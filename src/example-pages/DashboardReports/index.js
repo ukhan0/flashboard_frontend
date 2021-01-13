@@ -13,7 +13,7 @@ import DashboardReportsSection8 from '../../example-components/DashboardReports/
 export default function DashboardReports() {
   return (
     <Fragment>
-      <PageTitle titleHeading="Company Page" titleDescription="" />
+      <PageTitle titleHeading="Filings" titleDescription="" />
 
       <DashboardReportsSection1 />
       <DashboardReportsSection2 />

@@ -23,6 +23,7 @@ import PagesRegister from './example-pages/PagesRegister';
 import PagesRecoverPassword from './example-pages/PagesRecoverPassword';
 import PagesError404 from './example-pages/PagesError404';
 const LandingPage = lazy(() => import('./example-pages/LandingPage'));
+const ProfilePage = lazy(() => import('./example-pages/PagesProfile'));
 const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 
@@ -114,7 +115,8 @@ const Routes = () => {
                 </Switch>
               </MinimalLayout>
             </Route>
-            <Route path={['/watchlist', '/company', '/sentiments', '/help']}>
+            <Route
+              path={['/watchlist', '/filings', '/comparision', '/sentiments']}>
               <LeftSidebar>
                 <Switch location={location} key={location.pathname}>
                   <motion.div
@@ -124,7 +126,9 @@ const Routes = () => {
                     variants={pageVariants}
                     transition={pageTransition}>
                     <Route path="/watchlist" component={WatchList} />
-                    <Route path="/company" component={DashboardReports} />
+                    <Route path="/filings" component={DashboardReports} />
+                    {/* <Route path="/comparision" component={DashboardReports} /> */}
+                    <Route path="/sentiments" component={ProfilePage} />
                   </motion.div>
                 </Switch>
               </LeftSidebar>

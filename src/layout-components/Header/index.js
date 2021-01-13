@@ -18,7 +18,7 @@ import HeaderDots from '../../layout-components/HeaderDots';
 import HeaderDrawer from '../../layout-components/HeaderDrawer';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
 // import HeaderSearch from '../../layout-components/HeaderSearch';
-// import HeaderMenu from '../../layout-components/HeaderMenu';
+import HeaderMenuSimple from '../../layout-components/HeaderMenuSimple';
 
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
@@ -95,7 +95,7 @@ const Header = props => {
                 </Box>
               )}
               {/* <HeaderSearch /> */}
-              {/* <HeaderMenu /> */}
+              <HeaderMenuSimple />
             </Box>
           </Hidden>
           <Box className="d-flex align-items-center">

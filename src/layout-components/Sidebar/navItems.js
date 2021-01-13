@@ -40,24 +40,19 @@ var iconsMap = {
 
 const sideBarItems = [
   {
-    label: 'Watchlist',
+    label: 'Filings',
     icon: 'DashboardTwoToneIcon',
-    to: '/watchlist'
+    to: '/filings'
   },
   {
-    label: 'Company Page',
+    label: 'Comparison',
     icon: 'CalendarTodayIcon',
-    to: '/company'
+    to: '/comparision'
   },
   {
     label: 'Sentiments',
     icon: 'SettingsIcon',
     to: '/sentiments'
-  },
-  {
-    label: 'Help',
-    icon: 'ErrorIcon',
-    to: '/help'
   }
 ];
 
