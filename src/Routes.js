@@ -10,7 +10,11 @@ import MuiTheme from './theme';
 
 // Layout Blueprints
 
-import { LeftSidebar, MinimalLayout } from './layout-blueprints';
+import {
+  LeftSidebar,
+  MinimalLayout,
+  PresentationLayout
+} from './layout-blueprints';
 
 // Example Pages
 
@@ -18,7 +22,8 @@ import PagesLogin from './example-pages/PagesLogin';
 import PagesRegister from './example-pages/PagesRegister';
 import PagesRecoverPassword from './example-pages/PagesRecoverPassword';
 import PagesError404 from './example-pages/PagesError404';
-
+const LandingPage = lazy(() => import('./example-pages/LandingPage'));
+const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 
 const Routes = () => {
@@ -68,7 +73,21 @@ const Routes = () => {
       <AnimatePresence>
         <Suspense fallback={<SuspenseLoading />}>
           <Switch>
-            <Redirect exact from="/" to="/watchlist" />
+            <Redirect exact from="/" to="/LandingPage" />
+            <Route path={['/LandingPage']}>
+              <PresentationLayout>
+                <Switch location={location} key={location.pathname}>
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}>
+                    <Route path="/LandingPage" component={LandingPage} />
+                  </motion.div>
+                </Switch>
+              </PresentationLayout>
+            </Route>
             <Route
               path={[
                 '/PagesLogin',
@@ -95,8 +114,7 @@ const Routes = () => {
                 </Switch>
               </MinimalLayout>
             </Route>
-
-            <Route path={['/watchlist']}>
+            <Route path={['/watchlist', '/company', '/sentiments', '/help']}>
               <LeftSidebar>
                 <Switch location={location} key={location.pathname}>
                   <motion.div
@@ -106,6 +124,7 @@ const Routes = () => {
                     variants={pageVariants}
                     transition={pageTransition}>
                     <Route path="/watchlist" component={WatchList} />
+                    <Route path="/company" component={DashboardReports} />
                   </motion.div>
                 </Switch>
               </LeftSidebar>

@@ -38,9 +38,12 @@ body {
     background: rgba(255,255,255,.08);
   }
 
-  .app-header-logo-img {
-    width: 32px;
-    height: 32px;
+  .app-header-logo-img-big {
+    width: 90px;
+  }
+
+  .app-header-logo-img-small {
+    width: 50px;
   }
 
   .header-logo-wrapper {

@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
 
-import { Paper, List, ListItem, ListItemText } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
+import SnPLogo from '../../assets/images/logos/SP_Global_logo.png';
 
 import { connect } from 'react-redux';
 
@@ -19,37 +19,18 @@ const Footer = props => {
           'app-footer--fixed__collapsed': sidebarToggle
         })}>
         <div className="app-footer--inner">
-          <div className="app-footer--first">
-            <List dense className="d-flex align-items-center">
-              <ListItem
-                className="rounded-sm text-nowrap"
-                button
-                component={Link}
-                to="/DashboardAnalytics">
-                <ListItemText primary="Analytics" />
-              </ListItem>
-              <ListItem
-                className="rounded-sm text-nowrap"
-                button
-                component={Link}
-                to="/FormsWizard">
-                <ListItemText primary="Wizards" />
-              </ListItem>
-              <ListItem
-                className="rounded-sm text-nowrap"
-                button
-                component={Link}
-                to="/DashboardCrmManager">
-                <ListItemText primary="CRM Manager" />
-              </ListItem>
-            </List>
+          <div className="app-footer--first trade-logo">
+            <div className="spGlobal-text">
+              In collaboration with S&P Global
+            </div>
+            <div>
+              <img alt="S&P Global" src={SnPLogo} width="100" />
+            </div>
           </div>
           <div className="app-footer--second">
-            <span>Carolina React Admin Dashboard with Material-UI PRO</span> ©
-            2020 - crafted with <span className="text-danger px-1">❤</span> by{' '}
-            <a href="https://uifort.com" title="UiFort.com">
-              UiFort.com
-            </a>
+            <span>
+              © 2021 by Social Market Analytics, Inc All rights reserved.
+            </span>
           </div>
         </div>
       </Paper>

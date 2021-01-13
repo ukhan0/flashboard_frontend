@@ -32,8 +32,7 @@ const Sidebar = props => {
     setSidebarHover,
     sidebarToggle,
     sidebarUserbox,
-    sidebarShadow,
-    sidebarFooter
+    sidebarShadow
   } = props;
 
   const toggleHoverOn = () => setSidebarHover(true);
@@ -69,9 +68,9 @@ const Sidebar = props => {
           className="app-sidebar-wrapper-lg">
           <SidebarHeader />
           <PerfectScrollbar>
-            {sidebarUserbox && <SidebarUserbox />}
+            {/* {sidebarUserbox && <SidebarUserbox />} */}
             {sidebarMenuContent}
-            {sidebarFooter && <SidebarFooter />}
+            {/* {sidebarFooter && <SidebarFooter />} */}
           </PerfectScrollbar>
         </Drawer>
       </Hidden>
@@ -95,9 +94,10 @@ const Sidebar = props => {
               'app-sidebar-collapsed': sidebarToggle && !sidebarHover
             })}>
             <PerfectScrollbar options={{ wheelPropagation: false }}>
-              {sidebarUserbox && <SidebarUserbox />}
+              {/* {sidebarUserbox && <SidebarUserbox />} */}
+              <div style={{ marginTop: 10 }}></div>
               {sidebarMenuContent}
-              {sidebarFooter && <SidebarFooter />}
+              {/* {sidebarFooter && <SidebarFooter />} */}
             </PerfectScrollbar>
           </div>
         </Paper>

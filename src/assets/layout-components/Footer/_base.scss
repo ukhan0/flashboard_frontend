@@ -1,5 +1,11 @@
 //  Core
 body {
+  .trade-logo {
+    display: block;
+  }
+  .spGlobal-text {
+    margin-top: 5px;
+  }
   .app-footer {
     height: $footer-height;
     background: $footer-bg;

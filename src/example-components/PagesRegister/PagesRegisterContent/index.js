@@ -148,7 +148,7 @@ const LivePreviewExample = () => {
                                   variant="contained"
                                   color="primary"
                                   component={RouterLink}
-                                  to="/DashboardDefault">
+                                  to="/LandingPage">
                                   <span className="btn-wrapper--icon">
                                     <FontAwesomeIcon
                                       icon={['fas', 'arrow-left']}

@@ -42,9 +42,9 @@ const WatchlistFilters = props => {
       alignItems="center"
       spacing={2}>
       <Grid item>
-        <Typography variant="h6" color="primary">
+        <h6 className="font-weight-bold font-size-lg mb-1 text-black">
           File Types
-        </Typography>
+        </h6>
         <ButtonGroup color="primary">
           {fileTypesSelection.map((fileType, i) => (
             <Button
@@ -59,9 +59,9 @@ const WatchlistFilters = props => {
         </ButtonGroup>
       </Grid>
       <Grid item>
-        <Typography variant="h6" color="primary">
+        <h6 className="font-weight-bold font-size-lg mb-1 text-black">
           Universe
-        </Typography>
+        </h6>
         <ButtonGroup color="primary">
           {universeSelection.map((universe, i) => (
             <Button
@@ -76,9 +76,9 @@ const WatchlistFilters = props => {
         </ButtonGroup>
       </Grid>
       <Grid item>
-        <Typography variant="h6" color="primary">
+        <h6 className="font-weight-bold font-size-lg mb-1 text-black">
           Metrics
-        </Typography>
+        </h6>
         <ButtonGroup color="primary">
           {metricsSelection.map((metric, i) => (
             <Button

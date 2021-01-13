@@ -17,8 +17,8 @@ import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderDots from '../../layout-components/HeaderDots';
 import HeaderDrawer from '../../layout-components/HeaderDrawer';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
-import HeaderSearch from '../../layout-components/HeaderSearch';
-import HeaderMenu from '../../layout-components/HeaderMenu';
+// import HeaderSearch from '../../layout-components/HeaderSearch';
+// import HeaderMenu from '../../layout-components/HeaderMenu';
 
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
@@ -94,8 +94,8 @@ const Header = props => {
                   </Tooltip>
                 </Box>
               )}
-              <HeaderSearch />
-              <HeaderMenu />
+              {/* <HeaderSearch /> */}
+              {/* <HeaderMenu /> */}
             </Box>
           </Hidden>
           <Box className="d-flex align-items-center">
