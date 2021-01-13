@@ -59,11 +59,7 @@ const Routes = () => {
             <ClimbingBoxLoader color={'#5383ff'} loading={true} />
           </div>
           <div className="text-muted font-size-xl text-center pt-3">
-            Please wait while we load the live preview examples
-            <span className="font-size-lg d-block text-dark">
-              This live preview instance can be slower than a real production
-              build!
-            </span>
+            Loading...
           </div>
         </div>
       </Fragment>
