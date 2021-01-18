@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, ButtonGroup, Button, Typography } from '@material-ui/core';
+import { Grid, ButtonGroup, Button } from '@material-ui/core';
 import {
   setWatchlistFileType,
   setWatchlistUniverse,
@@ -14,7 +14,7 @@ const fileTypesSelection = [
 const universeSelection = [
   { label: 'Watchlist', key: 'watchlist' },
   { label: 'Recent', key: 'recent' },
-  { label: 'Complete', key: 'complete' }
+  { label: 'Complete', key: 'all' }
 ];
 const metricsSelection = [
   { label: 'Total', key: 'totdoc' },
@@ -102,9 +102,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setWatchlistFileType: enable => dispatch(setWatchlistFileType(enable)),
-  setWatchlistUniverse: enable => dispatch(setWatchlistUniverse(enable)),
-  setWatchlistMetric: enable => dispatch(setWatchlistMetric(enable))
+  setWatchlistFileType: value => dispatch(setWatchlistFileType(value)),
+  setWatchlistUniverse: value => dispatch(setWatchlistUniverse(value)),
+  setWatchlistMetric: value => dispatch(setWatchlistMetric(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WatchlistFilters);

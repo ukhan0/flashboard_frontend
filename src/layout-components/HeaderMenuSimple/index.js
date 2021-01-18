@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import { Button } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 const HeaderMenu = () => {
+  const location = useLocation();
   return (
     <Fragment>
       <div className="app-header-menu">
@@ -11,7 +12,10 @@ const HeaderMenu = () => {
           to="/watchlist"
           size="medium"
           color="inherit"
-          className="btn-inverse font-size-xs mx-2">
+          className={clsx(
+            'btn-inverse font-size-xs mx-2',
+            location.pathname === '/watchlist' ? 'btn-active' : ''
+          )}>
           Watchlist
         </Button>
         <Button

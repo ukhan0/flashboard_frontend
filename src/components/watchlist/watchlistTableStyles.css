@@ -1,3 +1,6 @@
 .ag-theme-alpine .ag-pivot-mode-panel {
   display: none;
 }
+.ag-theme-alpine .center-align-text {
+  text-align: center;
+}

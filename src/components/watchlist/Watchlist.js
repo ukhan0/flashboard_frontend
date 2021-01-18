@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Grid } from '@material-ui/core';
+import { get } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
-import { get } from 'lodash';
 import {
   formatData,
   storeColumnsState,
@@ -11,6 +12,7 @@ import {
   getSortingState,
   getFilteringState
 } from './WatchlistHelpers';
+import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import testData from './testData';
 import { connect } from 'react-redux';
 
@@ -19,19 +21,22 @@ import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
 // styles
 import useStyles from './watchlistStyles';
+import WatchlistSearch from './WatchlistSearch';
+import WatchlistActions from './WatchlistActions';
 
 const Watchlist = props => {
   const classes = useStyles();
   const [watchlistData, setWatchlistData] = useState([]);
+  const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const { selectedFileType, selectedUniverse, selectedMetric } = props;
 
   const fetchData = useCallback(async () => {
     try {
-      // const response = await axios.get(
-      //   `${config.apiUrl}/get_saved_wish_list2?subject=${selectedUniverse}`
-      // );
-      // setWatchlistData(formatData(get(response, 'data.data.content', [])));
-      setWatchlistData(formatData(get(testData, 'data.content', [])));
+      const response = await axios.get(
+        `${config.apiUrl}/api/get_saved_wish_list_raw?subject=${selectedUniverse}`
+      );
+      setWatchlistData(formatData(get(response, 'data.data.content', [])));
+      // setWatchlistData(formatData(get(testData, 'data.content', [])));
     } catch (error) {
       // log exception here
     }
@@ -58,7 +63,21 @@ const Watchlist = props => {
 
   return (
     <>
-      <WatchlistFilters />
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="flex-end">
+        <Grid item>
+          <WatchlistFilters />
+        </Grid>
+        <Grid item>
+          <WatchlistSearch />
+        </Grid>
+        <Grid item>
+          <WatchlistActions onTopicSelection={() => setTopicDialogOpen(true)} />
+        </Grid>
+      </Grid>
       <div className={classes.watchlistTableContainer}>
         <WatchlistTable
           data={processWatchlistData()}
@@ -70,6 +89,11 @@ const Watchlist = props => {
           filteringState={getFilteringState()}
         />
       </div>
+      <WatchlistTopicDialog
+        open={topicDialogOpen}
+        onClose={() => setTopicDialogOpen(false)}
+        onUpload={() => console.log('upload topics')}
+      />
     </>
   );
 };

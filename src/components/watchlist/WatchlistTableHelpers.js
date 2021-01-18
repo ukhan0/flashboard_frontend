@@ -1,13 +1,35 @@
-import { isNull, includes, capitalize, lowerCase } from 'lodash';
+import { isNull, includes, capitalize, lowerCase, round } from 'lodash';
+import moment from 'moment';
 
 const changedStyles = {
-  lowest: { backgroundColor: '#c70909', color: '#ffffff' },
-  low: { backgroundColor: '#ff0202', color: '#ffffff' },
-  median: { backgroundColor: '#b99494', color: '#2b2828' },
-  high: { backgroundColor: '#0ad606', color: '#ffffff' },
-  highest: { backgroundColor: '#09b306', color: '#ffffff' }
+  lowest: { backgroundColor: '#bf2828', color: '#ffffff' },
+  low: { backgroundColor: '#f50101', color: '#ffffff' },
+  median: { backgroundColor: '#f4772f', color: '#2b2828' },
+  high: { backgroundColor: '#0de63f', color: '#ffffff' },
+  highest: { backgroundColor: '#1bc943', color: '#ffffff' }
 };
 const changeStylesValues = Object.keys(changedStyles);
+
+export const formatExportValue = params => {
+  const colId = params.column.colDef.colId;
+  const value = params.value;
+  if (colId) {
+    if (colId === 'last') {
+      return dateFormater(value);
+    } else {
+      return value;
+    }
+  }
+};
+
+export const dateFormater = value => {
+  let formatedValue = null;
+  if (value) {
+    const momentDateObj = moment(value);
+    formatedValue = momentDateObj.format('YYYY-MM-DD');
+  }
+  return formatedValue;
+}
 
 export const parseDateStr = dateStr => {
   let dateObj = null;
@@ -36,7 +58,7 @@ export const parseNumber = number => {
 export const percentFormater = params => {
   let formatedValue = null;
   if (params.value) {
-    formatedValue = `${params.value}%`;
+    formatedValue = `${round(params.value, 2)}%`;
   }
   return formatedValue;
 };
@@ -99,6 +121,5 @@ export const changeWordStyler = value => {
       style = changedStyles[value];
     }
   }
-  console.log(style);
   return style;
 };

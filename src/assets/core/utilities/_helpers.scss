@@ -306,6 +306,10 @@ a.MuiButton-outlined:hover {
   background-color: rgba(255,255,255,.07);
 }
 
+.MuiButton-root.btn-active {
+  background-color: rgba(255,255,255,.07);
+}
+
 .card-box.mb-4,
 a.card.mb-4,
 .MuiCard-root.mb-4 {

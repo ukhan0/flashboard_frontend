@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { forEach, isEmpty, get, isNull } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
@@ -10,10 +11,11 @@ import {
   currencyStyler,
   changeWordGetter,
   changeWordFormatter,
-  changeWordStyler
+  changeWordStyler,
+  dateFormater
 } from './WatchlistTableHelpers';
-import moment from 'moment';
-
+import WatchlistService from './WatchlistService';
+import WordStatus from './WatchlistTableComponents/WordStatus';
 import './watchlistTableStyles.css';
 
 const defaultColDef = {
@@ -51,33 +53,46 @@ const sideBarConfiguration = {
 const colDefs = [
   {
     headerName: 'Ticker',
-    field: 'ticker'
+    headerTooltip: 'Ticker',
+    field: 'ticker',
+    colId: 'ticker',
+    cellClass: ['center-align-text']
   },
   {
     headerName: 'Company Name',
+    headerTooltip: 'Company Name',
     field: 'companyName',
+    colId: 'companyName',
     filter: 'agTextColumnFilter'
   },
   {
     headerName: 'Sector',
-    field: 'sector'
+    headerTooltip: 'Sector',
+    field: 'sector',
+    colId: 'sector'
   },
   {
     headerName: 'Industry',
+    headerTooltip: 'Industry',
     field: 'industry',
+    colId: 'industry',
     filter: 'agTextColumnFilter'
   },
   {
-    headerName: 'Mktcap',
+    headerName: 'Market Cap',
+    headerTooltip: 'Market Cap',
     field: 'mktcap',
+    colId: 'mktcap',
     filter: 'agNumberColumnFilter',
     valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
     valueFormatter: params => currencyFormater(params.value, 0),
     cellStyle: currencyStyler
   },
   {
-    headerName: 'Adv',
+    headerName: 'Average Daily Volume',
+    headerTooltip: 'Average Daily Volume',
     field: 'adv',
+    colId: 'adv',
     filter: 'agNumberColumnFilter',
     valueGetter: params => parseNumber(get(params, 'data.adv', null)),
     valueFormatter: params => currencyFormater(params.value, 0),
@@ -85,35 +100,36 @@ const colDefs = [
   },
   {
     headerName: 'Last Reported',
+    headerTooltip: 'Last Reported',
     field: 'last',
+    colId: 'last',
     valueGetter: params => parseDateStr(get(params, 'data.last', null)),
-    valueFormatter: params => {
-      let formatedValue = null;
-      if (params.value) {
-        const momentDateObj = moment(params.value);
-        formatedValue = momentDateObj.format('YYYY-MM-DD');
-      }
-      return formatedValue;
-    },
-    filter: 'agDateColumnFilter'
+    valueFormatter: params => dateFormater(params.value),
+    filter: 'agDateColumnFilter',
+    cellClass: ['center-align-text']
   },
   {
     headerName: 'Sentiment',
     children: [
       {
-        headerName: 'Sentiment',
+        headerName: 'Percent',
+        headerTooltip: 'Sentiment Percentage',
         field: 'sentiment',
+        colId: 'sentiment',
         filter: 'agNumberColumnFilter',
         valueGetter: params => parseNumber(get(params, 'data.sentiment', null)),
-        valueFormatter: percentFormater
+        valueFormatter: percentFormater,
+        cellStyle: currencyStyler
       },
       {
-        headerName: 'Sentiment Word',
+        headerName: 'Description',
+        headerTooltip: 'Sentiment Word',
         field: 'sentimentWord',
+        colId: 'sentimentWord',
         valueGetter: params =>
           changeWordGetter(get(params, 'data.sentimentWord', null)),
         valueFormatter: params => changeWordFormatter(params.value),
-        cellStyle: params => changeWordStyler(params.value)
+        cellRenderer: 'WordStatusRenderer'
       }
     ]
   },
@@ -121,20 +137,25 @@ const colDefs = [
     headerName: 'Sentiment Change',
     children: [
       {
-        headerName: 'Sentiment Change',
+        headerName: 'Percent',
+        headerTooltip: 'Sentiment Change Percentage',
         field: 'sentimentChange',
+        colId: 'sentimentChange',
         filter: 'agNumberColumnFilter',
         valueGetter: params =>
           parseNumber(get(params, 'data.sentimentChange', null)),
-        valueFormatter: percentFormater
+        valueFormatter: percentFormater,
+        cellStyle: currencyStyler
       },
       {
-        headerName: 'Sentiment Change Word',
+        headerName: 'Description',
+        headerTooltip: 'Sentiment Change Word',
         field: 'sentimentChangeWord',
+        colId: 'sentimentChangeWord',
         valueGetter: params =>
           changeWordGetter(get(params, 'data.sentimentChangeWord', null)),
         valueFormatter: params => changeWordFormatter(params.value),
-        cellStyle: params => changeWordStyler(params.value)
+        cellRenderer: 'WordStatusRenderer'
       }
     ]
   },
@@ -142,33 +163,43 @@ const colDefs = [
     headerName: 'Word Count Change',
     children: [
       {
-        headerName: 'Word Count Change',
+        headerName: 'Value',
+        headerTooltip: 'Word Count Change',
         field: 'wordCountChange',
-        filter: 'agNumberColumnFilter'
+        colId: 'wordCountChange',
+        filter: 'agNumberColumnFilter',
+        cellStyle: currencyStyler
       },
       {
-        headerName: 'Word Count Change Percent',
+        headerName: 'Percent',
+        headerTooltip: 'Word Count Change Percentage',
         field: 'wordCountChangePercent',
+        colId: 'wordCountChangePercent',
         filter: 'agNumberColumnFilter',
         valueGetter: params =>
           parseNumber(get(params, 'data.wordCountChangePercent', null)),
-        valueFormatter: percentFormater
+        valueFormatter: percentFormater,
+        cellStyle: currencyStyler
       },
       {
-        headerName: 'Word Count Change Percent Word',
+        headerName: 'Description',
+        headerTooltip: 'Word Count Change Percent Word',
         field: 'wordCountChangePercentWord',
+        colId: 'wordCountChangePercentWord',
         valueGetter: params =>
           changeWordGetter(
             get(params, 'data.wordCountChangePercentWord', null)
           ),
         valueFormatter: params => changeWordFormatter(params.value),
-        cellStyle: params => changeWordStyler(params.value)
+        cellRenderer: 'WordStatusRenderer'
       }
     ]
   }
 ];
 
-export default function WatchlistTable(props) {
+const WatchlistTable = props => {
+  const { searchText } = props;
+
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
     props.storeColumnsState(columnState);
@@ -187,11 +218,12 @@ export default function WatchlistTable(props) {
 
   const handleGridReady = params => {
     const columnsState = props.columnsState;
+    WatchlistService.init(params.api, params.columnApi); // global service
     // const sortingState = props.sortingState
     // const filteringState = props.filteringState
-    if (columnsState && columnsState.length) {
-      params.columnApi.setColumnState(columnsState);
-    }
+    // if (columnsState && columnsState.length) {
+    //   params.columnApi.setColumnState(columnsState);
+    // }
 
     // if(sortingState && sortingState.length) {
     // 	params.api.setSortModel(sortingState)
@@ -212,9 +244,12 @@ export default function WatchlistTable(props) {
       <AgGridReact
         onGridReady={handleGridReady}
         rowData={props.data}
+        quickFilterText={searchText}
         columnDefs={colDefs}
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}
+        tooltipShowDelay={0}
+        frameworkComponents={{ WordStatusRenderer: WordStatus }}
         onColumnResized={storeColumnsState}
         onColumnMoved={storeColumnsState}
         onColumnVisible={storeColumnsState}
@@ -222,4 +257,10 @@ export default function WatchlistTable(props) {
         onFilterChanged={storeColumnsState}></AgGridReact>
     </div>
   );
-}
+};
+
+const mapStateToProps = state => ({
+  searchText: state.Watchlist.searchText
+});
+
+export default connect(mapStateToProps)(WatchlistTable);
