@@ -26,6 +26,7 @@ const LandingPage = lazy(() => import('./example-pages/LandingPage'));
 const ProfilePage = lazy(() => import('./example-pages/PagesProfile'));
 const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
+const Comparision = lazy(() => import('./components/comparision'));
 
 const Routes = () => {
   const location = useLocation();
@@ -123,7 +124,7 @@ const Routes = () => {
                     transition={pageTransition}>
                     <Route path="/watchlist" component={WatchList} />
                     <Route path="/filings" component={DashboardReports} />
-                    {/* <Route path="/comparision" component={DashboardReports} /> */}
+                    <Route path="/comparision" component={Comparision} />
                     <Route path="/sentiments" component={ProfilePage} />
                   </motion.div>
                 </Switch>

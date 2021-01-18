@@ -205,6 +205,12 @@ const WatchlistTable = props => {
     props.storeColumnsState(columnState);
   };
 
+  const cellClicked = async params => {
+    if (params.data) {
+      props.onColumnClick(params.data, params.column.colId);
+    }
+  };
+
   const storeSortState = params => {
     const sortingsModel = params.api.getSortModel();
     props.storeSortingsState(sortingsModel);
@@ -249,6 +255,7 @@ const WatchlistTable = props => {
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
+        onCellClicked={cellClicked}
         frameworkComponents={{ WordStatusRenderer: WordStatus }}
         onColumnResized={storeColumnsState}
         onColumnMoved={storeColumnsState}

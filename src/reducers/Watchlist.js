@@ -3,6 +3,7 @@ export const SET_UNIVERSE = 'WATCHLIST/SET_UNIVERSE';
 export const SET_METRIC = 'WATCHLIST/SET_METRIC';
 export const SET_SEARCH_TEXT = 'WATCHLIST/SET_SEARCH_TEXT';
 export const SET_SELECTED_TAB = 'WATCHLIST/SET_SELECTED_TAB';
+export const SET_SELECTED_WATCHLIST = 'WATCHLIST/SET_SELECTED_WATCHLIST';
 export const SET_SELECTED_SYMBOLS = 'WATCHLIST/SET_SELECTED_SYMBOLS';
 export const RESET_WATCHLIST = 'WATCHLIST/RESET_WATCHLIST';
 
@@ -26,6 +27,10 @@ export const setWatchlistTopicTab = selectedTab => ({
   type: SET_SELECTED_TAB,
   selectedTab
 });
+export const setSelectedWatchlist = selectedItem => ({
+  type: SET_SELECTED_WATCHLIST,
+  selectedItem
+});
 export const setWatchlistSelectedSymbols = selectedSymbols => ({
   type: SET_SELECTED_SYMBOLS,
   selectedSymbols
@@ -42,6 +47,7 @@ const getDefaultState = () => {
     searchText: '',
     selectedTab: 0,
     selectedSymbols: [],
+    selectedItem: null,
     availableSymbols: ['AAPL', 'GOGL', 'AMZN', 'MSFT', 'TSLA']
   };
 };
@@ -64,6 +70,8 @@ export default function reducer(
       return { ...state, searchText: action.searchText };
     case SET_SELECTED_TAB:
       return { ...state, selectedTab: action.selectedTab };
+    case SET_SELECTED_WATCHLIST:
+      return { ...state, selectedItem: action.selectedItem };
     case SET_SELECTED_SYMBOLS:
       return { ...state, selectedSymbols: action.selectedSymbols };
     case RESET_WATCHLIST:

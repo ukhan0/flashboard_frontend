@@ -12,9 +12,10 @@ import {
   getSortingState,
   getFilteringState
 } from './WatchlistHelpers';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
-import testData from './testData';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 // components
 import WatchlistFilters from './WatchlistFilters';
@@ -28,7 +29,14 @@ const Watchlist = props => {
   const classes = useStyles();
   const [watchlistData, setWatchlistData] = useState([]);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
-  const { selectedFileType, selectedUniverse, selectedMetric } = props;
+  const history = useHistory();
+
+  const {
+    selectedFileType,
+    selectedUniverse,
+    selectedMetric,
+    setSelectedWatchlist
+  } = props;
 
   const fetchData = useCallback(async () => {
     try {
@@ -48,7 +56,16 @@ const Watchlist = props => {
       const data = {
         ...watchlist,
         ...watchlist[selectedFileType][selectedMetric],
-        last: selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q
+        last:
+          selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q,
+        recentId:
+          selectedFileType === '10k'
+            ? watchlist['recentId10k']
+            : watchlist['recentId10q'],
+        oldId:
+          selectedFileType === '10k'
+            ? watchlist['oldId10k']
+            : watchlist['oldId10q']
       };
       delete data['10k'];
       delete data['10q'];
@@ -56,6 +73,11 @@ const Watchlist = props => {
     });
     return filteredData;
   }, [selectedFileType, selectedMetric, watchlistData]);
+
+  const onColumnClick = rowData => {
+    setSelectedWatchlist(rowData);
+    history.push('/comparision');
+  };
 
   useEffect(() => {
     fetchData();
@@ -87,6 +109,7 @@ const Watchlist = props => {
           columnsState={getColumnState()}
           sortingState={getSortingState()}
           filteringState={getFilteringState()}
+          onColumnClick={onColumnClick}
         />
       </div>
       <WatchlistTopicDialog
@@ -104,4 +127,8 @@ const mapStateToProps = state => ({
   selectedMetric: state.Watchlist.selectedMetric
 });
 
-export default connect(mapStateToProps)(Watchlist);
+const mapDispatchToProps = dispatch => ({
+  setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Watchlist);

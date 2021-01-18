@@ -137,7 +137,11 @@ export const formatData = rawDataArr => {
       last10k: rawData.last_10k,
       last10q: rawData.last_10q,
       '10k': formatFileTypeData(fields10k, rawData),
-      '10q': formatFileTypeData(fields10q, rawData)
+      '10q': formatFileTypeData(fields10q, rawData),
+      recentId10k: rawData['10k_recent_id'],
+      recentId10q: rawData['10q_recent_id'],
+      oldId10k: rawData['10k_old_id'],
+      oldId10q: rawData['10q_old_id']
     };
   });
 };
