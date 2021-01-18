@@ -8,6 +8,7 @@ export const SET_SIDEBAR_FOOTER = 'THEME_OPTIONS/SET_SIDEBAR_FOOTER';
 export const SET_SIDEBAR_TOGGLE = 'THEME_OPTIONS/SET_SIDEBAR_TOGGLE';
 export const SET_SIDEBAR_USERBOX = 'THEME_OPTIONS/SET_SIDEBAR_USERBOX';
 export const SET_SIDEBAR_HOVER = 'THEME_OPTIONS/SET_SIDEBAR_HOVER';
+export const SET_SIDEBAR_DISPLAY = 'THEME_OPTIONS/SET_SIDEBAR_DISPLAY';
 
 export const setSidebarShadow = sidebarShadow => ({
   type: SET_SIDEBAR_SHADOW,
@@ -32,6 +33,10 @@ export const setSidebarToggle = sidebarToggle => ({
 export const setSidebarHover = sidebarHover => ({
   type: SET_SIDEBAR_HOVER,
   sidebarHover
+});
+export const setSidebarDisplay = showSidebar => ({
+  type: SET_SIDEBAR_DISPLAY,
+  showSidebar
 });
 export const setSidebarUserbox = sidebarUserbox => ({
   type: SET_SIDEBAR_USERBOX,
@@ -125,11 +130,12 @@ export default function reducer(
 
     sidebarShadow: false,
     sidebarFixed: true,
-    sidebarToggleMobile: false,
+    sidebarToggleMobile: true,
     sidebarFooter: true,
     sidebarUserbox: true,
-    sidebarToggle: false,
+    sidebarToggle: true,
     sidebarHover: false,
+    showSidebar: false,
     // Header
 
     headerFixed: true,
@@ -187,6 +193,12 @@ export default function reducer(
       return {
         ...state,
         sidebarHover: action.sidebarHover
+      };
+    case SET_SIDEBAR_DISPLAY:
+      return {
+        ...state,
+        showSidebar: action.showSidebar,
+        sidebarToggle: !action.showSidebar
       };
     case SET_SIDEBAR_USERBOX:
       return {

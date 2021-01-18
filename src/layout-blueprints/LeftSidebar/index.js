@@ -12,8 +12,11 @@ const LeftSidebar = props => {
     sidebarToggle,
     sidebarFixed,
     footerFixed,
-    contentBackground
+    contentBackground,
+    showSidebar
   } = props;
+
+  console.log(sidebarFixed);
 
   return (
     <Fragment>
@@ -23,7 +26,7 @@ const LeftSidebar = props => {
           className={clsx('app-main', {
             'app-main-sidebar-static': !sidebarFixed
           })}>
-          <Sidebar />
+          {showSidebar ? <Sidebar /> : null}
           <div
             className={clsx('app-content', {
               'app-content-sidebar-collapsed': sidebarToggle,
@@ -56,7 +59,8 @@ const mapStateToProps = state => ({
 
   footerFixed: state.ThemeOptions.footerFixed,
 
-  contentBackground: state.ThemeOptions.contentBackground
+  contentBackground: state.ThemeOptions.contentBackground,
+  showSidebar: state.ThemeOptions.showSidebar
 });
 
 export default connect(mapStateToProps)(LeftSidebar);

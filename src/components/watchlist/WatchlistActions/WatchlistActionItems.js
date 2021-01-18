@@ -44,7 +44,7 @@ export default function WatchListActionItems(props) {
       open={Boolean(anchorEl)}
       onClose={handleClose}>
       <StyledMenuItem onClick={() => actionSelected('addTopic')}>
-        <ListItemText id={'topic'} primary="Add Topic" />
+        <ListItemText id={'topic'} primary="Add To Watchlist" />
       </StyledMenuItem>
       <StyledMenuItem onClick={() => actionSelected('autoSize')}>
         <ListItemText id={'autoSize'} primary="Auto Size" />

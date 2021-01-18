@@ -32,7 +32,9 @@ const Sidebar = props => {
     setSidebarHover,
     sidebarToggle,
     sidebarUserbox,
-    sidebarShadow
+    sidebarShadow,
+
+    selectedItem
   } = props;
 
   const toggleHoverOn = () => setSidebarHover(true);
@@ -68,7 +70,7 @@ const Sidebar = props => {
           className="app-sidebar-wrapper-lg">
           <SidebarHeader />
           <PerfectScrollbar>
-            {/* {sidebarUserbox && <SidebarUserbox />} */}
+            {sidebarUserbox && selectedItem ? <SidebarUserbox /> : null}
             {sidebarMenuContent}
             {/* {sidebarFooter && <SidebarFooter />} */}
           </PerfectScrollbar>
@@ -94,7 +96,7 @@ const Sidebar = props => {
               'app-sidebar-collapsed': sidebarToggle && !sidebarHover
             })}>
             <PerfectScrollbar options={{ wheelPropagation: false }}>
-              {/* {sidebarUserbox && <SidebarUserbox />} */}
+              {sidebarUserbox && selectedItem ? <SidebarUserbox /> : null}
               <div style={{ marginTop: 10 }}></div>
               {sidebarMenuContent}
               {/* {sidebarFooter && <SidebarFooter />} */}
@@ -114,7 +116,8 @@ const mapStateToProps = state => ({
   sidebarShadow: state.ThemeOptions.sidebarShadow,
   sidebarFooter: state.ThemeOptions.sidebarFooter,
   sidebarUserbox: state.ThemeOptions.sidebarUserbox,
-  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile
+  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile,
+  selectedItem: state.Watchlist.selectedItem
 });
 
 const mapDispatchToProps = dispatch => ({

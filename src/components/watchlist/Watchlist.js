@@ -13,6 +13,7 @@ import {
   getFilteringState
 } from './WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -35,7 +36,8 @@ const Watchlist = props => {
     selectedFileType,
     selectedUniverse,
     selectedMetric,
-    setSelectedWatchlist
+    setSelectedWatchlist,
+    setSidebarDisplay
   } = props;
 
   const fetchData = useCallback(async () => {
@@ -76,6 +78,7 @@ const Watchlist = props => {
 
   const onColumnClick = rowData => {
     setSelectedWatchlist(rowData);
+    setSidebarDisplay(true);
     history.push('/comparision');
   };
 
@@ -128,7 +131,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value))
+  setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value)),
+  setSidebarDisplay: value => dispatch(setSidebarDisplay(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Watchlist);

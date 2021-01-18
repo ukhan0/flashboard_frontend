@@ -37,7 +37,8 @@ const Header = props => {
     sidebarToggleMobile,
     setSidebarToggleMobile,
     setSidebarToggle,
-    sidebarToggle
+    sidebarToggle,
+    showSidebar
   } = props;
 
   return (
@@ -74,7 +75,7 @@ const Header = props => {
           </Hidden>
           <Hidden mdDown>
             <Box className="d-flex align-items-center">
-              {!props.isCollapsedLayout && (
+              {showSidebar && !props.isCollapsedLayout && (
                 <Box
                   className={clsx('btn-toggle-collapse', {
                     'btn-toggle-collapse-closed': sidebarToggle
@@ -94,7 +95,6 @@ const Header = props => {
                   </Tooltip>
                 </Box>
               )}
-              {/* <HeaderSearch /> */}
               <HeaderMenuSimple />
             </Box>
           </Hidden>
@@ -127,7 +127,8 @@ const mapStateToProps = state => ({
   headerShadow: state.ThemeOptions.headerShadow,
   headerFixed: state.ThemeOptions.headerFixed,
   sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile,
-  sidebarToggle: state.ThemeOptions.sidebarToggle
+  sidebarToggle: state.ThemeOptions.sidebarToggle,
+  showSidebar: state.ThemeOptions.showSidebar
 });
 
 const mapDispatchToProps = dispatch => ({

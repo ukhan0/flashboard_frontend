@@ -24,7 +24,7 @@ export default function WatchListActions(props) {
     } else if (actionName === 'sizeToFit') {
       WatchlistService.sizeColumnsToFit();
     } else if (actionName === 'csvExport') {
-      WatchlistService.exportWatchlist(actionName);
+      WatchlistService.exportWatchlist('csv');
     } else if (actionName === 'addTopic') {
       props.onTopicSelection();
     }

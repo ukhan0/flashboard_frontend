@@ -1,26 +1,39 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { TextField, FormControl } from '@material-ui/core';
 import Dropzone from 'react-dropzone';
 import useStyles from './WatchlistTopicStyles';
+import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
-const WatchlistTopicUploadCSV = () => {
-  // const [ uploadedFiles, setUploadedFiles] = useState([])
+const WatchlistTopicUploadCSV = props => {
+  const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const classes = useStyles();
 
-  const onDrop = (files) => {
-    console.log(files)
-    // this.setState({ files });
+  const loadFile = async file => {
+    let text = await file.text();
+    if (text) {
+      const symbolsArr = text.split('\n');
+      if (symbolsArr.length) {
+        setWatchlistSelectedSymbols(symbolsArr);
+      }
+    }
   };
 
-  const onCancel = () => {
-    console.log('onCancel');
-    // this.setState({ files: [] });
+  const onDrop = files => {
+    console.log(files);
+    if (files && files.length) {
+      loadFile(files[0]);
+    }
+  };
+
+  const handleSymbolsTextChange = text => {
+    console.log(text);
   };
 
   return (
     <div>
       <div className="dropzone">
-        <Dropzone onDrop={onDrop} onFileDialogCancel={onCancel}>
+        <Dropzone onDrop={onDrop}>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()}>
               <input {...getInputProps()} />
@@ -34,19 +47,35 @@ const WatchlistTopicUploadCSV = () => {
           )}
         </Dropzone>
       </div>
-      <FormControl className={classes.formControl}>
-        <TextField
-          className="m-3"
-          id="outlined-multiline-static"
-          label="Symbols..."
-          multiline
-          rows="4"
-          defaultValue=""
-          variant="outlined"
-        />
-      </FormControl>
+      {selectedSymbols.length ? (
+        <FormControl className={classes.formControl}>
+          <TextField
+            className="m-3"
+            id="outlined-multiline-static"
+            label="Symbols..."
+            multiline
+            rows="4"
+            defaultValue=""
+            variant="outlined"
+            value={selectedSymbols.join('\n')}
+            disbaled={true}
+          />
+        </FormControl>
+      ) : null}
     </div>
   );
 };
 
-export default WatchlistTopicUploadCSV;
+const mapStateToProps = state => ({
+  selectedSymbols: state.Watchlist.selectedSymbols
+});
+
+const mapDispatchToProps = dispatch => ({
+  setWatchlistSelectedSymbols: value =>
+    dispatch(setWatchlistSelectedSymbols(value))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WatchlistTopicUploadCSV);

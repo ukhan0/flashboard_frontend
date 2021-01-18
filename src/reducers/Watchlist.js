@@ -47,8 +47,7 @@ const getDefaultState = () => {
     searchText: '',
     selectedTab: 0,
     selectedSymbols: [],
-    selectedItem: null,
-    availableSymbols: ['AAPL', 'GOGL', 'AMZN', 'MSFT', 'TSLA']
+    selectedItem: null
   };
 };
 
