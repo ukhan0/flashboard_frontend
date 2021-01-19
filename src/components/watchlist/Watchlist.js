@@ -29,7 +29,10 @@ import WatchlistActions from './WatchlistActions';
 const Watchlist = props => {
   const classes = useStyles();
   const [watchlistData, setWatchlistData] = useState([]);
+  const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
+  const [topicAddingError, setTopicAddingError] = useState(false);
+
   const history = useHistory();
 
   const {
@@ -37,7 +40,8 @@ const Watchlist = props => {
     selectedUniverse,
     selectedMetric,
     setSelectedWatchlist,
-    setSidebarDisplay
+    setSidebarDisplay,
+    selectedSymbols
   } = props;
 
   const fetchData = useCallback(async () => {
@@ -84,7 +88,34 @@ const Watchlist = props => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, dataVersion]);
+
+  const handleUpload = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    try {
+      const response = await axios.post(
+        `${config.apiUrl}/api/save_wishlist_item`,
+        {
+          ticker_limit: 10000,
+          alerts: false,
+          elimiter: 'comma',
+          watched_tickers: selectedSymbols.join(','),
+          id: user.id,
+          api_key: user.api_key,
+          authentication_token: user.authentication_token
+        }
+      );
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        setTopicDialogOpen(false);
+        setDataVersion(dataVersion + 1);
+      } else {
+        setTopicAddingError(true);
+      }
+    } catch (error) {
+      setTopicAddingError(true);
+    }
+  };
 
   return (
     <>
@@ -118,7 +149,8 @@ const Watchlist = props => {
       <WatchlistTopicDialog
         open={topicDialogOpen}
         onClose={() => setTopicDialogOpen(false)}
-        onUpload={() => console.log('upload topics')}
+        error={topicAddingError}
+        onUpload={handleUpload}
       />
     </>
   );
@@ -127,7 +159,8 @@ const Watchlist = props => {
 const mapStateToProps = state => ({
   selectedFileType: state.Watchlist.selectedFileType,
   selectedUniverse: state.Watchlist.selectedUniverse,
-  selectedMetric: state.Watchlist.selectedMetric
+  selectedMetric: state.Watchlist.selectedMetric,
+  selectedSymbols: state.Watchlist.selectedSymbols
 });
 
 const mapDispatchToProps = dispatch => ({

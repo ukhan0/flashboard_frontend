@@ -12,6 +12,7 @@ const WatchlistTopicUploadCSV = props => {
   const loadFile = async file => {
     let text = await file.text();
     if (text) {
+      setWatchlistSelectedSymbols([]);
       const symbolsArr = text.split('\n');
       if (symbolsArr.length) {
         setWatchlistSelectedSymbols(symbolsArr);
@@ -57,8 +58,8 @@ const WatchlistTopicUploadCSV = props => {
             rows="4"
             defaultValue=""
             variant="outlined"
-            value={selectedSymbols.join('\n')}
-            disbaled={true}
+            value={selectedSymbols.join(', ')}
+            disabled={true}
           />
         </FormControl>
       ) : null}

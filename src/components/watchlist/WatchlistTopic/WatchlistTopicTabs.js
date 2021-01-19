@@ -1,12 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from '@material-ui/core';
-import { setWatchlistTopicTab } from '../../../reducers/Watchlist';
+import {
+  setWatchlistTopicTab,
+  setWatchlistSelectedSymbols
+} from '../../../reducers/Watchlist';
 
 const WatchlistTopicTabs = props => {
-  const { selectedTab, setWatchlistTopicTab } = props;
+  const {
+    selectedTab,
+    setWatchlistTopicTab,
+    setWatchlistSelectedSymbols
+  } = props;
 
   const handleTabChange = (e, newValue) => {
+    setWatchlistSelectedSymbols([]);
     setWatchlistTopicTab(newValue);
   };
 
@@ -29,7 +37,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setWatchlistTopicTab: value => dispatch(setWatchlistTopicTab(value))
+  setWatchlistTopicTab: value => dispatch(setWatchlistTopicTab(value)),
+  setWatchlistSelectedSymbols: value =>
+    dispatch(setWatchlistSelectedSymbols(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicTabs);

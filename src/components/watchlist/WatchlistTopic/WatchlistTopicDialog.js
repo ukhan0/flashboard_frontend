@@ -17,7 +17,7 @@ import useStyles from './WatchlistTopicStyles';
 
 const WatchlistTopicDialog = props => {
   // const [errMsg, setErrMsg] = useState('');
-  const { selectedTab } = props;
+  const { selectedTab, selectedSymbols, error } = props;
   const classes = useStyles();
 
   const handleClose = () => {
@@ -25,7 +25,7 @@ const WatchlistTopicDialog = props => {
   };
 
   const handleUpload = () => {
-    console.log('upload');
+    props.onUpload();
   };
 
   let selectedComponent = null;
@@ -52,6 +52,9 @@ const WatchlistTopicDialog = props => {
         <div className={classes.topicDialogContent}>{selectedComponent}</div>
       </DialogContent>
       <DialogActions>
+        {error ? (
+          <Typography color="error">Unable to add symbols</Typography>
+        ) : null}
         <Button onClick={handleClose} color="secondary">
           Cancel
         </Button>
@@ -59,8 +62,9 @@ const WatchlistTopicDialog = props => {
           variant="contained"
           onClick={handleUpload}
           color="primary"
+          disabled={selectedSymbols.length > 0 ? false : true}
           autoFocus>
-          Upload
+          Add
         </Button>
       </DialogActions>
     </Dialog>
@@ -74,7 +78,8 @@ WatchlistTopicDialog.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  selectedTab: state.Watchlist.selectedTab
+  selectedTab: state.Watchlist.selectedTab,
+  selectedSymbols: state.Watchlist.selectedSymbols
 });
 
 export default connect(mapStateToProps)(WatchlistTopicDialog);

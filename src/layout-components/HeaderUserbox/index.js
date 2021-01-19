@@ -16,6 +16,7 @@ import {
 
 import avatar4 from '../../assets/images/avatars/avatar4.jpg';
 import { withStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 
 const StyledBadge = withStyles({
   badge: {
@@ -47,6 +48,7 @@ const StyledBadge = withStyles({
 })(Badge);
 export default function HeaderUserbox() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const history = useHistory();
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -54,6 +56,11 @@ export default function HeaderUserbox() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const signout = () => {
+    localStorage.removeItem('user');
+    history.push('/PagesRegister');
   };
 
   return (
@@ -124,6 +131,9 @@ export default function HeaderUserbox() {
             <ListItem button>My Account</ListItem>
             <ListItem button>Profile settings</ListItem>
             <ListItem button>Active tasks</ListItem>
+            <ListItem button color="secondary" onClick={signout}>
+              Signout
+            </ListItem>
             <Divider className="w-100" />
             <ListItem className="p-0">
               <div className="grid-menu grid-menu-2col w-100">

@@ -1,5 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import config from '../../../config/config';
+import { get } from 'lodash';
+import { useHistory } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -82,10 +86,31 @@ TabPanel.propTypes = {
 };
 
 const LivePreviewExample = () => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(1);
+  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [errorText, setErrorText] = React.useState('');
+  const history = useHistory();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const login = async () => {
+    try {
+      const response = await axios.post(
+        `${config.apiUrl}/api/users/sign_in?email=${email}&password=${password}`
+      );
+      const userData = get(response, 'data', []);
+      if (!userData.error) {
+        localStorage.setItem('user', JSON.stringify(userData.data));
+        history.push('/watchlist');
+      } else {
+        setErrorText('Email and Password not matched');
+      }
+    } catch (error) {
+      setErrorText('Uable to login');
+    }
   };
 
   const [checked1, setChecked1] = React.useState(true);
@@ -341,6 +366,7 @@ const LivePreviewExample = () => {
                                     <Input
                                       fullWidth
                                       id="input-with-icon-adornment"
+                                      onChange={e => setEmail(e.target.value)}
                                       startAdornment={
                                         <InputAdornment position="start">
                                           <MailOutlineTwoToneIcon />
@@ -358,6 +384,9 @@ const LivePreviewExample = () => {
                                       id="standard-adornment-password"
                                       fullWidth
                                       type="password"
+                                      onChange={e =>
+                                        setPassword(e.target.value)
+                                      }
                                       startAdornment={
                                         <InputAdornment position="start">
                                           <LockTwoToneIcon />
@@ -384,10 +413,17 @@ const LivePreviewExample = () => {
                                     color="primary"
                                     variant="contained"
                                     size="large"
+                                    disabled={password && email ? false : true}
+                                    onClick={login}
                                     className="my-2">
                                     Sign in
                                   </Button>
                                 </div>
+                                {errorText ? (
+                                  <div className="text-center text-black-50 mb-3">
+                                    <span>{errorText}</span>
+                                  </div>
+                                ) : null}
                               </form>
                             </CardContent>
                           </Card>

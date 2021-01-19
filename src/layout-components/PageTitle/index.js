@@ -392,7 +392,7 @@ function PageTitle(props) {
                         </div>
                         <CardContent className="p-3">
                           <div className="text-center text-black-50 mb-3">
-                            <small>Or sign in with credentials</small>
+                            <small>Or sign in withss credentials</small>
                           </div>
                           <form className="px-5">
                             <div className="mb-3">

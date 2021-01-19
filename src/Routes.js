@@ -1,5 +1,11 @@
 import React, { lazy, Suspense, Fragment } from 'react';
-import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  Redirect,
+  useLocation,
+  useHistory
+} from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { ThemeProvider } from '@material-ui/styles';
@@ -30,6 +36,15 @@ const Comparision = lazy(() => import('./components/comparision'));
 
 const Routes = () => {
   const location = useLocation();
+  const history = useHistory();
+
+  // if user is not loggedIn then redirect to login page.
+  const user = localStorage.getItem('user');
+  const path = location.pathname;
+  if (!user && path !== '/PagesRegister' && path !== '/LandingPage') {
+    history.push('/PagesRegister');
+    return <></>;
+  }
 
   const pageVariants = {
     initial: {
