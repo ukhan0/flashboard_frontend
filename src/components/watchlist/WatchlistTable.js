@@ -211,44 +211,36 @@ const WatchlistTable = props => {
     }
   };
 
-  const storeSortState = params => {
-    const sortingsModel = params.api.getSortModel();
-    props.storeSortingsState(sortingsModel);
-  };
-
   const storeFilteringState = params => {
     const filteringModel = params.api.getFilterModel();
-    console.log(filteringModel);
     props.storeFilteringState(filteringModel);
   };
 
   const handleGridReady = params => {
-    const columnsState = props.columnsState;
     WatchlistService.init(params.api, params.columnApi); // global service
-    // const sortingState = props.sortingState
-    // const filteringState = props.filteringState
-    // if (columnsState && columnsState.length) {
-    //   params.columnApi.setColumnState(columnsState);
-    // }
+  };
 
-    // if(sortingState && sortingState.length) {
-    // 	params.api.setSortModel(sortingState)
-    // 	params.api.onSortChanged()
-    // }
+  const handleFirstDataRendered = params => {
+    const columnsState = props.columnsState;
+    const filteringState = props.filteringState;
 
-    // if(filteringState && !isEmpty(filteringState)) {
-    // 	console.log(filteringState)
-    // 	forEach(filteringState, (columnFilterQuery, columnKey) => {
-    // 		params.api.getFilterInstance(columnKey).setModel(columnFilterQuery)
-    // 	})
-    // 	params.api.onFilterChanged()
-    // }
+    if (columnsState && columnsState.length) {
+      params.columnApi.applyColumnState({
+        state: columnsState,
+        applyOrder: true
+      });
+    }
+
+    if (filteringState && !isEmpty(filteringState)) {
+      params.api.setFilterModel(filteringState);
+    }
   };
 
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact
         onGridReady={handleGridReady}
+        onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
         quickFilterText={searchText}
         columnDefs={colDefs}
@@ -261,7 +253,7 @@ const WatchlistTable = props => {
         onColumnMoved={storeColumnsState}
         onColumnVisible={storeColumnsState}
         onSortChanged={storeColumnsState}
-        onFilterChanged={storeColumnsState}></AgGridReact>
+        onFilterChanged={storeFilteringState}></AgGridReact>
     </div>
   );
 };
