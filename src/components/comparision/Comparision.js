@@ -10,7 +10,6 @@ const Comparision = props => {
   if (!selectedItem) {
     history.push('/watchlist');
   }
-  console.log(selectedMetric);
   switch (selectedMetric) {
     case 'mda':
       metricQueryParam = 'partHeadingTag=P2&itemHeadingTag=I7';
@@ -28,8 +27,6 @@ const Comparision = props => {
       metricQueryParam = '';
       break;
   }
-
-  console.log(metricQueryParam);
 
   return (
     <iframe

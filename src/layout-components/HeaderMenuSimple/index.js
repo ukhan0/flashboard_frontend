@@ -34,6 +34,7 @@ const HeaderMenu = props => {
         <Button
           size="medium"
           color="inherit"
+          disabled={true}
           className={clsx(
             'btn-inverse font-size-xs mx-2',
             location.pathname === '/topic' ? 'btn-active' : ''
@@ -43,6 +44,7 @@ const HeaderMenu = props => {
         <Button
           size="medium"
           color="inherit"
+          disabled={true}
           className={clsx(
             'btn-inverse font-size-xs mx-2',
             location.pathname === '/alerts' ? 'btn-active' : ''

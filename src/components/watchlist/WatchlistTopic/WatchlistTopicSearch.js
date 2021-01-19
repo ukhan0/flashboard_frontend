@@ -27,7 +27,6 @@ const WatchlistTopicSearch = props => {
   }, 1000);
 
   const selectionChanged = (e, newSelectedSymbols) => {
-    console.log(newSelectedSymbols);
     setWatchlistSelectedSymbols(newSelectedSymbols);
   };
 

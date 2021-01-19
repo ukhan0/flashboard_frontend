@@ -21,14 +21,9 @@ const WatchlistTopicUploadCSV = props => {
   };
 
   const onDrop = files => {
-    console.log(files);
     if (files && files.length) {
       loadFile(files[0]);
     }
-  };
-
-  const handleSymbolsTextChange = text => {
-    console.log(text);
   };
 
   return (

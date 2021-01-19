@@ -16,8 +16,6 @@ const LeftSidebar = props => {
     showSidebar
   } = props;
 
-  console.log(sidebarFixed);
-
   return (
     <Fragment>
       <div className={clsx('app-wrapper', contentBackground)}>

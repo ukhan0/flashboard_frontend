@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core';
 import { get } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
+import cjson from 'compressed-json';
 import {
   formatData,
   storeColumnsState,
@@ -46,10 +47,20 @@ const Watchlist = props => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        `${config.apiUrl}/api/get_saved_wish_list_raw?subject=${selectedUniverse}`
-      );
-      setWatchlistData(formatData(get(response, 'data.data.content', [])));
+      let rawData = [];
+      if (selectedUniverse === 'recent' || selectedUniverse === 'all') {
+        rawData = localStorage.getItem(`watchlist-data-${selectedUniverse}`);
+        if (rawData) {
+          rawData = cjson.decompress.fromString(rawData);
+        }
+      } else {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const response = await axios.get(
+          `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}`
+        );
+        rawData = get(response, 'data.data.content', []);
+      }
+      setWatchlistData(formatData(rawData));
       // setWatchlistData(formatData(get(testData, 'data.content', [])));
     } catch (error) {
       // log exception here

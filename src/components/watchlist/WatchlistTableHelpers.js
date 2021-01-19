@@ -97,7 +97,6 @@ export const currencyStyler = params => {
 };
 
 export const changeWordGetter = value => {
-  console.log(value);
   let actulaValue = null;
   if (!isNull(value)) {
     actulaValue = lowerCase(value);
@@ -115,7 +114,6 @@ export const changeWordFormatter = value => {
 
 export const changeWordStyler = value => {
   let style = null;
-  // console.log(value, changeStylesValues, changedStyles)
   if (!isNull(value)) {
     if (includes(changeStylesValues, value)) {
       style = changedStyles[value];

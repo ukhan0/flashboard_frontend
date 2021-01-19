@@ -6,6 +6,10 @@ export const SET_SELECTED_TAB = 'WATCHLIST/SET_SELECTED_TAB';
 export const SET_SELECTED_WATCHLIST = 'WATCHLIST/SET_SELECTED_WATCHLIST';
 export const SET_SELECTED_SYMBOLS = 'WATCHLIST/SET_SELECTED_SYMBOLS';
 export const RESET_WATCHLIST = 'WATCHLIST/RESET_WATCHLIST';
+export const SET_RECENT_DATALOADED_FLAG =
+  'WATCHLIST/SET_RECENT_DATALOADED_FLAG';
+export const SET_COMPELTE_DATALOADED_FLAG =
+  'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
 
 export const setWatchlistFileType = fileType => ({
   type: SET_FILE_TYPE,
@@ -35,6 +39,14 @@ export const setWatchlistSelectedSymbols = selectedSymbols => ({
   type: SET_SELECTED_SYMBOLS,
   selectedSymbols
 });
+export const setRecentDataLoadedFlag = recentDataLoaded => ({
+  type: SET_RECENT_DATALOADED_FLAG,
+  recentDataLoaded
+});
+export const setCompleteDataLoadedFlag = completeDataLoaded => ({
+  type: SET_COMPELTE_DATALOADED_FLAG,
+  completeDataLoaded
+});
 export const resetWatchlist = () => ({
   type: RESET_WATCHLIST
 });
@@ -47,7 +59,9 @@ const getDefaultState = () => {
     searchText: '',
     selectedTab: 0,
     selectedSymbols: [],
-    selectedItem: null
+    selectedItem: null,
+    recentDataLoaded: false,
+    completeDataLoaded: false
   };
 };
 
@@ -73,6 +87,10 @@ export default function reducer(
       return { ...state, selectedItem: action.selectedItem };
     case SET_SELECTED_SYMBOLS:
       return { ...state, selectedSymbols: action.selectedSymbols };
+    case SET_RECENT_DATALOADED_FLAG:
+      return { ...state, recentDataLoaded: action.recentDataLoaded };
+    case SET_COMPELTE_DATALOADED_FLAG:
+      return { ...state, completeDataLoaded: action.completeDataLoaded };
     case RESET_WATCHLIST:
       return { ...state, ...getDefaultState() };
     default:

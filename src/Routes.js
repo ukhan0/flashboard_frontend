@@ -1,21 +1,20 @@
-import React, { lazy, Suspense, Fragment } from 'react';
-import {
-  Switch,
-  Route,
-  Redirect,
-  useLocation,
-  useHistory
-} from 'react-router-dom';
+import React, { lazy, Suspense, Fragment, useEffect, useCallback } from 'react';
+import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { get } from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
-
 import { ThemeProvider } from '@material-ui/styles';
-
 import { ClimbingBoxLoader } from 'react-spinners';
-
 import MuiTheme from './theme';
+import config from './config/config';
+import { connect } from 'react-redux';
+import cjson from 'compressed-json';
+import {
+  setRecentDataLoadedFlag,
+  setCompleteDataLoadedFlag
+} from './reducers/Watchlist';
 
 // Layout Blueprints
-
 import {
   LeftSidebar,
   MinimalLayout,
@@ -34,54 +33,89 @@ const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 const Comparision = lazy(() => import('./components/comparision'));
 
-const Routes = () => {
-  const location = useLocation();
-  const history = useHistory();
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    scale: 0.99
+  },
+  in: {
+    opacity: 1,
+    scale: 1
+  },
+  out: {
+    opacity: 0,
+    scale: 1.01
+  }
+};
 
+const pageTransition = {
+  type: 'tween',
+  ease: 'anticipate',
+  duration: 0.4
+};
+
+const SuspenseLoading = () => {
+  return (
+    <Fragment>
+      <div className="d-flex align-items-center flex-column vh-100 justify-content-center text-center py-3">
+        <div className="d-flex align-items-center flex-column px-4">
+          <ClimbingBoxLoader color={'#5383ff'} loading={true} />
+        </div>
+        <div className="text-muted font-size-xl text-center pt-3">
+          Loading...
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+const Routes = props => {
+  const location = useLocation();
+  const { setRecentDataLoadedFlag, setCompleteDataLoadedFlag } = props;
   // if user is not loggedIn then redirect to login page.
-  const user = localStorage.getItem('user');
+  const user = JSON.parse(localStorage.getItem('user'));
   const path = location.pathname;
+  let loginRequired = false;
   if (!user && path !== '/PagesRegister' && path !== '/LandingPage') {
-    history.push('/PagesRegister');
-    return <></>;
+    loginRequired = true;
   }
 
-  const pageVariants = {
-    initial: {
-      opacity: 0,
-      scale: 0.99
-    },
-    in: {
-      opacity: 1,
-      scale: 1
-    },
-    out: {
-      opacity: 0,
-      scale: 1.01
+  const cacheData = useCallback(() => {
+    const recentWatchListData = localStorage.getItem(`watchlist-data-recent`);
+    if (recentWatchListData) {
+      setRecentDataLoadedFlag(true);
     }
-  };
+    const allWatchListData = localStorage.getItem(`watchlist-data-all`);
+    if (allWatchListData) {
+      setCompleteDataLoadedFlag(true);
+    }
 
-  const pageTransition = {
-    type: 'tween',
-    ease: 'anticipate',
-    duration: 0.4
-  };
+    const apiUrl = `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject`;
+    axios.get(`${apiUrl}=recent`).then(response => {
+      localStorage.setItem(
+        `watchlist-data-recent`,
+        cjson.compress.toString(get(response, 'data.data.content', []))
+      );
+      setRecentDataLoadedFlag(true);
+    });
+    axios.get(`${apiUrl}=all`).then(response => {
+      localStorage.setItem(
+        `watchlist-data-all`,
+        cjson.compress.toString(get(response, 'data.data.content', []))
+      );
+      setCompleteDataLoadedFlag(true);
+    });
+  }, [user, setRecentDataLoadedFlag, setCompleteDataLoadedFlag]);
 
-  const SuspenseLoading = () => {
-    return (
-      <Fragment>
-        <div className="d-flex align-items-center flex-column vh-100 justify-content-center text-center py-3">
-          <div className="d-flex align-items-center flex-column px-4">
-            <ClimbingBoxLoader color={'#5383ff'} loading={true} />
-          </div>
-          <div className="text-muted font-size-xl text-center pt-3">
-            Loading...
-          </div>
-        </div>
-      </Fragment>
-    );
-  };
-  return (
+  useEffect(() => {
+    if (!loginRequired) {
+      cacheData();
+    }
+  }, [cacheData, loginRequired]);
+
+  return loginRequired ? (
+    <Redirect to="/PagesRegister" />
+  ) : (
     <ThemeProvider theme={MuiTheme}>
       <AnimatePresence>
         <Suspense fallback={<SuspenseLoading />}>
@@ -152,4 +186,11 @@ const Routes = () => {
   );
 };
 
-export default Routes;
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = dispatch => ({
+  setRecentDataLoadedFlag: value => dispatch(setRecentDataLoadedFlag(value)),
+  setCompleteDataLoadedFlag: value => dispatch(setCompleteDataLoadedFlag(value))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Routes);

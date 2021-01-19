@@ -13,7 +13,6 @@ const WatchlistTopicPaste = props => {
     const textValue = e.target.value;
     if (textValue) {
       const symbolsArr = textValue.split('\n').filter(v => v);
-      console.log(symbolsArr);
       setWatchlistSelectedSymbols(symbolsArr);
     }
   };

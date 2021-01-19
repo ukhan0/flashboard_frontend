@@ -247,6 +247,8 @@ const WatchlistTable = props => {
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
+        paginationAutoPageSize={true}
+        pagination={true}
         onCellClicked={cellClicked}
         frameworkComponents={{ WordStatusRenderer: WordStatus }}
         onColumnResized={storeColumnsState}

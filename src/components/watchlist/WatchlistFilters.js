@@ -31,8 +31,20 @@ const WatchlistFilters = props => {
     selectedMetric,
     setWatchlistFileType,
     setWatchlistUniverse,
-    setWatchlistMetric
+    setWatchlistMetric,
+    completeDataLoaded,
+    recentDataLoaded
   } = props;
+
+  const canItbeUsed = universeType => {
+    let flag = false;
+    if (universeType === 'recent' && !recentDataLoaded) {
+      flag = true;
+    } else if (universeType === 'all' && !completeDataLoaded) {
+      flag = true;
+    }
+    return flag;
+  };
 
   return (
     <Grid
@@ -67,6 +79,7 @@ const WatchlistFilters = props => {
             <Button
               key={`uni_${i}`}
               onClick={() => setWatchlistUniverse(universe.key)}
+              disabled={canItbeUsed(universe.key)}
               variant={
                 selectedUniverse === universe.key ? 'contained' : 'outlined'
               }>
@@ -98,7 +111,9 @@ const WatchlistFilters = props => {
 const mapStateToProps = state => ({
   selectedFileType: state.Watchlist.selectedFileType,
   selectedUniverse: state.Watchlist.selectedUniverse,
-  selectedMetric: state.Watchlist.selectedMetric
+  selectedMetric: state.Watchlist.selectedMetric,
+  completeDataLoaded: state.Watchlist.completeDataLoaded,
+  recentDataLoaded: state.Watchlist.recentDataLoaded
 });
 
 const mapDispatchToProps = dispatch => ({
