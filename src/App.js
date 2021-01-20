@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
 import Routes from './Routes';
+import Cache from './Cache';
 import ScrollToTop from './utils/ScrollToTop';
 import './assets/base.scss';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,6 +22,7 @@ class App extends Component {
         <BrowserRouter basename="/">
           <CssBaseline />
           <ScrollToTop>
+            <Cache />
             <Routes />
           </ScrollToTop>
         </BrowserRouter>

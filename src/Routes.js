@@ -1,18 +1,10 @@
-import React, { lazy, Suspense, Fragment, useEffect, useCallback } from 'react';
+import React, { lazy, Suspense, Fragment } from 'react';
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { get } from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider } from '@material-ui/styles';
 import { ClimbingBoxLoader } from 'react-spinners';
 import MuiTheme from './theme';
-import config from './config/config';
 import { connect } from 'react-redux';
-import cjson from 'compressed-json';
-import {
-  setRecentDataLoadedFlag,
-  setCompleteDataLoadedFlag
-} from './reducers/Watchlist';
 
 // Layout Blueprints
 import {
@@ -69,49 +61,20 @@ const SuspenseLoading = () => {
   );
 };
 
-const Routes = props => {
-  const location = useLocation();
-  const { setRecentDataLoadedFlag, setCompleteDataLoadedFlag } = props;
-  // if user is not loggedIn then redirect to login page.
-  const user = JSON.parse(localStorage.getItem('user'));
-  const path = location.pathname;
+const isLoginRequired = (user, path) => {
   let loginRequired = false;
   if (!user && path !== '/PagesRegister' && path !== '/LandingPage') {
     loginRequired = true;
   }
+  return loginRequired;
+};
 
-  const cacheData = useCallback(() => {
-    const recentWatchListData = localStorage.getItem(`watchlist-data-recent`);
-    if (recentWatchListData) {
-      setRecentDataLoadedFlag(true);
-    }
-    const allWatchListData = localStorage.getItem(`watchlist-data-all`);
-    if (allWatchListData) {
-      setCompleteDataLoadedFlag(true);
-    }
-
-    const apiUrl = `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject`;
-    axios.get(`${apiUrl}=recent`).then(response => {
-      localStorage.setItem(
-        `watchlist-data-recent`,
-        cjson.compress.toString(get(response, 'data.data.content', []))
-      );
-      setRecentDataLoadedFlag(true);
-    });
-    axios.get(`${apiUrl}=all`).then(response => {
-      localStorage.setItem(
-        `watchlist-data-all`,
-        cjson.compress.toString(get(response, 'data.data.content', []))
-      );
-      setCompleteDataLoadedFlag(true);
-    });
-  }, [user, setRecentDataLoadedFlag, setCompleteDataLoadedFlag]);
-
-  useEffect(() => {
-    if (!loginRequired) {
-      cacheData();
-    }
-  }, [cacheData, loginRequired]);
+const Routes = () => {
+  const location = useLocation();
+  // if user is not loggedIn then redirect to login page.
+  const user = JSON.parse(localStorage.getItem('user'));
+  const path = location.pathname;
+  let loginRequired = isLoginRequired(user, path);
 
   return loginRequired ? (
     <Redirect to="/PagesRegister" />
@@ -188,9 +151,4 @@ const Routes = props => {
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = dispatch => ({
-  setRecentDataLoadedFlag: value => dispatch(setRecentDataLoadedFlag(value)),
-  setCompleteDataLoadedFlag: value => dispatch(setCompleteDataLoadedFlag(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Routes);
+export default connect(mapStateToProps)(Routes);
