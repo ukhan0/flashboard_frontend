@@ -8,9 +8,14 @@ import config from '../../../config/config';
 import { debounce, get } from 'lodash';
 import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
+const createOptionLabel = option => {
+  return `${option.ticker} - ${option.name}`;
+};
+
 const WatchlistTopicSearch = props => {
   const classes = useStyles();
   const { selectedSymbols, setWatchlistSelectedSymbols } = props;
+  console.log(selectedSymbols);
   const [availableSymbols, setAvailableSymbols] = useState([]);
 
   const handleSearchTextChange = debounce(async text => {
@@ -19,7 +24,7 @@ const WatchlistTopicSearch = props => {
         `${config.apiUrl}/api/get_wish_list_items`,
         { q: text }
       );
-      const symbolCodes = get(response, 'data.data', []).map(d => d.ticker);
+      const symbolCodes = get(response, 'data.data', []);
       setAvailableSymbols(symbolCodes);
     } catch (error) {
       // log exception here
@@ -35,13 +40,17 @@ const WatchlistTopicSearch = props => {
       <Autocomplete
         multiple
         id="watchlist-topic-search"
+        loading={true}
         onChange={selectionChanged}
         options={availableSymbols}
-        getOptionLabel={option => option}
+        getOptionLabel={option => createOptionLabel(option)}
         defaultValue={selectedSymbols}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
-            <Chip label={option} {...getTagProps({ index })} />
+            <Chip
+              label={createOptionLabel(option)}
+              {...getTagProps({ index })}
+            />
           ))
         }
         renderInput={params => (

@@ -26,6 +26,11 @@ import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
 import WatchlistSearch from './WatchlistSearch';
 import WatchlistActions from './WatchlistActions';
+import { isObject } from 'lodash';
+
+const compileTikcerData = selectedSymbols => {
+  return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
+};
 
 const Watchlist = props => {
   const classes = useStyles();
@@ -110,7 +115,7 @@ const Watchlist = props => {
           ticker_limit: 10000,
           alerts: false,
           elimiter: 'comma',
-          watched_tickers: selectedSymbols.join(','),
+          watched_tickers: compileTikcerData(selectedSymbols),
           id: user.id,
           api_key: user.api_key,
           authentication_token: user.authentication_token
