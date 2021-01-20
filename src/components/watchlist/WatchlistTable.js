@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { forEach, isEmpty, get, isNull } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import {
@@ -11,7 +11,6 @@ import {
   currencyStyler,
   changeWordGetter,
   changeWordFormatter,
-  changeWordStyler,
   dateFormater
 } from './WatchlistTableHelpers';
 import WatchlistService from './WatchlistService';
@@ -247,8 +246,8 @@ const WatchlistTable = props => {
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
-        paginationAutoPageSize={true}
         pagination={true}
+        domLayout='autoHeight'
         onCellClicked={cellClicked}
         frameworkComponents={{ WordStatusRenderer: WordStatus }}
         onColumnResized={storeColumnsState}

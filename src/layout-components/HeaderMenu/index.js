@@ -133,7 +133,7 @@ const HeaderMenu = () => {
                   <Divider className="my-3" />
                   <ListItem className="px-0 pb-0">
                     <Button
-                      to="/DashboardDefault"
+                      to="/"
                       color="primary"
                       size="small"
                       variant="outlined"

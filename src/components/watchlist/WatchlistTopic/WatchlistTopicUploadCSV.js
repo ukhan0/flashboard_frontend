@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { TextField, FormControl } from '@material-ui/core';
 import Dropzone from 'react-dropzone';

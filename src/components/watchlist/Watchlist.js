@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Grid } from '@material-ui/core';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Grid, Typography } from '@material-ui/core';
 import { get } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
@@ -38,6 +38,8 @@ const Watchlist = props => {
   const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const firstTimeLoad = useRef(true);
 
   const history = useHistory();
 
@@ -59,6 +61,7 @@ const Watchlist = props => {
           rawData = cjson.decompress.fromString(rawData);
         }
       } else {
+        setLoading(true);
         const user = JSON.parse(localStorage.getItem('user'));
         const response = await axios.get(
           `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}`
@@ -66,8 +69,9 @@ const Watchlist = props => {
         rawData = get(response, 'data.data.content', []);
       }
       setWatchlistData(formatData(rawData));
-      // setWatchlistData(formatData(get(testData, 'data.content', [])));
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       // log exception here
     }
   }, [selectedUniverse]);
@@ -106,6 +110,10 @@ const Watchlist = props => {
     fetchData();
   }, [fetchData, dataVersion]);
 
+  useEffect(() => {
+    firstTimeLoad.current = false;
+  }, [])
+
   const handleUpload = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
@@ -133,6 +141,8 @@ const Watchlist = props => {
     }
   };
 
+  const gridData = firstTimeLoad.current ? null : processWatchlistData()
+
   return (
     <>
       <Grid
@@ -144,6 +154,14 @@ const Watchlist = props => {
           <WatchlistFilters />
         </Grid>
         <Grid item>
+          {
+            loading ?
+              <Typography>Loading...</Typography>
+              :
+              null
+          }
+        </Grid>
+        <Grid item>
           <WatchlistSearch />
         </Grid>
         <Grid item>
@@ -152,7 +170,7 @@ const Watchlist = props => {
       </Grid>
       <div className={classes.watchlistTableContainer}>
         <WatchlistTable
-          data={processWatchlistData()}
+          data={gridData}
           storeColumnsState={storeColumnsState}
           storeSortingsState={storeSortingsState}
           storeFilteringState={storeFilteringState}

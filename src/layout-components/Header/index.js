@@ -15,9 +15,7 @@ import projectLogo from '../../assets/images/react.svg';
 
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderDots from '../../layout-components/HeaderDots';
-import HeaderDrawer from '../../layout-components/HeaderDrawer';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
-// import HeaderSearch from '../../layout-components/HeaderSearch';
 import HeaderMenuSimple from '../../layout-components/HeaderMenuSimple';
 
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
@@ -27,15 +25,9 @@ const Header = props => {
   const toggleSidebar = () => {
     setSidebarToggle(!sidebarToggle);
   };
-
-  const toggleSidebarMobile = () => {
-    setSidebarToggleMobile(!sidebarToggleMobile);
-  };
   const {
     headerShadow,
     headerFixed,
-    sidebarToggleMobile,
-    setSidebarToggleMobile,
     setSidebarToggle,
     sidebarToggle,
     showSidebar
@@ -56,7 +48,7 @@ const Header = props => {
             <Box
               className="app-logo-wrapper"
               title="Carolina React Admin Dashboard with Material-UI PRO">
-              <Link to="/DashboardDefault" className="app-logo-link">
+              <Link to="/" className="app-logo-link">
                 <IconButton
                   color="primary"
                   size="medium"
@@ -101,21 +93,6 @@ const Header = props => {
           <Box className="d-flex align-items-center">
             <HeaderDots />
             <HeaderUserbox />
-            <HeaderDrawer />
-            <Box className="toggle-sidebar-btn-mobile">
-              <Tooltip title="Toggle Sidebar" placement="right">
-                <IconButton
-                  color="inherit"
-                  onClick={toggleSidebarMobile}
-                  size="medium">
-                  {sidebarToggleMobile ? (
-                    <MenuOpenRoundedIcon />
-                  ) : (
-                    <MenuRoundedIcon />
-                  )}
-                </IconButton>
-              </Tooltip>
-            </Box>
           </Box>
         </Box>
       </AppBar>

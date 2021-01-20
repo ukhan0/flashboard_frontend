@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-
+import { get } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
@@ -14,7 +14,7 @@ import {
   Divider
 } from '@material-ui/core';
 
-import avatar4 from '../../assets/images/avatars/avatar4.jpg';
+import avatar4 from '../../assets/images/avatars/avatar8.png';
 import { withStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 
@@ -47,6 +47,7 @@ const StyledBadge = withStyles({
   }
 })(Badge);
 export default function HeaderUserbox() {
+  const user = JSON.parse(localStorage.getItem('user'))
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
 
@@ -60,6 +61,8 @@ export default function HeaderUserbox() {
 
   const signout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('watchlist-data-recent');
+    localStorage.removeItem('watchlist-data-all');
     history.push('/PagesRegister');
   };
 
@@ -80,11 +83,11 @@ export default function HeaderUserbox() {
             <Avatar sizes="44" alt="Dustin Watson" src={avatar4} />
           </StyledBadge>
         </Box>
-        <div className="d-none d-xl-block pl-3">
+        <div className="d-xl-block pl-3">
           <div className="font-weight-bold pt-2 line-height-1">
-            Dustin Watson
+            {get(user, 'name', '')}
           </div>
-          <span className="text-white-50">Senior React Developer</span>
+          <span className="text-white-50">{get(user, 'email', '')}</span>
         </div>
         <span className="pl-1 pl-xl-3">
           <FontAwesomeIcon icon={['fas', 'angle-down']} className="opacity-5" />
@@ -121,10 +124,10 @@ export default function HeaderUserbox() {
             </Box>
             <div className="pl-3 ">
               <div className="font-weight-bold text-center pt-2 line-height-1">
-                Dustin Watson
+                {get(user, 'name', '')}
               </div>
               <span className="text-black-50 text-center">
-                Senior React Developer
+                {get(user, 'email', '')}
               </span>
             </div>
             <Divider className="w-100 mt-2" />
@@ -132,7 +135,7 @@ export default function HeaderUserbox() {
             <ListItem button>Profile settings</ListItem>
             <ListItem button>Active tasks</ListItem>
             <ListItem button color="secondary" onClick={signout}>
-              Signout
+              SignOut
             </ListItem>
             <Divider className="w-100" />
             <ListItem className="p-0">

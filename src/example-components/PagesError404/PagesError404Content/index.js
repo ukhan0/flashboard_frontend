@@ -24,7 +24,7 @@ export default function LivePreviewExample() {
         <div className="app-main">
           <Button
             component={RouterLink}
-            to="/DashboardDefault"
+            to="/"
             size="large"
             color="secondary"
             variant="contained"

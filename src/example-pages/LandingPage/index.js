@@ -9,7 +9,6 @@ import {
   Button,
   List,
   ListItem,
-  Tooltip,
   Divider
 } from '@material-ui/core';
 
@@ -106,7 +105,7 @@ const LandingPage = () => {
                 <Divider />
                 <ListItem className="d-block py-3 px-2">
                   <Link
-                    to="/DashboardDefault"
+                    to="/"
                     className="d-flex px-2 align-items-center dropdown-item rounded">
                     <div className="align-box-row w-100">
                       <div className="mr-3">

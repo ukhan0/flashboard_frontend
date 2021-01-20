@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Icon, Typography } from '@material-ui/core';
-import clsx from 'clsx';
+import { Button } from '@material-ui/core';
 import WatchListActionItems from './WatchlistActionItems';
 import useStyles from './styles';
 import WatchlistService from '../WatchlistService';

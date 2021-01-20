@@ -15,7 +15,6 @@ const createOptionLabel = option => {
 const WatchlistTopicSearch = props => {
   const classes = useStyles();
   const { selectedSymbols, setWatchlistSelectedSymbols } = props;
-  console.log(selectedSymbols);
   const [availableSymbols, setAvailableSymbols] = useState([]);
 
   const handleSearchTextChange = debounce(async text => {

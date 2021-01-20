@@ -80,7 +80,7 @@ const SidebarCollapsed = props => {
                 className="header-logo-wrapper"
                 title="Carolina React Admin Dashboard with Material-UI PRO">
                 <Link
-                  to="/DashboardDefault"
+                  to="/"
                   className="header-logo-wrapper-link">
                   <IconButton
                     color="primary"
@@ -105,7 +105,7 @@ const SidebarCollapsed = props => {
                       className="app-sidebar-btn-wrapper"
                       activeClassName="active"
                       component={RouterLink}
-                      to="/DashboardDefault">
+                      to="/">
                       <span>
                         <Settings className="app-sidebar-btn-icon" />
                       </span>
@@ -211,7 +211,7 @@ const SidebarCollapsed = props => {
                     color="secondary"
                     className="text-white text-center font-size-lg d-40"
                     component={RouterLink}
-                    to="/DashboardDefault">
+                    to="/">
                     <FontAwesomeIcon icon={['fas', 'arrow-left']} />
                   </Button>
                 </Tooltip>

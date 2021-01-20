@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import SidebarHeader from '../../layout-components/SidebarHeader';
 import SidebarUserbox from '../../layout-components/SidebarUserbox';
 import SidebarMenu from '../../layout-components/SidebarMenu';
-import SidebarFooter from '../../layout-components/SidebarFooter';
 
 import navItems from './navItems';
 
