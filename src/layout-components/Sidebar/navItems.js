@@ -50,9 +50,9 @@ const sideBarItems = [
     to: '/comparision'
   },
   {
-    label: 'Sentiments',
+    label: 'Sentiment',
     icon: 'SettingsIcon',
-    to: '/sentiments'
+    to: '/sentiment'
   }
 ];
 

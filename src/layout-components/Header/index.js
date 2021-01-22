@@ -14,7 +14,6 @@ import {
 import projectLogo from '../../assets/images/react.svg';
 
 import HeaderLogo from '../../layout-components/HeaderLogo';
-import HeaderDots from '../../layout-components/HeaderDots';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
 import HeaderMenuSimple from '../../layout-components/HeaderMenuSimple';
 
@@ -45,23 +44,17 @@ const Header = props => {
         {!props.isCollapsedLayout && <HeaderLogo />}
         <Box className="app-header-toolbar">
           <Hidden lgUp>
-            <Box
-              className="app-logo-wrapper"
-              title="Carolina React Admin Dashboard with Material-UI PRO">
+            <Box className="app-logo-wrapper" title="SMA">
               <Link to="/" className="app-logo-link">
                 <IconButton
                   color="primary"
                   size="medium"
                   className="app-logo-btn">
-                  <img
-                    className="app-logo-img"
-                    alt="Carolina React Admin Dashboard with Material-UI PRO"
-                    src={projectLogo}
-                  />
+                  <img className="app-logo-img" alt="SMA" src={projectLogo} />
                 </IconButton>
               </Link>
               <Hidden smDown>
-                <Box className="app-logo-text">Carolina</Box>
+                <Box className="app-logo-text">SMA</Box>
               </Hidden>
             </Box>
           </Hidden>
@@ -91,7 +84,6 @@ const Header = props => {
             </Box>
           </Hidden>
           <Box className="d-flex align-items-center">
-            <HeaderDots />
             <HeaderUserbox />
           </Box>
         </Box>

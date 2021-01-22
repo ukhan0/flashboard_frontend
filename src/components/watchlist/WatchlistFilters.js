@@ -8,7 +8,7 @@ import {
 import { connect } from 'react-redux';
 
 const fileTypesSelection = [
-  { label: '10-k', key: '10k' },
+  { label: '10-K', key: '10k' },
   { label: '10-Q', key: '10q' }
 ];
 const universeSelection = [

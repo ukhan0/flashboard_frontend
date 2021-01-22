@@ -88,8 +88,8 @@ const colDefs = [
     cellStyle: currencyStyler
   },
   {
-    headerName: 'Average Daily Volume',
-    headerTooltip: 'Average Daily Volume',
+    headerName: 'Avg Daily $ Value',
+    headerTooltip: 'Avg Daily $ Value',
     field: 'adv',
     colId: 'adv',
     filter: 'agNumberColumnFilter',
@@ -111,8 +111,8 @@ const colDefs = [
     headerName: 'Sentiment',
     children: [
       {
-        headerName: 'Percent',
-        headerTooltip: 'Sentiment Percentage',
+        headerName: 'Value',
+        headerTooltip: 'Value',
         field: 'sentiment',
         colId: 'sentiment',
         filter: 'agNumberColumnFilter',
@@ -121,8 +121,8 @@ const colDefs = [
         cellStyle: currencyStyler
       },
       {
-        headerName: 'Description',
-        headerTooltip: 'Sentiment Word',
+        headerName: 'Value Description',
+        headerTooltip: 'Value Description',
         field: 'sentimentWord',
         colId: 'sentimentWord',
         valueGetter: params =>
@@ -136,7 +136,7 @@ const colDefs = [
     headerName: 'Sentiment Change',
     children: [
       {
-        headerName: 'Percent',
+        headerName: '% Change',
         headerTooltip: 'Sentiment Change Percentage',
         field: 'sentimentChange',
         colId: 'sentimentChange',
@@ -147,7 +147,7 @@ const colDefs = [
         cellStyle: currencyStyler
       },
       {
-        headerName: 'Description',
+        headerName: '% Change Description',
         headerTooltip: 'Sentiment Change Word',
         field: 'sentimentChangeWord',
         colId: 'sentimentChangeWord',
@@ -247,7 +247,8 @@ const WatchlistTable = props => {
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
         pagination={true}
-        domLayout='autoHeight'
+        domLayout="autoHeight"
+        multiSortKey="ctrl"
         onCellClicked={cellClicked}
         frameworkComponents={{ WordStatusRenderer: WordStatus }}
         onColumnResized={storeColumnsState}

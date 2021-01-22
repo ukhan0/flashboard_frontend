@@ -125,7 +125,7 @@ const Routes = () => {
               </MinimalLayout>
             </Route>
             <Route
-              path={['/watchlist', '/filings', '/comparision', '/sentiments']}>
+              path={['/watchlist', '/filings', '/comparision', '/sentiment']}>
               <LeftSidebar>
                 <Switch location={location} key={location.pathname}>
                   <motion.div
@@ -137,7 +137,7 @@ const Routes = () => {
                     <Route path="/watchlist" component={WatchList} />
                     <Route path="/filings" component={DashboardReports} />
                     <Route path="/comparision" component={Comparision} />
-                    <Route path="/sentiments" component={ProfilePage} />
+                    <Route path="/sentiment" component={ProfilePage} />
                   </motion.div>
                 </Switch>
               </LeftSidebar>

@@ -36,22 +36,16 @@ const SidebarHeader = props => {
         className={clsx('app-sidebar-header', {
           'app-sidebar-header-close': sidebarToggle && !sidebarHover
         })}>
-        <Box
-          className="header-logo-wrapper"
-          title="Carolina React Admin Dashboard with Material-UI PRO">
+        <Box className="header-logo-wrapper" title="SMA">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton
               color="primary"
               size="medium"
               className="header-logo-wrapper-btn">
-              <img
-                className="app-sidebar-logo"
-                alt="Carolina React Admin Dashboard with Material-UI PRO"
-                src={projectLogo}
-              />
+              <img className="app-sidebar-logo" alt="SMA" src={projectLogo} />
             </IconButton>
           </Link>
-          <Box className="header-logo-text">Carolina</Box>
+          <Box className="header-logo-text">SMA</Box>
         </Box>
         <Box
           className={clsx('app-sidebar-header-btn', {

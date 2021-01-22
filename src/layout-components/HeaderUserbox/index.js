@@ -132,55 +132,8 @@ export default function HeaderUserbox() {
             </div>
             <Divider className="w-100 mt-2" />
             <ListItem button>My Account</ListItem>
-            <ListItem button>Profile settings</ListItem>
-            <ListItem button>Active tasks</ListItem>
             <ListItem button color="secondary" onClick={signout}>
               SignOut
-            </ListItem>
-            <Divider className="w-100" />
-            <ListItem className="p-0">
-              <div className="grid-menu grid-menu-2col w-100">
-                <div className="py-3">
-                  <div className="d-flex justify-content-center">
-                    <div className="d-flex align-items-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'chart-bar']}
-                          className="font-size-xxl text-info"
-                        />
-                      </div>
-                      <div className="pl-3 line-height-sm">
-                        <b className="font-size-lg">$9,693</b>
-                        <span className="text-black-50 d-block">revenue</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ListItem>
-            <Divider className="w-100" />
-            <ListItem className="d-block rounded-bottom px-3 pt-3 pb-0 text-center">
-              <Tooltip arrow title="Facebook">
-                <Button color="default" className="text-facebook">
-                  <span className="btn-wrapper--icon">
-                    <FontAwesomeIcon icon={['fab', 'facebook']} />
-                  </span>
-                </Button>
-              </Tooltip>
-              <Tooltip arrow title="Dribbble">
-                <Button color="default" className="text-dribbble mr-2 ml-2">
-                  <span className="btn-wrapper--icon">
-                    <FontAwesomeIcon icon={['fab', 'dribbble']} />
-                  </span>
-                </Button>
-              </Tooltip>
-              <Tooltip arrow title="Twitter">
-                <Button color="default" className="text-twitter">
-                  <span className="btn-wrapper--icon">
-                    <FontAwesomeIcon icon={['fab', 'twitter']} />
-                  </span>
-                </Button>
-              </Tooltip>
             </ListItem>
           </List>
         </div>

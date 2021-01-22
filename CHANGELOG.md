@@ -1,6 +1,6 @@
-# Changelog for Carolina React Admin Dashboard with Material-UI PRO
+# Changelog for Flashboard
 
-All notable changes for Carolina React Admin Dashboard with Material-UI PRO will be documented in this file and online inside the documentation or product presentation page on uifort.com
+All notable changes for Flashboard Dashboard
 
 ### This project was released on 16 February 2020 and was last updated on 16 February 2020
 

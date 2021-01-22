@@ -20,9 +20,7 @@ const Footer = props => {
         })}>
         <div className="app-footer--inner">
           <div className="app-footer--first trade-logo">
-            <div className="spGlobal-text">
-              In collaboration with S&P Global
-            </div>
+            <div className="spGlobal-text">In Parternship with S&P Global</div>
             <div>
               <img alt="S&P Global" src={SnPLogo} width="100" />
             </div>

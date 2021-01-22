@@ -36,7 +36,7 @@ export default function PromoSection() {
             <Tooltip arrow title="View documentation" placement="left">
               <Button
                 className="bg-neutral-danger text-danger my-2 p-0 d-50 d-flex align-items-center justify-content-center"
-                href="https://docs.uifort.com/carolina-react-admin-dashboard-pro-docs"
+                href="#"
                 rel="noopener"
                 target="_blank">
                 <FontAwesomeIcon
@@ -48,7 +48,7 @@ export default function PromoSection() {
             <Tooltip arrow title="View product details" placement="left">
               <Button
                 className="bg-neutral-success text-success p-0 d-50 d-flex align-items-center justify-content-center"
-                href="https://themes.material-ui.com/themes/carolina-react-admin-dashboard-pro"
+                href="#"
                 rel="noopener"
                 target="_blank">
                 <FontAwesomeIcon

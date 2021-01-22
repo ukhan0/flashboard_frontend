@@ -44,9 +44,7 @@ const LandingPage = () => {
           <Container className="d-flex" fixed>
             <div className="header-nav-logo align-items-center d-flex justify-content-start">
               <div className="nav-logo">
-                <Link
-                  to="/"
-                  title="Carolina React Admin Dashboard with Material-UI PRO">
+                <Link to="/" title="SMA">
                   <i className="bg-dark hero-logo">
                     <img alt="SMA" src={projectLogo} />
                   </i>
@@ -64,196 +62,7 @@ const LandingPage = () => {
                   Dashboard
                 </Button>
               </span>
-              <span className="d-block d-lg-none">
-                <Fab
-                  onClick={toggleDrawer('right', true)}
-                  color="secondary"
-                  size="medium">
-                  <MenuRoundedIcon />
-                </Fab>
-              </span>
             </div>
-            <Drawer
-              variant="temporary"
-              anchor="right"
-              open={state.right}
-              onClose={toggleDrawer('right', false)}
-              elevation={11}>
-              <List className="py-0">
-                <ListItem className="d-block bg-secondary py-2 px-3">
-                  <div className="d-flex w-100 justify-content-between navbar-light align-content-center">
-                    <div className="header-nav-logo justify-content-start">
-                      <a
-                        href="#/"
-                        onClick={e => e.preventDefault()}
-                        className="navbar-brand d-flex align-items-center d-40"
-                        title="Carolina React Admin Dashboard with Material-UI PRO">
-                        <img
-                          alt="Carolina React Admin Dashboard with Material-UI PRO"
-                          className="d-block img-fluid"
-                          src={projectLogo}
-                        />
-                      </a>
-                    </div>
-                    <IconButton
-                      onClick={toggleDrawer('right', false)}
-                      color="primary">
-                      <MenuRoundedIcon />
-                    </IconButton>
-                  </div>
-                </ListItem>
-                <Divider />
-                <ListItem className="d-block py-3 px-2">
-                  <Link
-                    to="/"
-                    className="d-flex px-2 align-items-center dropdown-item rounded">
-                    <div className="align-box-row w-100">
-                      <div className="mr-3">
-                        <div className="bg-deep-blue text-center text-white d-40 rounded-circle">
-                          <FontAwesomeIcon icon={['fas', 'object-group']} />
-                        </div>
-                      </div>
-                      <div className="text-truncate max-w-70 overflow-hidden">
-                        <div className="font-weight-bold text-primary d-block">
-                          Dashboards
-                        </div>
-                        <span className="text-black-50">
-                          12 different dashboards to choose from
-                        </span>
-                      </div>
-                      <div className="ml-auto card-hover-indicator align-self-center">
-                        <FontAwesomeIcon
-                          icon={['fas', 'chevron-right']}
-                          className="font-size-lg"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                </ListItem>
-                <Divider />
-                <ListItem className="d-block py-3 px-2">
-                  <Link
-                    to="/ApplicationsChat"
-                    className="d-flex px-2 align-items-center dropdown-item rounded">
-                    <div className="align-box-row w-100">
-                      <div className="mr-3">
-                        <div className="bg-strong-bliss text-center text-white d-40 rounded-circle">
-                          <FontAwesomeIcon icon={['fas', 'sitemap']} />
-                        </div>
-                      </div>
-                      <div className="text-truncate max-w-70 overflow-hidden">
-                        <div className="font-weight-bold text-primary d-block">
-                          Apps
-                        </div>
-                        <span className="text-black-50">
-                          Multiple application designs included
-                        </span>
-                      </div>
-                      <div className="ml-auto card-hover-indicator align-self-center">
-                        <FontAwesomeIcon
-                          icon={['fas', 'chevron-right']}
-                          className="font-size-lg"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                </ListItem>
-                <Divider />
-                <ListItem className="d-block py-3 px-2">
-                  <Link
-                    to="/Cards3"
-                    className="d-flex px-2 align-items-center dropdown-item rounded">
-                    <div className="align-box-row w-100">
-                      <div className="mr-3">
-                        <div className="bg-arielle-smile text-center text-white d-40 rounded-circle">
-                          <FontAwesomeIcon icon={['fas', 'shapes']} />
-                        </div>
-                      </div>
-                      <div className="text-truncate max-w-70 overflow-hidden">
-                        <div className="font-weight-bold text-primary d-block">
-                          Cards
-                        </div>
-                        <span className="text-black-50">
-                          Over 300 different cards available
-                        </span>
-                      </div>
-                      <div className="ml-auto card-hover-indicator align-self-center">
-                        <FontAwesomeIcon
-                          icon={['fas', 'chevron-right']}
-                          className="font-size-lg"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                </ListItem>
-                <Divider />
-                <ListItem className="d-block py-3 px-2">
-                  <Link
-                    to="/RegularTables"
-                    className="d-flex px-2 align-items-center dropdown-item rounded">
-                    <div className="align-box-row w-100">
-                      <div className="mr-3">
-                        <div className="bg-happy-green text-center text-white d-40 rounded-circle">
-                          <FontAwesomeIcon icon={['fas', 'table']} />
-                        </div>
-                      </div>
-                      <div className="text-truncate max-w-70 overflow-hidden">
-                        <div className="font-weight-bold text-primary d-block">
-                          Tables
-                        </div>
-                        <span className="text-black-50">
-                          Multiple, easy to customise tables
-                        </span>
-                      </div>
-                      <div className="ml-auto card-hover-indicator align-self-center">
-                        <FontAwesomeIcon
-                          icon={['fas', 'chevron-right']}
-                          className="font-size-lg"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                </ListItem>
-                <Divider />
-                <ListItem className="d-block py-3 px-2">
-                  <Link
-                    to="/FormsWizard"
-                    className="d-flex px-2 align-items-center dropdown-item rounded">
-                    <div className="align-box-row w-100">
-                      <div className="mr-3">
-                        <div className="bg-skim-blue text-center text-white d-40 rounded-circle">
-                          <FontAwesomeIcon icon={['fas', 'align-center']} />
-                        </div>
-                      </div>
-                      <div className="text-truncate max-w-70 overflow-hidden">
-                        <div className="font-weight-bold text-primary d-block">
-                          Forms
-                        </div>
-                        <span className="text-black-50">
-                          Over 50 forms elements included
-                        </span>
-                      </div>
-                      <div className="ml-auto card-hover-indicator align-self-center">
-                        <FontAwesomeIcon
-                          icon={['fas', 'chevron-right']}
-                          className="font-size-lg"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                </ListItem>
-                <Divider />
-                <ListItem className="d-block py-3 px-2">
-                  <Button
-                    href="/watchlist"
-                    className="text-white w-100"
-                    variant="contained"
-                    color="secondary">
-                    Dashboard
-                  </Button>
-                </ListItem>
-              </List>
-            </Drawer>
           </Container>
         </div>
 
@@ -280,7 +89,16 @@ const LandingPage = () => {
                         FilingsFlash by Social Market Analytics, Inc. (SMA)
                       </p>
                       <p className="text-black">
-                        SMA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF has turned SEC Edgar Filings into Textual Data at the Item, Section, Sub-Section, and Note level with Historical Baselines going back to 2006. FlilingsFlash is the first product using MRF to allow for quick sorting by Sentiment, Change in Sentiment, and Change in Cord Count. FilingsFlash also provides filtering by Tabs for Recent Filings over the Last Week or at the Total Doc or the Item Level including MD&A, Risk, Notes, and FSS.
+                        SMA has partnered with S&P Global Market Intelligence on
+                        'Machine Readable Filings' (MRF). MRF has turned SEC
+                        Edgar Filings into Textual Data at the Item, Section,
+                        Sub-Section, and Note level with Historical Baselines
+                        going back to 2006. FlilingsFlash is the first product
+                        using MRF to allow for quick sorting by Sentiment,
+                        Change in Sentiment, and Change in Cord Count.
+                        FilingsFlash also provides filtering by Tabs for Recent
+                        Filings over the Last Week or at the Total Doc or the
+                        Item Level including MD&A, Risk, Notes, and FSS.
                       </p>
                       <div className="divider border-2 border-dark mt-4 mb-2 border-light opacity-2 rounded-circle w-25" />
                       <div>
@@ -291,7 +109,7 @@ const LandingPage = () => {
                           className="py-3 px-5 mt-2"
                           color="primary"
                           variant="contained"
-                          title="View Carolina React Admin Dashboard with Material-UI PRO Live Preview">
+                          title="Dashboard">
                           <span className="btn-wrapper--label">Dashboard</span>
                           <span className="btn-wrapper--icon">
                             <FontAwesomeIcon icon={['fas', 'arrow-right']} />
@@ -304,7 +122,7 @@ const LandingPage = () => {
                           variant="contained"
                           color="secondary"
                           className="py-3 px-5 ml-2 mt-2"
-                          title="Read about what Carolina React Admin Dashboard with Material-UI PRO has to offer!">
+                          title="Dashboard">
                           <span className="btn-wrapper--icon">
                             <FontAwesomeIcon
                               icon={['fas', 'external-link-alt']}
@@ -314,7 +132,14 @@ const LandingPage = () => {
                         </Button>
                       </div>
                       <small className="d-block pt-3">
-                        Disclaimer: Social Market Analytics, Inc. is not an investment advisor, broker, or dealer, and therefore does not provide any investment advice, nor does it participate in the offer, sale, or distribution of securities. SMA does not provide trading or investment advice. SMA is not liable for any loss or damage caused by any reliance on information obtained in this report , in our website, or in our communications.
+                        Disclaimer: Social Market Analytics, Inc. is not an
+                        investment advisor, broker, or dealer, and therefore
+                        does not provide any investment advice, nor does it
+                        participate in the offer, sale, or distribution of
+                        securities. SMA does not provide trading or investment
+                        advice. SMA is not liable for any loss or damage caused
+                        by any reliance on information obtained in this report ,
+                        in our website, or in our communications.
                       </small>
                     </div>
                   </div>

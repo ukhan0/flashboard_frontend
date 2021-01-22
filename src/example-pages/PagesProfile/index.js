@@ -6,7 +6,7 @@ import PagesProfileContent from '../../example-components/PagesProfile/PagesProf
 export default function PagesProfile() {
   return (
     <Fragment>
-      <PageTitle titleHeading="Sentiments" titleDescription="" />
+      <PageTitle titleHeading="Sentiment" titleDescription="" />
 
       <PagesProfileContent />
     </Fragment>

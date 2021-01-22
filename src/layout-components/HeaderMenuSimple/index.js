@@ -29,7 +29,7 @@ const HeaderMenu = props => {
             'btn-inverse font-size-xs mx-2',
             location.pathname === '/watchlist' ? 'btn-active' : ''
           )}>
-          Watchlist
+          Home
         </Button>
         <Button
           size="medium"
