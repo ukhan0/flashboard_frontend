@@ -28,6 +28,16 @@ class WatchListService {
     this.agGridAPI.sizeColumnsToFit();
   };
 
+  clearSort = () => {
+    this.agGridColumnAPI.applyColumnState({
+      defaultState: { sort: null }
+    });
+  };
+
+  clearFilter = () => {
+    this.agGridAPI.setFilterModel(null);
+  };
+
   exportWatchlist(format) {
     switch (format) {
       case 'csv':

@@ -20,13 +20,15 @@ import { Link } from 'react-router-dom';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 
 import svgImage11 from '../../assets/images/illustrations/businesswoman.svg';
-
+import Footer from '../../layout-components/Footer'
 import hero6 from '../../assets/images/hero-bg/hero-6.jpg';
 
 const LandingPage = () => {
   const [state, setState] = React.useState({
     right: false
   });
+  const user = JSON.parse(localStorage.getItem('user'))
+
   const toggleDrawer = (side, open) => event => {
     if (
       event.type === 'keydown' &&
@@ -102,34 +104,38 @@ const LandingPage = () => {
                       </p>
                       <div className="divider border-2 border-dark mt-4 mb-2 border-light opacity-2 rounded-circle w-25" />
                       <div>
-                        <Button
-                          to="/watchlist"
-                          component={Link}
-                          size="large"
-                          className="py-3 px-5 mt-2"
-                          color="primary"
-                          variant="contained"
-                          title="Dashboard">
-                          <span className="btn-wrapper--label">Dashboard</span>
-                          <span className="btn-wrapper--icon">
-                            <FontAwesomeIcon icon={['fas', 'arrow-right']} />
-                          </span>
-                        </Button>
-                        <Button
-                          to="/PagesRegister"
-                          component={Link}
-                          size="large"
-                          variant="contained"
-                          color="secondary"
-                          className="py-3 px-5 ml-2 mt-2"
-                          title="Dashboard">
-                          <span className="btn-wrapper--icon">
-                            <FontAwesomeIcon
-                              icon={['fas', 'external-link-alt']}
-                            />
-                          </span>
-                          <span className="btn-wrapper--label">Register</span>
-                        </Button>
+                        {
+                          user != null ?
+                            <Button
+                              to="/watchlist"
+                              component={Link}
+                              size="large"
+                              className="py-3 px-5 mt-2"
+                              color="primary"
+                              variant="contained"
+                              title="Dashboard">
+                              <span className="btn-wrapper--label">Dashboard</span>
+                              <span className="btn-wrapper--icon">
+                                <FontAwesomeIcon icon={['fas', 'arrow-right']} />
+                              </span>
+                            </Button>
+                            :
+                            <Button
+                              to="/PagesRegister"
+                              component={Link}
+                              size="large"
+                              variant="contained"
+                              color="secondary"
+                              className="py-3 px-5 ml-2 mt-2"
+                              title="Dashboard">
+                              <span className="btn-wrapper--icon">
+                                <FontAwesomeIcon
+                                  icon={['fas', 'external-link-alt']}
+                                />
+                              </span>
+                              <span className="btn-wrapper--label">SignIn</span>
+                            </Button>
+                        }
                       </div>
                       <small className="d-block pt-3">
                         Disclaimer: Social Market Analytics, Inc. is not an
@@ -161,6 +167,7 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </Fragment>
   );
 };

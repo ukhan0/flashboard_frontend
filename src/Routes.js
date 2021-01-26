@@ -146,7 +146,7 @@ const Routes = () => {
         </Suspense>
       </AnimatePresence>
     </ThemeProvider>
-  );
+    );
 };
 
 const mapStateToProps = () => ({});

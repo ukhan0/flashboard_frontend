@@ -24,6 +24,10 @@ export default function WatchListActions(props) {
       WatchlistService.sizeColumnsToFit();
     } else if (actionName === 'csvExport') {
       WatchlistService.exportWatchlist('csv');
+    } else if (actionName === 'clearSort') {
+      WatchlistService.clearSort();
+    } else if (actionName === 'clearFilter') {
+      WatchlistService.clearFilter();
     } else if (actionName === 'addTopic') {
       props.onTopicSelection();
     }

@@ -21,7 +21,8 @@ const defaultColDef = {
   sortable: true,
   filter: true,
   resizable: true,
-  floatingFilter: true
+  floatingFilter: true,
+  suppressMenu: true
 };
 
 const sideBarConfiguration = {
@@ -55,7 +56,8 @@ const colDefs = [
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-    cellClass: ['center-align-text']
+    cellClass: ['center-align-text'],
+    filter: 'agTextColumnFilter'
   },
   {
     headerName: 'Company Name',
@@ -68,7 +70,8 @@ const colDefs = [
     headerName: 'Sector',
     headerTooltip: 'Sector',
     field: 'sector',
-    colId: 'sector'
+    colId: 'sector',
+    filter: 'agTextColumnFilter'
   },
   {
     headerName: 'Industry',
@@ -78,14 +81,12 @@ const colDefs = [
     filter: 'agTextColumnFilter'
   },
   {
-    headerName: 'Market Cap',
+    headerName: 'Market Cap in Millions',
     headerTooltip: 'Market Cap',
     field: 'mktcap',
     colId: 'mktcap',
     filter: 'agNumberColumnFilter',
-    valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
-    valueFormatter: params => currencyFormater(params.value, 0),
-    cellStyle: currencyStyler
+    valueGetter: params => parseNumber(get(params, 'data.mktcap', null))
   },
   {
     headerName: 'Avg Daily $ Value',
@@ -105,7 +106,8 @@ const colDefs = [
     valueGetter: params => parseDateStr(get(params, 'data.last', null)),
     valueFormatter: params => dateFormater(params.value),
     filter: 'agDateColumnFilter',
-    cellClass: ['center-align-text']
+    cellClass: ['center-align-text'],
+    getQuickFilterText: params => dateFormater(params.value)
   },
   {
     headerName: 'Sentiment',
@@ -125,9 +127,16 @@ const colDefs = [
         headerTooltip: 'Value Description',
         field: 'sentimentWord',
         colId: 'sentimentWord',
-        valueGetter: params =>
-          changeWordGetter(get(params, 'data.sentimentWord', null)),
-        valueFormatter: params => changeWordFormatter(params.value),
+        valueGetter: params => {
+          return {
+            number: parseNumber(get(params, 'data.sentiment', null)),
+            word: changeWordGetter(get(params, 'data.sentimentWord', null))
+          };
+        },
+        valueFormatter: params => {
+          return changeWordFormatter(params.value.word);
+        },
+        comparator: (value1, value2) => value1.number - value2.number,
         cellRenderer: 'WordStatusRenderer'
       }
     ]
@@ -151,9 +160,18 @@ const colDefs = [
         headerTooltip: 'Sentiment Change Word',
         field: 'sentimentChangeWord',
         colId: 'sentimentChangeWord',
-        valueGetter: params =>
-          changeWordGetter(get(params, 'data.sentimentChangeWord', null)),
-        valueFormatter: params => changeWordFormatter(params.value),
+        valueGetter: params => {
+          return {
+            number: parseNumber(get(params, 'data.sentimentChange', null)),
+            word: changeWordGetter(
+              get(params, 'data.sentimentChangeWord', null)
+            )
+          };
+        },
+        valueFormatter: params => {
+          return changeWordFormatter(params.value.word);
+        },
+        comparator: (value1, value2) => value1.number - value2.number,
         cellRenderer: 'WordStatusRenderer'
       }
     ]
@@ -185,11 +203,18 @@ const colDefs = [
         headerTooltip: 'Word Count Change Percent Word',
         field: 'wordCountChangePercentWord',
         colId: 'wordCountChangePercentWord',
-        valueGetter: params =>
-          changeWordGetter(
-            get(params, 'data.wordCountChangePercentWord', null)
-          ),
-        valueFormatter: params => changeWordFormatter(params.value),
+        valueGetter: params => {
+          return {
+            number: parseNumber(get(params, 'data.wordCountChange', null)),
+            word: changeWordGetter(
+              get(params, 'data.wordCountChangePercentWord', null)
+            )
+          };
+        },
+        valueFormatter: params => {
+          return changeWordFormatter(params.value.word);
+        },
+        comparator: (value1, value2) => value1.number - value2.number,
         cellRenderer: 'WordStatusRenderer'
       }
     ]
