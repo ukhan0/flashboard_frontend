@@ -118,8 +118,8 @@ const Watchlist = props => {
         {
           ticker_limit: 10000,
           alerts: false,
-          elimiter: 'comma',
-          watched_tickers: compileTikcerData(selectedSymbols),
+          delimiter: 'comma',
+          watched_tickers: compileTikcerData(selectedSymbols).join(','),
           id: user.id,
           api_key: user.api_key,
           authentication_token: user.authentication_token
