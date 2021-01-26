@@ -42,17 +42,20 @@ const sideBarItems = [
   {
     label: 'Filings',
     icon: 'DashboardTwoToneIcon',
-    to: '/filings'
+    to: '/filings',
+    disabled: true
   },
   {
     label: 'Comparison',
     icon: 'CalendarTodayIcon',
-    to: '/comparision'
+    to: '/comparision',
+    disabled: false
   },
   {
     label: 'Sentiment',
     icon: 'SettingsIcon',
-    to: '/sentiment'
+    to: '/sentiment',
+    disabled: true
   }
 ];
 

@@ -61,6 +61,7 @@ const reduceChildRoutes = props => {
         key={page.label}
         label={page.badge}
         title={page.label}
+        disabled={page.disabled}
       />
     );
   }

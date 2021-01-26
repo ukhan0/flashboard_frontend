@@ -25,6 +25,7 @@ const SidebarMenuListItem = props => {
     className,
     open: openProp,
     label: Label,
+    disabled,
     ...rest
   } = props;
 
@@ -83,6 +84,7 @@ const SidebarMenuListItem = props => {
           className={clsx('app-sidebar-button-wrapper', `depth-${depth}`)}
           component={CustomRouterLink}
           exact
+          disabled={disabled}
           style={style}
           to={href}>
           {Icon && <Icon className="app-sidebar-icon" />}

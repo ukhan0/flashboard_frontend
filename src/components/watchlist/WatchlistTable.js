@@ -86,7 +86,10 @@ const colDefs = [
     field: 'mktcap',
     colId: 'mktcap',
     filter: 'agNumberColumnFilter',
-    valueGetter: params => parseNumber(get(params, 'data.mktcap', null))
+    valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
+    cellStyle: () => {
+      return { textAlign: 'right' };
+    }
   },
   {
     headerName: 'Avg Daily $ Value',

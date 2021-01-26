@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
+import { Typography } from '@material-ui/core';
 
 const Comparision = props => {
   const { selectedItem, selectedMetric } = props;
@@ -28,7 +29,7 @@ const Comparision = props => {
       break;
   }
 
-  return (
+  return selectedItem ? (
     <iframe
       src={`${config.comparisionSite}?f1=${selectedItem.recentId}&f2=${selectedItem.oldId}&${metricQueryParam}`}
       title="Comparision"
@@ -38,6 +39,8 @@ const Comparision = props => {
       frameBorder="0"
       id="comparisionResult"
     />
+  ) : (
+    <Typography variant="h3">No row selected</Typography>
   );
 };
 

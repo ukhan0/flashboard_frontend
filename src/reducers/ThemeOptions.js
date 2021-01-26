@@ -135,7 +135,7 @@ export default function reducer(
     sidebarUserbox: true,
     sidebarToggle: true,
     sidebarHover: false,
-    showSidebar: false,
+    showSidebar: true,
     // Header
 
     headerFixed: true,
