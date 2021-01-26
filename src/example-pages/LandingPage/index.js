@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Link } from 'react-router-dom';
 
-import svgImage11 from '../../assets/images/illustrations/businesswoman.svg';
+import desktopImage from '../../assets/images/composed-bg/desktop.png';
+import mobileImage from '../../assets/images/composed-bg/mobile.png';
 import Footer from '../../layout-components/Footer';
 import hero6 from '../../assets/images/hero-bg/hero-6.jpg';
 
@@ -132,11 +133,23 @@ const LandingPage = () => {
                   lg={5}
                   xl={6}
                   className="px-0 d-none d-lg-flex align-items-center">
-                  <img
-                    alt="..."
-                    className="w-100 mx-auto d-block img-fluid"
-                    src={svgImage11}
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      alt="..."
+                      className=""
+                      style={{ width: 500 }}
+                      src={desktopImage}
+                    />
+
+                    <div style={{ position: 'absolute', top: 100, right: -90 }}>
+                      <img
+                        alt="..."
+                        className=""
+                        style={{ width: 150 }}
+                        src={mobileImage}
+                      />
+                    </div>
+                  </div>
                 </Grid>
               </Grid>
             </Container>
