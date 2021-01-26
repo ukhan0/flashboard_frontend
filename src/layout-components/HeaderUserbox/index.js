@@ -10,7 +10,6 @@ import {
   Button,
   List,
   ListItem,
-  Tooltip,
   Divider
 } from '@material-ui/core';
 

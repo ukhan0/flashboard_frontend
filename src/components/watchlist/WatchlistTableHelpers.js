@@ -1,4 +1,4 @@
-import { isNull, includes, capitalize, lowerCase, round } from 'lodash';
+import { isNull, includes, capitalize, lowerCase } from 'lodash';
 import moment from 'moment';
 
 const changedStyles = {
