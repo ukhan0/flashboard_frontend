@@ -61,7 +61,7 @@ const Watchlist = props => {
         setLoading(true);
         const user = JSON.parse(localStorage.getItem('user'));
         const response = await axios.get(
-          `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}`
+          `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`
         );
         rawData = get(response, 'data.data.content', []);
       }
@@ -71,7 +71,7 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse]);
+  }, [selectedUniverse, selectedFileType]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -108,7 +108,7 @@ const Watchlist = props => {
 
   useEffect(() => {
     firstTimeLoad.current = false;
-  }, [])
+  }, []);
 
   const handleUpload = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -137,7 +137,7 @@ const Watchlist = props => {
     }
   };
 
-  const gridData = firstTimeLoad.current ? null : processWatchlistData()
+  const gridData = firstTimeLoad.current ? null : processWatchlistData();
 
   return (
     <>
@@ -149,14 +149,7 @@ const Watchlist = props => {
         <Grid item>
           <WatchlistFilters />
         </Grid>
-        <Grid item>
-          {
-            loading ?
-              <Typography>Loading...</Typography>
-              :
-              null
-          }
-        </Grid>
+        <Grid item>{loading ? <Typography>Loading...</Typography> : null}</Grid>
         <Grid item>
           <WatchlistSearch />
         </Grid>
