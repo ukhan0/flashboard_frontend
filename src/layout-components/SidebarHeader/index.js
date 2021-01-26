@@ -7,7 +7,7 @@ import { IconButton, Box, Tooltip } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 
-import projectLogo from '../../assets/images/react.svg';
+import projectLogo from '../../assets/images/logos/sma-logo.svg';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 
