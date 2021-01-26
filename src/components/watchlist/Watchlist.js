@@ -17,7 +17,6 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 // components
 import WatchlistFilters from './WatchlistFilters';
@@ -40,8 +39,6 @@ const Watchlist = props => {
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
   const firstTimeLoad = useRef(true);
-
-  const history = useHistory();
 
   const {
     selectedFileType,
@@ -103,7 +100,6 @@ const Watchlist = props => {
   const onColumnClick = rowData => {
     setSelectedWatchlist(rowData);
     setSidebarDisplay(true);
-    history.push('/comparision');
   };
 
   useEffect(() => {
