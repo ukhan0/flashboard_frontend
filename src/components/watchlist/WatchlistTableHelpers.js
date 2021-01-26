@@ -26,7 +26,7 @@ export const dateFormater = value => {
   let formatedValue = null;
   if (value) {
     const momentDateObj = moment(value);
-    formatedValue = momentDateObj.format('MM-DD-YYYY');
+    formatedValue = momentDateObj.format('DD-MMM-YYYY');
   }
   return formatedValue;
 }
