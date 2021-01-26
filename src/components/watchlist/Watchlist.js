@@ -52,7 +52,7 @@ const Watchlist = props => {
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
-      if (selectedUniverse === 'recent' || selectedUniverse === 'all') {
+      if (selectedUniverse === 'all') {
         rawData = localStorage.getItem(`watchlist-data-${selectedUniverse}`);
         if (rawData) {
           rawData = cjson.decompress.fromString(rawData);

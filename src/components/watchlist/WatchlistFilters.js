@@ -32,15 +32,12 @@ const WatchlistFilters = props => {
     setWatchlistFileType,
     setWatchlistUniverse,
     setWatchlistMetric,
-    completeDataLoaded,
-    recentDataLoaded
+    completeDataLoaded
   } = props;
 
   const canItbeUsed = universeType => {
     let flag = false;
-    if (universeType === 'recent' && !recentDataLoaded) {
-      flag = true;
-    } else if (universeType === 'all' && !completeDataLoaded) {
+    if (universeType === 'all' && !completeDataLoaded) {
       flag = true;
     }
     return flag;
@@ -112,8 +109,7 @@ const mapStateToProps = state => ({
   selectedFileType: state.Watchlist.selectedFileType,
   selectedUniverse: state.Watchlist.selectedUniverse,
   selectedMetric: state.Watchlist.selectedMetric,
-  completeDataLoaded: state.Watchlist.completeDataLoaded,
-  recentDataLoaded: state.Watchlist.recentDataLoaded
+  completeDataLoaded: state.Watchlist.completeDataLoaded
 });
 
 const mapDispatchToProps = dispatch => ({
