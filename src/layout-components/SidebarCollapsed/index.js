@@ -78,10 +78,7 @@ const SidebarCollapsed = props => {
             <div className="sidebar-collapsed-logo">
               <Box className="header-logo-wrapper" title="SMA">
                 <Link to="/" className="header-logo-wrapper-link">
-                  <IconButton
-                    color="primary"
-                    size="medium"
-                    className="header-logo-wrapper-btn">
+                  <IconButton color="primary" size="medium">
                     <img
                       className="app-sidebar-logo"
                       alt="SMA"
