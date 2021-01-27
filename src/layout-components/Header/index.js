@@ -24,12 +24,19 @@ const Header = props => {
   const toggleSidebar = () => {
     setSidebarToggle(!sidebarToggle);
   };
+
+  const toggleSidebarMobile = () => {
+    setSidebarToggleMobile(!sidebarToggleMobile);
+  };
+
   const {
     headerShadow,
     headerFixed,
     setSidebarToggle,
     sidebarToggle,
-    showSidebar
+    showSidebar,
+    setSidebarToggleMobile,
+    sidebarToggleMobile
   } = props;
 
   return (
@@ -85,6 +92,20 @@ const Header = props => {
           </Hidden>
           <Box className="d-flex align-items-center">
             <HeaderUserbox />
+            <Box className="toggle-sidebar-btn-mobile">
+              <Tooltip title="Toggle Sidebar" placement="right">
+                <IconButton
+                  color="inherit"
+                  onClick={toggleSidebarMobile}
+                  size="medium">
+                  {sidebarToggleMobile ? (
+                    <MenuOpenRoundedIcon />
+                  ) : (
+                    <MenuRoundedIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
         </Box>
       </AppBar>
