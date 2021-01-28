@@ -6,7 +6,7 @@ import { Button } from '@material-ui/core';
 export default function AddRemoveIcon(props) {
   return (
     <div className="text-center">
-      <Button>{props.value ? <AddIcon /> : <DeleteIcon />}</Button>
+      <Button>{props.value ? <DeleteIcon /> : <AddIcon />}</Button>
     </div>
   );
 }

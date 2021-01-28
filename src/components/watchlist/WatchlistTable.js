@@ -58,10 +58,10 @@ const sideBarConfiguration = {
 
 const colDefs = [
   {
-    headerName: 'Edit',
-    headerTooltip: 'Edit',
-    field: 'edit',
-    colId: 'edit',
+    headerName: 'Actions',
+    headerTooltip: 'Add/Remove Ticker',
+    field: 'isTickerActive',
+    colId: 'actions',
     filter: false,
     cellClass: ['center-align-text'],
     cellRenderer: 'AddRemoveIcon'

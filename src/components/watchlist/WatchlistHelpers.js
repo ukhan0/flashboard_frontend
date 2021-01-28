@@ -142,7 +142,7 @@ export const formatData = rawDataArr => {
       recentId10q: rawData['10q_recent_id'],
       oldId10k: rawData['10k_old_id'],
       oldId10q: rawData['10q_old_id'],
-      edit:  Math.random() < 0.5
+      isTickerActive: get(rawData, 'isTickerActive', false)
     };
   });
 };

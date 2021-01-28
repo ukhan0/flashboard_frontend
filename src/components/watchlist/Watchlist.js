@@ -98,12 +98,14 @@ const Watchlist = props => {
   }, [selectedFileType, selectedMetric, watchlistData]);
 
   const onColumnClick = (rowData, columnId) => {
-    if (columnId === 'edit') {
-      if (rowData.edit) {
-        handleUpload(rowData.ticker);
-        setSelectedWatchlist(rowData);
-      } else if (!rowData.edit) {
+    if (columnId === 'actions') {
+      if (rowData.isTickerActive) {
+        // remove ticker
         deleteTicker(rowData.ticker);
+        setSelectedWatchlist(rowData);
+      } else {
+        // add ticker
+        handleUpload(rowData.ticker);
         setSelectedWatchlist(rowData);
       }
     } else {
