@@ -15,7 +15,13 @@ import {
 } from './WatchlistTableHelpers';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
+import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
 import './watchlistTableStyles.css';
+
+const frameworkComponents = {
+  WordStatusRenderer: WordStatus,
+  AddRemoveIcon: AddRemoveIcon
+};
 
 const defaultColDef = {
   sortable: true,
@@ -51,6 +57,15 @@ const sideBarConfiguration = {
 };
 
 const colDefs = [
+  {
+    headerName: 'Edit',
+    headerTooltip: 'Edit',
+    field: 'edit',
+    colId: 'edit',
+    filter: false,
+    cellClass: ['center-align-text'],
+    cellRenderer: 'AddRemoveIcon'
+  },
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',
@@ -278,7 +293,7 @@ const WatchlistTable = props => {
         domLayout="autoHeight"
         multiSortKey="ctrl"
         onCellClicked={cellClicked}
-        frameworkComponents={{ WordStatusRenderer: WordStatus }}
+        frameworkComponents={frameworkComponents}
         onColumnResized={storeColumnsState}
         onColumnMoved={storeColumnsState}
         onColumnVisible={storeColumnsState}

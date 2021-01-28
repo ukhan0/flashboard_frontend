@@ -97,9 +97,19 @@ const Watchlist = props => {
     return filteredData;
   }, [selectedFileType, selectedMetric, watchlistData]);
 
-  const onColumnClick = rowData => {
-    setSelectedWatchlist(rowData);
-    setSidebarDisplay(true);
+  const onColumnClick = (rowData, columnId) => {
+    if (columnId === 'edit') {
+      if (rowData.edit) {
+        handleUpload(rowData.ticker);
+        setSelectedWatchlist(rowData);
+      } else if (!rowData.edit) {
+        deleteTicker(rowData.ticker);
+        setSelectedWatchlist(rowData);
+      }
+    } else {
+      setSelectedWatchlist(rowData);
+      setSidebarDisplay(true);
+    }
   };
 
   useEffect(() => {
@@ -110,7 +120,33 @@ const Watchlist = props => {
     firstTimeLoad.current = false;
   }, []);
 
-  const handleUpload = async () => {
+  const deleteTicker = async ticker => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    try {
+      const response = await axios.post(
+        `${config.apiUrl}/api/delete_wishlist_item`,
+        {
+          tickers: ticker
+            ? ticker
+            : compileTikcerData(selectedSymbols).join(','),
+          id: user.id,
+          api_key: user.api_key,
+          authentication_token: user.authentication_token
+        }
+      );
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        setTopicDialogOpen(false);
+        setDataVersion(dataVersion + 1);
+      } else {
+        setTopicAddingError(true);
+      }
+    } catch (error) {
+      setTopicAddingError(true);
+    }
+  };
+
+  const handleUpload = async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
       const response = await axios.post(
@@ -119,7 +155,9 @@ const Watchlist = props => {
           ticker_limit: 10000,
           alerts: false,
           delimiter: 'comma',
-          watched_tickers: compileTikcerData(selectedSymbols).join(','),
+          watched_tickers: ticker
+            ? ticker
+            : compileTikcerData(selectedSymbols).join(','),
           id: user.id,
           api_key: user.api_key,
           authentication_token: user.authentication_token
