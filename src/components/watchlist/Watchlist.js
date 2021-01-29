@@ -197,7 +197,9 @@ const Watchlist = props => {
           <WatchlistActions onTopicSelection={() => setTopicDialogOpen(true)} />
         </Grid>
       </Grid>
-      <div className={classes.watchlistTableContainer}>
+      <div
+        className={classes.watchlistTableContainer}
+        style={{ height: window.innerHeight - 170 }}>
         <WatchlistTable
           data={gridData}
           storeColumnsState={storeColumnsState}
