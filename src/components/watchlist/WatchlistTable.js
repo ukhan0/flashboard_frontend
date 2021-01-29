@@ -58,13 +58,15 @@ const sideBarConfiguration = {
 
 const colDefs = [
   {
-    headerName: 'Actions',
+    headerName: '',
     headerTooltip: 'Add/Remove Ticker',
     field: 'isTickerActive',
     colId: 'actions',
     filter: false,
-    cellClass: ['center-align-text'],
-    cellRenderer: 'AddRemoveIcon'
+    cellClass: ['center-align-left', 'no-padding'],
+    cellRenderer: 'AddRemoveIcon',
+    width: 70,
+    suppressMenu: false
   },
   {
     headerName: 'Ticker',
@@ -79,7 +81,8 @@ const colDefs = [
     headerTooltip: 'Company Name',
     field: 'companyName',
     colId: 'companyName',
-    filter: 'agTextColumnFilter'
+    filter: 'agTextColumnFilter',
+    suppressMenu: false
   },
   {
     headerName: 'Sector',
@@ -290,7 +293,7 @@ const WatchlistTable = props => {
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
         pagination={true}
-        domLayout="autoHeight"
+        // domLayout="autoHeight"
         multiSortKey="ctrl"
         onCellClicked={cellClicked}
         frameworkComponents={frameworkComponents}

@@ -1,12 +1,12 @@
 import React from 'react';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Button } from '@material-ui/core';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
+import { Button, Tooltip } from '@material-ui/core';
 
 export default function AddRemoveIcon(props) {
   return (
-    <div className="text-center">
-      <Button>{props.value ? <DeleteIcon /> : <AddIcon />}</Button>
-    </div>
+    <Tooltip arrow title={props.value ? 'Remove Ticker' : 'Add Ticker'}>
+      <Button>{props.value ? <StarIcon /> : <StarBorderIcon />}</Button>
+    </Tooltip>
   );
 }
