@@ -60,7 +60,9 @@ export default function HeaderUserbox() {
 
   const signout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('watchlist-data-recent');
+    localStorage.removeItem('watchlist::state');
+    localStorage.removeItem('watchlist::sortingorder');
+    localStorage.removeItem('watchlist::filtering');
     localStorage.removeItem('watchlist-data-all');
     history.push('/PagesRegister');
   };
