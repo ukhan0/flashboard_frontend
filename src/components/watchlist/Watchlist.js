@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { get } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
@@ -17,6 +17,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { connect } from 'react-redux';
+import { BeatLoader } from 'react-spinners';
 
 // components
 import WatchlistFilters from './WatchlistFilters';
@@ -189,7 +190,11 @@ const Watchlist = props => {
         <Grid item>
           <WatchlistFilters />
         </Grid>
-        <Grid item>{loading ? <Typography>Loading...</Typography> : null}</Grid>
+        <Grid item>
+          {loading ? (
+            <BeatLoader color={'var(--primary)'} loading={true} size={10} />
+          ) : null}
+        </Grid>
         <Grid item>
           <WatchlistSearch />
         </Grid>

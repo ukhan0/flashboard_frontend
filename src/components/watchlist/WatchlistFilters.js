@@ -6,6 +6,7 @@ import {
   setWatchlistMetric
 } from '../../reducers/Watchlist';
 import { connect } from 'react-redux';
+import { ClipLoader } from 'react-spinners';
 
 const fileTypesSelection = [
   { label: '10-K', key: '10k' },
@@ -81,6 +82,15 @@ const WatchlistFilters = props => {
                 selectedUniverse === universe.key ? 'contained' : 'outlined'
               }>
               {universe.label}
+              {canItbeUsed(universe.key) ? (
+                <div style={{ marginLeft: 5 }}>
+                  <ClipLoader
+                    color={'var(--warning)'}
+                    loading={true}
+                    size={10}
+                  />
+                </div>
+              ) : null}
             </Button>
           ))}
         </ButtonGroup>
