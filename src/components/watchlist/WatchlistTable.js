@@ -66,7 +66,8 @@ const colDefs = [
     cellClass: ['center-align-left', 'no-padding'],
     cellRenderer: 'AddRemoveIcon',
     width: 70,
-    suppressMenu: false
+    suppressMenu: false,
+    pinned: 'left'
   },
   {
     headerName: 'Ticker',
@@ -74,7 +75,9 @@ const colDefs = [
     field: 'ticker',
     colId: 'ticker',
     cellClass: ['center-align-text'],
-    filter: 'agTextColumnFilter'
+    filter: 'agTextColumnFilter',
+    suppressMenu: false,
+    pinned: 'left'
   },
   {
     headerName: 'Company Name',
@@ -82,7 +85,8 @@ const colDefs = [
     field: 'companyName',
     colId: 'companyName',
     filter: 'agTextColumnFilter',
-    suppressMenu: false
+    suppressMenu: false,
+    pinned: 'left'
   },
   {
     headerName: 'Sector',

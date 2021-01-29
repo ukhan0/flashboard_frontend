@@ -4,7 +4,7 @@ import moment from 'moment';
 const changedStyles = {
   lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80 },
   low: { backgroundColor: '#f50101', color: '#ffffff', width: 80 },
-  median: { backgroundColor: '#f4772f', color: '#2b2828', width: 80 },
+  median: { backgroundColor: '#263055', color: '#ffffff', width: 80 },
   high: { backgroundColor: '#0de63f', color: '#ffffff', width: 80 },
   highest: { backgroundColor: '#1bc943', color: '#ffffff', width: 80 }
 };
@@ -29,7 +29,7 @@ export const dateFormater = value => {
     formatedValue = momentDateObj.format('DD-MMM-YYYY');
   }
   return formatedValue;
-}
+};
 
 export const parseDateStr = dateStr => {
   let dateObj = null;
@@ -58,7 +58,10 @@ export const parseNumber = number => {
 export const percentFormater = params => {
   let formatedValue = null;
   if (params.value) {
-    formatedValue = params.colDef.colId === 'sentiment' ? params.value.toFixed(2) : `${params.value.toFixed(2)}%`;
+    formatedValue =
+      params.colDef.colId === 'sentiment'
+        ? params.value.toFixed(2)
+        : `${params.value.toFixed(2)}%`;
   }
   return formatedValue;
 };
