@@ -4,7 +4,7 @@ import axios from 'axios';
 import config from '../../../config/config';
 import { get } from 'lodash';
 import { useHistory } from 'react-router-dom';
-
+import MaskedInput from 'react-text-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
@@ -64,6 +64,41 @@ const StyledTab = withStyles(theme => ({
     }
   }
 }))(props => <Tab disableRipple {...props} />);
+
+function TextMaskCustom(props) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={ref => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[
+        '(',
+        /[1-9]/,
+        /\d/,
+        /\d/,
+        ')',
+        ' ',
+        /\d/,
+        /\d/,
+        /\d/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/
+      ]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
+
+TextMaskCustom.propTypes = {
+  inputRef: PropTypes.func.isRequired
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -142,21 +177,6 @@ const LivePreviewExample = () => {
                           />
                           <div className="bg-composed-wrapper--bg bg-premium-dark opacity-5" />
                           <div className="bg-composed-wrapper--content p-5">
-                            <div className="d-flex align-items-center">
-                              <span className="px-4 h-auto py-1 badge badge-second badge-pill">
-                                Register page
-                              </span>
-                              <Tooltip
-                                arrow
-                                title="Create your own register or login pages using the included elements."
-                                placement="right">
-                                <span className="text-white-50 pl-3">
-                                  <FontAwesomeIcon
-                                    icon={['far', 'question-circle']}
-                                  />
-                                </span>
-                              </Tooltip>
-                            </div>
                             <div className="text-white mt-3">
                               <h1 className="display-4 my-3 font-weight-bold">
                                 Why should you create an account?
@@ -299,12 +319,31 @@ const LivePreviewExample = () => {
                               type="text"
                             />
                           </div>
+                          <div className="mb-3">
+                            <TextField
+                              variant="outlined"
+                              label="Company"
+                              fullWidth
+                              placeholder="Enter your Company Name"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3">
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              label="PhoneNumber"
+                              id="formatted-numberformat-input"
+                              InputProps={{
+                                inputComponent: TextMaskCustom
+                              }}
+                            />
+                          </div>
                           <div className="form-group pt-2 mb-4">
                             By clicking the <strong>Create account</strong>{' '}
                             button below you agree to our terms of service and
                             privacy statement.
                           </div>
-
                           <Button
                             color="primary"
                             size="large"

@@ -8,7 +8,7 @@ import {
   parseNumber,
   percentFormater,
   currencyFormater,
-  currencyStyler,
+  descriptionValueStyler,
   changeWordGetter,
   changeWordFormatter,
   dateFormater
@@ -16,11 +16,13 @@ import {
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
 import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
+import TickerLogo from './WatchlistTableComponents/TickerLogo';
 import './watchlistTableStyles.css';
 
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
-  AddRemoveIcon: AddRemoveIcon
+  AddRemoveIcon: AddRemoveIcon,
+  TickerLogo: TickerLogo
 };
 
 const defaultColDef = {
@@ -67,6 +69,7 @@ const colDefs = [
     cellRenderer: 'AddRemoveIcon',
     width: 70,
     suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
     pinned: 'left'
   },
   {
@@ -77,7 +80,9 @@ const colDefs = [
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,
-    pinned: 'left'
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    cellRenderer: 'TickerLogo'
   },
   {
     headerName: 'Company Name',
@@ -85,6 +90,7 @@ const colDefs = [
     field: 'companyName',
     colId: 'companyName',
     filter: 'agTextColumnFilter',
+    menuTabs: ['generalMenuTab'],
     suppressMenu: false,
     pinned: 'left'
   },
@@ -109,6 +115,7 @@ const colDefs = [
     colId: 'mktcap',
     filter: 'agNumberColumnFilter',
     valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
+    valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
     cellStyle: () => {
       return { textAlign: 'right' };
     }
@@ -120,8 +127,7 @@ const colDefs = [
     colId: 'adv',
     filter: 'agNumberColumnFilter',
     valueGetter: params => parseNumber(get(params, 'data.adv', null)),
-    valueFormatter: params => currencyFormater(params.value, 0),
-    cellStyle: currencyStyler
+    valueFormatter: params => currencyFormater(params.value, 0, 'USD')
   },
   {
     headerName: 'Last Reported',
@@ -143,9 +149,19 @@ const colDefs = [
         field: 'sentiment',
         colId: 'sentiment',
         filter: 'agNumberColumnFilter',
-        valueGetter: params => parseNumber(get(params, 'data.sentiment', null)),
-        valueFormatter: percentFormater,
-        cellStyle: currencyStyler
+        valueGetter: params => {
+          const sentimentValue = get(params, 'data.sentiment', null);
+          let sentimentObj = null;
+          if (sentimentValue) {
+            sentimentObj = {
+              number: parseNumber(get(params, 'data.sentiment', null)),
+              word: changeWordGetter(get(params, 'data.sentimentWord', null))
+            };
+          }
+          return sentimentObj;
+        },
+        valueFormatter: params => percentFormater(params, true),
+        cellStyle: descriptionValueStyler
       },
       {
         headerName: 'Value Description',
@@ -163,22 +179,28 @@ const colDefs = [
         },
         comparator: (value1, value2) => value1.number - value2.number,
         cellRenderer: 'WordStatusRenderer'
-      }
-    ]
-  },
-  {
-    headerName: 'Sentiment Change',
-    children: [
+      },
       {
         headerName: '% Change',
         headerTooltip: 'Sentiment Change Percentage',
         field: 'sentimentChange',
         colId: 'sentimentChange',
         filter: 'agNumberColumnFilter',
-        valueGetter: params =>
-          parseNumber(get(params, 'data.sentimentChange', null)),
-        valueFormatter: percentFormater,
-        cellStyle: currencyStyler
+        valueGetter: params => {
+          const sentimentValue = get(params, 'data.sentimentChange', null);
+          let sentimentObj = null;
+          if (sentimentValue) {
+            sentimentObj = {
+              number: parseNumber(sentimentValue),
+              word: changeWordGetter(
+                get(params, 'data.sentimentChangeWord', null)
+              )
+            };
+          }
+          return sentimentObj;
+        },
+        valueFormatter: params => percentFormater(params, true),
+        cellStyle: descriptionValueStyler
       },
       {
         headerName: '% Change Description',
@@ -210,7 +232,12 @@ const colDefs = [
         field: 'wordCountChange',
         colId: 'wordCountChange',
         filter: 'agNumberColumnFilter',
-        cellStyle: currencyStyler
+        valueGetter: params =>
+          parseNumber(get(params, 'data.wordCountChange', null)),
+        valueFormatter: params => currencyFormater(params.value, 0, ''),
+        cellStyle: () => {
+          return { textAlign: 'right', color: 'black' };
+        }
       },
       {
         headerName: 'Percent',
@@ -218,10 +245,25 @@ const colDefs = [
         field: 'wordCountChangePercent',
         colId: 'wordCountChangePercent',
         filter: 'agNumberColumnFilter',
-        valueGetter: params =>
-          parseNumber(get(params, 'data.wordCountChangePercent', null)),
-        valueFormatter: percentFormater,
-        cellStyle: currencyStyler
+        valueGetter: params => {
+          const sentimentValue = get(
+            params,
+            'data.wordCountChangePercent',
+            null
+          );
+          let sentimentObj = null;
+          if (sentimentValue) {
+            sentimentObj = {
+              number: parseNumber(sentimentValue),
+              word: changeWordGetter(
+                get(params, 'data.wordCountChangePercentWord', null)
+              )
+            };
+          }
+          return sentimentObj;
+        },
+        valueFormatter: params => percentFormater(params, false),
+        cellStyle: descriptionValueStyler
       },
       {
         headerName: 'Description',

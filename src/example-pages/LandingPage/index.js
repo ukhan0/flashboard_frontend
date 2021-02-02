@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 
 import { Grid, Container, Button } from '@material-ui/core';
-
+import clsx from 'clsx';
+import { connect } from 'react-redux';
 import projectLogo from '../../assets/images/logos/sma-logo-white.svg';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,7 +14,8 @@ import mobileImage from '../../assets/images/composed-bg/SMA_Filings_mobile.png'
 import Footer from '../../layout-components/Footer';
 import hero6 from '../../assets/images/hero-bg/hero-6.jpg';
 
-const LandingPage = () => {
+const LandingPage = props => {
+  const { footerFixed } = props;
   const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Fragment>
@@ -156,9 +158,17 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <div
+        className={clsx('app-content', {
+          'app-content-footer-fixed': footerFixed
+        })}>
+        <Footer />
+      </div>
     </Fragment>
   );
 };
+const mapStateToProps = state => ({
+  footerFixed: state.ThemeOptions.footerFixed
+});
 
-export default LandingPage;
+export default connect(mapStateToProps)(LandingPage);

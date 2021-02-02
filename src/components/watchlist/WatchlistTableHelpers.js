@@ -55,13 +55,14 @@ export const parseNumber = number => {
   return parsedNumber;
 };
 
-export const percentFormater = params => {
+export const percentFormater = (params, flag) => {
   let formatedValue = null;
-  if (params.value) {
-    formatedValue =
-      params.colDef.colId === 'sentiment'
-        ? params.value.toFixed(2)
-        : `${params.value.toFixed(2)}%`;
+  if (!isNull(params.value)) {
+    if (flag === false) {
+      formatedValue = `${params.value.number.toFixed(2)}%`;
+    } else {
+      formatedValue = params.value.number.toFixed(2);
+    }
   }
   return formatedValue;
 };
@@ -77,12 +78,18 @@ export const currencyFormater = (
     return '';
   }
   let number = Number(value);
-
-  let formatedNumber = number.toLocaleString('en-US', {
-    style: 'currency',
-    currency: currencyType,
-    minimumFractionDigits: fractionDigits
-  });
+  let formatedNumber = '';
+  if (currencyType === '') {
+    formatedNumber = number.toLocaleString('en-US', {
+      minimumFractionDigits: fractionDigits
+    });
+  } else {
+    formatedNumber = number.toLocaleString('en-US', {
+      style: 'currency',
+      currency: currencyType,
+      minimumFractionDigits: fractionDigits
+    });
+  }
 
   if (fractionDigits === 0) {
     if (formatedNumber.indexOf('.') !== -1) {
@@ -92,9 +99,20 @@ export const currencyFormater = (
   return `${prefix}${formatedNumber}${postfix}`;
 };
 
-export const currencyStyler = params => {
-  if (!isNull(params.value)) {
-    return { textAlign: 'right', color: params.value > 0 ? 'green' : 'red' };
+export const descriptionValueStyler = params => {
+  if (isNull(params.value)) {
+    return null;
+  }
+  let value = params.value.word;
+  let style = null;
+  if (!isNull(value)) {
+    if (includes(changeStylesValues, value)) {
+      style = changedStyles[value];
+    }
+    return {
+      textAlign: 'right',
+      color: style.backgroundColor
+    };
   }
   return null;
 };
