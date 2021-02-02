@@ -145,6 +145,8 @@ const colDefs = [
   },
   {
     headerName: 'Sentiment',
+    headerTooltip:
+      "The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP",
     children: [
       {
         headerName: 'Value',
@@ -185,7 +187,8 @@ const colDefs = [
       },
       {
         headerName: '% Change',
-        headerTooltip: 'Sentiment Change Percentage',
+        headerTooltip:
+          "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
         field: 'sentimentChange',
         colId: 'sentimentChange',
         filter: 'agNumberColumnFilter',
@@ -228,10 +231,12 @@ const colDefs = [
   },
   {
     headerName: 'Word Count Change',
+    headerTooltip:
+      "The raw change in Word Count of the parsed text from the company's most recent filing of the same type",
     children: [
       {
         headerName: 'Value',
-        headerTooltip: 'Word Count Change',
+        headerTooltip: 'Word Count Value',
         field: 'wordCountChange',
         colId: 'wordCountChange',
         filter: 'agNumberColumnFilter',
@@ -244,7 +249,8 @@ const colDefs = [
       },
       {
         headerName: 'Percent',
-        headerTooltip: 'Word Count Change Percentage',
+        headerTooltip:
+          "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
         field: 'wordCountChangePercent',
         colId: 'wordCountChangePercent',
         filter: 'agNumberColumnFilter',
@@ -270,7 +276,13 @@ const colDefs = [
       },
       {
         headerName: 'Description',
-        headerTooltip: 'Word Count Change Percent Word',
+        headerTooltip:
+          'Quintile of the security for that Factor<br />' +
+          'Lowest – First quintile of the factor (1st - 20th percentile)<br />' +
+          'Low – Second quintile of the factor (21st - 40th percentile)<br />' +
+          'Median – Third quintile of the factor (41st - 60th percentile)<br />' +
+          'High – Fourth quintile of the factor (61st - 80th percentile)<br />' +
+          'Highest – Fifth quintile of the factor (81st - 100th percentile)',
         field: 'wordCountChangePercentWord',
         colId: 'wordCountChangePercentWord',
         valueGetter: params => {
