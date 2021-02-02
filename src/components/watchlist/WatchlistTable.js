@@ -127,7 +127,10 @@ const colDefs = [
     colId: 'adv',
     filter: 'agNumberColumnFilter',
     valueGetter: params => parseNumber(get(params, 'data.adv', null)),
-    valueFormatter: params => currencyFormater(params.value, 0, 'USD')
+    valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
+    cellStyle: () => {
+      return { textAlign: 'right' };
+    }
   },
   {
     headerName: 'Last Reported',

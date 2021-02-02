@@ -5,10 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
     display: 'flex',
-    flexFlow: 'row',
-    '& > *': {
-      margin: theme.spacing(1)
-    }
+    height: 40,
+    alignItems: 'center'
   },
   logo: {
     height: 20,
@@ -26,7 +24,7 @@ export default function TickerLogo(props) {
   return (
     <Box className={classes.tickerLogo}>
       <Avatar
-        alt="Symbol"
+        alt="-"
         src={`https://activetraders.socialmarketanalytics.com/images/stock_icons/${props.value}.png`}
         className={classes.logo}
       />
