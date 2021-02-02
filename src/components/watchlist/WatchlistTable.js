@@ -186,7 +186,7 @@ const colDefs = [
         cellRenderer: 'WordStatusRenderer'
       },
       {
-        headerName: '% Change',
+        headerName: 'Change',
         headerTooltip:
           "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
         field: 'sentimentChange',
@@ -209,7 +209,7 @@ const colDefs = [
         cellStyle: descriptionValueStyler
       },
       {
-        headerName: '% Change Description',
+        headerName: 'Change Description',
         headerTooltip: 'Sentiment Change Word',
         field: 'sentimentChangeWord',
         colId: 'sentimentChangeWord',
@@ -231,12 +231,11 @@ const colDefs = [
   },
   {
     headerName: 'Word Count Change',
-    headerTooltip:
-      "The raw change in Word Count of the parsed text from the company's most recent filing of the same type",
+    headerTooltip: 'Word Count Change',
     children: [
       {
-        headerName: 'Value',
-        headerTooltip: 'Word Count Value',
+        headerName: 'Change',
+        headerTooltip: "The raw change in Word Count of the parsed text from the company's most recent filing of the same type.",
         field: 'wordCountChange',
         colId: 'wordCountChange',
         filter: 'agNumberColumnFilter',
@@ -248,7 +247,7 @@ const colDefs = [
         }
       },
       {
-        headerName: 'Percent',
+        headerName: '% Change',
         headerTooltip:
           "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
         field: 'wordCountChangePercent',
@@ -275,7 +274,7 @@ const colDefs = [
         cellStyle: descriptionValueStyler
       },
       {
-        headerName: 'Description',
+        headerName: '% Change Description',
         headerTooltip:
           'Quintile of the security for that Factor<br />' +
           'Lowest – First quintile of the factor (1st - 20th percentile)<br />' +
