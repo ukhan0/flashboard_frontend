@@ -19,7 +19,7 @@ export default function AddRemoveIcon(props) {
         {props.value ? (
           <StarIcon className={classes.star} />
         ) : (
-          <StarBorderIcon className={classes.Star} />
+          <StarBorderIcon className={classes.star} />
         )}
       </Button>
     </Tooltip>

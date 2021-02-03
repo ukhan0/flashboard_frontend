@@ -145,12 +145,11 @@ const colDefs = [
   },
   {
     headerName: 'Sentiment',
-    headerTooltip:
-      "The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP",
+    headerTooltip: 'Sentiment',
     children: [
       {
         headerName: 'Value',
-        headerTooltip: 'Value',
+        headerTooltip: "The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP",
         field: 'sentiment',
         colId: 'sentiment',
         filter: 'agNumberColumnFilter',
