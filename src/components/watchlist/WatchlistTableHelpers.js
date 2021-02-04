@@ -14,8 +14,32 @@ export const formatExportValue = params => {
   const colId = params.column.colDef.colId;
   const value = params.value;
   if (colId) {
-    if (colId === 'last') {
-      return dateFormater(value);
+    if (colId === 'actions') {
+      if (value === true) {
+        return 'YES';
+      } else {
+        return 'NO';
+      }
+    } else if (colId === 'mktcap') {
+      return currencyFormater(params.value, 0, 'USD');
+    } else if (colId === 'adv') {
+      return currencyFormater(params.value, 0, 'USD');
+    } else if (colId === 'last') {
+      return dateFormater(params.value);
+    } else if (colId === 'sentiment') {
+      return percentFormater(params, true);
+    } else if (colId === 'sentimentWord') {
+      return changeWordFormatter(params.value.word);
+    } else if (colId === 'sentimentChange') {
+      return percentFormater(params, true);
+    } else if (colId === 'sentimentChangeWord') {
+      return changeWordFormatter(params.value.word);
+    } else if (colId === 'wordCountChange') {
+      return currencyFormater(params.value, 0, '');
+    } else if (colId === 'wordCountChangePercent') {
+      return percentFormater(params, false);
+    } else if (colId === 'wordCountChangePercentWord') {
+      return changeWordFormatter(params.value.word);
     } else {
       return value;
     }
