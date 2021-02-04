@@ -62,7 +62,7 @@ const Watchlist = props => {
         setLoading(true);
         const user = JSON.parse(localStorage.getItem('user'));
         const response = await axios.get(
-          `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`
+          `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`
         );
         rawData = get(response, 'data.data.content', []);
       }
@@ -134,7 +134,7 @@ const Watchlist = props => {
             : compileTikcerData(selectedSymbols).join(','),
           id: user.id,
           api_key: user.api_key,
-          authentication_token: user.authentication_token
+          authentication_token: user.token
         }
       );
       const responsePayload = get(response, 'data', null);
@@ -163,7 +163,7 @@ const Watchlist = props => {
             : compileTikcerData(selectedSymbols).join(','),
           id: user.id,
           api_key: user.api_key,
-          authentication_token: user.authentication_token
+          authentication_token: user.token
         }
       );
       const responsePayload = get(response, 'data', null);

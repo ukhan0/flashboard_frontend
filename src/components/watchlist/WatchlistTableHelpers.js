@@ -16,9 +16,9 @@ export const formatExportValue = params => {
   if (colId) {
     if (colId === 'actions') {
       if (value === true) {
-        return 'YES';
+        return 'Yes';
       } else {
-        return 'NO';
+        return 'No';
       }
     } else if (colId === 'mktcap') {
       return currencyFormater(params.value, 0, 'USD');
