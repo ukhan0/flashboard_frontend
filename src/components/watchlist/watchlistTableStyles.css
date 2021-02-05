@@ -10,3 +10,6 @@
 .ag-theme-alpine .no-padding {
   padding: 0;
 }
+.ag-theme-alpine .ag-column-select-header {
+  display: none;
+}

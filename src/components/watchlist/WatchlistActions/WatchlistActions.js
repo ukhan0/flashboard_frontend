@@ -24,10 +24,6 @@ export default function WatchListActions(props) {
       WatchlistService.sizeColumnsToFit();
     } else if (actionName === 'csvExport') {
       WatchlistService.exportWatchlist('csv');
-    } else if (actionName === 'clearSort') {
-      WatchlistService.clearSort();
-    } else if (actionName === 'clearFilter') {
-      WatchlistService.clearFilter();
     } else if (actionName === 'addTopic') {
       props.onTopicSelection();
     }
@@ -44,11 +40,7 @@ export default function WatchListActions(props) {
         onClick={handleClick}>
         Actions
       </Button>
-      <WatchListActionItems
-        anchorEl={anchorEl}
-        handleClose={handleClose}
-        actionSelected={actionSelected}
-      />
+      <WatchListActionItems anchorEl={anchorEl} handleClose={handleClose} actionSelected={actionSelected} />
     </>
   );
 }

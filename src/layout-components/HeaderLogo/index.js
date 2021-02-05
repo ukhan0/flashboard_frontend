@@ -21,13 +21,7 @@ const HeaderLogo = props => {
         <Box className="header-logo-wrapper" title="SMA">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton color="primary" size="medium">
-              <img
-                className={`app-header-logo-img-${
-                  sidebarToggle ? 'small' : 'big'
-                }`}
-                alt="SMA"
-                src={smaLogo}
-              />
+              <img className={`app-header-logo-img-${sidebarToggle ? 'small' : 'big'}`} alt="SMA" src={smaLogo} />
             </IconButton>
           </Link>
         </Box>

@@ -1,4 +1,4 @@
-import { forEach, get } from 'lodash';
+import { forEach, get, isEmpty } from 'lodash';
 
 const fields10k = {
   totdoc: [
@@ -115,11 +115,7 @@ const formatFileTypeData = (fileTypeFields, rawData) => {
   forEach(fileTypeFields, (_metricFields, metricName) => {
     fileTypeData[metricName] = {};
     commonColumns.forEach((fieldKey, index) => {
-      fileTypeData[metricName][fieldKey] = get(
-        rawData,
-        fields10k[metricName][index],
-        null
-      );
+      fileTypeData[metricName][fieldKey] = get(rawData, fields10k[metricName][index], null);
     });
   });
   return fileTypeData;
@@ -148,7 +144,6 @@ export const formatData = rawDataArr => {
 };
 
 const stateKey = 'watchlist::state';
-const sortingModelKey = 'watchlist::sortingorder';
 const filteringModelKey = 'watchlist::filtering';
 
 export const getColumnState = () => {
@@ -163,23 +158,9 @@ export const getColumnState = () => {
   }
   return columnState;
 };
-export const getSortingState = () => {
-  const offRampAlertsTableSortingState = localStorage.getItem(sortingModelKey);
-  let sortingState = [];
-  if (offRampAlertsTableSortingState) {
-    try {
-      sortingState = JSON.parse(offRampAlertsTableSortingState);
-    } catch (error) {
-      // logException(error)
-    }
-  }
-  return sortingState;
-};
 
 export const getFilteringState = () => {
-  const offRampAlertsTableFilteringState = localStorage.getItem(
-    filteringModelKey
-  );
+  const offRampAlertsTableFilteringState = localStorage.getItem(filteringModelKey);
   let sortingState = [];
   if (offRampAlertsTableFilteringState) {
     try {
@@ -195,10 +176,17 @@ export const storeColumnsState = state => {
   localStorage.setItem(stateKey, JSON.stringify(state));
 };
 
-export const storeSortingsState = state => {
-  localStorage.setItem(sortingModelKey, JSON.stringify(state));
-};
-
 export const storeFilteringState = state => {
   localStorage.setItem(filteringModelKey, JSON.stringify(state));
+};
+
+export const checkIsFilterActive = () => {
+  const filteringState = getFilteringState();
+  return !isEmpty(filteringState);
+};
+
+export const checkIsSortActive = () => {
+  const sortingState = getColumnState();
+  const activeSortColumns = sortingState.filter(state => state.sort);
+  return activeSortColumns.length === 0 ? false : true;
 };

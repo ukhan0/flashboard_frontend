@@ -52,12 +52,6 @@ export default function WatchListActionItems(props) {
       <StyledMenuItem onClick={() => actionSelected('sizeToFit')}>
         <ListItemText id={'sizeToFit'} primary="Size To Fit" />
       </StyledMenuItem>
-      <StyledMenuItem onClick={() => actionSelected('clearFilter')}>
-        <ListItemText id={'clearFilter'} primary="Clear Filter" />
-      </StyledMenuItem>
-      <StyledMenuItem onClick={() => actionSelected('clearSort')}>
-        <ListItemText id={'sort'} primary="Clear Sort" />
-      </StyledMenuItem>
       <StyledMenuItem onClick={() => actionSelected('csvExport')}>
         <ListItemText id={'csvExport'} primary="Export (.csv)" />
       </StyledMenuItem>

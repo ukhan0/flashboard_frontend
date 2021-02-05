@@ -7,14 +7,7 @@ import { connect } from 'react-redux';
 import { Sidebar, Header, Footer } from '../../layout-components';
 
 const LeftSidebar = props => {
-  const {
-    children,
-    sidebarToggle,
-    sidebarFixed,
-    footerFixed,
-    contentBackground,
-    showSidebar
-  } = props;
+  const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
 
   return (
     <Fragment>

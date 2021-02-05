@@ -2,20 +2,10 @@ import React, { Fragment } from 'react';
 import { get } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {
-  Avatar,
-  Box,
-  Badge,
-  Menu,
-  Button,
-  List,
-  ListItem,
-  Divider
-} from '@material-ui/core';
+import { Avatar, Box, Badge, Menu, Button, List, ListItem, Divider } from '@material-ui/core';
 
 import avatar4 from '../../assets/images/avatars/avatar8.png';
 import { withStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
 
 const StyledBadge = withStyles({
   badge: {
@@ -46,9 +36,8 @@ const StyledBadge = withStyles({
   }
 })(Badge);
 export default function HeaderUserbox() {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const history = useHistory();
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -64,7 +53,8 @@ export default function HeaderUserbox() {
     localStorage.removeItem('watchlist::sortingorder');
     localStorage.removeItem('watchlist::filtering');
     localStorage.removeItem('watchlist-data-all');
-    history.push('/PagesRegister');
+    // following code will refresh the page and Context will be reset
+    window.location.href = '/PagesRegister';
   };
 
   return (
@@ -85,9 +75,7 @@ export default function HeaderUserbox() {
           </StyledBadge>
         </Box>
         <div className="d-xl-block pl-3">
-          <div className="font-weight-bold pt-2 line-height-1">
-            {get(user, 'name', '')}
-          </div>
+          <div className="font-weight-bold pt-2 line-height-1">{get(user, 'name', '')}</div>
           <span className="text-white-50">{get(user, 'email', '')}</span>
         </div>
         <span className="pl-1 pl-xl-3">
@@ -124,12 +112,8 @@ export default function HeaderUserbox() {
               </StyledBadge>
             </Box>
             <div className="pl-3 ">
-              <div className="font-weight-bold text-center pt-2 line-height-1">
-                {get(user, 'name', '')}
-              </div>
-              <span className="text-black-50 text-center">
-                {get(user, 'email', '')}
-              </span>
+              <div className="font-weight-bold text-center pt-2 line-height-1">{get(user, 'name', '')}</div>
+              <span className="text-black-50 text-center">{get(user, 'email', '')}</span>
             </div>
             <Divider className="w-100 mt-2" />
             <ListItem button>My Account</ListItem>

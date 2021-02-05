@@ -11,7 +11,8 @@ import {
   descriptionValueStyler,
   changeWordGetter,
   changeWordFormatter,
-  dateFormater
+  dateFormater,
+  numberWordComparator
 } from './WatchlistTableHelpers';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -45,13 +46,6 @@ const sideBarConfiguration = {
         suppressRowGroups: true,
         suppressValues: true
       }
-    },
-    {
-      id: 'filters',
-      labelDefault: 'Filters',
-      labelKey: 'filters',
-      iconKey: 'filter',
-      toolPanel: 'agFiltersToolPanel'
     }
   ],
   position: 'right',
@@ -149,7 +143,7 @@ const colDefs = [
     children: [
       {
         headerName: 'Value',
-        headerTooltip: "The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP",
+        headerTooltip: `The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP`,
         field: 'sentiment',
         colId: 'sentiment',
         filter: 'agNumberColumnFilter',
@@ -164,6 +158,7 @@ const colDefs = [
           }
           return sentimentObj;
         },
+        comparator: numberWordComparator,
         valueFormatter: params => percentFormater(params, true),
         cellStyle: descriptionValueStyler
       },
@@ -181,13 +176,12 @@ const colDefs = [
         valueFormatter: params => {
           return changeWordFormatter(params.value.word);
         },
-        comparator: (value1, value2) => value1.number - value2.number,
+        comparator: numberWordComparator,
         cellRenderer: 'WordStatusRenderer'
       },
       {
         headerName: 'Change',
-        headerTooltip:
-          "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
+        headerTooltip: "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
         field: 'sentimentChange',
         colId: 'sentimentChange',
         filter: 'agNumberColumnFilter',
@@ -197,14 +191,13 @@ const colDefs = [
           if (sentimentValue) {
             sentimentObj = {
               number: parseNumber(sentimentValue),
-              word: changeWordGetter(
-                get(params, 'data.sentimentChangeWord', null)
-              )
+              word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
             };
           }
           return sentimentObj;
         },
         valueFormatter: params => percentFormater(params, true),
+        comparator: numberWordComparator,
         cellStyle: descriptionValueStyler
       },
       {
@@ -215,15 +208,13 @@ const colDefs = [
         valueGetter: params => {
           return {
             number: parseNumber(get(params, 'data.sentimentChange', null)),
-            word: changeWordGetter(
-              get(params, 'data.sentimentChangeWord', null)
-            )
+            word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
           };
         },
         valueFormatter: params => {
           return changeWordFormatter(params.value.word);
         },
-        comparator: (value1, value2) => value1.number - value2.number,
+        comparator: numberWordComparator,
         cellRenderer: 'WordStatusRenderer'
       }
     ]
@@ -234,15 +225,21 @@ const colDefs = [
     children: [
       {
         headerName: 'Change',
-        headerTooltip: "The raw change in Word Count of the parsed text from the company's most recent filing of the same type.",
+        headerTooltip: `The raw change in Word Count of the parsed text from the company's most recent filing of the same type.`,
         field: 'wordCountChange',
         colId: 'wordCountChange',
         filter: 'agNumberColumnFilter',
-        valueGetter: params =>
-          parseNumber(get(params, 'data.wordCountChange', null)),
+        valueGetter: params => parseNumber(get(params, 'data.wordCountChange', null)),
         valueFormatter: params => currencyFormater(params.value, 0, ''),
         cellStyle: () => {
           return { textAlign: 'right', color: 'black' };
+        },
+        comparator: (value1, value2) => {
+          let result = null;
+          if (value1 && value2) {
+            result = value1 - value2;
+          }
+          return result;
         }
       },
       {
@@ -253,23 +250,18 @@ const colDefs = [
         colId: 'wordCountChangePercent',
         filter: 'agNumberColumnFilter',
         valueGetter: params => {
-          const sentimentValue = get(
-            params,
-            'data.wordCountChangePercent',
-            null
-          );
+          const sentimentValue = get(params, 'data.wordCountChangePercent', null);
           let sentimentObj = null;
           if (sentimentValue) {
             sentimentObj = {
               number: parseNumber(sentimentValue),
-              word: changeWordGetter(
-                get(params, 'data.wordCountChangePercentWord', null)
-              )
+              word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
             };
           }
           return sentimentObj;
         },
         valueFormatter: params => percentFormater(params, false),
+        comparator: numberWordComparator,
         cellStyle: descriptionValueStyler
       },
       {
@@ -285,16 +277,14 @@ const colDefs = [
         colId: 'wordCountChangePercentWord',
         valueGetter: params => {
           return {
-            number: parseNumber(get(params, 'data.wordCountChange', null)),
-            word: changeWordGetter(
-              get(params, 'data.wordCountChangePercentWord', null)
-            )
+            number: parseNumber(get(params, 'data.wordCountChangePercent', null)),
+            word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
           };
         },
         valueFormatter: params => {
           return changeWordFormatter(params.value.word);
         },
-        comparator: (value1, value2) => value1.number - value2.number,
+        comparator: numberWordComparator,
         cellRenderer: 'WordStatusRenderer'
       }
     ]

@@ -10,6 +10,14 @@ const changedStyles = {
 };
 const changeStylesValues = Object.keys(changedStyles);
 
+export const numberWordComparator = (value1, value2) => {
+  if (value1 && value2 && value1.number && value2.number) {
+    return value1.number - value2.number;
+  } else {
+    return null;
+  }
+};
+
 export const formatExportValue = params => {
   const colId = params.column.colDef.colId;
   const value = params.value;
@@ -99,7 +107,7 @@ export const currencyFormater = (
   postfix = ''
 ) => {
   if (value === null || value === '') {
-    return '';
+    return null;
   }
   let number = Number(value);
   let formatedNumber = '';
