@@ -115,7 +115,7 @@ const formatFileTypeData = (fileTypeFields, rawData) => {
   forEach(fileTypeFields, (_metricFields, metricName) => {
     fileTypeData[metricName] = {};
     commonColumns.forEach((fieldKey, index) => {
-      fileTypeData[metricName][fieldKey] = get(rawData, fields10k[metricName][index], null);
+      fileTypeData[metricName][fieldKey] = get(rawData, fileTypeFields[metricName][index], null);
     });
   });
   return fileTypeData;
