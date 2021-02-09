@@ -13,7 +13,7 @@ import {
   checkIsFilterActive,
   checkIsSortActive
 } from './WatchlistHelpers';
-import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSelectedWatchlist,setCount } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { connect } from 'react-redux';
@@ -50,7 +50,9 @@ const Watchlist = props => {
     selectedMetric,
     setSelectedWatchlist,
     setSidebarDisplay,
-    selectedSymbols
+    selectedSymbols,
+    count,
+    setCount
   } = props;
 
   const fetchData = useCallback(async () => {
@@ -69,13 +71,18 @@ const Watchlist = props => {
         );
         rawData = get(response, 'data.data.content', []);
       }
+
+      if(rawData.length===0 &&selectedUniverse ==="watchlist"&&count===0){
+        setTopicDialogOpen(true);
+        setCount(count+1)
+      }
       setWatchlistData(formatData(rawData));
       setLoading(false);
     } catch (error) {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse, selectedFileType]);
+  }, [selectedUniverse, selectedFileType,count,setCount]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -240,12 +247,14 @@ const mapStateToProps = state => ({
   selectedFileType: state.Watchlist.selectedFileType,
   selectedUniverse: state.Watchlist.selectedUniverse,
   selectedMetric: state.Watchlist.selectedMetric,
-  selectedSymbols: state.Watchlist.selectedSymbols
+  selectedSymbols: state.Watchlist.selectedSymbols,
+  count: state.Watchlist.count
 });
 
 const mapDispatchToProps = dispatch => ({
   setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value)),
-  setSidebarDisplay: value => dispatch(setSidebarDisplay(value))
+  setSidebarDisplay: value => dispatch(setSidebarDisplay(value)),
+  setCount: value => dispatch(setCount(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Watchlist);

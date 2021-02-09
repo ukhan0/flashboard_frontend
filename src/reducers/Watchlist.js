@@ -6,10 +6,14 @@ export const SET_SELECTED_TAB = 'WATCHLIST/SET_SELECTED_TAB';
 export const SET_SELECTED_WATCHLIST = 'WATCHLIST/SET_SELECTED_WATCHLIST';
 export const SET_SELECTED_SYMBOLS = 'WATCHLIST/SET_SELECTED_SYMBOLS';
 export const RESET_WATCHLIST = 'WATCHLIST/RESET_WATCHLIST';
-export const SET_RECENT_DATALOADED_FLAG =
-  'WATCHLIST/SET_RECENT_DATALOADED_FLAG';
-export const SET_COMPELTE_DATALOADED_FLAG =
-  'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
+export const SET_RECENT_DATALOADED_FLAG = 'WATCHLIST/SET_RECENT_DATALOADED_FLAG';
+export const SET_COMPELTE_DATALOADED_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
+export const SET_COUNT = 'WATCHLIST/SET_COUNT';
+
+export const setCount = count => ({
+  type: SET_COUNT,
+  count
+});
 
 export const setWatchlistFileType = fileType => ({
   type: SET_FILE_TYPE,
@@ -58,6 +62,7 @@ const getDefaultState = () => {
     selectedMetric: 'totdoc',
     searchText: '',
     selectedTab: 0,
+    count: 0,
     selectedSymbols: [],
     selectedItem: null,
     recentDataLoaded: false,
@@ -73,6 +78,8 @@ export default function reducer(
 ) {
   switch (action.type) {
     // watchlist
+    case SET_COUNT:
+      return { ...state, count: action.count };
     case SET_FILE_TYPE:
       return { ...state, selectedFileType: action.fileType };
     case SET_UNIVERSE:

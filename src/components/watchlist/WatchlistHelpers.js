@@ -2,100 +2,100 @@ import { forEach, get, isEmpty } from 'lodash';
 
 const fields10k = {
   totdoc: [
-    '10k_sentiment',
-    '10k_sentiment_word',
-    '10k_sentiment_change',
-    '10k_sentiment_change_word',
-    '10k_word_count_change',
-    '10k_word_count_change_percent',
-    '10k_word_count_change_percent_word'
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o'
   ],
   mda: [
-    'mda_10k_sentiment',
-    'mda_10k_sentiment_word',
-    'mda_10k_sentiment_change',
-    'mda_10k_sentiment_change_word',
-    'mda_10k_word_count_change',
-    'mda_10k_word_count_change_percent',
-    'mda_10k_word_count_change_percent_word'
+    'w',
+    'x',
+    'y',
+    'z',
+    'aa',
+    'ab',
+    'ac'
   ],
   rf: [
-    'rf_10k_sentiment',
-    'rf_10k_sentiment_word',
-    'rf_10k_sentiment_change',
-    'rf_10k_sentiment_change_word',
-    'rf_10k_word_count_change',
-    'rf_10k_word_count_change_percent',
-    'rf_10k_word_count_change_percent_word'
+    'ak',
+    'al',
+    'am',
+    'an',
+    'ao',
+    'ap',
+    'aq'
   ],
   notes: [
-    '10k_notes_sum_sent',
-    '10k_notes_sum_sent_word',
-    '10k_raw_change_in_notes_sum_sent',
-    '10k_raw_change_in_notes_sum_sent_word',
-    '10k_raw_change_in_notes_word_count',
-    '10k_change_in_notes_word_count_percent',
-    '10k_change_in_notes_word_count_percent_word'
-    // "10k_notes_count": 18,		// available in respone but not required
-    // "10k_raw_change_in_notes_count": 21,		// available in respone but not required
+    'ay',
+    'az',
+    'ba',
+    'bb',
+    'bc',
+    'bd',
+    'be'
+    // "bf": 18,		// available in respone but not required
+    // "bg": 21,		// available in respone but not required
   ],
   fss: [
     'fss_10k_sentiment', // not available in response
     'fss_10k_sentiment_word', // not available in response
     'fss_10k_sentiment_change', // not available in response
     'fss_10k_sentiment_change_word', // not available in response
-    'fss_10k_word_count_change',
-    'fss_10k_word_count_change_percent',
+    'bq',
+    'br',
     'fss_10k_word_count_change_percent_word' // not available in response
   ]
 };
 
 const fields10q = {
   totdoc: [
-    '10q_sentiment',
-    '10q_sentiment_word',
-    '10q_sentiment_change',
-    '10q_sentiment_change_word',
-    '10q_word_count_change',
-    '10q_word_count_change_percent',
-    '10q_word_count_change_percent_word'
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v'
   ],
   mda: [
-    'mda_10q_sentiment',
-    'mda_10q_sentiment_word',
-    'mda_10q_sentiment_change',
-    'mda_10q_sentiment_change_word',
-    'mda_10q_word_count_change',
-    'mda_10q_word_count_change_percent',
-    'mda_10q_word_count_change_percent_word'
+    'ad',
+    'ae',
+    'af',
+    'ag',
+    'ah',
+    'ai',
+    'aj'
   ],
   rf: [
-    'rf_10q_sentiment',
-    'rf_10q_sentiment_word',
-    'rf_10q_sentiment_change',
-    'rf_10q_sentiment_change_word',
-    'rf_10q_word_count_change',
-    'rf_10q_word_count_change_percent',
-    'rf_10q_word_count_change_percent_word'
+    'ar',
+    'as',
+    'at',
+    'au',
+    'av',
+    'aw',
+    'ax'
   ],
   notes: [
-    '10q_notes_sum_sent',
-    '10q_notes_sum_sent_word',
-    '10q_raw_change_in_notes_sum_sent',
-    '10q_raw_change_in_notes_sum_sent_word',
-    '10q_raw_change_in_notes_word_count',
-    '10q_change_in_notes_word_count_percent',
-    '10q_change_in_notes_word_count_percent_word'
-    // "10q_notes_count": 18,		// available in respone but not required
-    // "10q_raw_change_in_notes_count": 21,		// available in respone but not required
+    'bh',
+    'bi',
+    'bj',
+    'bk',
+    'bl',
+    'bm',
+    'bn'
+    // "bo": 18,		// available in respone but not required
+    // "bp": 21,		// available in respone but not required
   ],
   fss: [
     'fss_10k_sentiment', // not available in response
     'fss_10k_sentiment_word', // not available in response
     'fss_10k_sentiment_change', // not available in response
     'fss_10k_sentiment_change_word', // not available in response
-    'fss_10q_word_count_change',
-    'fss_10q_word_count_change_percent',
+    'bs',
+    'bt',
     'fss_10k_word_count_change_percent_word' // not available in response
   ]
 };
@@ -125,19 +125,19 @@ export const formatData = rawDataArr => {
   return rawDataArr.map(rawData => {
     return {
       ticker: rawData.ticker,
-      companyName: rawData.company_name,
-      industry: rawData.industry,
-      sector: rawData.sector,
-      mktcap: rawData.mktcap,
-      adv: rawData.adv,
+      companyName: rawData.b,
+      industry: rawData.d,
+      sector: rawData.c,
+      mktcap: rawData.e,
+      adv: rawData.f,
       last10k: rawData.last_10k,
       last10q: rawData.last_10q,
       '10k': formatFileTypeData(fields10k, rawData),
       '10q': formatFileTypeData(fields10q, rawData),
-      recentId10k: rawData['10k_recent_id'],
-      recentId10q: rawData['10q_recent_id'],
-      oldId10k: rawData['10k_old_id'],
-      oldId10q: rawData['10q_old_id'],
+      recentId10k: rawData['bu'],
+      recentId10q: rawData['bw'],
+      oldId10k: rawData['bv'],
+      oldId10q: rawData['bx'],
       isTickerActive: get(rawData, 'isTickerActive', false)
     };
   });
