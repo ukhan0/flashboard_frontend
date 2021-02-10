@@ -24,20 +24,12 @@ export default function WatchListActions(props) {
       WatchlistService.sizeColumnsToFit();
     } else if (actionName === 'csvExport') {
       WatchlistService.exportWatchlist('csv');
-    } else if (actionName === 'addTopic') {
-      props.onTopicSelection();
     }
   };
 
   return (
     <>
-      <Button
-        id={'exportActionBtn'}
-        variant="contained"
-        color="primary"
-        size="small"
-        className={classes.button}
-        onClick={handleClick}>
+      <Button variant="contained" color="primary" size="small" onClick={handleClick}>
         Actions
       </Button>
       <WatchListActionItems anchorEl={anchorEl} handleClose={handleClose} actionSelected={actionSelected} />

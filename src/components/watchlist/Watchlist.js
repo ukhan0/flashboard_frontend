@@ -205,42 +205,58 @@ const Watchlist = props => {
 
   return (
     <>
-      <Grid container direction="row" justify="space-between" alignItems="flex-end">
+      <Grid container direction="row" alignItems="flex-end" className={classes.space}>
         <Grid item>
           <WatchlistFilters />
         </Grid>
-        <Grid item>{loading ? <BeatLoader color={'var(--primary)'} loading={true} size={10} /> : null}</Grid>
-        <Grid item>
+        <Grid item className={classes.spaceBetween}>
+          {loading ? <BeatLoader size="small" color={'var(--primary)'} loading={true} size={10} /> : null}
+        </Grid>
+        <Grid item className={classes.spaceBetween}>
           <WatchlistSearch />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.button}>
           <WatchlistActions onTopicSelection={() => setTopicDialogOpen(true)} />
         </Grid>
-        <Grid item xs={12}>
-          <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-            <Button
-              color="primary"
-              className="m-2"
-              variant="contained"
-              disabled={!isFilterActive}
-              onClick={() => {
-                WatchlistService.clearFilter();
-                setIsFilterActive(false);
-              }}>
-              Clear Filters
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              className="m-2"
-              disabled={!isSortActive}
-              onClick={() => {
-                WatchlistService.clearSort();
-                setIsSortActive(false);
-              }}>
-              Clear Sorting
-            </Button>
-          </div>
+        <Grid item>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.button}
+            size="small"
+            onClick={() => {
+              setTopicDialogOpen(true);
+            }}>
+            Add to WatchList
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            color="primary"
+            className={classes.button}
+            size="small"
+            variant="contained"
+            disabled={!isFilterActive}
+            onClick={() => {
+              WatchlistService.clearFilter();
+              setIsFilterActive(false);
+            }}>
+            ClearFilter
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.button}
+            size="small"
+            disabled={!isSortActive}
+            onClick={() => {
+              WatchlistService.clearSort();
+              setIsSortActive(false);
+            }}>
+            ClearSort
+          </Button>
         </Grid>
       </Grid>
       <div className={classes.watchlistTableContainer} style={{ height: window.innerHeight - 215 }}>

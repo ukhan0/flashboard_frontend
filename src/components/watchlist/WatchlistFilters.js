@@ -47,6 +47,7 @@ const WatchlistFilters = props => {
         <ButtonGroup color="primary">
           {fileTypesSelection.map((fileType, i) => (
             <Button
+              size="small"
               key={`ft_${i}`}
               onClick={() => setWatchlistFileType(fileType.key)}
               variant={selectedFileType === fileType.key ? 'contained' : 'outlined'}>
@@ -60,6 +61,7 @@ const WatchlistFilters = props => {
         <ButtonGroup color="primary">
           {universeSelection.map((universe, i) => (
             <Button
+              size="small"
               key={`uni_${i}`}
               onClick={() => setWatchlistUniverse(universe.key)}
               disabled={canItbeUsed(universe.key)}
@@ -79,6 +81,7 @@ const WatchlistFilters = props => {
         <ButtonGroup color="primary">
           {metricsSelection.map((metric, i) => (
             <Button
+              size="small"
               key={`met_${i}`}
               onClick={() => setWatchlistMetric(metric.key)}
               variant={selectedMetric === metric.key ? 'contained' : 'outlined'}>
