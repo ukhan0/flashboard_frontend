@@ -1,23 +1,19 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
-import WatchListActionItems from './WatchlistActionItems';
-import useStyles from './styles';
+import { ListItem, List, ListItemText } from '@material-ui/core';
 import WatchlistService from '../WatchlistService';
 
-export default function WatchListActions(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const classes = useStyles();
+export default function WatchListActions() {
+  const actions = [
+    { key: 'autoSize', label: 'Auto Size Columns' },
+    { key: 'sizeToFit', label: 'Fit Column Size' },
+    { key: 'csvExport', label: 'CSV Export' }
+  ];
 
   const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
+    actionSelected(event);
   };
 
   const actionSelected = actionName => {
-    setAnchorEl(null);
     if (actionName === 'autoSize') {
       WatchlistService.autoSizeColumns();
     } else if (actionName === 'sizeToFit') {
@@ -28,11 +24,19 @@ export default function WatchListActions(props) {
   };
 
   return (
-    <>
-      <Button variant="contained" color="primary" size="small" onClick={handleClick}>
-        Actions
-      </Button>
-      <WatchListActionItems anchorEl={anchorEl} handleClose={handleClose} actionSelected={actionSelected} />
-    </>
+    <List component="nav">
+      {actions.map((action, index) => {
+        return (
+          <ListItem
+            key={index}
+            button
+            onClick={() => {
+              handleClick(action.key);
+            }}>
+            <ListItemText primary={action.label} />
+          </ListItem>
+        );
+      })}
+    </List>
   );
 }

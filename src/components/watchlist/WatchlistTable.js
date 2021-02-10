@@ -19,11 +19,13 @@ import WordStatus from './WatchlistTableComponents/WordStatus';
 import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
 import TickerLogo from './WatchlistTableComponents/TickerLogo';
 import './watchlistTableStyles.css';
+import Action from './WatchlistActions/WatchlistActions';
 
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
-  TickerLogo: TickerLogo
+  TickerLogo: TickerLogo,
+  actions: Action
 };
 
 const defaultColDef = {
@@ -46,6 +48,13 @@ const sideBarConfiguration = {
         suppressRowGroups: true,
         suppressValues: true
       }
+    },
+    {
+      id: 'Actions',
+      labelDefault: 'Actions',
+      labelKey: 'actions',
+      iconKey: 'columns',
+      toolPanel: 'actions'
     }
   ],
   position: 'right',

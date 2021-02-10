@@ -31,7 +31,6 @@ import WatchlistTable from './WatchlistTable';
 // styles
 import useStyles from './watchlistStyles';
 import WatchlistSearch from './WatchlistSearch';
-import WatchlistActions from './WatchlistActions';
 import { isObject } from 'lodash';
 
 const compileTikcerData = selectedSymbols => {
@@ -214,9 +213,6 @@ const Watchlist = props => {
         </Grid>
         <Grid item className={classes.spaceBetween}>
           <WatchlistSearch />
-        </Grid>
-        <Grid item className={classes.button}>
-          <WatchlistActions onTopicSelection={() => setTopicDialogOpen(true)} />
         </Grid>
         <Grid item>
           <Button
