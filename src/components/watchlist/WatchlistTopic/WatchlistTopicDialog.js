@@ -41,7 +41,7 @@ const WatchlistTopicDialog = props => {
 
   return (
     <Dialog open={props.open} onClose={handleClose} keepMounted={false}>
-      <DialogTitle>{'Add Symbol'}</DialogTitle>
+      <DialogTitle>{'Add to Watchlist'}</DialogTitle>
       <DialogContent>
         <WatchlistTopicTabs />
         <div className={classes.topicDialogContent}>{selectedComponent}</div>

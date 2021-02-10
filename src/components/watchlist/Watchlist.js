@@ -206,58 +206,75 @@ const Watchlist = props => {
 
   return (
     <>
+      {loading ? (
+        <div className={classes.loaderContainer}>
+          <div className={classes.loaderSection}>
+            <BeatLoader color={'var(--primary)'} loading={true} size={10} />
+          </div>
+        </div>
+      ) : null}
       <Grid container direction="row" alignItems="flex-end" className={classes.space}>
-        <Grid item>
-          <WatchlistFilters />
+        <Grid item xs={6}>
+          <Grid container direction="row" justify="flex-start" alignItems="flex-end">
+            <Grid item>
+              <WatchlistFilters />
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item className={classes.spaceBetween}>
-          {loading ? <BeatLoader color={'var(--primary)'} loading={true} size={10} /> : null}
-        </Grid>
-        <Grid item className={classes.spaceBetween}>
-          <WatchlistSearch />
-        </Grid>
-        <Grid item>
-          <Button
-            color="primary"
-            variant="contained"
-            className={classes.button}
-            size="small"
-            onClick={() => {
-              setTopicDialogOpen(true);
-            }}>
-            Add to WatchList
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            color="primary"
-            className={classes.button}
-            size="small"
-            variant="contained"
-            disabled={!isFilterActive}
-            onClick={() => {
-              WatchlistService.clearFilter();
-              setIsFilterActive(false);
-            }}>
-            ClearFilter
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            color="primary"
-            variant="contained"
-            className={classes.button}
-            size="small"
-            disabled={!isSortActive}
-            onClick={() => {
-              WatchlistService.clearSort();
-              setIsSortActive(false);
-            }}>
-            ClearSort
-          </Button>
+        <Grid item xs={6}>
+          <Grid container direction="row" justify="flex-end" alignItems="center">
+            {isFilterActive ? (
+              <Grid item>
+                <Button
+                  color="primary"
+                  className={classes.button}
+                  size="small"
+                  variant="contained"
+                  disabled={!isFilterActive}
+                  onClick={() => {
+                    WatchlistService.clearFilter();
+                    setIsFilterActive(false);
+                  }}>
+                  Clear Filtering
+                </Button>
+              </Grid>
+            ) : null}
+            {isSortActive ? (
+              <Grid item>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className={classes.button}
+                  size="small"
+                  disabled={!isSortActive}
+                  onClick={() => {
+                    WatchlistService.clearSort();
+                    setIsSortActive(false);
+                  }}>
+                  Clear Sorting
+                </Button>
+              </Grid>
+            ) : null}
+            <Grid item>
+              <Button
+                color="primary"
+                variant="contained"
+                className={classes.button}
+                size="small"
+                onClick={() => {
+                  setTopicDialogOpen(true);
+                }}>
+                Add Ticker to WatchList
+              </Button>
+            </Grid>
+            <Grid item className={classes.spaceBetween} xs={4}>
+              <WatchlistSearch />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
-      <div className={classes.watchlistTableContainer} style={{ height: window.innerHeight - 215 }}>
+
+      <div className={classes.watchlistTableContainer} style={{ height: window.innerHeight - 160 }}>
         <WatchlistTable
           data={gridData}
           storeColumnsState={onStoreColumnsState}

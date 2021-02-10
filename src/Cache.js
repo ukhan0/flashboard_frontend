@@ -19,10 +19,7 @@ const Cache = props => {
 
     const apiUrl = `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.current.authentication_token}&user_id=${user.current.id}&subject`;
     axios.get(`${apiUrl}=all`).then(response => {
-      localStorage.setItem(
-        `watchlist-data-all`,
-        cjson.compress.toString(get(response, 'data.data.content', []))
-      );
+      localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(get(response, 'data.data.content', [])));
       setCompleteDataLoadedFlag(true);
     });
   }, [setCompleteDataLoadedFlag]);

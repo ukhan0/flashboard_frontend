@@ -19,5 +19,13 @@ export default makeStyles(() => ({
   button: {
     marginRight: 2,
     marginLeft: 3
+  },
+  loaderContainer: {
+    position: 'absolute',
+    width: '100%'
+  },
+  loaderSection: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));

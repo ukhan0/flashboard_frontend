@@ -51,29 +51,16 @@ const LivePreviewExample = () => {
                 <div className="bg-composed-wrapper--content py-5">
                   <Container maxWidth="lg">
                     <Grid container spacing={5}>
-                      <Grid
-                        item
-                        xs={12}
-                        lg={5}
-                        className="d-none d-xl-flex align-items-center">
-                        <img
-                          alt="..."
-                          className="w-100 mx-auto d-block img-fluid"
-                          src={svgImage9}
-                        />
+                      <Grid item xs={12} lg={5} className="d-none d-xl-flex align-items-center">
+                        <img alt="..." className="w-100 mx-auto d-block img-fluid" src={svgImage9} />
                       </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        lg={7}
-                        className="d-flex flex-column align-items-center">
+                      <Grid item xs={12} lg={7} className="d-flex flex-column align-items-center">
                         <span className="w-100 text-left text-md-center pb-4">
                           <h1 className="display-3 text-xl-left text-center mb-3 font-weight-bold">
                             Login to your account
                           </h1>
                           <p className="font-size-lg text-xl-left text-center mb-0 text-black-50">
-                            We're glad you're working on your app. Login below
-                            to continue.
+                            We're glad you're working on your app. Login below to continue.
                           </p>
                         </span>
                         <Card className="m-0 w-100 p-0 border-0">
@@ -82,25 +69,17 @@ const LivePreviewExample = () => {
                               <span>Sign in with</span>
                             </div>
                             <div className="text-center">
-                              <Button
-                                variant="outlined"
-                                className="mr-2 text-facebook">
+                              <Button variant="outlined" className="mr-2 text-facebook">
                                 <span className="btn-wrapper--icon">
                                   <FontAwesomeIcon icon={['fab', 'facebook']} />
                                 </span>
-                                <span className="btn-wrapper--label">
-                                  Facebook
-                                </span>
+                                <span className="btn-wrapper--label">Facebook</span>
                               </Button>
-                              <Button
-                                variant="outlined"
-                                className="ml-2 text-twitter">
+                              <Button variant="outlined" className="ml-2 text-twitter">
                                 <span className="btn-wrapper--icon">
                                   <FontAwesomeIcon icon={['fab', 'twitter']} />
                                 </span>
-                                <span className="btn-wrapper--label">
-                                  Twitter
-                                </span>
+                                <span className="btn-wrapper--label">Twitter</span>
                               </Button>
                             </div>
                           </div>
@@ -111,9 +90,7 @@ const LivePreviewExample = () => {
                             <form className="px-5">
                               <div className="mb-3">
                                 <FormControl className="w-100">
-                                  <InputLabel htmlFor="input-with-icon-adornment">
-                                    Email address
-                                  </InputLabel>
+                                  <InputLabel htmlFor="input-with-icon-adornment">Email address</InputLabel>
                                   <Input
                                     fullWidth
                                     id="input-with-icon-adornment"
@@ -127,9 +104,7 @@ const LivePreviewExample = () => {
                               </div>
                               <div className="mb-3">
                                 <FormControl className="w-100">
-                                  <InputLabel htmlFor="standard-adornment-password">
-                                    Password
-                                  </InputLabel>
+                                  <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                                   <Input
                                     id="standard-adornment-password"
                                     fullWidth
@@ -156,11 +131,7 @@ const LivePreviewExample = () => {
                                 />
                               </div>
                               <div className="text-center">
-                                <Button
-                                  color="primary"
-                                  variant="contained"
-                                  size="large"
-                                  className="my-2">
+                                <Button color="primary" variant="contained" size="large" className="my-2">
                                   Sign in
                                 </Button>
                               </div>
