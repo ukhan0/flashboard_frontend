@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Grid, Button } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, debounce } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
 import cjson from 'compressed-json';
@@ -148,7 +148,8 @@ const Watchlist = props => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         setTopicDialogOpen(false);
-        setDataVersion(dataVersion + 1);
+        const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
+        debouncedSave();
         setRemoveTickersnackbar(true);
       } else {
         setTopicAddingError(true);
@@ -176,7 +177,8 @@ const Watchlist = props => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         setTopicDialogOpen(false);
-        setDataVersion(dataVersion + 1);
+        const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
+        debouncedSave();
         setWatchlistSelectedSymbols([]);
         setOverwriteCheckBox(false);
         setAddTickersnackbar(true);
@@ -209,7 +211,7 @@ const Watchlist = props => {
           <WatchlistFilters />
         </Grid>
         <Grid item className={classes.spaceBetween}>
-          {loading ? <BeatLoader size="small" color={'var(--primary)'} loading={true} size={10} /> : null}
+          {loading ? <BeatLoader color={'var(--primary)'} loading={true} size={10} /> : null}
         </Grid>
         <Grid item className={classes.spaceBetween}>
           <WatchlistSearch />

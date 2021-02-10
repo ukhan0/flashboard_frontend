@@ -11,12 +11,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function AddRemoveIcon(props) {
+  const [flagStarIcon, setFlagStarIcon] = React.useState(props.value);
   const classes = useStyles();
 
   return (
-    <Tooltip arrow title={props.value ? 'Remove from Watchlist' : 'Add to Watchlist'}>
-      <Button>
-        {props.value ? <StarIcon className={classes.star} /> : <StarBorderIcon className={classes.star} />}
+    <Tooltip arrow title={flagStarIcon ? 'Remove from Watchlist' : 'Add to Watchlist'}>
+      <Button
+        onClick={() => {
+          if (flagStarIcon === true) {
+            setFlagStarIcon(false);
+          } else {
+            setFlagStarIcon(true);
+          }
+        }}>
+        {flagStarIcon === true ? <StarIcon className={classes.star} /> : <StarBorderIcon className={classes.star} />}
       </Button>
     </Tooltip>
   );
