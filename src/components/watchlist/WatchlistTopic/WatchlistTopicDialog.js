@@ -1,26 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  Typography,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@material-ui/core';
+import { Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import WatchlistTopicTabs from './WatchlistTopicTabs';
 import WatchlistTopicSearch from './WatchlistTopicSearch';
 import WatchlistTopicUploadCSV from './WatchlistTopicUploadCSV';
 import WatchlistTopicPaste from './WatchlistTopicPaste';
 import useStyles from './WatchlistTopicStyles';
+import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
 const WatchlistTopicDialog = props => {
   // const [errMsg, setErrMsg] = useState('');
-  const { selectedTab, selectedSymbols, error } = props;
+  const { selectedTab, selectedSymbols, error, setWatchlistSelectedSymbols } = props;
   const classes = useStyles();
 
   const handleClose = () => {
+    setWatchlistSelectedSymbols([]);
     props.onClose();
   };
 
@@ -52,9 +47,7 @@ const WatchlistTopicDialog = props => {
         <div className={classes.topicDialogContent}>{selectedComponent}</div>
       </DialogContent>
       <DialogActions>
-        {error ? (
-          <Typography color="error">Unable to add symbols</Typography>
-        ) : null}
+        {error ? <Typography color="error">Unable to add symbols</Typography> : null}
         <Button onClick={handleClose} color="secondary">
           Cancel
         </Button>
@@ -82,4 +75,8 @@ const mapStateToProps = state => ({
   selectedSymbols: state.Watchlist.selectedSymbols
 });
 
-export default connect(mapStateToProps)(WatchlistTopicDialog);
+const mapDispatchToProps = dispatch => ({
+  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicDialog);

@@ -22,12 +22,7 @@ export default function LivePreviewExample() {
   return (
     <Fragment>
       <div className="text-center">
-        <Button
-          className="m-2"
-          size="large"
-          color="primary"
-          variant="contained"
-          onClick={handleClick}>
+        <Button className="m-2" size="large" color="primary" variant="contained" onClick={handleClick}>
           Top Centered Snackbar
         </Button>
         <Snackbar
@@ -44,11 +39,7 @@ export default function LivePreviewExample() {
               <Button color="primary" size="small" onClick={handleClose}>
                 UNDO
               </Button>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             </React.Fragment>

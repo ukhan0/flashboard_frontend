@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TextField, FormControl } from '@material-ui/core';
+import { TextField, FormControl, FormControlLabel, Checkbox } from '@material-ui/core';
 import Dropzone from 'react-dropzone';
 import useStyles from './WatchlistTopicStyles';
-import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
+import { setWatchlistSelectedSymbols, setOverwriteCheckBox } from '../../../reducers/Watchlist';
 
 const WatchlistTopicUploadCSV = props => {
-  const { selectedSymbols, setWatchlistSelectedSymbols } = props;
+  const { selectedSymbols, setWatchlistSelectedSymbols, overwriteCheckBox, setOverwriteCheckBox } = props;
   const classes = useStyles();
 
   const loadFile = async file => {
@@ -34,10 +34,7 @@ const WatchlistTopicUploadCSV = props => {
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               <div className="dz-message">
-                <div className="dx-text">
-                  Try dropping some files here, or click to select files to
-                  upload.
-                </div>
+                <div className="dx-text">Try dropping some files here, or click to select files to upload.</div>
               </div>
             </div>
           )}
@@ -58,20 +55,30 @@ const WatchlistTopicUploadCSV = props => {
           />
         </FormControl>
       ) : null}
+      <FormControlLabel
+        control={
+          <Checkbox
+            color="primary"
+            value={overwriteCheckBox}
+            onChange={() => {
+              setOverwriteCheckBox(!overwriteCheckBox);
+            }}
+          />
+        }
+        label="Overwrite old values"
+      />
     </div>
   );
 };
 
 const mapStateToProps = state => ({
-  selectedSymbols: state.Watchlist.selectedSymbols
+  selectedSymbols: state.Watchlist.selectedSymbols,
+  checkBox: state.Watchlist.checkBox
 });
 
 const mapDispatchToProps = dispatch => ({
-  setWatchlistSelectedSymbols: value =>
-    dispatch(setWatchlistSelectedSymbols(value))
+  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value)),
+  setOverwriteCheckBox: value => dispatch(setOverwriteCheckBox(value))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WatchlistTopicUploadCSV);
+export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicUploadCSV);

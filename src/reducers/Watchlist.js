@@ -9,6 +9,12 @@ export const RESET_WATCHLIST = 'WATCHLIST/RESET_WATCHLIST';
 export const SET_RECENT_DATALOADED_FLAG = 'WATCHLIST/SET_RECENT_DATALOADED_FLAG';
 export const SET_COMPELTE_DATALOADED_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
 export const SET_COUNT = 'WATCHLIST/SET_COUNT';
+export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
+
+export const setOverwriteCheckBox = overwriteCheckBox => ({
+  type: SET_OVERWRITE_CHECK_BOX,
+  overwriteCheckBox
+})
 
 export const setCount = count => ({
   type: SET_COUNT,
@@ -66,7 +72,8 @@ const getDefaultState = () => {
     selectedSymbols: [],
     selectedItem: null,
     recentDataLoaded: false,
-    completeDataLoaded: false
+    completeDataLoaded: false,
+    overwriteCheckBox: false
   };
 };
 
@@ -78,6 +85,8 @@ export default function reducer(
 ) {
   switch (action.type) {
     // watchlist
+    case SET_OVERWRITE_CHECK_BOX:
+      return { ...state, overwriteCheckBox: action.overwriteCheckBox };
     case SET_COUNT:
       return { ...state, count: action.count };
     case SET_FILE_TYPE:

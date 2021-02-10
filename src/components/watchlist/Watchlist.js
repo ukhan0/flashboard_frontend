@@ -13,13 +13,18 @@ import {
   checkIsFilterActive,
   checkIsSortActive
 } from './WatchlistHelpers';
-import { setSelectedWatchlist,setCount } from '../../reducers/Watchlist';
+import {
+  setSelectedWatchlist,
+  setWatchlistSelectedSymbols,
+  setOverwriteCheckBox,
+  setCount
+} from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { connect } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
-
+import Snackbar from '../Snackbar';
 // components
 import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
@@ -42,15 +47,21 @@ const Watchlist = props => {
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [addTickersnackbar, setAddTickersnackbar] = React.useState(false);
+  const [removeTickersnackbar, setRemoveTickersnackbar] = React.useState(false);
+  const [errorSnackbar, setErrorSnackbar] = React.useState(false);
   const firstTimeLoad = useRef(true);
 
   const {
     selectedFileType,
     selectedUniverse,
+    overwriteCheckBox,
     selectedMetric,
     setSelectedWatchlist,
     setSidebarDisplay,
     selectedSymbols,
+    setWatchlistSelectedSymbols,
+    setOverwriteCheckBox,
     count,
     setCount
   } = props;
@@ -72,9 +83,9 @@ const Watchlist = props => {
         rawData = get(response, 'data.data.content', []);
       }
 
-      if(rawData.length===0 &&selectedUniverse ==="watchlist"&&count===0){
+      if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
         setTopicDialogOpen(true);
-        setCount(count+1)
+        setCount(count + 1);
       }
       setWatchlistData(formatData(rawData));
       setLoading(false);
@@ -82,7 +93,7 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse, selectedFileType,count,setCount]);
+  }, [selectedUniverse, selectedFileType, count, setCount]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -139,11 +150,14 @@ const Watchlist = props => {
       if (responsePayload && !responsePayload.error) {
         setTopicDialogOpen(false);
         setDataVersion(dataVersion + 1);
+        setRemoveTickersnackbar(true);
       } else {
         setTopicAddingError(true);
+        setErrorSnackbar(true);
       }
     } catch (error) {
       setTopicAddingError(true);
+      setErrorSnackbar(true);
     }
   };
 
@@ -157,17 +171,23 @@ const Watchlist = props => {
         watched_tickers: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
         id: user.id,
         api_key: user.api_key,
-        authentication_token: user.authentication_token
+        authentication_token: user.authentication_token,
+        overWrite: overwriteCheckBox
       });
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         setTopicDialogOpen(false);
         setDataVersion(dataVersion + 1);
+        setWatchlistSelectedSymbols([]);
+        setOverwriteCheckBox(false);
+        setAddTickersnackbar(true);
       } else {
         setTopicAddingError(true);
+        setErrorSnackbar(true);
       }
     } catch (error) {
       setTopicAddingError(true);
+      setErrorSnackbar(true);
     }
   };
 
@@ -239,6 +259,24 @@ const Watchlist = props => {
         error={topicAddingError}
         onUpload={handleUpload}
       />
+      <Snackbar
+        open={addTickersnackbar}
+        onClose={() => setAddTickersnackbar(false)}
+        message="Ticker added in Watchlist"
+        severity="success"
+      />
+      <Snackbar
+        open={removeTickersnackbar}
+        onClose={() => setRemoveTickersnackbar(false)}
+        message="Tikcer removed from Watchlist"
+        severity="info"
+      />
+      <Snackbar
+        open={errorSnackbar}
+        onClose={() => setErrorSnackbar(false)}
+        message="Unable to Add/Remove Ticker To/From Watchlist"
+        severity="error"
+      />
     </>
   );
 };
@@ -248,12 +286,15 @@ const mapStateToProps = state => ({
   selectedUniverse: state.Watchlist.selectedUniverse,
   selectedMetric: state.Watchlist.selectedMetric,
   selectedSymbols: state.Watchlist.selectedSymbols,
+  overwriteCheckBox: state.Watchlist.overwriteCheckBox,
   count: state.Watchlist.count
 });
 
 const mapDispatchToProps = dispatch => ({
   setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value)),
   setSidebarDisplay: value => dispatch(setSidebarDisplay(value)),
+  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value)),
+  setOverwriteCheckBox: value => dispatch(setOverwriteCheckBox(value)),
   setCount: value => dispatch(setCount(value))
 });
 

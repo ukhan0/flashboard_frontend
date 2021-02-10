@@ -145,6 +145,7 @@ const colDefs = [
         headerName: 'Value',
         headerTooltip: `The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP`,
         field: 'sentiment',
+        width: 95,
         colId: 'sentiment',
         filter: 'agNumberColumnFilter',
         valueGetter: params => {
@@ -167,6 +168,7 @@ const colDefs = [
         headerTooltip: 'Value Description',
         field: 'sentimentWord',
         colId: 'sentimentWord',
+        width: 147,
         valueGetter: params => {
           return {
             number: parseNumber(get(params, 'data.sentiment', null)),
@@ -185,6 +187,7 @@ const colDefs = [
         field: 'sentimentChange',
         colId: 'sentimentChange',
         filter: 'agNumberColumnFilter',
+        width: 109,
         valueGetter: params => {
           const sentimentValue = get(params, 'data.sentimentChange', null);
           let sentimentObj = null;
@@ -205,6 +208,7 @@ const colDefs = [
         headerTooltip: 'Sentiment Change Word',
         field: 'sentimentChangeWord',
         colId: 'sentimentChangeWord',
+        width: 161,
         valueGetter: params => {
           return {
             number: parseNumber(get(params, 'data.sentimentChange', null)),
@@ -229,6 +233,7 @@ const colDefs = [
         field: 'wordCountChange',
         colId: 'wordCountChange',
         filter: 'agNumberColumnFilter',
+        width: 94,
         valueGetter: params => parseNumber(get(params, 'data.wordCountChange', null)),
         valueFormatter: params => currencyFormater(params.value, 0, ''),
         cellStyle: () => {
@@ -249,6 +254,7 @@ const colDefs = [
         field: 'wordCountChangePercent',
         colId: 'wordCountChangePercent',
         filter: 'agNumberColumnFilter',
+        width: 100,
         valueGetter: params => {
           const sentimentValue = get(params, 'data.wordCountChangePercent', null);
           let sentimentObj = null;
@@ -275,6 +281,7 @@ const colDefs = [
           'Highest – Fifth quintile of the factor (81st - 100th percentile)',
         field: 'wordCountChangePercentWord',
         colId: 'wordCountChangePercentWord',
+        width: 187,
         valueGetter: params => {
           return {
             number: parseNumber(get(params, 'data.wordCountChangePercent', null)),
