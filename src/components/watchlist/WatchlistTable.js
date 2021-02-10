@@ -63,7 +63,7 @@ const sideBarConfiguration = {
 
 const colDefs = [
   {
-    headerName: '',
+    headerName: 'Actions',
     headerTooltip: 'Add/Remove Ticker',
     field: 'isTickerActive',
     colId: 'actions',
@@ -73,7 +73,8 @@ const colDefs = [
     width: 70,
     suppressMenu: false,
     menuTabs: ['generalMenuTab'],
-    pinned: 'left'
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
   },
   {
     headerName: 'Ticker',

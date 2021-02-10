@@ -13,3 +13,6 @@
 .ag-theme-alpine .ag-column-select-header {
   display: none;
 }
+.ag-theme-alpine .actionColumnHeader .ag-header-cell-text {
+  display: none;
+}
