@@ -148,163 +148,151 @@ const colDefs = [
     getQuickFilterText: params => dateFormater(params.value)
   },
   {
-    headerName: 'Sentiment',
-    headerTooltip: 'Sentiment',
-    children: [
-      {
-        headerName: 'Value',
-        headerTooltip: `The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP`,
-        field: 'sentiment',
-        width: 95,
-        colId: 'sentiment',
-        filter: 'agNumberColumnFilter',
-        valueGetter: params => {
-          const sentimentValue = get(params, 'data.sentiment', null);
-          let sentimentObj = null;
-          if (sentimentValue) {
-            sentimentObj = {
-              number: parseNumber(get(params, 'data.sentiment', null)),
-              word: changeWordGetter(get(params, 'data.sentimentWord', null))
-            };
-          }
-          return sentimentObj;
-        },
-        comparator: numberWordComparator,
-        valueFormatter: params => percentFormater(params, true),
-        cellStyle: descriptionValueStyler
-      },
-      {
-        headerName: 'Value Description',
-        headerTooltip: 'Value Description',
-        field: 'sentimentWord',
-        colId: 'sentimentWord',
-        width: 147,
-        valueGetter: params => {
-          return {
-            number: parseNumber(get(params, 'data.sentiment', null)),
-            word: changeWordGetter(get(params, 'data.sentimentWord', null))
-          };
-        },
-        valueFormatter: params => {
-          return changeWordFormatter(params.value.word);
-        },
-        comparator: numberWordComparator,
-        cellRenderer: 'WordStatusRenderer'
-      },
-      {
-        headerName: 'Change',
-        headerTooltip: "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
-        field: 'sentimentChange',
-        colId: 'sentimentChange',
-        filter: 'agNumberColumnFilter',
-        width: 109,
-        valueGetter: params => {
-          const sentimentValue = get(params, 'data.sentimentChange', null);
-          let sentimentObj = null;
-          if (sentimentValue) {
-            sentimentObj = {
-              number: parseNumber(sentimentValue),
-              word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
-            };
-          }
-          return sentimentObj;
-        },
-        valueFormatter: params => percentFormater(params, true),
-        comparator: numberWordComparator,
-        cellStyle: descriptionValueStyler
-      },
-      {
-        headerName: 'Change Description',
-        headerTooltip: 'Sentiment Change Word',
-        field: 'sentimentChangeWord',
-        colId: 'sentimentChangeWord',
-        width: 161,
-        valueGetter: params => {
-          return {
-            number: parseNumber(get(params, 'data.sentimentChange', null)),
-            word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
-          };
-        },
-        valueFormatter: params => {
-          return changeWordFormatter(params.value.word);
-        },
-        comparator: numberWordComparator,
-        cellRenderer: 'WordStatusRenderer'
+    headerName: 'Aggregated Sentiment',
+    headerTooltip: `The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP`,
+    field: 'sentiment',
+    width: 95,
+    colId: 'sentiment',
+    filter: 'agNumberColumnFilter',
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.sentiment', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(get(params, 'data.sentiment', null)),
+          word: changeWordGetter(get(params, 'data.sentimentWord', null))
+        };
       }
-    ]
+      return sentimentObj;
+    },
+    comparator: numberWordComparator,
+    valueFormatter: params => percentFormater(params, true),
+    cellStyle: descriptionValueStyler
+  },
+  {
+    headerName: 'Sentiment Quantile',
+    headerTooltip: 'Value Description',
+    field: 'sentimentWord',
+    colId: 'sentimentWord',
+    width: 147,
+    valueGetter: params => {
+      return {
+        number: parseNumber(get(params, 'data.sentiment', null)),
+        word: changeWordGetter(get(params, 'data.sentimentWord', null))
+      };
+    },
+    valueFormatter: params => {
+      return changeWordFormatter(params.value.word);
+    },
+    comparator: numberWordComparator,
+    cellRenderer: 'WordStatusRenderer'
+  },
+  {
+    headerName: 'Sentiment Change',
+    headerTooltip: "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
+    field: 'sentimentChange',
+    colId: 'sentimentChange',
+    filter: 'agNumberColumnFilter',
+    width: 109,
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.sentimentChange', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(sentimentValue),
+          word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
+        };
+      }
+      return sentimentObj;
+    },
+    valueFormatter: params => percentFormater(params, true),
+    comparator: numberWordComparator,
+    cellStyle: descriptionValueStyler
+  },
+  {
+    headerName: 'Sentiment Change Quantile',
+    headerTooltip: 'Sentiment Change Word',
+    field: 'sentimentChangeWord',
+    colId: 'sentimentChangeWord',
+    width: 161,
+    valueGetter: params => {
+      return {
+        number: parseNumber(get(params, 'data.sentimentChange', null)),
+        word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
+      };
+    },
+    valueFormatter: params => {
+      return changeWordFormatter(params.value.word);
+    },
+    comparator: numberWordComparator,
+    cellRenderer: 'WordStatusRenderer'
   },
   {
     headerName: 'Word Count Change',
-    headerTooltip: 'Word Count Change',
-    children: [
-      {
-        headerName: 'Change',
-        headerTooltip: `The raw change in Word Count of the parsed text from the company's most recent filing of the same type.`,
-        field: 'wordCountChange',
-        colId: 'wordCountChange',
-        filter: 'agNumberColumnFilter',
-        width: 94,
-        valueGetter: params => parseNumber(get(params, 'data.wordCountChange', null)),
-        valueFormatter: params => currencyFormater(params.value, 0, ''),
-        cellStyle: () => {
-          return { textAlign: 'right', color: 'black' };
-        },
-        comparator: (value1, value2) => {
-          let result = null;
-          if (value1 && value2) {
-            result = value1 - value2;
-          }
-          return result;
-        }
-      },
-      {
-        headerName: '% Change',
-        headerTooltip:
-          "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
-        field: 'wordCountChangePercent',
-        colId: 'wordCountChangePercent',
-        filter: 'agNumberColumnFilter',
-        width: 100,
-        valueGetter: params => {
-          const sentimentValue = get(params, 'data.wordCountChangePercent', null);
-          let sentimentObj = null;
-          if (sentimentValue) {
-            sentimentObj = {
-              number: parseNumber(sentimentValue),
-              word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
-            };
-          }
-          return sentimentObj;
-        },
-        valueFormatter: params => percentFormater(params, false),
-        comparator: numberWordComparator,
-        cellStyle: descriptionValueStyler
-      },
-      {
-        headerName: '% Change Description',
-        headerTooltip:
-          'Quintile of the security for that Factor<br />' +
-          'Lowest – First quintile of the factor (1st - 20th percentile)<br />' +
-          'Low – Second quintile of the factor (21st - 40th percentile)<br />' +
-          'Median – Third quintile of the factor (41st - 60th percentile)<br />' +
-          'High – Fourth quintile of the factor (61st - 80th percentile)<br />' +
-          'Highest – Fifth quintile of the factor (81st - 100th percentile)',
-        field: 'wordCountChangePercentWord',
-        colId: 'wordCountChangePercentWord',
-        width: 187,
-        valueGetter: params => {
-          return {
-            number: parseNumber(get(params, 'data.wordCountChangePercent', null)),
-            word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
-          };
-        },
-        valueFormatter: params => {
-          return changeWordFormatter(params.value.word);
-        },
-        comparator: numberWordComparator,
-        cellRenderer: 'WordStatusRenderer'
+    headerTooltip: `The raw change in Word Count of the parsed text from the company's most recent filing of the same type.`,
+    field: 'wordCountChange',
+    colId: 'wordCountChange',
+    filter: 'agNumberColumnFilter',
+    width: 94,
+    valueGetter: params => parseNumber(get(params, 'data.wordCountChange', null)),
+    valueFormatter: params => currencyFormater(params.value, 0, ''),
+    cellStyle: () => {
+      return { textAlign: 'right', color: 'black' };
+    },
+    comparator: (value1, value2) => {
+      let result = null;
+      if (value1 && value2) {
+        result = value1 - value2;
       }
-    ]
+      return result;
+    }
+  },
+  {
+    headerName: 'Word Count Percentage',
+    headerTooltip:
+      "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
+    field: 'wordCountChangePercent',
+    colId: 'wordCountChangePercent',
+    filter: 'agNumberColumnFilter',
+    width: 100,
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.wordCountChangePercent', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(sentimentValue),
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+        };
+      }
+      return sentimentObj;
+    },
+    valueFormatter: params => percentFormater(params, false),
+    comparator: numberWordComparator,
+    cellStyle: descriptionValueStyler
+  },
+  {
+    headerName: 'Word Count Change Quantile',
+    headerTooltip:
+      'Quintile of the security for that Factor<br />' +
+      'Lowest – First quintile of the factor (1st - 20th percentile)<br />' +
+      'Low – Second quintile of the factor (21st - 40th percentile)<br />' +
+      'Median – Third quintile of the factor (41st - 60th percentile)<br />' +
+      'High – Fourth quintile of the factor (61st - 80th percentile)<br />' +
+      'Highest – Fifth quintile of the factor (81st - 100th percentile)',
+    field: 'wordCountChangePercentWord',
+    colId: 'wordCountChangePercentWord',
+    width: 187,
+    valueGetter: params => {
+      return {
+        number: parseNumber(get(params, 'data.wordCountChangePercent', null)),
+        word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+      };
+    },
+    valueFormatter: params => {
+      return changeWordFormatter(params.value.word);
+    },
+    comparator: numberWordComparator,
+    cellRenderer: 'WordStatusRenderer'
   }
 ];
 

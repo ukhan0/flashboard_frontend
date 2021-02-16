@@ -19,10 +19,7 @@ const WatchlistTopicSearch = props => {
 
   const handleSearchTextChange = debounce(async text => {
     try {
-      const response = await axios.post(
-        `${config.apiUrl}/api/get_wish_list_items`,
-        { q: text }
-      );
+      const response = await axios.post(`${config.apiUrl}/api/get_wish_list_items`, { q: text });
       const symbolCodes = get(response, 'data.data', []);
       setAvailableSymbols(symbolCodes);
     } catch (error) {
@@ -45,19 +42,14 @@ const WatchlistTopicSearch = props => {
         getOptionLabel={option => createOptionLabel(option)}
         defaultValue={selectedSymbols}
         renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              label={createOptionLabel(option)}
-              {...getTagProps({ index })}
-            />
-          ))
+          value.map((option, index) => <Chip label={createOptionLabel(option)} {...getTagProps({ index })} />)
         }
         renderInput={params => (
           <TextField
             {...params}
-            label="Symbol"
+            label="Search"
             variant="outlined"
-            placeholder="Type Symbol here"
+            placeholder="Type Company Name or Symbol"
             onChange={e => handleSearchTextChange(e.target.value)}
             fullWidth
           />
@@ -72,11 +64,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setWatchlistSelectedSymbols: value =>
-    dispatch(setWatchlistSelectedSymbols(value))
+  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WatchlistTopicSearch);
+export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicSearch);

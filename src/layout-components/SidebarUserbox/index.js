@@ -21,9 +21,7 @@ const SidebarUserbox = props => {
           <Box>
             <b>{selectedItem.ticker}</b>
           </Box>
-          <Box className="app-sidebar-userbox-description">
-            {selectedItem.companyName}
-          </Box>
+          <Box className="app-sidebar-userbox-description">{selectedItem.companyName}</Box>
         </Box>
       </Box>
     </Fragment>

@@ -27,5 +27,8 @@ export default makeStyles(() => ({
   loaderSection: {
     display: 'flex',
     justifyContent: 'center'
+  },
+  formControl: {
+    width: '100%'
   }
 }));

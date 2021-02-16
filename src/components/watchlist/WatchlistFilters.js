@@ -43,7 +43,7 @@ const WatchlistFilters = props => {
   return (
     <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
       <Grid item>
-        <h6 className="font-weight-bold font-size-lg mb-1 text-black">File Types</h6>
+        <div className="text-black-50 opacity-6">File Types</div>
         <ButtonGroup color="primary">
           {fileTypesSelection.map((fileType, i) => (
             <Button
@@ -57,7 +57,7 @@ const WatchlistFilters = props => {
         </ButtonGroup>
       </Grid>
       <Grid item>
-        <h6 className="font-weight-bold font-size-lg mb-1 text-black">Universe</h6>
+        <div className="text-black-50 opacity-6">Universe</div>
         <ButtonGroup color="primary">
           {universeSelection.map((universe, i) => (
             <Button
@@ -77,7 +77,7 @@ const WatchlistFilters = props => {
         </ButtonGroup>
       </Grid>
       <Grid item>
-        <h6 className="font-weight-bold font-size-lg mb-1 text-black">Metrics</h6>
+        <div className="text-black-50 opacity-6">Metrics</div>
         <ButtonGroup color="primary">
           {metricsSelection.map((metric, i) => (
             <Button

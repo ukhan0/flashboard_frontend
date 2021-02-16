@@ -164,6 +164,7 @@ const Watchlist = props => {
   const handleUpload = async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
+      setLoading(true);
       const response = await axios.post(`${config.apiUrl}/api/save_wishlist_item`, {
         ticker_limit: 10000,
         alerts: false,
@@ -255,6 +256,9 @@ const Watchlist = props => {
                 </Button>
               </Grid>
             ) : null}
+            <Grid item className={classes.spaceBetween} xs={4}>
+              <WatchlistSearch handleUpload={handleUpload} />
+            </Grid>
             <Grid item>
               <Button
                 color="primary"
@@ -264,11 +268,8 @@ const Watchlist = props => {
                 onClick={() => {
                   setTopicDialogOpen(true);
                 }}>
-                Add Ticker to WatchList
+                Add a List
               </Button>
-            </Grid>
-            <Grid item className={classes.spaceBetween} xs={4}>
-              <WatchlistSearch />
             </Grid>
           </Grid>
         </Grid>

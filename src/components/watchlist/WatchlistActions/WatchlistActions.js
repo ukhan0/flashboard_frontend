@@ -5,7 +5,7 @@ import WatchlistService from '../WatchlistService';
 export default function WatchListActions() {
   const actions = [
     { key: 'autoSize', label: 'Auto Size Columns' },
-    { key: 'sizeToFit', label: 'Fit Column Size' },
+    // { key: 'sizeToFit', label: 'Fit Column Size' },
     { key: 'csvExport', label: 'CSV Export' }
   ];
 
