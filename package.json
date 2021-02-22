@@ -77,7 +77,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
-    "deploy:dev": "aws s3 sync build/ s3://flashboard --acl public-read --profile experts"
+    "deploy:dev": "aws s3 sync build/ s3://flashboard --acl public-read --profile experts",
+    "deploy:sma:dev": "aws s3 sync build/ s3://sma-webapp-react --acl public-read --profile flashboard"
   },
   "eslintConfig": {
     "extends": "react-app"

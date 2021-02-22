@@ -170,7 +170,7 @@ const colDefs = [
     cellStyle: descriptionValueStyler
   },
   {
-    headerName: 'Sentiment Quantile',
+    headerName: 'Sentiment Quintile',
     headerTooltip: 'Value Description',
     field: 'sentimentWord',
     colId: 'sentimentWord',
@@ -210,7 +210,7 @@ const colDefs = [
     cellStyle: descriptionValueStyler
   },
   {
-    headerName: 'Sentiment Change Quantile',
+    headerName: 'Sentiment Change Quintile',
     headerTooltip: 'Sentiment Change Word',
     field: 'sentimentChangeWord',
     colId: 'sentimentChangeWord',
@@ -271,7 +271,7 @@ const colDefs = [
     cellStyle: descriptionValueStyler
   },
   {
-    headerName: 'Word Count Change Quantile',
+    headerName: 'Word Count Change Quintile',
     headerTooltip:
       'Quintile of the security for that Factor<br />' +
       'Lowest – First quintile of the factor (1st - 20th percentile)<br />' +

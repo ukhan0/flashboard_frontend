@@ -34,7 +34,7 @@ const Comparision = props => {
       src={`${config.comparisionSite}?f1=${selectedItem.recentId}&f2=${selectedItem.oldId}&${metricQueryParam}`}
       title="Comparision"
       width="100%"
-      height="900"
+      height={`${window.innerHeight - 100}px`}
       samesite="None"
       frameBorder="0"
       id="comparisionResult"

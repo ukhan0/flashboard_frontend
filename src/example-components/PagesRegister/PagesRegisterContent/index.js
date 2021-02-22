@@ -74,22 +74,7 @@ function TextMaskCustom(props) {
       ref={ref => {
         inputRef(ref ? ref.inputElement : null);
       }}
-      mask={[
-        '(',
-        /[1-9]/,
-        /\d/,
-        /\d/,
-        ')',
-        ' ',
-        /\d/,
-        /\d/,
-        /\d/,
-        '-',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/
-      ]}
+      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
       placeholderChar={'\u2000'}
       showMask
     />
@@ -104,11 +89,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      {...other}>
+    <Typography component="div" role="tabpanel" hidden={value !== index} {...other}>
       {value === index && <Box p={0}>{children}</Box>}
     </Typography>
   );
@@ -133,9 +114,7 @@ const LivePreviewExample = () => {
 
   const login = async () => {
     try {
-      const response = await axios.post(
-        `${config.apiUrl}/api/users/sign_in?email=${email}&password=${password}`
-      );
+      const response = await axios.post(`${config.apiUrl}/api/users/sign_in?email=${email}&password=${password}`);
       const userData = get(response, 'data', []);
       if (!userData.error) {
         localStorage.setItem('user', JSON.stringify(userData.data));
@@ -163,12 +142,7 @@ const LivePreviewExample = () => {
               <div className="flex-grow-1 w-100 d-flex align-items-center">
                 <div className="bg-composed-wrapper--content">
                   <Grid container spacing={0} className="min-vh-100">
-                    <Grid
-                      item
-                      xs={12}
-                      md={4}
-                      lg={5}
-                      className="d-flex align-items-center">
+                    <Grid item xs={12} md={4} lg={5} className="d-flex align-items-center">
                       <div className="hero-wrapper w-100 bg-composed-wrapper bg-plum-plate min-vh-100">
                         <div className="flex-grow-1 w-100 d-flex align-items-center">
                           <div
@@ -178,12 +152,9 @@ const LivePreviewExample = () => {
                           <div className="bg-composed-wrapper--bg bg-premium-dark opacity-5" />
                           <div className="bg-composed-wrapper--content p-5">
                             <div className="text-white mt-3">
-                              <h1 className="display-4 my-3 font-weight-bold">
-                                Why should you create an account?
-                              </h1>
+                              <h1 className="display-4 my-3 font-weight-bold">Why should you create an account?</h1>
                               <p className="font-size-md mb-0 text-white-50">
-                                A free hour, when our power of choice is
-                                untrammelled and when nothing prevents.
+                                A free hour, when our power of choice is untrammelled and when nothing prevents.
                               </p>
                               <div className="divider border-2 my-5 border-light opacity-2 rounded w-25" />
                               <div>
@@ -195,13 +166,9 @@ const LivePreviewExample = () => {
                                   component={RouterLink}
                                   to="/LandingPage">
                                   <span className="btn-wrapper--icon">
-                                    <FontAwesomeIcon
-                                      icon={['fas', 'arrow-left']}
-                                    />
+                                    <FontAwesomeIcon icon={['fas', 'arrow-left']} />
                                   </span>
-                                  <span className="btn-wrapper--label">
-                                    Back to dashboard
-                                  </span>
+                                  <span className="btn-wrapper--label">Back to dashboard</span>
                                 </Button>
                               </div>
                             </div>
@@ -209,62 +176,29 @@ const LivePreviewExample = () => {
                         </div>
                         <div className="hero-footer pb-4">
                           <Tooltip arrow title="Facebook">
-                            <IconButton
-                              color="inherit"
-                              size="medium"
-                              variant="outlined"
-                              className="text-white-50">
-                              <FontAwesomeIcon
-                                icon={['fab', 'facebook']}
-                                className="font-size-md"
-                              />
+                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
+                              <FontAwesomeIcon icon={['fab', 'facebook']} className="font-size-md" />
                             </IconButton>
                           </Tooltip>
                           <Tooltip arrow title="Twitter">
-                            <IconButton
-                              color="inherit"
-                              size="medium"
-                              variant="outlined"
-                              className="text-white-50">
-                              <FontAwesomeIcon
-                                icon={['fab', 'twitter']}
-                                className="font-size-md"
-                              />
+                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
+                              <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
                             </IconButton>
                           </Tooltip>
                           <Tooltip arrow title="Google">
-                            <IconButton
-                              color="inherit"
-                              size="medium"
-                              variant="outlined"
-                              className="text-white-50">
-                              <FontAwesomeIcon
-                                icon={['fab', 'google']}
-                                className="font-size-md"
-                              />
+                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
+                              <FontAwesomeIcon icon={['fab', 'google']} className="font-size-md" />
                             </IconButton>
                           </Tooltip>
                           <Tooltip arrow title="Instagram">
-                            <IconButton
-                              color="inherit"
-                              size="medium"
-                              variant="outlined"
-                              className="text-white-50">
-                              <FontAwesomeIcon
-                                icon={['fab', 'instagram']}
-                                className="font-size-md"
-                              />
+                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
+                              <FontAwesomeIcon icon={['fab', 'instagram']} className="font-size-md" />
                             </IconButton>
                           </Tooltip>
                         </div>
                       </div>
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      md={8}
-                      lg={7}
-                      className="d-flex align-items-center">
+                    <Grid item xs={12} md={8} lg={7} className="d-flex align-items-center">
                       <Container maxWidth="sm">
                         <div className="pt-5 pb-4">
                           <StyledTabs
@@ -277,9 +211,7 @@ const LivePreviewExample = () => {
                           </StyledTabs>
                         </div>
                         <TabPanel value={value} index={0}>
-                          <h3 className="display-4 mb-2 font-weight-bold">
-                            Create account
-                          </h3>
+                          <h3 className="display-4 mb-2 font-weight-bold">Create account</h3>
                           <p className="font-size-lg mb-5 text-black-50">
                             Fill in the fields below and you'll be good to go.
                           </p>
@@ -340,25 +272,17 @@ const LivePreviewExample = () => {
                             />
                           </div>
                           <div className="form-group pt-2 mb-4">
-                            By clicking the <strong>Create account</strong>{' '}
-                            button below you agree to our terms of service and
-                            privacy statement.
+                            By clicking the <strong>Create account</strong> button below you agree to our terms of
+                            service and privacy statement.
                           </div>
-                          <Button
-                            color="primary"
-                            size="large"
-                            variant="contained"
-                            className="mb-5">
+                          <Button color="primary" size="large" variant="contained" className="mb-5">
                             Create Account
                           </Button>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                          <h3 className="display-4 mb-2 font-weight-bold">
-                            Existing account
-                          </h3>
+                          <h3 className="display-4 mb-2 font-weight-bold">Existing account</h3>
                           <p className="font-size-lg mb-5 text-black-50">
-                            You already have an account? Fill in the fields
-                            below to login into your existing dashboard.
+                            You already have an account? Fill in the fields below to login into your existing dashboard.
                           </p>
                           <Card className="mx-0 bg-secondary mt-0 w-100 p-0 mb-4 border-0">
                             <div className="card-header d-block p-3 mx-2 mb-0 mt-2 rounded border-0">
@@ -366,29 +290,17 @@ const LivePreviewExample = () => {
                                 <span>Sign in with</span>
                               </div>
                               <div className="text-center">
-                                <Button
-                                  variant="outlined"
-                                  className="mr-2 text-facebook">
+                                <Button variant="outlined" className="mr-2 text-facebook">
                                   <span className="btn-wrapper--icon">
-                                    <FontAwesomeIcon
-                                      icon={['fab', 'facebook']}
-                                    />
+                                    <FontAwesomeIcon icon={['fab', 'facebook']} />
                                   </span>
-                                  <span className="btn-wrapper--label">
-                                    Facebook
-                                  </span>
+                                  <span className="btn-wrapper--label">Facebook</span>
                                 </Button>
-                                <Button
-                                  variant="outlined"
-                                  className="ml-2 text-twitter">
+                                <Button variant="outlined" className="ml-2 text-twitter">
                                   <span className="btn-wrapper--icon">
-                                    <FontAwesomeIcon
-                                      icon={['fab', 'twitter']}
-                                    />
+                                    <FontAwesomeIcon icon={['fab', 'twitter']} />
                                   </span>
-                                  <span className="btn-wrapper--label">
-                                    Twitter
-                                  </span>
+                                  <span className="btn-wrapper--label">Twitter</span>
                                 </Button>
                               </div>
                             </div>
@@ -399,9 +311,7 @@ const LivePreviewExample = () => {
                               <form className="px-5">
                                 <div className="mb-3">
                                   <FormControl className="w-100">
-                                    <InputLabel htmlFor="input-with-icon-adornment">
-                                      Email address
-                                    </InputLabel>
+                                    <InputLabel htmlFor="input-with-icon-adornment">Email address</InputLabel>
                                     <Input
                                       fullWidth
                                       id="input-with-icon-adornment"
@@ -416,16 +326,12 @@ const LivePreviewExample = () => {
                                 </div>
                                 <div className="mb-3">
                                   <FormControl className="w-100">
-                                    <InputLabel htmlFor="standard-adornment-password">
-                                      Password
-                                    </InputLabel>
+                                    <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                                     <Input
                                       id="standard-adornment-password"
                                       fullWidth
                                       type="password"
-                                      onChange={e =>
-                                        setPassword(e.target.value)
-                                      }
+                                      onChange={e => setPassword(e.target.value)}
                                       startAdornment={
                                         <InputAdornment position="start">
                                           <LockTwoToneIcon />

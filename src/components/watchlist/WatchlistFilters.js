@@ -17,8 +17,8 @@ const metricsSelection = [
   { label: 'Total', key: 'totdoc' },
   { label: 'MD&A', key: 'mda' },
   { label: 'Risk', key: 'rf' },
-  { label: 'Notes', key: 'notes' },
-  { label: 'FSS', key: 'fss' }
+  { label: 'Notes', key: 'notes' }
+  // { label: 'FSS', key: 'fss' }
 ];
 
 const WatchlistFilters = props => {
