@@ -43,7 +43,7 @@ const WatchlistFilters = props => {
   return (
     <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
       <Grid item>
-        <div className="text-black-50 opacity-6">File Types</div>
+        <div className="text-black-50 opacity-6">File Type</div>
         <ButtonGroup color="primary">
           {fileTypesSelection.map((fileType, i) => (
             <Button
@@ -77,7 +77,7 @@ const WatchlistFilters = props => {
         </ButtonGroup>
       </Grid>
       <Grid item>
-        <div className="text-black-50 opacity-6">Metrics</div>
+        <div className="text-black-50 opacity-6">Section</div>
         <ButtonGroup color="primary">
           {metricsSelection.map((metric, i) => (
             <Button

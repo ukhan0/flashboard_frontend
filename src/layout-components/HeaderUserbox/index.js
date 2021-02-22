@@ -49,7 +49,6 @@ export default function HeaderUserbox() {
 
   const signout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('watchlist::sortingorder');
     localStorage.removeItem('watchlist-data-all');
     // following code will refresh the page and Context will be reset
     window.location.href = '/PagesRegister';

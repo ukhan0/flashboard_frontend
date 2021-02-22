@@ -1,5 +1,4 @@
 import { isNull, includes, capitalize, lowerCase } from 'lodash';
-import moment from 'moment';
 
 const changedStyles = {
   lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80 },
@@ -57,8 +56,7 @@ export const formatExportValue = params => {
 export const dateFormater = value => {
   let formatedValue = null;
   if (value) {
-    const momentDateObj = moment(value);
-    formatedValue = momentDateObj.format('YYYY-MMM-DD');
+    formatedValue = value.toLocaleDateString();
   }
   return formatedValue;
 };
@@ -99,13 +97,7 @@ export const percentFormater = (params, flag) => {
   return formatedValue;
 };
 
-export const currencyFormater = (
-  value,
-  fractionDigits = 2,
-  currencyType = 'USD',
-  prefix = '',
-  postfix = ''
-) => {
+export const currencyFormater = (value, fractionDigits = 2, currencyType = 'USD', prefix = '', postfix = '') => {
   if (value === null || value === '') {
     return null;
   }

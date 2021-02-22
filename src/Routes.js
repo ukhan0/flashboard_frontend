@@ -7,11 +7,7 @@ import MuiTheme from './theme';
 import { connect } from 'react-redux';
 
 // Layout Blueprints
-import {
-  LeftSidebar,
-  MinimalLayout,
-  PresentationLayout
-} from './layout-blueprints';
+import { LeftSidebar, MinimalLayout, PresentationLayout } from './layout-blueprints';
 
 // Example Pages
 
@@ -53,9 +49,7 @@ const SuspenseLoading = () => {
         <div className="d-flex align-items-center flex-column px-4">
           <ClimbingBoxLoader color={'#5383ff'} loading={true} />
         </div>
-        <div className="text-muted font-size-xl text-center pt-3">
-          Loading...
-        </div>
+        <div className="text-muted font-size-xl text-center pt-3">Loading...</div>
       </div>
     </Fragment>
   );
@@ -98,13 +92,7 @@ const Routes = () => {
                 </Switch>
               </PresentationLayout>
             </Route>
-            <Route
-              path={[
-                '/PagesLogin',
-                '/PagesRegister',
-                '/PagesRecoverPassword',
-                '/PagesError404'
-              ]}>
+            <Route path={['/PagesLogin', '/PagesRegister', '/PagesRecoverPassword', '/PagesError404']}>
               <MinimalLayout>
                 <Switch location={location} key={location.pathname}>
                   <motion.div
@@ -115,17 +103,13 @@ const Routes = () => {
                     transition={pageTransition}>
                     <Route path="/PagesLogin" component={PagesLogin} />
                     <Route path="/PagesRegister" component={PagesRegister} />
-                    <Route
-                      path="/PagesRecoverPassword"
-                      component={PagesRecoverPassword}
-                    />
+                    <Route path="/PagesRecoverPassword" component={PagesRecoverPassword} />
                     <Route path="/PagesError404" component={PagesError404} />
                   </motion.div>
                 </Switch>
               </MinimalLayout>
             </Route>
-            <Route
-              path={['/watchlist', '/filings', '/comparision', '/sentiment']}>
+            <Route path={['/watchlist', '/filings', '/comparision', '/sentiment']}>
               <LeftSidebar>
                 <Switch location={location} key={location.pathname}>
                   <motion.div
@@ -146,7 +130,7 @@ const Routes = () => {
         </Suspense>
       </AnimatePresence>
     </ThemeProvider>
-    );
+  );
 };
 
 const mapStateToProps = () => ({});

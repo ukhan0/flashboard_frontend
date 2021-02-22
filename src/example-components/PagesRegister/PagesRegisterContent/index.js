@@ -35,6 +35,8 @@ import hero9 from '../../../assets/images/hero-bg/hero-9.jpg';
 
 import { NavLink as RouterLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../reducers/User';
 
 const StyledTabs = withStyles({
   indicator: {
@@ -107,6 +109,7 @@ const LivePreviewExample = () => {
   const [email, setEmail] = React.useState('');
   const [errorText, setErrorText] = React.useState('');
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -117,6 +120,7 @@ const LivePreviewExample = () => {
       const response = await axios.post(`${config.apiUrl}/api/users/sign_in?email=${email}&password=${password}`);
       const userData = get(response, 'data', []);
       if (!userData.error) {
+        dispatch(setUser(userData.data));
         localStorage.setItem('user', JSON.stringify(userData.data));
         history.push('/watchlist');
       } else {

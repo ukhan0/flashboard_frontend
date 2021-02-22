@@ -54,7 +54,6 @@ const WatchlistTopicSearch = props => {
         className={classes.searchField}
         onChange={selectionChanged}
         options={availableSymbols}
-        hasClearIcon={false}
         value={selectedValue}
         getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (

@@ -14,12 +14,11 @@ import mobileImage from '../../assets/images/composed-bg/SMA_Filings_mobile.png'
 import Footer from '../../layout-components/Footer';
 import hero6 from '../../assets/images/hero-bg/hero-6.jpg';
 
-const LandingPage = props => {
-  const { footerFixed } = props;
+const LandingPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Fragment>
-      <div className="hero-wrapper bg-composed-wrapper bg-white">
+      <div className={clsx('hero-wrapper bg-composed-wrapper bg-white')}>
         <div className="header-nav-wrapper header-nav-wrapper-lg w-100 navbar-dark">
           <Container className="d-flex" fixed>
             <div className="header-nav-logo align-items-center d-flex justify-content-start">
@@ -120,10 +119,7 @@ const LandingPage = props => {
           </div>
         </div>
       </div>
-      <div
-        className={clsx('app-content', {
-          'app-content-footer-fixed': footerFixed
-        })}>
+      <div>
         <Footer />
       </div>
     </Fragment>
