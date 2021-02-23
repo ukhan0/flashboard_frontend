@@ -5,24 +5,28 @@ import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 
 const Comparision = props => {
-  const { selectedItem, selectedMetric } = props;
+  const { selectedItem, selectedMetric, selectedFileType } = props;
   let metricQueryParam = '';
   const history = useHistory();
   if (!selectedItem) {
     history.push('/watchlist');
   }
+  console.log(selectedFileType);
   switch (selectedMetric) {
     case 'mda':
-      metricQueryParam = 'partHeadingTag=P2&itemHeadingTag=I7';
+      metricQueryParam =
+        selectedFileType === '10k' ? 'partHeadingTag=P2&itemHeadingTag=I7' : 'partHeadingTag=P1&itemHeadingTag=I2';
       break;
     case 'rf':
-      metricQueryParam = 'partHeadingTag=P1&itemHeadingTag=I1A';
+      metricQueryParam =
+        selectedFileType === '10k' ? 'partHeadingTag=P1&itemHeadingTag=I1A' : 'partHeadingTag=P2&itemHeadingTag=I1A';
       break;
     case 'notes':
       metricQueryParam = 'partHeadingTag=N';
       break;
     case 'fss':
-      metricQueryParam = 'partHeadingTag=P2&itemHeadingTag=I8';
+      metricQueryParam =
+        selectedFileType === '10k' ? 'partHeadingTag=P2&itemHeadingTag=I8' : 'partHeadingTag=P1&itemHeadingTag=I1';
       break;
     default:
       metricQueryParam = '';
@@ -46,7 +50,8 @@ const Comparision = props => {
 
 const mapStateToProps = state => ({
   selectedItem: state.Watchlist.selectedItem,
-  selectedMetric: state.Watchlist.selectedMetric
+  selectedMetric: state.Watchlist.selectedMetric,
+  selectedFileType: state.Watchlist.selectedFileType
 });
 
 export default connect(mapStateToProps)(Comparision);
