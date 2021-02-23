@@ -34,6 +34,7 @@ const defaultColDef = {
   resizable: true,
   floatingFilter: true,
   suppressMenu: true,
+  filterParams: { newRowsAction: 'keep' },
   headerClass: ['allColumnHeader']
 };
 
