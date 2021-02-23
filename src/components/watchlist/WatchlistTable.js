@@ -38,6 +38,10 @@ const defaultColDef = {
   headerClass: ['allColumnHeader']
 };
 
+const gridOptions = {
+  headerHeight: 80,
+}
+
 const sideBarConfiguration = {
   toolPanels: [
     {
@@ -84,7 +88,7 @@ const colDefs = [
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-    width: 100,
+    width: 94,
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,
@@ -97,7 +101,7 @@ const colDefs = [
     headerTooltip: 'Company Name',
     field: 'companyName',
     colId: 'companyName',
-    width: 240,
+    width: 197,
     filter: 'agTextColumnFilter',
     menuTabs: ['generalMenuTab'],
     suppressMenu: false,
@@ -107,7 +111,7 @@ const colDefs = [
     headerName: 'Sector',
     headerTooltip: 'Sector',
     field: 'sector',
-    width: 193,
+    width: 142,
     colId: 'sector',
     filter: 'agTextColumnFilter'
   },
@@ -116,7 +120,7 @@ const colDefs = [
     headerTooltip: 'Industry',
     field: 'industry',
     colId: 'industry',
-    width: 212,
+    width: 158,
     filter: 'agTextColumnFilter'
   },
   {
@@ -124,7 +128,7 @@ const colDefs = [
     headerTooltip: 'Market Cap',
     field: 'mktcap',
     colId: 'mktcap',
-    width: 143,
+    width: 117,
     filter: 'agNumberColumnFilter',
     valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
@@ -138,7 +142,7 @@ const colDefs = [
     field: 'adv',
     colId: 'adv',
     filter: 'agNumberColumnFilter',
-    width: 157,
+    width: 127,
     valueGetter: params => parseNumber(get(params, 'data.adv', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
     cellStyle: () => {
@@ -150,7 +154,7 @@ const colDefs = [
     headerTooltip: 'Last Reported',
     field: 'last',
     colId: 'last',
-    width: 143,
+    width: 117,
     sort: 'desc',
     valueGetter: params => parseDateStr(get(params, 'data.last', null)),
     valueFormatter: params => dateFormater(params.value),
@@ -162,7 +166,7 @@ const colDefs = [
     headerName: 'Aggregated Sentiment',
     headerTooltip: `The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP`,
     field: 'sentiment',
-    width: 101,
+    width: 112,
     colId: 'sentiment',
     filter: 'agNumberColumnFilter',
     valueGetter: params => {
@@ -191,7 +195,7 @@ const colDefs = [
     headerTooltip: 'Value Description',
     field: 'sentimentWord',
     colId: 'sentimentWord',
-    width: 126,
+    width: 106,
     valueGetter: params => {
       return {
         number: parseNumber(get(params, 'data.sentiment', null)),
@@ -213,7 +217,7 @@ const colDefs = [
     field: 'sentimentChange',
     colId: 'sentimentChange',
     filter: 'agNumberColumnFilter',
-    width: 88,
+    width: 104,
     valueGetter: params => {
       const sentimentValue = get(params, 'data.sentimentChange', null);
       let sentimentObj = null;
@@ -240,7 +244,7 @@ const colDefs = [
     headerTooltip: 'Sentiment Change Word',
     field: 'sentimentChangeWord',
     colId: 'sentimentChangeWord',
-    width: 146,
+    width: 118,
     valueGetter: params => {
       return {
         number: parseNumber(get(params, 'data.sentimentChange', null)),
@@ -262,7 +266,7 @@ const colDefs = [
     field: 'wordCountChange',
     colId: 'wordCountChange',
     filter: 'agNumberColumnFilter',
-    width: 99,
+    width: 93,
     valueGetter: params => parseNumber(get(params, 'data.wordCountChange', null)),
     valueFormatter: params => currencyFormater(params.value, 0, ''),
     cellStyle: () => {
@@ -289,7 +293,7 @@ const colDefs = [
     field: 'wordCountChangePercent',
     colId: 'wordCountChangePercent',
     filter: 'agNumberColumnFilter',
-    width: 105,
+    width: 109,
     valueGetter: params => {
       const sentimentValue = get(params, 'data.wordCountChangePercent', null);
       let sentimentObj = null;
@@ -322,7 +326,7 @@ const colDefs = [
       'Highest – Fifth quintile of the factor (81st - 100th percentile)',
     field: 'wordCountChangePercentWord',
     colId: 'wordCountChangePercentWord',
-    width: 150,
+    width: 115,
     valueGetter: params => {
       return {
         number: parseNumber(get(params, 'data.wordCountChangePercent', null)),
@@ -392,6 +396,7 @@ const WatchlistTable = props => {
         tooltipShowDelay={0}
         pagination={true}
         // domLayout="autoHeight"
+        gridOptions={gridOptions}
         multiSortKey="ctrl"
         onCellClicked={cellClicked}
         frameworkComponents={frameworkComponents}

@@ -31,7 +31,7 @@ const Comparision = props => {
 
   return selectedItem ? (
     <iframe
-      src={`${config.comparisionSite}?f1=${selectedItem.recentId}&f2=${selectedItem.oldId}&${metricQueryParam}`}
+      src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}`}
       title="Comparision"
       width="100%"
       height={`${window.innerHeight - 100}px`}

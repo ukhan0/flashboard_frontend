@@ -22,3 +22,12 @@
 .ag-theme-alpine .allColumnHeader .ag-header-cell-text {
   white-space: initial;
 }
+.ag-header-cell-label, .ag-header-group-cell-label {
+  display: flex;
+  flex: 1 1 auto;
+  overflow: hidden;
+  align-items: center;
+  text-overflow: ellipsis;
+  align-self: stretch;
+  text-align: center;
+}
