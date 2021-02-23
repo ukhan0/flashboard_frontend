@@ -1,33 +1,9 @@
 import { forEach, get, isEmpty } from 'lodash';
 
 const fields10k = {
-  totdoc: [
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o'
-  ],
-  mda: [
-    'w',
-    'x',
-    'y',
-    'z',
-    'aa',
-    'ab',
-    'ac'
-  ],
-  rf: [
-    'ak',
-    'al',
-    'am',
-    'an',
-    'ao',
-    'ap',
-    'aq'
-  ],
+  totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
+  mda: ['w', 'x', 'y', 'z', 'aa', 'ab', 'ac'],
+  rf: ['ak', 'al', 'am', 'an', 'ao', 'ap', 'aq'],
   notes: [
     'ay',
     'az',
@@ -51,33 +27,9 @@ const fields10k = {
 };
 
 const fields10q = {
-  totdoc: [
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v'
-  ],
-  mda: [
-    'ad',
-    'ae',
-    'af',
-    'ag',
-    'ah',
-    'ai',
-    'aj'
-  ],
-  rf: [
-    'ar',
-    'as',
-    'at',
-    'au',
-    'av',
-    'aw',
-    'ax'
-  ],
+  totdoc: ['p', 'q', 'r', 's', 't', 'u', 'v'],
+  mda: ['ad', 'ae', 'af', 'ag', 'ah', 'ai', 'aj'],
+  rf: ['ar', 'as', 'at', 'au', 'av', 'aw', 'ax'],
   notes: [
     'bh',
     'bi',
@@ -188,5 +140,10 @@ export const checkIsFilterActive = () => {
 export const checkIsSortActive = () => {
   const sortingState = getColumnState();
   const activeSortColumns = sortingState.filter(state => state.sort);
+  if (activeSortColumns.length === 1) {
+    if (activeSortColumns[0].colId === 'last') {
+      return false;
+    }
+  }
   return activeSortColumns.length === 0 ? false : true;
 };

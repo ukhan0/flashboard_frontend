@@ -209,13 +209,21 @@ const Watchlist = props => {
   const clearFilterHandler = state => {
     WatchlistService.clearFilter();
     setIsFilterActive(false);
-    setConfirmationClearFilterDialog(false)
+    setConfirmationClearFilterDialog(false);
   };
 
   const clearSortHandler = state => {
-    WatchlistService.clearSort();
+    const columnState = getColumnState();
+    let sortLast = null;
+    columnState.forEach(elements => {
+      if (elements.colId === 'last') {
+        sortLast = elements.sort;
+      }
+    });
+
+    WatchlistService.clearSort(sortLast);
     setIsSortActive(false);
-    setConfirmationClearSortDialog(false)
+    setConfirmationClearSortDialog(false);
   };
 
   const gridData = firstTimeLoad.current ? null : processWatchlistData();
@@ -248,7 +256,7 @@ const Watchlist = props => {
                   variant="contained"
                   disabled={!isFilterActive}
                   onClick={() => {
-                    setConfirmationClearFilterDialog(true)
+                    setConfirmationClearFilterDialog(true);
                   }}>
                   Clear Filtering
                 </Button>
@@ -263,7 +271,7 @@ const Watchlist = props => {
                   size="small"
                   disabled={!isSortActive}
                   onClick={() => {
-                    setConfirmationClearSortDialog(true)
+                    setConfirmationClearSortDialog(true);
                   }}>
                   Clear Sorting
                 </Button>
@@ -304,16 +312,16 @@ const Watchlist = props => {
         error={topicAddingError}
         onUpload={handleUpload}
       />
-       <WatchlistConfirmationDialog
+      <WatchlistConfirmationDialog
         isOpen={confirmationClearFilterDialog}
-        Agree={clearFilterHandler}
+        Agree={() => clearFilterHandler()}
         disAgree={() => setConfirmationClearFilterDialog(false)}
         actionName="filter"
         error={topicAddingError}
       />
-       <WatchlistConfirmationDialog
+      <WatchlistConfirmationDialog
         isOpen={confirmationClearSortDialog}
-        Agree={clearSortHandler}
+        Agree={() => clearSortHandler()}
         disAgree={() => setConfirmationClearSortDialog(false)}
         actionName="sort"
         error={topicAddingError}

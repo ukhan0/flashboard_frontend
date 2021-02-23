@@ -16,6 +16,9 @@
 .ag-theme-alpine .actionColumnHeader .ag-header-cell-text {
   display: none;
 }
-.ag-theme-alpine .allColumnHeader:hover{
-  background-color: #E5E5E5;
+.ag-theme-alpine .allColumnHeader:hover {
+  background-color: #e5e5e5;
+}
+.ag-theme-alpine .allColumnHeader .ag-header-cell-text {
+  white-space: initial;
 }
