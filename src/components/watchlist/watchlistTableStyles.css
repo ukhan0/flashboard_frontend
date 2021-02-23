@@ -16,3 +16,6 @@
 .ag-theme-alpine .actionColumnHeader .ag-header-cell-text {
   display: none;
 }
+.ag-theme-alpine .allColumnHeader:hover{
+  background-color: #E5E5E5;
+}

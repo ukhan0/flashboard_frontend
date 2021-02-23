@@ -33,7 +33,8 @@ const defaultColDef = {
   filter: true,
   resizable: true,
   floatingFilter: true,
-  suppressMenu: true
+  suppressMenu: true,
+  headerClass: ['allColumnHeader']
 };
 
 const sideBarConfiguration = {

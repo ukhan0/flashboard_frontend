@@ -21,6 +21,7 @@ import {
 } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
+import WatchlistConfirmationDialog from './ActionConfirmation';
 import { connect } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
@@ -44,6 +45,8 @@ const Watchlist = props => {
   const [isSortActive, setIsSortActive] = useState(checkIsSortActive());
   const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
+  const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
+  const [confirmationClearSortDialog, setConfirmationClearSortDialog] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addTickersnackbar, setAddTickersnackbar] = React.useState(false);
@@ -203,6 +206,18 @@ const Watchlist = props => {
     setIsFilterActive(checkIsFilterActive());
   };
 
+  const clearFilterHandler = state => {
+    WatchlistService.clearFilter();
+    setIsFilterActive(false);
+    setConfirmationClearFilterDialog(false)
+  };
+
+  const clearSortHandler = state => {
+    WatchlistService.clearSort();
+    setIsSortActive(false);
+    setConfirmationClearSortDialog(false)
+  };
+
   const gridData = firstTimeLoad.current ? null : processWatchlistData();
 
   return (
@@ -233,8 +248,7 @@ const Watchlist = props => {
                   variant="contained"
                   disabled={!isFilterActive}
                   onClick={() => {
-                    WatchlistService.clearFilter();
-                    setIsFilterActive(false);
+                    setConfirmationClearFilterDialog(true)
                   }}>
                   Clear Filtering
                 </Button>
@@ -249,8 +263,7 @@ const Watchlist = props => {
                   size="small"
                   disabled={!isSortActive}
                   onClick={() => {
-                    WatchlistService.clearSort();
-                    setIsSortActive(false);
+                    setConfirmationClearSortDialog(true)
                   }}>
                   Clear Sorting
                 </Button>
@@ -290,6 +303,20 @@ const Watchlist = props => {
         onClose={() => setTopicDialogOpen(false)}
         error={topicAddingError}
         onUpload={handleUpload}
+      />
+       <WatchlistConfirmationDialog
+        isOpen={confirmationClearFilterDialog}
+        Agree={clearFilterHandler}
+        disAgree={() => setConfirmationClearFilterDialog(false)}
+        actionName="filter"
+        error={topicAddingError}
+      />
+       <WatchlistConfirmationDialog
+        isOpen={confirmationClearSortDialog}
+        Agree={clearSortHandler}
+        disAgree={() => setConfirmationClearSortDialog(false)}
+        actionName="sort"
+        error={topicAddingError}
       />
       <Snackbar
         open={addTickersnackbar}
