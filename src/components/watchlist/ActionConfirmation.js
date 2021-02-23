@@ -12,7 +12,7 @@ export default function ActionConfirmation(props) {
       <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          You can going to clear the ${props.actionName}. Are you sure?
+          You can going to clear the {props.actionName}. Are you sure?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
