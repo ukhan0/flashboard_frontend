@@ -14,16 +14,11 @@ export default function LivePreviewExample() {
           <Card className="card-box mb-4 p-4 text-center">
             <Box className="card-tr-actions">
               <IconButton color="secondary" className="font-size-xl">
-                <FontAwesomeIcon
-                  icon={['fas', 'ellipsis-h']}
-                  className="font-size-lg"
-                />
+                <FontAwesomeIcon icon={['fas', 'ellipsis-h']} className="font-size-lg" />
               </IconButton>
             </Box>
             <div className="card-header-alt">
-              <div className="font-weight-bold font-size-lg mb-0 text-black">
-                Financial year
-              </div>
+              <div className="font-weight-bold font-size-lg mb-0 text-black">Financial year</div>
               <p className="text-black-50">Expenses statistics to date</p>
             </div>
             <div className="divider my-4" />
@@ -46,19 +41,11 @@ export default function LivePreviewExample() {
             <Grid container spacing={4}>
               <Grid item xs={12} sm={6}>
                 <span className="opacity-6 pb-2">Current month</span>
-                <div className="d-flex align-items-center justify-content-center">
+                <div className="d-flex 5">
                   <span className="font-weight-bold font-size-lg">
                     <small className="opacity-6">$</small>
                     <span>
-                      <CountUp
-                        start={0}
-                        end={466.362}
-                        duration={12}
-                        deplay={2}
-                        separator=""
-                        decimals={3}
-                        decimal=","
-                      />
+                      <CountUp start={0} end={466.362} duration={12} deplay={2} separator="" decimals={3} decimal="," />
                     </span>
                   </span>
                   <Badge color="secondary" className="ml-2 text-danger">
@@ -98,10 +85,7 @@ export default function LivePreviewExample() {
             <Grid item xs={12} sm={6}>
               <Card className="card-box card-shadow-first p-4 mb-4">
                 <div className="display-3 text-center line-height-sm text-second text-center d-flex align-items-center pt-3 justify-content-center">
-                  <FontAwesomeIcon
-                    icon={['fas', 'arrow-down']}
-                    className="font-size-sm text-danger mr-2"
-                  />
+                  <FontAwesomeIcon icon={['fas', 'arrow-down']} className="font-size-sm text-danger mr-2" />
                   <div>
                     <CountUp
                       start={0}
@@ -134,20 +118,9 @@ export default function LivePreviewExample() {
               </Card>
               <Card className="card-box p-4 mb-4">
                 <div className="display-3 text-center line-height-sm text-second text-center d-flex align-items-center pt-3 justify-content-center">
-                  <FontAwesomeIcon
-                    icon={['far', 'dot-circle']}
-                    className="font-size-sm text-warning mr-2"
-                  />
+                  <FontAwesomeIcon icon={['far', 'dot-circle']} className="font-size-sm text-warning mr-2" />
                   <div>
-                    <CountUp
-                      start={0}
-                      end={436}
-                      duration={12}
-                      deplay={2}
-                      separator=""
-                      decimals={0}
-                      decimal=","
-                    />
+                    <CountUp start={0} end={436} duration={12} deplay={2} separator="" decimals={0} decimal="," />
                   </div>
                 </div>
                 <div className="text-black-50 text-center opacity-6 pt-3">
@@ -171,20 +144,9 @@ export default function LivePreviewExample() {
             <Grid item xs={12} sm={6}>
               <Card className="card-box p-4 mb-4">
                 <div className="display-3 text-center line-height-sm text-second text-center d-flex align-items-center pt-3 justify-content-center">
-                  <FontAwesomeIcon
-                    icon={['fas', 'arrow-up']}
-                    className="font-size-sm text-success mr-2"
-                  />
+                  <FontAwesomeIcon icon={['fas', 'arrow-up']} className="font-size-sm text-success mr-2" />
                   <div>
-                    <CountUp
-                      start={0}
-                      end={48.67}
-                      duration={12}
-                      deplay={2}
-                      separator=""
-                      decimals={2}
-                      decimal=","
-                    />
+                    <CountUp start={0} end={48.67} duration={12} deplay={2} separator="" decimals={2} decimal="," />
                   </div>
                 </div>
                 <div className="text-black-50 text-center opacity-6 pt-3">
@@ -206,10 +168,7 @@ export default function LivePreviewExample() {
               </Card>
               <Card className="card-box bg-premium-dark p-4 mb-4">
                 <div className="display-3 text-center line-height-sm text-white-50 text-center d-flex align-items-center pt-3 justify-content-center">
-                  <FontAwesomeIcon
-                    icon={['fas', 'arrow-down']}
-                    className="font-size-sm text-first mr-2"
-                  />
+                  <FontAwesomeIcon icon={['fas', 'arrow-down']} className="font-size-sm text-first mr-2" />
                   <div>
                     <CountUp
                       start={0}

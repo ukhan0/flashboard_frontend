@@ -21,21 +21,14 @@ const LandingPage = () => {
       <div className={clsx('hero-wrapper bg-composed-wrapper bg-white')}>
         <div className="header-nav-wrapper header-nav-wrapper-lg w-100 navbar-dark">
           <Container className="d-flex" fixed>
-            <div className="header-nav-logo align-items-center d-flex justify-content-start">
+            <div className="header-nav-logo align-items-center d-flex justify-content-end">
               <div className="nav-logo">
                 <Link to="/" title="SMA">
-                  <i className="bg-dark hero-logo">
+                  <i>
                     <img alt="SMA" src={projectLogo} style={{ paddingTop: 3 }} />
                   </i>
                 </Link>
               </div>
-            </div>
-            <div className="header-nav-actions flex-grow-0 flex-lg-grow-1">
-              <span className="d-none d-lg-block">
-                <Button component={Link} to="/watchlist" className="px-3" color="primary" variant="contained">
-                  Dashboard
-                </Button>
-              </span>
             </div>
           </Container>
         </div>

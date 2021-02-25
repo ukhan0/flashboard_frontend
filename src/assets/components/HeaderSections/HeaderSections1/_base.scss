@@ -33,7 +33,7 @@
         i {
           height: 90px;
           width: 170px;
-          background: rgba($white, .5);
+          background: none;
           display: flex;
           align-items: center;
           @include border-radius($border-radius);
