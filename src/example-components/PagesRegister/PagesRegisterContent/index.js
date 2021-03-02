@@ -128,7 +128,7 @@ const LivePreviewExample = () => {
         setErrorText('Email and Password not matched');
       }
     } catch (error) {
-      setErrorText('Uable to login');
+      setErrorText('Unable to login');
     }
   };
 
