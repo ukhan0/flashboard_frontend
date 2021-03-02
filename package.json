@@ -74,6 +74,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:dev": "env-cmd -f .env.dev react-scripts build",
+    "build:sma:dev": "env-cmd -f .env.dev react-scripts build",
+    "build:sma:live": "env-cmd -f .env.live react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
@@ -97,6 +100,7 @@
     ]
   },
   "devDependencies": {
+    "env-cmd": "^10.1.0",
     "eslint": "6.8.0",
     "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-react": "7.18.3",
