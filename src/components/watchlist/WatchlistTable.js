@@ -39,8 +39,8 @@ const defaultColDef = {
 };
 
 const gridOptions = {
-  headerHeight: 80,
-}
+  headerHeight: 80
+};
 
 const sideBarConfiguration = {
   toolPanels: [
@@ -267,18 +267,26 @@ const colDefs = [
     colId: 'wordCountChange',
     filter: 'agNumberColumnFilter',
     width: 93,
-    valueGetter: params => parseNumber(get(params, 'data.wordCountChange', null)),
-    valueFormatter: params => currencyFormater(params.value, 0, ''),
-    cellStyle: () => {
-      return { textAlign: 'right', color: 'black' };
-    },
-    comparator: (value1, value2) => {
-      let result = null;
-      if (value1 && value2) {
-        result = value1 - value2;
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.wordCountChange', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(sentimentValue),
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+        };
       }
-      return result;
+      return sentimentObj;
     },
+
+    valueFormatter: params => {
+      if (params.value !== null) {
+        return currencyFormater(params.value.number, 0, '');
+      }
+      return null;
+    },
+    cellStyle: descriptionValueStyler,
+    comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
         const value = get(params, 'data.wordCountChange', null);
@@ -396,6 +404,7 @@ const WatchlistTable = props => {
         tooltipShowDelay={0}
         pagination={true}
         // domLayout="autoHeight"
+        rowSelection="single"
         gridOptions={gridOptions}
         multiSortKey="ctrl"
         onCellClicked={cellClicked}

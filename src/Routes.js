@@ -57,7 +57,7 @@ const SuspenseLoading = () => {
 
 const isLoginRequired = (user, path) => {
   let loginRequired = false;
-  if (!user && path !== '/PagesRegister' && path !== '/LandingPage') {
+  if (!user && path !== '/PagesRegister' && path !== '/LandingPage' && path !== '/') {
     loginRequired = true;
   }
   return loginRequired;
@@ -77,55 +77,60 @@ const Routes = () => {
       <AnimatePresence>
         <Suspense fallback={<SuspenseLoading />}>
           <Switch>
-            <Redirect exact from="/" to="/LandingPage" />
-            <Route path={['/LandingPage']}>
-              <PresentationLayout>
-                <Switch location={location} key={location.pathname}>
-                  <motion.div
-                    initial="initial"
-                    animate="in"
-                    exit="out"
-                    variants={pageVariants}
-                    transition={pageTransition}>
-                    <Route path="/LandingPage" component={LandingPage} />
-                  </motion.div>
-                </Switch>
-              </PresentationLayout>
-            </Route>
-            <Route path={['/PagesLogin', '/PagesRegister', '/PagesRecoverPassword', '/PagesError404']}>
-              <MinimalLayout>
-                <Switch location={location} key={location.pathname}>
-                  <motion.div
-                    initial="initial"
-                    animate="in"
-                    exit="out"
-                    variants={pageVariants}
-                    transition={pageTransition}>
-                    <Route path="/PagesLogin" component={PagesLogin} />
-                    <Route path="/PagesRegister" component={PagesRegister} />
-                    <Route path="/PagesRecoverPassword" component={PagesRecoverPassword} />
-                    <Route path="/PagesError404" component={PagesError404} />
-                  </motion.div>
-                </Switch>
-              </MinimalLayout>
-            </Route>
-            <Route path={['/watchlist', '/filings', '/comparision', '/sentiment']}>
-              <LeftSidebar>
-                <Switch location={location} key={location.pathname}>
-                  <motion.div
-                    initial="initial"
-                    animate="in"
-                    exit="out"
-                    variants={pageVariants}
-                    transition={pageTransition}>
-                    <Route path="/watchlist" component={WatchList} />
-                    <Route path="/filings" component={DashboardReports} />
-                    <Route path="/comparision" component={Comparision} />
-                    <Route path="/sentiment" component={ProfilePage} />
-                  </motion.div>
-                </Switch>
-              </LeftSidebar>
-            </Route>
+            <Redirect exact from="/LandingPage" to="/" />
+            {path === '/' ? (
+              <Route path={['/']}>
+                <PresentationLayout>
+                  <Switch location={location} key={location.pathname}>
+                    <motion.div
+                      initial="initial"
+                      animate="in"
+                      exit="out"
+                      variants={pageVariants}
+                      transition={pageTransition}>
+                      <Route path="/" component={LandingPage} />
+                    </motion.div>
+                  </Switch>
+                </PresentationLayout>
+              </Route>
+            ) : (
+              <>
+                <Route path={['/PagesLogin', '/PagesRegister', '/PagesRecoverPassword', '/PagesError404']}>
+                  <MinimalLayout>
+                    <Switch location={location} key={location.pathname}>
+                      <motion.div
+                        initial="initial"
+                        animate="in"
+                        exit="out"
+                        variants={pageVariants}
+                        transition={pageTransition}>
+                        <Route path="/PagesLogin" component={PagesLogin} />
+                        <Route path="/PagesRegister" component={PagesRegister} />
+                        <Route path="/PagesRecoverPassword" component={PagesRecoverPassword} />
+                        <Route path="/PagesError404" component={PagesError404} />
+                      </motion.div>
+                    </Switch>
+                  </MinimalLayout>
+                </Route>
+                <Route path={['/watchlist', '/filings', '/comparision', '/sentiment']}>
+                  <LeftSidebar>
+                    <Switch location={location} key={location.pathname}>
+                      <motion.div
+                        initial="initial"
+                        animate="in"
+                        exit="out"
+                        variants={pageVariants}
+                        transition={pageTransition}>
+                        <Route path="/watchlist" component={WatchList} />
+                        <Route path="/filings" component={DashboardReports} />
+                        <Route path="/comparision" component={Comparision} />
+                        <Route path="/sentiment" component={ProfilePage} />
+                      </motion.div>
+                    </Switch>
+                  </LeftSidebar>
+                </Route>
+              </>
+            )}
           </Switch>
         </Suspense>
       </AnimatePresence>

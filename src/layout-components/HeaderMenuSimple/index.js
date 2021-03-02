@@ -3,16 +3,16 @@ import { Button } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSidebarToggle } from '../../reducers/ThemeOptions';
 import { useHistory } from 'react-router-dom';
 
 const HeaderMenu = props => {
   const location = useLocation();
   const history = useHistory();
-  const { setSelectedWatchlist } = props;
+  const { setSidebarToggle } = props;
 
   const goToWatchlist = () => {
-    setSelectedWatchlist(null);
+    setSidebarToggle(true);
     history.push('/watchlist');
   };
 
@@ -62,7 +62,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value))
+  setSidebarToggle: value => dispatch(setSidebarToggle(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderMenu);

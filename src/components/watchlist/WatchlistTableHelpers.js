@@ -1,4 +1,4 @@
-import { isNull, includes, capitalize, lowerCase } from 'lodash';
+import { isNull, includes, capitalize, lowerCase, round } from 'lodash';
 
 const changedStyles = {
   lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80 },
@@ -77,7 +77,7 @@ export const parseNumber = number => {
   let parsedNumber = null;
   if (number) {
     try {
-      parsedNumber = parseFloat(number);
+      parsedNumber = round(parseFloat(number), 2);
     } catch (e) {
       parsedNumber = null;
     }

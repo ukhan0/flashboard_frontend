@@ -12,15 +12,15 @@ export default function ActionConfirmation(props) {
       <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          You can going to clear the {props.actionName}. Are you sure?
+        You are going to clear all {props.actionName}. Are you sure?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={props.disAgree} color="primary">
-          Disagree
+          No
         </Button>
         <Button onClick={props.Agree} color="primary" autoFocus>
-          Agree
+          Yes
         </Button>
       </DialogActions>
     </Dialog>

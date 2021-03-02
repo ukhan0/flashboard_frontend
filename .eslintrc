@@ -9,6 +9,11 @@
     "es6": true,
     "browser": true
   },
+  "prettier/prettier":[
+    "error",{
+      "endOfLine": "auto"
+    }
+  ],
   "rules": {
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
