@@ -9,12 +9,10 @@ const changedStyles = {
 };
 const changeStylesValues = Object.keys(changedStyles);
 
-export const numberWordComparator = (value1, value2) => {
-  if (value1 && value2 && value1.number && value2.number) {
-    return value1.number - value2.number;
-  } else {
-    return null;
-  }
+export const numberWordComparator = (value1, value2, nodeA, nodeB, isInverted) => {
+  let value1ComparableValue = value1 === null ? (!isInverted ? +1 * Infinity : -1 * Infinity) : Number(value1.number);
+  let value2ComparableValue = value2 === null ? (!isInverted ? +1 * Infinity : -1 * Infinity) : Number(value2.number);
+  return value1ComparableValue - value2ComparableValue;
 };
 
 export const formatExportValue = params => {
