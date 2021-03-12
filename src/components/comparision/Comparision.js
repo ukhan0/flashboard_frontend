@@ -11,7 +11,6 @@ const Comparision = props => {
   if (!selectedItem) {
     history.push('/watchlist');
   }
-  console.log(selectedFileType);
   switch (selectedMetric) {
     case 'mda':
       metricQueryParam =

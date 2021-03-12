@@ -246,13 +246,18 @@ const colDefs = [
     colId: 'sentimentChangeWord',
     width: 118,
     valueGetter: params => {
-      return {
-        number: parseNumber(get(params, 'data.sentimentChange', null)),
-        word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
-      };
+      const sentimentValue = get(params, 'data.sentimentChange', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(sentimentValue),
+          word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
+        };
+      }
+      return sentimentObj;
     },
     valueFormatter: params => {
-      return changeWordFormatter(params.value.word);
+      return changeWordFormatter(params.value ? params.value.word : null);
     },
     comparator: numberWordComparator,
     filterParams: {
@@ -336,13 +341,18 @@ const colDefs = [
     colId: 'wordCountChangePercentWord',
     width: 115,
     valueGetter: params => {
-      return {
-        number: parseNumber(get(params, 'data.wordCountChangePercent', null)),
-        word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
-      };
+      const sentimentValue = get(params, 'data.wordCountChangePercent', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(sentimentValue),
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+        };
+      }
+      return sentimentObj;
     },
     valueFormatter: params => {
-      return changeWordFormatter(params.value.word);
+      return changeWordFormatter(params.value ? params.value.word : null);
     },
     comparator: numberWordComparator,
     filterParams: {
