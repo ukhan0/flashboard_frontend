@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { TextField, Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { addDays } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
 
@@ -20,11 +19,11 @@ const useStyles = makeStyles(theme => ({
 
 const TopicDatePickerTextField = props => {
   const classes = useStyles();
-
+  const [DateRangeFlag, setDateRangeFlag] = React.useState(false);
   const [state, setState] = React.useState({
     selection: {
       startDate: new Date(),
-      endDate: null,
+      endDate: new Date(),
       key: 'selection'
     },
     compare: {
@@ -34,27 +33,50 @@ const TopicDatePickerTextField = props => {
     }
   });
 
-  const { selection, compare } = state;
-  console.log('ajmal', compare.startDate, compare.endDate);
+  const { selection } = state;
+  console.log('ajmal', selection.startDate, selection.endDate);
 
   return (
-    <div style={{ backgroundColor: 'grey', padding: '10' }}>
-      <form className={classes.container} noValidate>
-        <DateRangePicker
-          onChange={item => {
-            console.log(item.selection);
-            setState({ ...state, ...item });
-          }}
-          value={3}
-          months={1}
-          minDate={addDays(new Date(), -300)}
-          maxDate={addDays(new Date(), 900)}
-          direction="vertical"
-          scroll={{ enabled: true }}
-          ranges={[state.selection, state.compare]}
-          customCloseIcon={<Button>Close</Button>}
-        />
-      </form>
+    <div>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => {
+          setDateRangeFlag(true);
+        }}>
+        selectDateRange
+      </Button>
+      {DateRangeFlag ? (
+        <div style={{ backgroundColor: 'grey', padding: '10' }}>
+          <form className={classes.container} noValidate>
+            <DateRangePicker
+              onChange={item => {
+                console.log(item.selection);
+                setState({ ...state, ...item });
+              }}
+              value={3}
+              months={1}
+              minDate={addDays(new Date(), -300)}
+              maxDate={addDays(new Date(), 900)}
+              direction="vertical"
+              scroll={{ enabled: true }}
+              ranges={[state.selection, state.compare]}
+              customCloseIcon={<Button>Close</Button>}
+            />
+          </form>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              setDateRangeFlag(false);
+            }}
+            style={{ float: 'right' }}>
+            Close
+          </Button>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
