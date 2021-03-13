@@ -1,14 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, FormControlLabel, Checkbox,Card } from '@material-ui/core';
+import { Grid, Button, FormControlLabel, Checkbox, Card } from '@material-ui/core';
 import TopicTextField from './topicTextField';
 import TopicTextFieldDropDown from './topicDropDownTextField';
+import TopicButtonGroup from './topicButtonGroup';
 import TopicDatePickerTextField from './topicDatePickerTextField';
 import TopicCheckBoxField from './topicCheckBoxField';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
+  },
+  herosection: {
+    marginLeft: 80
+  },
+  searchuniverse: {
+    marginLeft: 30
   },
   rightBar: {
     padding: theme.spacing(1),
@@ -23,10 +30,13 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row'
   },
+  searchdate: {
+    marginTop: 10,
+    float: 'right'
+  },
   savebutton: {
     marginTop: 10,
-    display: 'flex',
-    justifyContent: 'flex-end'
+    float: 'right'
   }
 }));
 
@@ -37,137 +47,36 @@ const Topic = () => {
   return (
     <div className={classes.root}>
       <Grid container spacing={4}>
-        <Grid item xs={6} lg={6}>
-          <div className="p-4 mb-4">
-            <Grid item xs={12}>
-              <Grid item xs={4}>
-                <h5>Filling Search</h5>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} className={classes.inflex}>
-              <Grid item xs={6}>
-                <h6>Filling Search ($ is not required)</h6>
-                <TopicTextField text="coronavirus" />
-              </Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={6}>
-                <h6>Search From (Optional)</h6>
-                <TopicTextField text='Enter text like "P1.l1.*" (without quote)' />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} className={classes.inflex}>
-              <Grid item xs={3}>
-                <h6>Show Filter</h6>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={showFilters}
-                      onChange={event => {
-                        setShowFilters(event.target.checked);
-                      }}
-                    />
-                  }
-                />
-              </Grid>
-              <Grid item xs={4} style={{ marginLeft: 20 }}>
-                <h6>Document Type:</h6>
-                <TopicTextFieldDropDown />
-              </Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={4}>
-                <h6>Sort By:</h6>
-                <TopicTextFieldDropDown />
-              </Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={2}>
-                <h6>Sort By:</h6>
-                <TopicTextFieldDropDown />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} className={classes.inflex}>
-              <Grid item xs={3}></Grid>
-              <Grid item xs={4} style={{ marginLeft: 20 }}>
-                <h6> Start Date:</h6>
-                <TopicDatePickerTextField />
-              </Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={4}>
-                <h6>End Date:</h6>
-                <TopicDatePickerTextField />
-              </Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={2} style={{ marginTop: '5%' }}></Grid>
-            </Grid>
-          </div>
-        </Grid>
-        <Grid item xs={6} lg={6}>
-          <div className="p-4 mb-4">
-            <h6>Smart Synonyms:</h6>
-            <Grid item xs={12} className={classes.rightBar}>
-              <Grid item xs={4} lg={4}>
-                <TopicCheckBoxField />
-              </Grid>
-              <Grid item xs={4} lg={4}>
-                <TopicCheckBoxField />
-              </Grid>
-              <Grid item xs={4} lg={4}>
-                <TopicCheckBoxField />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} className={classes.savebutton}>
-              <Button size="small" variant="contained" color="primary" style={{ marginRight: 4 }}>
-                Save
-              </Button>
-              <Button size="small" variant="outlined" color="primary">
-                Search
-              </Button>
-            </Grid>
-          </div>
-        </Grid>
-        <Grid container spacing={4}>
-          <Grid item xs={3} lg={3} style={{marginBottom:15,marginLeft:15}}>
-            <div className="bg-midnight-bloom p-3 rounded text-white h-100">
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div className="font-weight-bold font-size-lg d-flex align-items-center mb-3">
-                  <span>Insights</span>
-                </div>
-                <div className="pl-2 d-block text-back"style={{marginTop:"2%"}}>
-                  Total : <span style={{ backgroundColor: 'black', borderRadius: 8,padding:2 }}>1000</span>
-                </div>
-              </div>
-              <div className="pl-2 d-block text-back" style={{ backgroundColor: 'grey',padding:5 }}>
-                <h5>1. By Document Type</h5>
-              </div>
-              <div style={{ padding: 10 }}>
-                <span>10-Q</span>
-                <span style={{ float: 'right', backgroundColor: 'black', borderRadius: 8 ,padding:2}}>18635</span>
-              </div>
-              <div style={{ padding: 10 }}>
-                <span>10-K</span>
-                <span style={{ float: 'right', backgroundColor: 'black', borderRadius: 8,padding:2 }}>5691</span>
-              </div>
-              <div className="pl-2 d-block text-back" style={{ backgroundColor: 'grey',padding:5 }}>
-                <h5>2. By Company Name</h5>
-              </div>
-              <div style={{ padding: 10 }}>
-                <span>ImmuCell Corporation</span>
-                <span style={{ float: 'right', backgroundColor: 'black', borderRadius: 8,padding:2 }}>18</span>
-              </div>
-              <div style={{ padding: 10 }}>
-                <span>SkinnVisible</span>
-                <span style={{ float: 'right', backgroundColor: 'black', borderRadius: 8,padding:2 }}>13</span>
-              </div>
-              <div style={{ padding: 10 }}>
-                <span>Power Solution Internation .inc</span>
-                <span style={{ float: 'right', backgroundColor: 'black', borderRadius: 8,padding:2 }}>12</span>
-              </div>
-            </div>
+        <Grid item xs={6} className={classes.inflex}>
+          <Grid item xs={8} lg={8} className={classes.herosection}>
+            <h6>Search</h6>
+            <TopicTextField text="coronavirus" />
           </Grid>
-          <Grid item xs={8} lg={8}  >
-              <Card style={{height:360,width:"106%"}}></Card>
+        </Grid>
+        <Grid item xs={5}>
+          <Grid item xs={12} className={classes.searchdate}>
+            <h6>Search From (Optional)</h6>
+            <TopicDatePickerTextField />
           </Grid>
+          <Grid></Grid>
+        </Grid>
+        <Grid item xs={6} className={classes.inflex}>
+          <Grid item xs={4} className={classes.herosection}>
+            <h6>Document Type:</h6>
+            <TopicTextFieldDropDown />
+          </Grid>
+          <Grid item xs={4} className={classes.searchuniverse}>
+            <h6>Search Universe:</h6>
+            <TopicButtonGroup />
+          </Grid>
+        </Grid>
+        <Grid item xs={5}>
+          <Button color="primary" variant="contained" className={classes.savebutton}>
+            Save
+          </Button>
         </Grid>
       </Grid>
+      <h6>Ajmal</h6>
     </div>
   );
 };
