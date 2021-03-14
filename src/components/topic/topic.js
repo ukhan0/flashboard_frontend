@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Card } from '@material-ui/core';
+import { Grid, Card, Button, Divider } from '@material-ui/core';
 import TopicTextField from './topicTextField';
 import TopicTextFieldDropDown from './topicDropDownTextField';
 import TopicButtonGroup from './topicButtonGroup';
@@ -11,6 +11,9 @@ import TopicSectorChart from './topicSectorChart';
 import TopicCompanyCard from './TopicCompanyCard';
 import TopicHeroSection from './topicHeroSection';
 import TopicSidebarFooter from './topicFooter';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import TopicHighChart from './topicHighChart';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,43 +50,62 @@ const useStyles = makeStyles(theme => ({
 
 const Topic = () => {
   const classes = useStyles();
-  const [showFilters, setShowFilters] = React.useState(true);
+  const [showFilters, setShowFilters] = React.useState(false);
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={4}>
-        <Grid item xs={6}>
-          <Grid item xs={8} lg={8} className={classes.herosection}>
-            <h6>Search</h6>
-            <TopicTextField text="coronavirus" />
-          </Grid>
-          <Grid item xs={6} className={classes.inflex}>
-            <Grid item xs={4} className={classes.herosection}>
-              <h6>Document Type:</h6>
-              <TopicTextFieldDropDown />
+      {showFilters ? (
+        <Grid container spacing={4}>
+          <Grid item xs={6}>
+            <Grid item xs={8} lg={8} className={classes.herosection}>
+              <h6>Search</h6>
+              <TopicTextField text="coronavirus" />
             </Grid>
-            <Grid item xs={4} className={classes.searchuniverse}>
-              <h6>Search Universe:</h6>
-              <TopicButtonGroup />
+            <Grid item xs={6} className={classes.inflex}>
+              <Grid item xs={4} className={classes.herosection}>
+                <h6>Document Type:</h6>
+                <TopicTextFieldDropDown />
+              </Grid>
+              <Grid item xs={4} className={classes.searchuniverse}>
+                <h6>Search Universe:</h6>
+                <TopicButtonGroup />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-
-        <Grid item xs={4}>
-          <Grid item xs={12} className={classes.searchdate}>
-            <h6>Search From (Optional)</h6>
-            <TopicDatePickerTextField />
+          <Grid item xs={4}>
+            <Grid item xs={12} className={classes.searchdate}>
+              <h6>Search From (Optional)</h6>
+              <TopicDatePickerTextField />
+            </Grid>
+          </Grid>
+          <Grid item xs={2} className={classes.savebutton}>
+            <TopicDialog />
           </Grid>
         </Grid>
-        <Grid item xs={2} className={classes.savebutton}>
-          <TopicDialog />
-        </Grid>
-      </Grid>
-
+      ) : (
+        <></>
+      )}
       <Grid container spacing={4}>
         <Grid item xs={2}>
           <div style={{ height: 600, backgroundColor: '#f5f5f5' }}>
-            <TopicSidebar />
+            <div className="p-3 bg-white">
+              <Button
+                onClick={() => {
+                  setShowFilters(!showFilters);
+                }}
+                variant="contained"
+                color="primary"
+                className="d-block w-100">
+                <span className="btn-wrapper--icon">
+                  <FontAwesomeIcon icon={['fas', 'upload']} />
+                </span>
+                <span className="btn-wrapper--label">Compose new</span>
+              </Button>
+            </div>
+            <Divider />
+            <PerfectScrollbar>
+              <TopicSidebar />
+            </PerfectScrollbar>
             <TopicSidebarFooter />
           </div>
         </Grid>
@@ -97,7 +119,11 @@ const Topic = () => {
             </Grid>
           </div>
           <Grid item xs={12}>
-            <Card className="card-box mb-4" style={{ height: 150 }}></Card>
+            <Card className="card-box mb-4" style={{ height: 400 }}>
+              <PerfectScrollbar>
+                <TopicHighChart />
+              </PerfectScrollbar>
+            </Card>
           </Grid>
           <Grid item xs={12}>
             <TopicHeroSection />

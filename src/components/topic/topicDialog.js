@@ -15,10 +15,10 @@ export default function TopicDialog() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Save
       </Button>
-      <Dialog fullWidth open={open} onClose={handleClose}>
+      <Dialog maxWidth="lg" open={open} onClose={handleClose}>
         <DialogTitle id="max-width-dialog-title">Smart Synonums</DialogTitle>
         <DialogContent>
           <DialogContentText>

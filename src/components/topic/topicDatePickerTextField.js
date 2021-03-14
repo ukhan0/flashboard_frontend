@@ -34,7 +34,6 @@ const TopicDatePickerTextField = props => {
   });
 
   const { selection } = state;
-  console.log('ajmal', selection.startDate, selection.endDate);
 
   return (
     <div>
@@ -47,7 +46,15 @@ const TopicDatePickerTextField = props => {
         selectDateRange
       </Button>
       {DateRangeFlag ? (
-        <div style={{ backgroundColor: 'grey', padding: '10' }}>
+        <div
+          style={{
+            backgroundColor: 'white',
+            position: 'absolute',
+            right: 0,
+            top: 60,
+            zIndex: 1,
+            border: '2px inset black'
+          }}>
           <form className={classes.container} noValidate>
             <DateRangePicker
               onChange={item => {
@@ -64,15 +71,17 @@ const TopicDatePickerTextField = props => {
               customCloseIcon={<Button>Close</Button>}
             />
           </form>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              setDateRangeFlag(false);
-            }}
-            style={{ float: 'right' }}>
-            Close
-          </Button>
+          <div>
+            <Button
+              style={{ bottom: 10, left: 10 }}
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                setDateRangeFlag(false);
+              }}>
+              Close
+            </Button>
+          </div>
         </div>
       ) : (
         <></>

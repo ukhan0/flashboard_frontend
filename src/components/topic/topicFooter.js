@@ -1,17 +1,6 @@
 import React, { Fragment } from 'react';
-import SidebarMenu from '../../layout-components/SidebarMenu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  Fab,
-  InputAdornment,
-  IconButton,
-  Button,
-  List,
-  ListItem,
-  Tooltip,
-  TextField,
-  Divider
-} from '@material-ui/core';
+import { List, ListItem } from '@material-ui/core';
 const TopicFooterSidebar = () => {
   return (
     <Fragment>

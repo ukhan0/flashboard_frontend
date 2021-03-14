@@ -40,7 +40,7 @@ var iconsMap = {
 
 const sideBarItems = [
   {
-    label: 'Filings',
+    label: '5g Technology',
     icon: 'DashboardTwoToneIcon',
     to: '/5gtechnologies',
     disabled: true,
@@ -54,7 +54,7 @@ const sideBarItems = [
   },
   {
     label: 'Cryptocurrencies',
-    icon: 'CalendarTodayIcon',
+    icon: 'LockOpenIcon',
     to: '/cryptocurrencies',
     disabled: false,
     content: [
@@ -67,7 +67,7 @@ const sideBarItems = [
   },
   {
     label: 'CoronaVirus',
-    icon: 'CalendarTodayIcon',
+    icon: 'ErrorIcon',
     to: '/coronaVirus',
     disabled: false,
     content: [

@@ -1,20 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { useRef } from 'react';
 
 import clsx from 'clsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {
-  Fab,
-  InputAdornment,
-  IconButton,
-  Button,
-  List,
-  ListItem,
-  Tooltip,
-  TextField,
-  Divider
-} from '@material-ui/core';
+import { InputAdornment, IconButton, Button, List, ListItem, Tooltip, TextField, Divider } from '@material-ui/core';
 
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -24,18 +14,14 @@ import avatar3 from '../../assets/images/avatars/avatar3.jpg';
 import avatar4 from '../../assets/images/avatars/avatar4.jpg';
 
 const LivePreviewExample = () => {
-  const [isSidebarMenuOpen, setIsSidebarMenuOpen] = useState(false);
-  const [isSidebarMenuOpen2, setIsSidebarMenuOpen2] = useState(false);
-
-  const toggleSidebarMenu = () => setIsSidebarMenuOpen(!isSidebarMenuOpen);
-  const toggleSidebarMenu2 = () => setIsSidebarMenuOpen2(!isSidebarMenuOpen2);
+  const isSidebarMenuOpen2 = useRef(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div
         className={clsx(
           'app-inner-content-layout--sidebar bg-white app-inner-content-layout--sidebar__xl pos-r border-right',
-          { 'layout-sidebar-open': isSidebarMenuOpen2 }
+          { 'layout-sidebar-open': isSidebarMenuOpen2.current }
         )}>
         <div className="p-3">
           <TextField

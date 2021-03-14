@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { FormControlLabel, Checkbox, FormControl } from '@material-ui/core';
 
@@ -41,9 +41,9 @@ export default function TopicCheckBoxField() {
     }
   ];
 
-  const error =
-    [coronavirus, coronavirusdisease2019, p2019_2020coronaviruspandamic, covid_2019pandamicinindia].filter(v => v)
-      .length !== 2;
+  // const error =
+  //   [coronavirus, coronavirusdisease2019, p2019_2020coronaviruspandamic, covid_2019pandamicinindia].filter(v => v)
+  //     .length !== 2;
 
   return (
     <FormControl size="small">
