@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { addDays } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -34,16 +35,20 @@ const TopicDatePickerTextField = props => {
   });
 
   const { selection } = state;
+  console.log(moment(selection.startDate).format('MMM Do YY'),"ajmal")
 
   return (
     <div>
       <Button
-        color="primary"
-        variant="contained"
+        style={{ backgroundColor: '#f5f5f5' }}
+        variant="text"
         onClick={() => {
           setDateRangeFlag(true);
         }}>
-        selectDateRange
+        <span style={{backgroundColor:"white"}} >
+          {moment(selection.startDate).format('MMM Do YY')}-
+          {moment(selection.endDate).format('MMM Do YY')}
+        </span>
       </Button>
       {DateRangeFlag ? (
         <div
@@ -68,12 +73,11 @@ const TopicDatePickerTextField = props => {
               direction="vertical"
               scroll={{ enabled: true }}
               ranges={[state.selection, state.compare]}
-              customCloseIcon={<Button>Close</Button>}
             />
           </form>
-          <div>
+          <div style={{padding:10}}>
             <Button
-              style={{ bottom: 10, left: 10 }}
+              style={{ marginTop: 10, marginBottom: 5, marginLeft: 500 }}
               color="primary"
               variant="contained"
               onClick={() => {

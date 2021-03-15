@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { InputAdornment, IconButton, Button, List, ListItem, Tooltip, TextField, Divider } from '@material-ui/core';
+import { InputAdornment, IconButton,List, ListItem, Tooltip, TextField, Divider } from '@material-ui/core';
 
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -18,6 +18,7 @@ const LivePreviewExample = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div  style={{ width:"100%" }}>
       <div
         className={clsx(
           'app-inner-content-layout--sidebar bg-white app-inner-content-layout--sidebar__xl pos-r border-right',
@@ -39,7 +40,7 @@ const LivePreviewExample = () => {
         </div>
         <Divider />
         <PerfectScrollbar>
-          <List className="pt-0" style={{ height: 250 }}>
+          <List className="pt-0" style={{ height: 600 }}>
             <ListItem button className="bg-secondary text-uppercase px-4 py-2 font-weight-bold font-size-xs">
               Today
             </ListItem>
@@ -234,6 +235,7 @@ const LivePreviewExample = () => {
           </List>
         </PerfectScrollbar>
       </div>
+      </div>
       <div>
         <div className="app-inner-content-layout--main bg-white p-0">
           <div className="app-content--inner__header m-4 p-2 rounded d-flex justify-content-center justify-content-xl-between bg-secondary border-bottom">
@@ -309,38 +311,6 @@ const LivePreviewExample = () => {
               of the truth, the master-builder of human happiness.
             </p>
           </PerfectScrollbar>
-          <div className="app-content--inner__footer bg-white p-4 border-top">
-            <div>
-              <TextField
-                variant="outlined"
-                margin="dense"
-                fullWidth
-                placeholder="Write your message and hit enter to send..."
-              />
-            </div>
-            <div className="d-flex justify-content-between mt-3">
-              <div className="align-items-center">
-                <Tooltip arrow title="Add audio file">
-                  <IconButton color="default" className="text-success">
-                    <FontAwesomeIcon icon={['far', 'file-audio']} className="font-size-xl" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip arrow title="Add video file">
-                  <IconButton color="default" className="text-danger">
-                    <FontAwesomeIcon icon={['far', 'file-video']} className="font-size-xl" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip arrow title="Upload Documents">
-                  <IconButton color="default" className="text-info">
-                    <FontAwesomeIcon icon={['far', 'file-excel']} className="font-size-xl" />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <Button size="small" variant="contained" color="primary">
-                Send
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

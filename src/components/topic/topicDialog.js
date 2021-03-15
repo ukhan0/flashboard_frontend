@@ -18,32 +18,37 @@ export default function TopicDialog() {
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Save
       </Button>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose}>
+      <Dialog maxWidth="lg" open={open} onClose={handleClose} >
         <DialogTitle id="max-width-dialog-title">Smart Synonums</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{padding:20}}>
             <Grid container spacing={4}>
-              <Grid item xs={8}>
-                <Grid item xs={12} style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f5f5f5' }}>
+              <Grid item xs={7} style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f5f5f5' }}>
+                <Grid item xs={6} >
                   <TopicDialogCheckBox />
+                  </Grid>
+                  <Grid item xs={6} >
                   <TopicDialogCheckBox />
                 </Grid>
               </Grid>
-              <Grid item xs={4} style={{ backgroundColor: '#f5f5f5' }}>
+              <Grid item xs={4} style={{ backgroundColor: '#f5f5f5',marginLeft:10 }}>
                 <TopicDialogCheckBox />
               </Grid>
             </Grid>
-            <Grid container spacing={4}>
-              <Grid item xs={8}>
-                <Grid item xs={12} style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f5f5f5' }}>
+            <Grid container spacing={4} style={{marginTop:30}}>
+              <Grid item xs={7} style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f5f5f5'}}>
+                <Grid item xs={6} >
                   <TopicDialogCheckBox />
+                  </Grid>
+                  <Grid item xs={6} >
                   <TopicDialogCheckBox />
                 </Grid>
               </Grid>
-              <Grid item xs={4} style={{ marginTop: 25, backgroundColor: '#f5f5f5' }}>
+              <Grid item xs={4} style={{ backgroundColor: '#f5f5f5',marginLeft:10 }}>
                 <TopicDialogCheckBox />
               </Grid>
             </Grid>
+            
           </DialogContentText>
         </DialogContent>
         <DialogActions>

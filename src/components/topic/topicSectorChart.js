@@ -11,7 +11,7 @@ export default function TopicSectorChart() {
   return (
     <Fragment>
       <Card className="card-box mb-4">
-        <div className="card-header" style={{ padding: 15 }}>
+        <div className="card-header" style={{ padding: 16 }}>
           <div className="card-header--title font-weight-bold">Sector</div>
         </div>
         <div className="scroll-area-sm mb-2 d-flex justify-content-center">
