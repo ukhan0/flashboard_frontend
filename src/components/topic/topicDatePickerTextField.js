@@ -46,8 +46,9 @@ const TopicDatePickerTextField = props => {
           setDateRangeFlag(true);
         }}>
         <span style={{backgroundColor:"white"}} >
-          {moment(selection.startDate).format('MMM Do YY')}-
-          {moment(selection.endDate).format('MMM Do YY')}
+          {` ${moment(selection.startDate).format('MMM Do YY')}`}
+          { ' - ' }
+          {`${moment(selection.endDate).format('MMM Do YY')} `}
         </span>
       </Button>
       {DateRangeFlag ? (
@@ -57,6 +58,7 @@ const TopicDatePickerTextField = props => {
             position: 'absolute',
             right: 0,
             top: 60,
+            right: 20,
             zIndex: 1,
             border: '2px inset black'
           }}>

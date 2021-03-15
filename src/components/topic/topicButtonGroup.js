@@ -14,7 +14,7 @@ const TopicButtonGroup = () => {
     <ButtonGroup color="primary">
       {universeSelection.map((universe, i) => (
         <Button
-          size="small"
+          size="medium"
           key={`uni_${i}`}
           onClick={() => setSelectedButton(universe.key)}
           variant={selectedButton === universe.key ? 'contained' : 'outlined'}>

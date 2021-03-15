@@ -40,13 +40,17 @@ const useStyles = makeStyles(theme => ({
   searchdate: {
     marginTop: 10,
     float: 'right',
-    padding:20
+    padding: 20
   },
   savebutton: {
-    marginTop:20,
-    marginLeft:80,
-    display:"flex",
-   justifyContent:"flex-end"
+    marginTop: 20,
+    marginLeft: 80,
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  topsection: {
+    marginBottom: 15,
+    marginTop: 5,
   }
 }));
 
@@ -57,36 +61,44 @@ const Topic = () => {
   return (
     <div className={classes.root}>
       {showFilters ? (
-        <Grid container spacing={4}>
-          <Grid item xs={6}>
-            <Grid item xs={8}  className={classes.herosection}>
-              <h6>Search</h6>
-              <TopicTextField text="coronavirus" />
-            </Grid>
-            </Grid>
-            <Grid item xs={6}>
-            <Grid item xs={12} className={classes.searchdate}>
-              <h6>Search From (Optional)</h6>
-              <TopicDatePickerTextField />
-            </Grid>
-          </Grid>
-            <Grid item xs={6} className={classes.inflex}>
-              <Grid item xs={6} className={classes.herosection}>
+        <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
+          <Grid item xs={8}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <h6>Search</h6>
+                <TopicTextField text="coronavirus" />
+              </Grid>
+              <Grid item xs={6}></Grid>
+              <Grid item xs={3}>
                 <h6>Document Type:</h6>
                 <TopicTextFieldDropDown />
               </Grid>
-              <Grid item xs={6} className={classes.searchuniverse}>
+              <Grid item xs={3}>
                 <h6>Search Universe:</h6>
                 <TopicButtonGroup />
               </Grid>
+              <Grid item xs={6}></Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={5} className={classes.savebutton}>
-            <TopicDialog />
+          <Grid item xs={4}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                  <div>
+                    <h6>Search From (Optional)</h6>
+                    <TopicDatePickerTextField />
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                  <TopicDialog />
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
-      ) : (
-        <></>
-      )}
+      ) : null}
       <Grid container spacing={4}>
         <Grid item xs={3}>
           <div style={{ height: 600, backgroundColor: '#f5f5f5' }}>
