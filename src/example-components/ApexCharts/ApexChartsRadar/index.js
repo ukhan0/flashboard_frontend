@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-
+import {Card,Divider} from '@material-ui/core'
 import Chart from 'react-apexcharts';
 
 export default function LivePreviewExample() {
@@ -10,9 +10,13 @@ export default function LivePreviewExample() {
 
   return (
     <Fragment>
+      <Card>
+        <h6>Radar</h6>
+        <Divider />
       <div className="d-flex justify-content-center">
         <Chart options={options} series={series} type="donut" width="380" />
       </div>
+      </Card>
     </Fragment>
   );
 }

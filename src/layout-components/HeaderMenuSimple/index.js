@@ -16,6 +16,12 @@ const HeaderMenu = props => {
     history.push('/watchlist');
   };
 
+  const gotToTopic = () => {
+    setSidebarToggle(true);
+    history.push('/topic');
+  };
+
+
   return (
     <Fragment>
       <div className="app-header-menu">
@@ -32,7 +38,7 @@ const HeaderMenu = props => {
         <Button
           size="medium"
           color="inherit"
-          disabled={true}
+          onClick={gotToTopic}
           className={clsx(
             'btn-inverse font-size-xs mx-2',
             location.pathname === '/topic' ? 'btn-active' : ''

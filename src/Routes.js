@@ -20,6 +20,7 @@ const ProfilePage = lazy(() => import('./example-pages/PagesProfile'));
 const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 const Comparision = lazy(() => import('./components/comparision'));
+const Topic = lazy(() => import('./components/topic'));
 
 const pageVariants = {
   initial: {
@@ -69,7 +70,7 @@ const Routes = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const path = location.pathname;
   let loginRequired = isLoginRequired(user, path);
-
+  
   return loginRequired ? (
     <Redirect to="/PagesRegister" />
   ) : (
@@ -112,7 +113,7 @@ const Routes = () => {
                     </Switch>
                   </MinimalLayout>
                 </Route>
-                <Route path={['/watchlist', '/filings', '/comparision', '/sentiment']}>
+                <Route path={['/watchlist', '/filings', '/comparision', '/sentiment', '/topic']}>
                   <LeftSidebar>
                     <Switch location={location} key={location.pathname}>
                       <motion.div
@@ -125,6 +126,7 @@ const Routes = () => {
                         <Route path="/filings" component={DashboardReports} />
                         <Route path="/comparision" component={Comparision} />
                         <Route path="/sentiment" component={ProfilePage} />
+                        <Route path="/topic" component={Topic} />
                       </motion.div>
                     </Switch>
                   </LeftSidebar>
