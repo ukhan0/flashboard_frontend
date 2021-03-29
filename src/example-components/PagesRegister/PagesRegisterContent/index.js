@@ -118,7 +118,7 @@ const LivePreviewExample = () => {
 
   const login = async () => {
     try {
-      const response = await axios.post(`${config.apiUrl}/api/users/sign_in?email=${email}&password=${password}`);
+      const response = await axios.post(`${config.apiUrl}/api/users/sign_in`, {email: email, password: password});
       const userData = get(response, 'data', []);
       if (!userData.error) {
         dispatch(setUser(userData.data));
