@@ -7,7 +7,7 @@ import {
   FormControl,
 } from '@material-ui/core';
 
-import { FormLabel, FormGroup } from '@material-ui/core';
+import { FormLabel } from '@material-ui/core';
 
 export default function TopicCheckBoxField() {
   const [state, setState] = React.useState({

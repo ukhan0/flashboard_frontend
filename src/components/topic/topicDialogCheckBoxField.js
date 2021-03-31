@@ -4,7 +4,7 @@ import { FormControlLabel, Checkbox, FormControl } from '@material-ui/core';
 
 import { FormLabel } from '@material-ui/core';
 
-export default function TopicCheckBoxField() {
+export default function TopicDialogCheckBoxField() {
   const [state, setState] = React.useState({
     coronavirus: true,
     coronavirusdisease2019: false,

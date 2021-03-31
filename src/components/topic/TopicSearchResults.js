@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -39,7 +39,6 @@ const TopicSearchResults = () => {
         resultsCount
     }
   })
-  console.log(companyNames[selectCompanyIndex])
   const companyResults = allComapnyResults.filter(cr => cr.company_name === companyNames[selectCompanyIndex].company_name)
 
   return (
@@ -82,8 +81,8 @@ const TopicSearchResults = () => {
             {
               companyResults.map((companyResult, index) => {
                 return (
-                  <>
-                    <div className={classes.resultSection} key={`rs${index}`}>
+                  <Fragment key={`rs${index}`}>
+                    <div className={classes.resultSection}>
                       <Grid
                         container
                         direction="row"
@@ -123,7 +122,7 @@ const TopicSearchResults = () => {
                     </div>
                     <Divider />
                     <div className="mb-2"></div>
-                  </>
+                  </Fragment>
 
                 )
               })

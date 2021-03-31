@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button } from '@material-ui/core';
-import TopicTextField from './topicTextField';
-import TopicTextFieldDropDown from './topicDropDownTextField';
-import TopicButtonGroup from './topicButtonGroup';
-import TopicDatePickerTextField from './topicDatePickerTextField';
+import TopicTextField from './TopicTextField';
+import TopicTextFieldDropDown from './TopicDropDownTextField';
+import TopicButtonGroup from './TopicButtonGroup';
+import TopicDatePickerTextField from './TopicDatePickerTextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +30,7 @@ const TopicFilters = (props) => {
             <TopicTextFieldDropDown />
           </Grid>
           <Grid item xs={3}>
-            <h6>Search Universe:</h6>
+            <h6 className="text-black-25">Search Universe:</h6>
             <TopicButtonGroup />
           </Grid>
           <Grid item xs={6}></Grid>

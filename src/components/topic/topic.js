@@ -4,7 +4,7 @@ import { Grid, Card, Button, Divider } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import TopicSearchHistory from './TopicSearchHistory';
 import TopicSectorChart from './TopicSectorChart';
-import TopicCompanyCard from './TopicCompanyCard';
+import TopicCompantResultsTable from './TopicCompantResultsTable';
 import TopicSearchResults from './TopicSearchResults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -88,7 +88,7 @@ const Topic = () => {
               <TopicSectorChart />
             </Grid>
             <Grid item xs={6} style={{ marginLeft: 10 }}>
-              <TopicCompanyCard />
+              <TopicCompantResultsTable />
             </Grid>
           </div>
           <Grid item xs={12}>

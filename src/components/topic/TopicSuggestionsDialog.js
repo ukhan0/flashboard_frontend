@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Grid } from '@material-ui/core';
-import TopicDialogCheckBox from './topicDialogCheckBoxField';
+import TopicDialogCheckBox from './TopicDialogCheckBoxField';
 
 export default function TopicSuggestionsDialog(props) {
   

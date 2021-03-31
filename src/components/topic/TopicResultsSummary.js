@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -20,7 +20,7 @@ const TopicSearchResults = (props) => {
       {
         summaryByCompany.map((summary, index) => {
           return (
-            <>
+            <Fragment key={`sbc${index}`}>
               <ListItem button selected={index === props.selectCompanyIndex} onClick={() => props.onCompanySelect(index)}>
                 <div className="rounded-0 p-2">
                   <div>
@@ -29,8 +29,8 @@ const TopicSearchResults = (props) => {
                       {summary.resultsCount} matches
                     </div>
                     {
-                      summary.uniqTitles.map(title => 
-                        <p className="font-size-xs mb-0">
+                      summary.uniqTitles.map((title, index) => 
+                        <p key={`sbct${index}`} className="font-size-xs mb-0">
                           {title}
                         </p>
                       )
@@ -39,7 +39,7 @@ const TopicSearchResults = (props) => {
                 </div>
               </ListItem>
               <Divider />
-            </>
+            </Fragment>
           )
         })
       }

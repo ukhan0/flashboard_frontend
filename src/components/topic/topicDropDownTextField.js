@@ -11,7 +11,7 @@ import { TextField,MenuItem } from '@material-ui/core';
         label:"Some"
     },
   ]
-const TopicTextField = (props) => {
+const TopicDropDownTextField = (props) => {
     const [value, setValue] = React.useState("all");
 
   return (
@@ -30,4 +30,4 @@ const TopicTextField = (props) => {
   </TextField>
   );
 };
-export default TopicTextField;
+export default TopicDropDownTextField;
