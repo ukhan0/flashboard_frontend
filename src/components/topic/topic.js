@@ -1,18 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Card, Button, Divider } from '@material-ui/core';
-import TopicTextField from './topicTextField';
-import TopicTextFieldDropDown from './topicDropDownTextField';
-import TopicButtonGroup from './topicButtonGroup';
-import TopicDatePickerTextField from './topicDatePickerTextField';
-import TopicDialog from './topicDialog';
-import TopicSidebar from './TopicSidebar';
-import TopicSectorChart from './topicSectorChart';
+import TopicSuggestionsDialog from './TopicSuggestionsDialog';
+import TopicSearchHistory from './TopicSearchHistory';
+import TopicSectorChart from './TopicSectorChart';
 import TopicCompanyCard from './TopicCompanyCard';
-import TopicHeroSection from './topicHeroSection';
+import TopicSearchResults from './TopicSearchResults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import TopicHighChart from './topicHighChart';
+import TopicHighChart from './TopicHighChart';
+import TopicFilters from './TopicFilters';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,49 +53,12 @@ const useStyles = makeStyles(theme => ({
 
 const Topic = () => {
   const classes = useStyles();
-  const [showFilters, setShowFilters] = React.useState(false);
+  const [showFilters, setShowFilters] = useState(false)
+  const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false)
 
   return (
     <div className={classes.root}>
-      {showFilters ? (
-        <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
-          <Grid item xs={8}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <h6>Search</h6>
-                <TopicTextField text="coronavirus" />
-              </Grid>
-              <Grid item xs={6}></Grid>
-              <Grid item xs={3}>
-                <h6>Document Type:</h6>
-                <TopicTextFieldDropDown />
-              </Grid>
-              <Grid item xs={3}>
-                <h6>Search Universe:</h6>
-                <TopicButtonGroup />
-              </Grid>
-              <Grid item xs={6}></Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                  <div>
-                    <h6>Search From (Optional)</h6>
-                    <TopicDatePickerTextField />
-                  </div>
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                  <TopicDialog />
-                </div>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      ) : null}
+      { showFilters ? <TopicFilters /> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>
           <div style={{ height: 600, backgroundColor: '#f5f5f5' }}>
@@ -118,7 +78,7 @@ const Topic = () => {
             </div>
             <Divider />
             <PerfectScrollbar>
-              <TopicSidebar />
+              <TopicSearchHistory />
             </PerfectScrollbar>
           </div>
         </Grid>
@@ -139,10 +99,15 @@ const Topic = () => {
             </Card>
           </Grid>
           <Grid item xs={12}>
-            <TopicHeroSection />
+            <TopicSearchResults />
           </Grid>
         </Grid>
       </Grid>
+      <TopicSuggestionsDialog 
+        isOpen={isSuggestionsDlgOpen}
+        onClose={() => null}
+        handleClose={() => setIsSuggestionsDlgOpen(false)}
+      />
     </div>
   );
 };

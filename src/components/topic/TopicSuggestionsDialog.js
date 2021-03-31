@@ -2,23 +2,10 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Grid } from '@material-ui/core';
 import TopicDialogCheckBox from './topicDialogCheckBoxField';
 
-export default function TopicDialog() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+export default function TopicSuggestionsDialog(props) {
+  
   return (
-    <div>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Save
-      </Button>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose} >
+      <Dialog maxWidth="lg" open={props.isOpen} onClose={props.onClose} >
         <DialogTitle id="max-width-dialog-title">Smart Synonums</DialogTitle>
         <DialogContent>
           <DialogContentText style={{padding:20}}>
@@ -52,11 +39,10 @@ export default function TopicDialog() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={props.handleClose} color="primary">
             Close
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
   );
 }

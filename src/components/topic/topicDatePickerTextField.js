@@ -56,7 +56,6 @@ const TopicDatePickerTextField = props => {
           style={{
             backgroundColor: 'white',
             position: 'absolute',
-            right: 0,
             top: 60,
             right: 20,
             zIndex: 1,

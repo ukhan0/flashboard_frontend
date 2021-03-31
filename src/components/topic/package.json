@@ -2,5 +2,5 @@
 	"name": "topic",
 	"version": "1.0.0",
 	"private": true,
-	"main": "topic.js"
+	"main": "Topic.js"
 }

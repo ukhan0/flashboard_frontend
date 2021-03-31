@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import SidebarMenu from '../../layout-components/SidebarMenu';
 
 import navItems from './TopicNavItems';
-const TopicSidebar = () => {
+const TopicSearchHistory = () => {
   const sidebarMenuContent = (
     <div>
       {navItems.map(list => (
@@ -14,4 +14,4 @@ const TopicSidebar = () => {
   return <Fragment>{sidebarMenuContent}</Fragment>;
 };
 
-export default TopicSidebar;
+export default TopicSearchHistory;
