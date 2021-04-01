@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import TopicHighChart from './TopicHighChart';
 import TopicFilters from './TopicFilters';
+import axios from 'axios';
+import config from '../../config/config';
+import { get } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -53,12 +56,33 @@ const useStyles = makeStyles(theme => ({
 
 const Topic = () => {
   const classes = useStyles();
-  const [showFilters, setShowFilters] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false)
+
+  const handlePerfromSearch = async () => {
+    console.log('handlePerfromSearch')
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_results`, {
+          "searchTerm": "corona",
+          "searchfrom": "",
+          "startDate": "2016-03-30 07:55:00",
+          "endDate": "2021-03-29 07:55:00",
+          "document_type": "",
+          "orderBy": "desc",
+          "sortBy": "company_name.keyword",
+          "page": 0
+      });
+      const responsePayload = get(response, 'data', null);
+      console.log(responsePayload)
+    } catch (error) {
+      console.log('error occured')
+      console.log(error)
+    }
+  }
 
   return (
     <div className={classes.root}>
-      { showFilters ? <TopicFilters /> : null }
+      { showFilters ? <TopicFilters perfromSearch={handlePerfromSearch}/> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>
           <div style={{ height: 600, backgroundColor: '#f5f5f5' }}>
