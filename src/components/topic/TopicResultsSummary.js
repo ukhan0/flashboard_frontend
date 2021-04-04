@@ -1,17 +1,6 @@
 import React, { Fragment } from 'react';
-import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { InputAdornment, IconButton,List, ListItem, Tooltip, TextField, Divider } from '@material-ui/core';
-import { get, uniqBy, filter, flatten, flattenDeep, uniq } from 'lodash';
+import { List, ListItem, Divider } from '@material-ui/core';
 
-import SearchIcon from '@material-ui/icons/Search';
-import { useSelector } from 'react-redux';
-
-import avatar1 from '../../assets/images/avatars/avatar1.jpg';
-import avatar2 from '../../assets/images/avatars/avatar2.jpg';
-import avatar3 from '../../assets/images/avatars/avatar3.jpg';
-import avatar4 from '../../assets/images/avatars/avatar4.jpg';
 
 const TopicSearchResults = (props) => {
   const summaryByCompany = props.summaryByCompany

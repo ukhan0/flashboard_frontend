@@ -1,9 +1,9 @@
 import React, { useState, Fragment } from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
 import { get, uniqBy, filter, flatten, flattenDeep, uniq } from 'lodash';
+import clsx from 'clsx';
 
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector } from 'react-redux';
@@ -113,7 +113,7 @@ const TopicSearchResults = () => {
                             <div key={`rst${index}`}>
                               <p className="font-size-lg mb-2 text-black-100">{result.title}</p>
                               {
-                                result.content.map((content, index) => <p key={`rstc${index}`} className="font-size-mg mb-2 text-black-50" className={classes.searchResultText} dangerouslySetInnerHTML={{__html: content}}></p>)
+                                result.content.map((content, index) => <p key={`rstc${index}`} className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')} dangerouslySetInnerHTML={{__html: content}}></p>)
                               }
                             </div>
                           )

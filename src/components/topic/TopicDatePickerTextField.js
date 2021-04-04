@@ -1,9 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { addDays } from 'date-fns';
+import { format } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
-import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTopicSearchDateRange } from '../../reducers/Topic';
+// import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -20,38 +22,37 @@ const useStyles = makeStyles(theme => ({
 
 const TopicDatePickerTextField = props => {
   const classes = useStyles();
-  const [DateRangeFlag, setDateRangeFlag] = React.useState(false);
-  const [state, setState] = React.useState({
-    selection: {
-      startDate: new Date(),
-      endDate: new Date(),
+  const dispatch = useDispatch();
+  const [isDateRangeSelectorOpen, setIsDateRangeSelectorOpen] = React.useState(false);
+  const { startDate, endDate } = useSelector(state => state.Topic);
+  const [dateRange, setDateRange] = React.useState([
+    {
+      startDate: startDate,
+      endDate: endDate,
       key: 'selection'
-    },
-    compare: {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 3),
-      key: 'compare'
     }
-  });
+  ]);
 
-  const { selection } = state;
-  console.log(moment(selection.startDate).format('MMM Do YY'),"ajmal")
+  const handleDateChange = (item) => {
+    setDateRange([item.selection])
+    dispatch(setTopicSearchDateRange({startDate: item.selection.startDate, endDate: item.selection.endDate}))
+  }
 
   return (
     <div>
       <Button
-        style={{ backgroundColor: '#f5f5f5' }}
+        style={{ backgroundColor: '#f5f5f5'}}
         variant="text"
         onClick={() => {
-          setDateRangeFlag(true);
+          setIsDateRangeSelectorOpen(true);
         }}>
-        <span style={{backgroundColor:"white"}} >
-          {` ${moment(selection.startDate).format('MMM Do YY')}`}
+        <span style={{backgroundColor: "white",paddingLeft: 5, paddingRight: 5 }} >
+          {format(dateRange[0].startDate, 'dd MMM yy')}
           { ' - ' }
-          {`${moment(selection.endDate).format('MMM Do YY')} `}
+          {format(dateRange[0].endDate, 'dd MMM yy')}
         </span>
       </Button>
-      {DateRangeFlag ? (
+      {isDateRangeSelectorOpen ? (
         <div
           style={{
             backgroundColor: 'white',
@@ -62,18 +63,13 @@ const TopicDatePickerTextField = props => {
             border: '2px inset black'
           }}>
           <form className={classes.container} noValidate>
-            <DateRangePicker
-              onChange={item => {
-                console.log(item.selection);
-                setState({ ...state, ...item });
-              }}
-              value={3}
+          <DateRangePicker
+              onChange={handleDateChange}
+              showSelectionPreview={true}
+              moveRangeOnFirstSelection={false}
               months={1}
-              minDate={addDays(new Date(), -300)}
-              maxDate={addDays(new Date(), 900)}
-              direction="vertical"
-              scroll={{ enabled: true }}
-              ranges={[state.selection, state.compare]}
+              ranges={dateRange}
+              direction="horizontal"
             />
           </form>
           <div style={{padding:10}}>
@@ -82,7 +78,7 @@ const TopicDatePickerTextField = props => {
               color="primary"
               variant="contained"
               onClick={() => {
-                setDateRangeFlag(false);
+                setIsDateRangeSelectorOpen(false);
               }}>
               Close
             </Button>

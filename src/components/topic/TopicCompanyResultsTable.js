@@ -1,14 +1,12 @@
 import React, { Fragment } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LinearProgress, Card } from '@material-ui/core';
+import { Card } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { get, round } from 'lodash';
 
 export default function TopicCompantResultsTable() {
   const { searchResult } = useSelector(state => state.Topic);
   const results = get(searchResult, 'buckets.companyNames', [])
-  console.log(results)
   const totalHits = results.reduce((accumulator, currentValue) => accumulator + currentValue.doc_count, 0 )
   const computedResults = results.map(result => {
     return {

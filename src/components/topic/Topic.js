@@ -3,16 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Card, Button, Divider } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import TopicSearchHistory from './TopicSearchHistory';
-import TopicSectorChart from './TopicSectorChart';
-import TopicCompantResultsTable from './TopicCompantResultsTable';
+import TopicSummaryChart from './TopicSummaryChart';
+import TopicCompanyResultsTable from './TopicCompanyResultsTable';
 import TopicSearchResults from './TopicSearchResults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import TopicHighChart from './TopicHighChart';
+import TopicHistoryChart from './TopicHistoryChart';
 import TopicFilters from './TopicFilters';
 import axios from 'axios';
 import config from '../../config/config';
 import { get } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
+import { format } from 'date-fns';
+import { setSearchResults } from '../../reducers/Topic';
+import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,33 +60,56 @@ const useStyles = makeStyles(theme => ({
 
 const Topic = () => {
   const classes = useStyles();
-  const [showFilters, setShowFilters] = useState(true)
-  const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false)
+  const [error, setError] = useState(null);
+  const { searchText, selectedDocumentType, startDate, endDate, selectedSuggestions } = useSelector(state => state.Topic);
+  const [showFilters, setShowFilters] = useState(true);
+  const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
+  const showSearchError = () => {
+    setIsLoading(false)
+    setError('Sorry, we are unable to fetch results')
+  }
+  
   const handlePerfromSearch = async () => {
-    console.log('handlePerfromSearch')
+    setError(null)
+    setIsLoading(true)
+    const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
+    const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
     try {
       const response = await axios.post(`${config.apiUrl}/api/dictionary/search_results`, {
-          "searchTerm": "corona",
-          "searchfrom": "",
-          "startDate": "2016-03-30 07:55:00",
-          "endDate": "2021-03-29 07:55:00",
-          "document_type": "",
-          "orderBy": "desc",
-          "sortBy": "company_name.keyword",
-          "page": 0
+          searchTerm: fullSearchText,
+          searchfrom: '',
+          startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
+          endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
+          document_type: selectedDocumentType === 'all' ? '' : selectedDocumentType,
+          orderBy: "desc",
+          sortBy: "document_date",
+          page: 0
       });
       const responsePayload = get(response, 'data', null);
-      console.log(responsePayload)
+      if(responsePayload) {
+        dispatch(setSearchResults(responsePayload))
+        setIsLoading(false)
+      } else {
+        showSearchError()
+      }
     } catch (error) {
-      console.log('error occured')
       console.log(error)
+      showSearchError()
     }
   }
 
   return (
     <div className={classes.root}>
-      { showFilters ? <TopicFilters perfromSearch={handlePerfromSearch}/> : null }
+      { showFilters ? 
+        <TopicFilters 
+          error={error}
+          isLoading={isLoading}
+          perfromSearch={handlePerfromSearch}
+          onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
+        /> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>
           <div style={{ height: 600, backgroundColor: '#f5f5f5' }}>
@@ -109,16 +136,16 @@ const Topic = () => {
         <Grid item xs={9}>
           <div style={{ display: 'flex', flexDirection: 'row', space: 'wrap' }}>
             <Grid item xs={6}>
-              <TopicSectorChart />
+              <TopicSummaryChart />
             </Grid>
             <Grid item xs={6} style={{ marginLeft: 10 }}>
-              <TopicCompantResultsTable />
+              <TopicCompanyResultsTable />
             </Grid>
           </div>
           <Grid item xs={12}>
             <Card className="card-box mb-4" style={{ height: 400 }}>
               <PerfectScrollbar>
-                <TopicHighChart />
+                <TopicHistoryChart />
               </PerfectScrollbar>
             </Card>
           </Grid>
@@ -127,11 +154,17 @@ const Topic = () => {
           </Grid>
         </Grid>
       </Grid>
-      <TopicSuggestionsDialog 
-        isOpen={isSuggestionsDlgOpen}
-        onClose={() => null}
-        handleClose={() => setIsSuggestionsDlgOpen(false)}
-      />
+      {
+        isSuggestionsDlgOpen ?
+          <TopicSuggestionsDialog 
+            isOpen={isSuggestionsDlgOpen}
+            onClose={() => null}
+            handleClose={() => setIsSuggestionsDlgOpen(false)}
+            searchText={searchText}
+          />
+          :
+          null
+      }
     </div>
   );
 };

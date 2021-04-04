@@ -3,6 +3,7 @@ import { Card } from '@material-ui/core';
 import Chart from 'react-apexcharts';
 
 export default function TopicSectorChart() {
+  
   const options = {
     labels: ['Technology', 'Healthcare', 'Financial', 'Transportat', 'Energy']
   };
