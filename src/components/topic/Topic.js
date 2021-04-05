@@ -109,6 +109,7 @@ const Topic = () => {
           isLoading={isLoading}
           perfromSearch={handlePerfromSearch}
           onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
+          onSaveSearch={() => {}}
         /> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>

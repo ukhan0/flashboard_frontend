@@ -60,6 +60,7 @@ const getDefaultState = () => {
     suggestions: {},
     searchResult: {},
     saveTopics: [],
+    searchListVersion: 0,
   };
 };
 
