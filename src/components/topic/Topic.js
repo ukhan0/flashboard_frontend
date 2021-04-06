@@ -201,10 +201,8 @@ const Topic = () => {
             </Grid>
           </div>
           <Grid item xs={12}>
-            <Card className="card-box mb-4" style={{ height: 400 }}>
-              <PerfectScrollbar>
-                <TopicHistoryChart />
-              </PerfectScrollbar>
+            <Card className="card-box mb-4">
+              <TopicHistoryChart />
             </Card>
           </Grid>
           <Grid item xs={12}>

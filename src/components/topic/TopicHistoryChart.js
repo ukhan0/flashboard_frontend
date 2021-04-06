@@ -7,7 +7,8 @@ import { useSelector } from 'react-redux';
 const TopicHistoryChart = () => {
   const options = {
     chart: {
-      zoomType: 'xy'
+      zoomType: 'xy',
+      height: 200,
     },
     title: {
       text: 'Documents Count Over Time'
@@ -15,7 +16,12 @@ const TopicHistoryChart = () => {
     xAxis: [
       {
         categories: [],
-        crosshair: true
+        crosshair: true,
+        labels: {
+          formatter: function() {
+            return Highcharts.dateFormat('%e %b, %y', new Date(this.value));
+          }
+        }
       }
     ],
     yAxis: [
@@ -42,11 +48,14 @@ const TopicHistoryChart = () => {
     },
     series: [
       {
-        name: 'File Count',
+        name: 'Documents Count',
         type: 'spline',
         data: []
       }
-    ]
+    ],
+    credits: {
+      enabled: false
+    },
   };
   const { searchResult } = useSelector(state => state.Topic);
   const history = get(searchResult, 'buckets.history', []);
@@ -59,9 +68,7 @@ const TopicHistoryChart = () => {
   options.xAxis[0].categories = xAxisValues;
   options.series[0].data = yAxisValues;
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    <HighchartsReact highcharts={Highcharts} options={options} />
   );
 };
 export default TopicHistoryChart;
