@@ -68,6 +68,7 @@
     "react-router": "5.1.2",
     "react-router-dom": "5.1.2",
     "react-scripts": "3.4.0",
+    "react-select": "^4.3.0",
     "react-slick": "0.25.2",
     "react-sparklines": "1.7.0",
     "react-spinners": "0.8.0",
@@ -78,13 +79,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build:dev": "env-cmd -f .env.dev react-scripts build",
-    "build:sma:dev": "env-cmd -f .env.dev react-scripts build",
+    "build:sma:staging": "env-cmd -f .env.dev react-scripts build",
     "build:sma:live": "env-cmd -f .env.live react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
     "deploy:dev": "aws s3 sync build/ s3://flashboard --acl public-read --profile experts",
-    "deploy:sma:dev": "aws s3 sync build/ s3://sma-webapp-react --acl public-read --profile flashboard",
+    "deploy:sma:staging": "aws s3 sync build/ s3://sma-webapp-react --acl public-read --profile flashboard",
     "deploy:sma:live": "aws s3 sync build/ s3://filingsflash.com --acl public-read --profile flashboard"
   },
   "eslintConfig": {

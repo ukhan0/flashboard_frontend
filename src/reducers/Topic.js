@@ -10,6 +10,8 @@ export const SET_SEARCH_RESULT = 'TOPIC/SET_SEARCH_RESULT';
 export const SET_SUGGESTIONS_RESULT = 'TOPIC/SET_SUGGESTIONS_RESULT';
 export const SET_SUGGESTIONS_RESULT_AND_SELECTIONS = 'TOPIC/SET_SUGGESTIONS_RESULT_AND_SELECTIONS';
 export const SET_SELECTED_SUGGESTIONS = 'TOPIC/SET_SELECTED_SUGGESTIONS';
+export const SET_SEARCH_LIST_VERSION = 'TOPIC/SET_SEARCH_LIST_VERSION';
+export const SET_ALL_SEARCH_PARAMS = 'TOPIC/SET_ALL_SEARCH_PARAMS';
 
 export const setTopicSelectedDocumentType = documentType => ({
   type: SET_DOCUMENT_TYPE,
@@ -46,6 +48,16 @@ export const setSelectedSuggestions = selectedSuggestions => ({
   selectedSuggestions
 })
 
+export const setSearchListVersion = searchListVersion => ({
+  type: SET_SEARCH_LIST_VERSION,
+  searchListVersion
+})
+
+export const setAllSearchParams = searchObj => ({
+  type: SET_ALL_SEARCH_PARAMS,
+  searchObj
+})
+
 const getDefaultState = () => {
   return {
     searchText: '',
@@ -59,7 +71,6 @@ const getDefaultState = () => {
     documentTypes: documentTypesData,
     suggestions: {},
     searchResult: {},
-    saveTopics: [],
     searchListVersion: 0,
   };
 };
@@ -80,13 +91,24 @@ export default function reducer(
     case SET_SEARCH_RESULT:
       return { ...state, searchResult: action.searchResult };
     case SET_SUGGESTIONS_RESULT:
-      console.log(action.suggestions)
       return { ...state, suggestions: action.suggestions };
     case SET_SUGGESTIONS_RESULT_AND_SELECTIONS:
       return { ...state, suggestions: action.data.suggestions, selectedSuggestions: action.data.selectedSuggestions };
     case SET_SELECTED_SUGGESTIONS:
       return { ...state, selectedSuggestions: action.selectedSuggestions };
-      
+    case SET_SEARCH_LIST_VERSION:
+      return { ...state, searchListVersion: action.searchListVersion };
+    case SET_ALL_SEARCH_PARAMS:
+      return { 
+        ...state,
+        searchText: action.searchObj.searchText,
+        selectedDocumentType: action.searchObj.searchJSON.selectedDocumentType,
+        startDate: new Date(action.searchObj.searchJSON.startDate),
+        endDate: new Date(action.searchObj.searchJSON.endDate),
+        orderBy: action.searchObj.searchJSON.orderBy,
+        sortBy: action.searchObj.searchJSON.sortBy,
+        selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
+      };
     default:
       break;
   }

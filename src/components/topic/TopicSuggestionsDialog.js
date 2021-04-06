@@ -37,19 +37,21 @@ export default function TopicSuggestionsDialog(props) {
         });
         const responsePayload = get(response, 'data', null);
         const newSuggestions = get(responsePayload, 'results', {})
-        const selectedSuggestions = {}
+        const newSelectedSuggestions = {}
         forEach(newSuggestions, (_values, keyWord) => {
-          selectedSuggestions[keyWord] = []
+          newSelectedSuggestions[keyWord] = []
         })
         setIsLoading(false);
-        dispatch(setSuggestionsWithSelections(newSuggestions, selectedSuggestions));
+        dispatch(setSuggestionsWithSelections(newSuggestions, newSelectedSuggestions));
       } catch (error) {
         setIsLoading(false);
         console.log(error);
       }
     };
-    findSuggestions();
-  }, [props.searchText, dispatch]);
+    if(isEmpty(selectedSuggestions)) {
+      findSuggestions();
+    }
+  }, [props.searchText, dispatch, selectedSuggestions]);
 
   const isSuggestionChecked = (suggestion) => {
     let selectedSelectionsArr = []
@@ -116,7 +118,7 @@ export default function TopicSuggestionsDialog(props) {
   
   return (
     <Dialog maxWidth="md" open={props.isOpen} onClose={props.onClose}>
-      <DialogTitle id="max-width-dialog-title">Smart Synonums</DialogTitle>
+      <DialogTitle id="max-width-dialog-title">Smart Synonyms</DialogTitle>
       <DialogContent>
         <FormControl size="small">
           <Grid container spacing={4} direction="row" justify="flex-start" alignItems="center" className={classes.suggestionContainer}>

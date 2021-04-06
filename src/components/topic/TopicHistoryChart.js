@@ -1,11 +1,10 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { get } from 'lodash'
+import { get } from 'lodash';
 import { useSelector } from 'react-redux';
 
-
-const TopicHighChart = () => {
+const TopicHistoryChart = () => {
   const options = {
     chart: {
       zoomType: 'xy'
@@ -32,39 +31,37 @@ const TopicHighChart = () => {
           style: {
             color: Highcharts.getOptions().colors[0]
           }
-        },
+        }
       }
     ],
     tooltip: {
       shared: true
     },
     legend: {
-      enabled: false,
+      enabled: false
     },
     series: [
       {
         name: 'File Count',
         type: 'spline',
-        data: [],
+        data: []
       }
     ]
   };
   const { searchResult } = useSelector(state => state.Topic);
-  const history = get(searchResult, 'buckets.history', [])
-  const xAxisValues = []
-  const yAxisValues = []
-  for(const historyItem of history) {
-    xAxisValues.push(historyItem.key_as_string)
-    yAxisValues.push(historyItem.doc_count)
+  const history = get(searchResult, 'buckets.history', []);
+  const xAxisValues = [];
+  const yAxisValues = [];
+  for (const historyItem of history) {
+    xAxisValues.push(historyItem.key_as_string);
+    yAxisValues.push(historyItem.doc_count);
   }
-  console.log(xAxisValues)
-  console.log(yAxisValues)
-  options.xAxis[0].categories = xAxisValues
-  options.series[0].data = yAxisValues
+  options.xAxis[0].categories = xAxisValues;
+  options.series[0].data = yAxisValues;
   return (
     <div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 };
-export default TopicHighChart;
+export default TopicHistoryChart;

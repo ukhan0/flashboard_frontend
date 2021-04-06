@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Card, Button, Divider } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
+import TopicSaveDialog from './TopicSaveDialog';
 import TopicSearchHistory from './TopicSearchHistory';
 import TopicSummaryChart from './TopicSummaryChart';
 import TopicCompanyResultsTable from './TopicCompanyResultsTable';
@@ -15,7 +16,7 @@ import config from '../../config/config';
 import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
-import { setSearchResults } from '../../reducers/Topic';
+import { setSearchResults, setSearchListVersion } from '../../reducers/Topic';
 import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
 
 const useStyles = makeStyles(theme => ({
@@ -61,20 +62,24 @@ const useStyles = makeStyles(theme => ({
 const Topic = () => {
   const classes = useStyles();
   const [error, setError] = useState(null);
-  const { searchText, selectedDocumentType, startDate, endDate, selectedSuggestions } = useSelector(state => state.Topic);
+  const [saveSearchError, setSaveSearchError] = useState(false);
+  const { searchText, orderBy, sortBy, selectedDocumentType, startDate, endDate, selectedSuggestions, searchListVersion } = useSelector(state => state.Topic);
   const [showFilters, setShowFilters] = useState(true);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
+  const [isSaveDlgOpen, setIsSaveDlgOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchVersoin, setSearchVersoin] = useState(0);
   const dispatch = useDispatch();
 
   const showSearchError = () => {
     setIsLoading(false)
     setError('Sorry, we are unable to fetch results')
   }
-  
-  const handlePerfromSearch = async () => {
+
+  const perfromSearch = useCallback(async () => {
     setError(null)
     setIsLoading(true)
+    console.log(searchText)
     const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
     const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
     try {
@@ -84,8 +89,8 @@ const Topic = () => {
           startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
           endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
           document_type: selectedDocumentType === 'all' ? '' : selectedDocumentType,
-          orderBy: "desc",
-          sortBy: "document_date",
+          orderBy,
+          sortBy,
           page: 0
       });
       const responsePayload = get(response, 'data', null);
@@ -99,6 +104,56 @@ const Topic = () => {
       console.log(error)
       showSearchError()
     }
+  }, [searchText, startDate, endDate, selectedDocumentType, orderBy, sortBy, dispatch, selectedSuggestions]);
+
+  useEffect(() => {
+    if(searchVersoin !== 0) {
+      perfromSearch()
+    }
+  }, [perfromSearch, searchVersoin]);
+  
+  const handlePerfromSearch = () => {
+    setSearchVersoin(searchVersoin + 1)
+  }
+
+  const handleSaveSearch = async(topic, isNewTopic) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const payload = {
+      userId: user.id,
+      searchText: searchText,
+      searchJSON: {
+        selectedSuggestions,
+        startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
+        endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
+        orderBy,
+        sortBy,
+        selectedDocumentType
+      }
+    }
+    if(isNewTopic) {
+      payload.topicText = topic.value
+    } else {
+      payload.topicId = topic.value
+    }
+
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/topic/save`, payload);
+      const responsePayload = get(response, 'data', null);
+      if(responsePayload) {
+        handleTopicSaveDlgClose()
+        dispatch(setSearchListVersion(searchListVersion+1))
+      } else {
+        setSaveSearchError(true)
+      }
+    } catch (error) {
+      console.log(error)
+      setSaveSearchError(true)
+    }
+  }
+
+  const handleTopicSaveDlgClose = () => {
+    setIsSaveDlgOpen(false)
+    setSaveSearchError(false)
   }
 
   return (
@@ -109,7 +164,7 @@ const Topic = () => {
           isLoading={isLoading}
           perfromSearch={handlePerfromSearch}
           onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
-          onSaveSearch={() => {}}
+          onSaveSearch={() => setIsSaveDlgOpen(true)}
         /> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>
@@ -130,7 +185,9 @@ const Topic = () => {
             </div>
             <Divider />
             <PerfectScrollbar>
-              <TopicSearchHistory />
+              <TopicSearchHistory 
+                onSearchSelect={handlePerfromSearch}
+              />
             </PerfectScrollbar>
           </div>
         </Grid>
@@ -162,6 +219,18 @@ const Topic = () => {
             onClose={() => null}
             handleClose={() => setIsSuggestionsDlgOpen(false)}
             searchText={searchText}
+          />
+          :
+          null
+      }
+      {
+        isSaveDlgOpen ?
+          <TopicSaveDialog 
+            isOpen={isSaveDlgOpen}
+            onClose={() => null}
+            onCancel={handleTopicSaveDlgClose}
+            onSave={handleSaveSearch}
+            showError={saveSearchError}
           />
           :
           null

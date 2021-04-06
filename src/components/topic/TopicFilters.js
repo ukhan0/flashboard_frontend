@@ -79,7 +79,7 @@ const TopicFilters = (props) => {
             <div style={{display: 'flex', justifyContent: 'flex-end'}}>
               {
                 isSearchAllowed(searchText) ?
-                  <Button variant="contained" color="warning" onClick={props.saveSearch}>
+                  <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
                     Save
                   </Button>
                   :
