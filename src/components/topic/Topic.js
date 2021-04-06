@@ -64,7 +64,7 @@ const Topic = () => {
   const [error, setError] = useState(null);
   const [saveSearchError, setSaveSearchError] = useState(false);
   const { searchText, orderBy, sortBy, selectedDocumentType, startDate, endDate, selectedSuggestions, searchListVersion } = useSelector(state => state.Topic);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const [isSaveDlgOpen, setIsSaveDlgOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
