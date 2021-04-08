@@ -8,13 +8,16 @@ import clsx from 'clsx';
 
 const useStyles = makeStyles(_theme => ({
   rightAlign: {
-    textAlign: 'right'
+    textAlign: 'right',
   },
+  loadingTd: {
+    textAlign: 'center',
+  }
 }));
 
 export default function TopicCompantResultsTable() {
   const classes = useStyles()
-  const { searchResult } = useSelector(state => state.Topic);
+  const { searchResult, isSearchLoading } = useSelector(state => state.Topic);
   const results = get(searchResult, 'buckets.companyNames', [])
   const totalHits = results.reduce((accumulator, currentValue) => accumulator + currentValue.doc_count, 0 )
   const computedResults = results.map(result => {
@@ -42,23 +45,28 @@ export default function TopicCompantResultsTable() {
               </thead>
               <tbody>
                 {
-                  computedResults.map((result, index) => {
-                    return (
-                      <tr key={`r${index}`}>
-                        <td>
-                          <div className="align-box-row">
-                            <flag-icon className="font-size-xxl mr-2" country="us"></flag-icon>
-                            <span>{result.key}</span>
-                          </div>
-                        </td>
-                        <td className={classes.rightAlign}>
-                            <small className="text-black-50 d-block">{result.doc_count}</small>
-                        </td>
-                        <td className={classes.rightAlign}>
-                            <small className="text-black-50 d-block">{result.percentage}%</small>
-                        </td>
-                      </tr>
-                    )
+                  isSearchLoading ? 
+                    <tr>
+                      <td colSpan={3} className={classes.loadingTd}>Loading...</td>
+                    </tr>
+                    :
+                    computedResults.map((result, index) => {
+                      return (
+                        <tr key={`r${index}`}>
+                          <td>
+                            <div className="align-box-row">
+                              <flag-icon className="font-size-xxl mr-2" country="us"></flag-icon>
+                              <span>{result.key}</span>
+                            </div>
+                          </td>
+                          <td className={classes.rightAlign}>
+                              <small className="text-black-50 d-block">{result.doc_count}</small>
+                          </td>
+                          <td className={classes.rightAlign}>
+                              <small className="text-black-50 d-block">{result.percentage}%</small>
+                          </td>
+                        </tr>
+                      )
                   })
                 }
               </tbody>

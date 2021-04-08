@@ -2,6 +2,7 @@ import { forEach, uniq, cloneDeep } from "lodash-es";
 
 export function getSearchCombinations(suggestions) {
   // remove special character from search text
+  console.log(suggestions)
   const combinations = createCombinations(cloneDeep(suggestions), Object.keys(suggestions).length);
   const quotedCombinations = combinations.map(c => `"${c}"`)
   return quotedCombinations.join(' OR ');
@@ -53,7 +54,7 @@ function createCombinations(suggestions, length) {
     for (let i = 0; i < suggestions.length; i++) {
       var elem = suggestions.shift();
       for (let j = 0; j < elem.length; j++) {
-        var childperm = createCombinations(suggestions, length - 1);
+        var childperm = createCombinations(suggestions.slice(), length - 1);
         for (let k = 0; k < childperm.length; k++) {
           result.push(`${[elem[j]]} ${childperm[k]}`);
         }

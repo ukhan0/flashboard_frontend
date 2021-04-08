@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Grid, Card, Button, Divider } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import TopicSaveDialog from './TopicSaveDialog';
@@ -16,70 +15,35 @@ import config from '../../config/config';
 import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
-import { setSearchResults, setSearchListVersion } from '../../reducers/Topic';
+import { setSearchResults, setSearchListVersion, setIsSearchLoading } from '../../reducers/Topic';
 import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  herosection: {
-    marginLeft: 80
-  },
-  searchuniverse: {
-    marginLeft: 30
-  },
-  rightBar: {
-    padding: theme.spacing(1),
-    height: 235,
-    border: '1px solid black',
-    overflow: 'scroll',
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  inflex: {
-    padding: theme.spacing(1),
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  searchdate: {
-    marginTop: 10,
-    float: 'right',
-    padding: 20
-  },
-  savebutton: {
-    marginTop: 20,
-    marginLeft: 80,
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  topsection: {
-    marginBottom: 15,
-    marginTop: 5,
-  }
-}));
+import topicStyles from './topicStyles';
+// import topicSearchResultData from '../../reducers/topicSearchResultData'
 
 const Topic = () => {
-  const classes = useStyles();
+  const classes = topicStyles();
   const [error, setError] = useState(null);
   const [saveSearchError, setSaveSearchError] = useState(false);
   const { searchText, orderBy, sortBy, selectedDocumentType, startDate, endDate, selectedSuggestions, searchListVersion } = useSelector(state => state.Topic);
   const [showFilters, setShowFilters] = useState(false);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const [isSaveDlgOpen, setIsSaveDlgOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchVersoin, setSearchVersoin] = useState(0);
   const dispatch = useDispatch();
+  const performSearch = useRef(false);
 
-  const showSearchError = () => {
-    setIsLoading(false)
+  const showSearchError = useCallback(() => {
+    dispatch(setIsSearchLoading(false));
     setError('Sorry, we are unable to fetch results')
-  }
+  }, [dispatch])
 
   const perfromSearch = useCallback(async () => {
+    if(!performSearch.current) {
+      return
+    }
+
     setError(null)
-    setIsLoading(true)
-    console.log(searchText)
+    dispatch(setIsSearchLoading(true))
     const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
     const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
     try {
@@ -94,9 +58,10 @@ const Topic = () => {
           page: 0
       });
       const responsePayload = get(response, 'data', null);
+      // const responsePayload = topicSearchResultData
       if(responsePayload) {
         dispatch(setSearchResults(responsePayload))
-        setIsLoading(false)
+        dispatch(setIsSearchLoading(false))
       } else {
         showSearchError()
       }
@@ -104,13 +69,15 @@ const Topic = () => {
       console.log(error)
       showSearchError()
     }
-  }, [searchText, startDate, endDate, selectedDocumentType, orderBy, sortBy, dispatch, selectedSuggestions]);
+  }, [searchText, startDate, endDate, selectedDocumentType, orderBy, sortBy, dispatch, selectedSuggestions, showSearchError]);
 
   useEffect(() => {
     if(searchVersoin !== 0) {
+      performSearch.current = true
       perfromSearch()
+      performSearch.current = false
     }
-  }, [perfromSearch, searchVersoin]);
+  }, [searchVersoin]);
   
   const handlePerfromSearch = () => {
     setSearchVersoin(searchVersoin + 1)
@@ -161,14 +128,13 @@ const Topic = () => {
       { showFilters ? 
         <TopicFilters 
           error={error}
-          isLoading={isLoading}
           perfromSearch={handlePerfromSearch}
           onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
           onSaveSearch={() => setIsSaveDlgOpen(true)}
         /> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>
-          <div style={{ height: 600, backgroundColor: '#f5f5f5' }}>
+          <div className={classes.sideFilterSection}>
             <div className="p-3 bg-white">
               <Button
                 onClick={() => {

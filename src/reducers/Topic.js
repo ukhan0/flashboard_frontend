@@ -12,6 +12,7 @@ export const SET_SUGGESTIONS_RESULT_AND_SELECTIONS = 'TOPIC/SET_SUGGESTIONS_RESU
 export const SET_SELECTED_SUGGESTIONS = 'TOPIC/SET_SELECTED_SUGGESTIONS';
 export const SET_SEARCH_LIST_VERSION = 'TOPIC/SET_SEARCH_LIST_VERSION';
 export const SET_ALL_SEARCH_PARAMS = 'TOPIC/SET_ALL_SEARCH_PARAMS';
+export const SET_IS_SEARCH_LOADING = 'TOPIC/SET_IS_SEARCH_LOADING';
 
 export const setTopicSelectedDocumentType = documentType => ({
   type: SET_DOCUMENT_TYPE,
@@ -58,6 +59,11 @@ export const setAllSearchParams = searchObj => ({
   searchObj
 })
 
+export const setIsSearchLoading = isSearchLoading => ({
+  type: SET_IS_SEARCH_LOADING,
+  isSearchLoading
+})
+
 const getDefaultState = () => {
   return {
     searchText: '',
@@ -72,6 +78,7 @@ const getDefaultState = () => {
     suggestions: {},
     searchResult: {},
     searchListVersion: 0,
+    isSearchLoading: false,
   };
 };
 
@@ -109,6 +116,8 @@ export default function reducer(
         sortBy: action.searchObj.searchJSON.sortBy,
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
       };
+    case SET_IS_SEARCH_LOADING:
+      return { ...state, isSearchLoading: action.isSearchLoading };
     default:
       break;
   }

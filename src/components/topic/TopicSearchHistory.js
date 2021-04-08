@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -23,10 +23,8 @@ const useStyles = makeStyles(theme => ({
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
   const { searchListVersion } = useSelector(state => state.Topic);
-  const [open, setOpen] = React.useState(true);
   const [topics, setTopics] = useState([]);
   const [openedTopics, setOpenedTopics] = useState([]);
-  // const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedSearch, setSelectedSearch] = useState(null);
   const dispatch = useDispatch();
 
@@ -39,12 +37,14 @@ export default function TopicSearchHistory(props) {
         setTopics(topics);
         // set first search of first topic as default search
         
-        const firstTopic = get(topics, '[0]', null)
-        if(firstTopic) {
-          toggleTopic(firstTopic.topicID)
-          const firstSearch = get(firstTopic, 'searches[0]', null)
-          if(firstSearch) {
-            setSearchParams(firstSearch)
+        if(openedTopics.length === 0) {
+          const firstTopic = get(topics, '[0]', null)
+          if(firstTopic) {
+            toggleTopic(firstTopic.topicID)
+            const firstSearch = get(firstTopic, 'searches[0]', null)
+            if(firstSearch) {
+              setSearchParams(firstSearch)
+            }
           }
         }
       }
@@ -69,12 +69,11 @@ export default function TopicSearchHistory(props) {
   };
 
   const setSearchParams = searchObj => {
-    // setSelectedTopic(topic)
     setSelectedSearch(searchObj);
     dispatch(setAllSearchParams(searchObj));
     setTimeout(() => {
       props.onSearchSelect();
-    },100)
+    },1000)
     
   };
 

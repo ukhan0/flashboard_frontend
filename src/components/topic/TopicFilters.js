@@ -29,7 +29,7 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = (props) => {
   const classes = useStyles();
-  const { searchText } = useSelector(state => state.Topic);
+  const { searchText, isSearchLoading } = useSelector(state => state.Topic);
   return (
     <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
       <Grid item xs={8}>
@@ -97,7 +97,7 @@ const TopicFilters = (props) => {
                 props.error ? <div className="mr-3"><Typography color="error">{props.error}</Typography></div> : null
               }
               {
-                props.isLoading ? <div className="mr-3"><Typography color="primary">{'Searching...'}</Typography></div> : null
+                isSearchLoading ? <div className="mr-3"><Typography color="primary">{'Searching...'}</Typography></div> : null
               }
             </div>
           </Grid>

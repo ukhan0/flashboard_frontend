@@ -25,7 +25,7 @@ export default function TickerLogo(props) {
     <Box className={classes.tickerLogo}>
       <Avatar
         alt="-"
-        src={`https://activetraders.socialmarketanalytics.com/images/stock_icons/${props.value}.png`}
+        src={`https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.png`}
         className={classes.logo}
       />
       <Box variant="outlined" className={classes.tickerText}>
