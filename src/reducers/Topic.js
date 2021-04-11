@@ -1,5 +1,3 @@
-import searchResultsData from './topicSearchResultData';
-// import searchSuggestionsData from './topSuggestionsData';
 import documentTypesData from './documentTypesData';
 import { subDays } from 'date-fns';
 
@@ -10,9 +8,14 @@ export const SET_SEARCH_RESULT = 'TOPIC/SET_SEARCH_RESULT';
 export const SET_SUGGESTIONS_RESULT = 'TOPIC/SET_SUGGESTIONS_RESULT';
 export const SET_SUGGESTIONS_RESULT_AND_SELECTIONS = 'TOPIC/SET_SUGGESTIONS_RESULT_AND_SELECTIONS';
 export const SET_SELECTED_SUGGESTIONS = 'TOPIC/SET_SELECTED_SUGGESTIONS';
-export const SET_SEARCH_LIST_VERSION = 'TOPIC/SET_SEARCH_LIST_VERSION';
 export const SET_ALL_SEARCH_PARAMS = 'TOPIC/SET_ALL_SEARCH_PARAMS';
 export const SET_IS_SEARCH_LOADING = 'TOPIC/SET_IS_SEARCH_LOADING';
+export const SET_SEARCH_START = 'TOPIC/SET_SEARCH_START';
+export const SET_SEARCH_ERROR = 'TOPIC/SET_SEARCH_ERROR';
+export const SET_TOPICS_LIST = 'TOPIC/SET_TOPICS_LIST';
+export const SET_IS_SAVE_DLG_OPEN = 'TOPIC/SET_IS_SAVE_DLG_OPEN';
+export const SET_IS_SEARCH_SAVE_ERROR = 'TOPIC/SET_IS_SEARCH_SAVE_ERROR';
+export const SET_IS_SAVE_DLG_OPEN_AND_ERROR = 'TOPIC/SET_IS_SAVE_DLG_OPEN_AND_ERROR';
 
 export const setTopicSelectedDocumentType = documentType => ({
   type: SET_DOCUMENT_TYPE,
@@ -49,11 +52,6 @@ export const setSelectedSuggestions = selectedSuggestions => ({
   selectedSuggestions
 })
 
-export const setSearchListVersion = searchListVersion => ({
-  type: SET_SEARCH_LIST_VERSION,
-  searchListVersion
-})
-
 export const setAllSearchParams = searchObj => ({
   type: SET_ALL_SEARCH_PARAMS,
   searchObj
@@ -63,6 +61,36 @@ export const setIsSearchLoading = isSearchLoading => ({
   type: SET_IS_SEARCH_LOADING,
   isSearchLoading
 })
+
+export const setSearchStart = () => ({
+  type: SET_SEARCH_START
+})
+
+export const setSearchError = (isSearchError) => ({
+  type: SET_SEARCH_ERROR,
+  isSearchError
+})
+
+export const setTopicsList = (topicsList) => ({
+  type: SET_TOPICS_LIST,
+  topicsList
+})
+
+export const setIsSaveDlgOpen = (isSaveDlgOpen) => ({
+  type: SET_IS_SAVE_DLG_OPEN,
+  isSaveDlgOpen
+})
+
+export const setIsSaveSearchError = (isSearchSaveError) => ({
+  type: SET_IS_SEARCH_SAVE_ERROR,
+  isSearchSaveError
+})
+
+export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
+  type: SET_IS_SAVE_DLG_OPEN_AND_ERROR,
+  isSaveDlgOpen, isSearchSaveError
+})
+
 
 const getDefaultState = () => {
   return {
@@ -77,8 +105,11 @@ const getDefaultState = () => {
     documentTypes: documentTypesData,
     suggestions: {},
     searchResult: {},
-    searchListVersion: 0,
     isSearchLoading: false,
+    isSearchError: false,
+    topicsList: [],
+    isSaveDlgOpen: false,
+    isSearchSaveError: false,
   };
 };
 
@@ -96,15 +127,13 @@ export default function reducer(
     case SET_DATE_RANGE:
       return { ...state, startDate: action.dateRangeObj.startDate, endDate: action.dateRangeObj.endDate };
     case SET_SEARCH_RESULT:
-      return { ...state, searchResult: action.searchResult };
+      return { ...state, searchResult: action.searchResult, isSearchLoading: false, isSearchError: false };
     case SET_SUGGESTIONS_RESULT:
       return { ...state, suggestions: action.suggestions };
     case SET_SUGGESTIONS_RESULT_AND_SELECTIONS:
       return { ...state, suggestions: action.data.suggestions, selectedSuggestions: action.data.selectedSuggestions };
     case SET_SELECTED_SUGGESTIONS:
       return { ...state, selectedSuggestions: action.selectedSuggestions };
-    case SET_SEARCH_LIST_VERSION:
-      return { ...state, searchListVersion: action.searchListVersion };
     case SET_ALL_SEARCH_PARAMS:
       return { 
         ...state,
@@ -118,6 +147,18 @@ export default function reducer(
       };
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
+    case SET_SEARCH_START:
+      return { ...state, isSearchLoading: true, isSearchError: false };
+    case SET_SEARCH_ERROR:
+      return { ...state, isSearchLoading: false, isSearchError: action.isSearchError };
+    case SET_TOPICS_LIST:
+      return { ...state, topicsList: action.topicsList };
+    case SET_IS_SAVE_DLG_OPEN:
+      return { ...state, isSaveDlgOpen: action.isSaveDlgOpen};
+    case SET_IS_SEARCH_SAVE_ERROR:
+      return { ...state, isSearchSaveError: action.isSearchSaveError};
+    case SET_IS_SAVE_DLG_OPEN_AND_ERROR:
+      return { ...state, isSearchSaveError: action.isSearchSaveError, isSaveDlgOpen: action.isSaveDlgOpen};
     default:
       break;
   }

@@ -5,7 +5,8 @@ import TopicSearchTextField from './TopicSearchTextField';
 import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
 import TopicButtonGroup from './TopicButtonGroup';
 import TopicDatePickerTextField from './TopicDatePickerTextField';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { performTopicSearch } from './topicActions';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -29,7 +30,9 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = (props) => {
   const classes = useStyles();
-  const { searchText, isSearchLoading } = useSelector(state => state.Topic);
+  const { searchText, isSearchLoading, isSearchError } = useSelector(state => state.Topic);
+  console.log(isSearchError)
+  const dispatch = useDispatch()
   return (
     <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
       <Grid item xs={8}>
@@ -86,7 +89,7 @@ const TopicFilters = (props) => {
                   null
               }
               <div className="mr-2"></div>
-              <Button variant="contained" color="primary" onClick={props.perfromSearch}>
+              <Button variant="contained" color="primary" onClick={() => dispatch(performTopicSearch())}>
                 Search
               </Button>
             </div>
@@ -94,7 +97,10 @@ const TopicFilters = (props) => {
           <Grid item xs={12}>
             <div style={{display: 'flex', justifyContent: 'flex-end'}}>
               {
-                props.error ? <div className="mr-3"><Typography color="error">{props.error}</Typography></div> : null
+                isSearchError ? <div className="mr-3">
+                  <Typography color="error">
+                    Error Occured
+                  </Typography></div> : null
               }
               {
                 isSearchLoading ? <div className="mr-3"><Typography color="primary">{'Searching...'}</Typography></div> : null

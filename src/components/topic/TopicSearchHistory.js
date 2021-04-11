@@ -1,13 +1,12 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useCallback, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { includes, get, remove } from 'lodash';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import config from '../../config/config';
 import { setAllSearchParams } from '../../reducers/Topic';
+import { performTopicSearch, fetchTopicsList } from './topicActions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,37 +21,25 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
-  const { searchListVersion } = useSelector(state => state.Topic);
-  const [topics, setTopics] = useState([]);
+  const { topicsList } = useSelector(state => state.Topic);
   const [openedTopics, setOpenedTopics] = useState([]);
   const [selectedSearch, setSelectedSearch] = useState(null);
   const dispatch = useDispatch();
+  const firstTimeLoad = useRef(false);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const fetchSaveTopics = async () => {
-      const response = await axios.get(`${config.apiUrl}/api/topic/list/${user.id}`);
-      const topics = get(response, 'data.data', [])
-      if(topics && topics.length) {
-        setTopics(topics);
-        // set first search of first topic as default search
-        
-        if(openedTopics.length === 0) {
-          const firstTopic = get(topics, '[0]', null)
-          if(firstTopic) {
-            toggleTopic(firstTopic.topicID)
-            const firstSearch = get(firstTopic, 'searches[0]', null)
-            if(firstSearch) {
-              setSearchParams(firstSearch)
-            }
-          }
-        }
-      }
-    };
-    fetchSaveTopics();
-  }, [searchListVersion]);
+    dispatch(fetchTopicsList());
+  }, [dispatch]);
 
-  const toggleTopic = topicId => {
+  const setSearchParams = useCallback(searchObj => {
+    setSelectedSearch(searchObj);
+    dispatch(setAllSearchParams(searchObj));
+    setTimeout(() => {
+      dispatch(performTopicSearch());
+    },1000)
+  }, [dispatch]);
+
+  const toggleTopic = useCallback(topicId => {
     const newTopicArray = [...openedTopics];
     if (includes(openedTopics, topicId)) {
       // remove from array
@@ -62,24 +49,30 @@ export default function TopicSearchHistory(props) {
       newTopicArray.push(topicId);
     }
     setOpenedTopics(newTopicArray);
-  };
+  }, [openedTopics]);
+
+  useEffect(() => {
+    if(topicsList && topicsList.length && !firstTimeLoad.current) {
+      firstTimeLoad.current = true
+      // set first search of first topic as default search
+      const firstTopic = get(topicsList, '[0]', null)
+      if(firstTopic) {
+        toggleTopic(firstTopic.topicID)
+        const firstSearch = get(firstTopic, 'searches[0]', null)
+        if(firstSearch) {
+          setSearchParams(firstSearch)
+        }
+      }
+    }
+  }, [topicsList, setSearchParams, toggleTopic]);
 
   const isTopicOpen = topicId => {
     return includes(openedTopics, topicId);
   };
 
-  const setSearchParams = searchObj => {
-    setSelectedSearch(searchObj);
-    dispatch(setAllSearchParams(searchObj));
-    setTimeout(() => {
-      props.onSearchSelect();
-    },1000)
-    
-  };
-
   return (
     <List component="nav" className={classes.root}>
-      {topics.map((topic, index) => {
+      {topicsList.map((topic, index) => {
         return (
           <Fragment key={`li${index}`}>
             <ListItem button onClick={() => toggleTopic(topic.topicID)}>

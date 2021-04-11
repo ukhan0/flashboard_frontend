@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState } from 'react';
 import { Grid, Card, Button, Divider } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import TopicSaveDialog from './TopicSaveDialog';
@@ -10,127 +10,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import TopicHistoryChart from './TopicHistoryChart';
 import TopicFilters from './TopicFilters';
-import axios from 'axios';
-import config from '../../config/config';
-import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { format } from 'date-fns';
-import { setSearchResults, setSearchListVersion, setIsSearchLoading } from '../../reducers/Topic';
-import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
 import topicStyles from './topicStyles';
-// import topicSearchResultData from '../../reducers/topicSearchResultData'
+import { setIsSaveDlgOpen } from '../../reducers/Topic';
 
 const Topic = () => {
   const classes = topicStyles();
-  const [error, setError] = useState(null);
-  const [saveSearchError, setSaveSearchError] = useState(false);
-  const { searchText, orderBy, sortBy, selectedDocumentType, startDate, endDate, selectedSuggestions, searchListVersion } = useSelector(state => state.Topic);
+  const { searchText, isSaveDlgOpen } = useSelector(state => state.Topic);
   const [showFilters, setShowFilters] = useState(false);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
-  const [isSaveDlgOpen, setIsSaveDlgOpen] = useState(false);
-  const [searchVersoin, setSearchVersoin] = useState(0);
   const dispatch = useDispatch();
-  const performSearch = useRef(false);
-
-  const showSearchError = useCallback(() => {
-    dispatch(setIsSearchLoading(false));
-    setError('Sorry, we are unable to fetch results')
-  }, [dispatch])
-
-  const perfromSearch = useCallback(async () => {
-    if(!performSearch.current) {
-      return
-    }
-
-    setError(null)
-    dispatch(setIsSearchLoading(true))
-    const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
-    const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
-    try {
-      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_results`, {
-          searchTerm: fullSearchText,
-          searchfrom: '',
-          startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
-          endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
-          document_type: selectedDocumentType === 'all' ? '' : selectedDocumentType,
-          orderBy,
-          sortBy,
-          page: 0
-      });
-      const responsePayload = get(response, 'data', null);
-      // const responsePayload = topicSearchResultData
-      if(responsePayload) {
-        dispatch(setSearchResults(responsePayload))
-        dispatch(setIsSearchLoading(false))
-      } else {
-        showSearchError()
-      }
-    } catch (error) {
-      console.log(error)
-      showSearchError()
-    }
-  }, [searchText, startDate, endDate, selectedDocumentType, orderBy, sortBy, dispatch, selectedSuggestions, showSearchError]);
-
-  useEffect(() => {
-    if(searchVersoin !== 0) {
-      performSearch.current = true
-      perfromSearch()
-      performSearch.current = false
-    }
-  }, [searchVersoin]);
-  
-  const handlePerfromSearch = () => {
-    setSearchVersoin(searchVersoin + 1)
-  }
-
-  const handleSaveSearch = async(topic, isNewTopic) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const payload = {
-      userId: user.id,
-      searchText: searchText,
-      searchJSON: {
-        selectedSuggestions,
-        startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
-        endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
-        orderBy,
-        sortBy,
-        selectedDocumentType
-      }
-    }
-    if(isNewTopic) {
-      payload.topicText = topic.value
-    } else {
-      payload.topicId = topic.value
-    }
-
-    try {
-      const response = await axios.post(`${config.apiUrl}/api/topic/save`, payload);
-      const responsePayload = get(response, 'data', null);
-      if(responsePayload) {
-        handleTopicSaveDlgClose()
-        dispatch(setSearchListVersion(searchListVersion+1))
-      } else {
-        setSaveSearchError(true)
-      }
-    } catch (error) {
-      console.log(error)
-      setSaveSearchError(true)
-    }
-  }
-
-  const handleTopicSaveDlgClose = () => {
-    setIsSaveDlgOpen(false)
-    setSaveSearchError(false)
-  }
 
   return (
     <div className={classes.root}>
       { showFilters ? 
         <TopicFilters 
-          error={error}
-          perfromSearch={handlePerfromSearch}
           onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
-          onSaveSearch={() => setIsSaveDlgOpen(true)}
+          onSaveSearch={() => dispatch(setIsSaveDlgOpen(true))}
         /> : null }
       <Grid container spacing={4}>
         <Grid item xs={3}>
@@ -151,9 +47,7 @@ const Topic = () => {
             </div>
             <Divider />
             <PerfectScrollbar>
-              <TopicSearchHistory 
-                onSearchSelect={handlePerfromSearch}
-              />
+              <TopicSearchHistory />
             </PerfectScrollbar>
           </div>
         </Grid>
@@ -192,9 +86,6 @@ const Topic = () => {
           <TopicSaveDialog 
             isOpen={isSaveDlgOpen}
             onClose={() => null}
-            onCancel={handleTopicSaveDlgClose}
-            onSave={handleSaveSearch}
-            showError={saveSearchError}
           />
           :
           null

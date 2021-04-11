@@ -4,7 +4,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { get, round } from 'lodash';
-import clsx from 'clsx';
 
 const useStyles = makeStyles(_theme => ({
   rightAlign: {

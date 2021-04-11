@@ -73,7 +73,8 @@
     "react-sparklines": "1.7.0",
     "react-spinners": "0.8.0",
     "react-text-mask": "5.4.3",
-    "react-trend": "1.2.5"
+    "react-trend": "1.2.5",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
