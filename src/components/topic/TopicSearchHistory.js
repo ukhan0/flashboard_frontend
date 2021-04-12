@@ -96,7 +96,7 @@ export default function TopicSearchHistory(props) {
               </ListItemSecondaryAction>
             </ListItem>
             <Collapse in={isTopicOpen(topic.topicID)} timeout="auto" unmountOnExit>
-              {topic.searches.map((search, index) => {
+              {get(topic, 'searches', []).map((search, index) => {
                 return (
                   <List component="div" disablePadding key={`lil${index}`}>
                     <ListItem

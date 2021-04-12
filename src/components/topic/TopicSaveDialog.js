@@ -37,7 +37,7 @@ export default function TopicSuggestionsDialog(props) {
           Cancel
         </Button>
         {
-          selectedTopicLocal && selectedTopicLocal.value === selectedTopic.topicID ?
+          selectedTopicLocal && selectedTopic && selectedTopicLocal.value === selectedTopic.topicID ?
             <Button onClick={() => dispatch(updateSaveSearch(selectedTopic.topicID, selectedSearch.searchId))} color="primary" disabled={selectedTopic === null}>
               Save
             </Button>
