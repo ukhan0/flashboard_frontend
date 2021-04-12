@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Fragment, useCallback, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemText, Collapse } from '@material-ui/core';
+import { List, ListItem, ListItemText, Collapse, ListItemSecondaryAction, IconButton } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { includes, get, remove } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAllSearchParams } from '../../reducers/Topic';
-import { performTopicSearch, fetchTopicsList } from './topicActions';
+import { setAllSearchParams, setSelectedSearch } from '../../reducers/Topic';
+import { performTopicSearch, fetchTopicsList, deleteTopic, deleteSearch } from './topicActions';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,14 +17,16 @@ const useStyles = makeStyles(theme => ({
   },
   nested: {
     paddingLeft: theme.spacing(4)
-  }
+  },
+  deleteIcon: {
+    fontSize: '.7rem',
+  },
 }));
 
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
-  const { topicsList } = useSelector(state => state.Topic);
+  const { topicsList, selectedSearch } = useSelector(state => state.Topic);
   const [openedTopics, setOpenedTopics] = useState([]);
-  const [selectedSearch, setSelectedSearch] = useState(null);
   const dispatch = useDispatch();
   const firstTimeLoad = useRef(false);
 
@@ -31,8 +34,8 @@ export default function TopicSearchHistory(props) {
     dispatch(fetchTopicsList());
   }, [dispatch]);
 
-  const setSearchParams = useCallback(searchObj => {
-    setSelectedSearch(searchObj);
+  const setSearchParams = useCallback((searchObj, topicObj) => {
+    dispatch(setSelectedSearch(searchObj, topicObj));
     dispatch(setAllSearchParams(searchObj));
     setTimeout(() => {
       dispatch(performTopicSearch());
@@ -60,7 +63,7 @@ export default function TopicSearchHistory(props) {
         toggleTopic(firstTopic.topicID)
         const firstSearch = get(firstTopic, 'searches[0]', null)
         if(firstSearch) {
-          setSearchParams(firstSearch)
+          setSearchParams(firstSearch, firstTopic)
         }
       }
     }
@@ -77,7 +80,20 @@ export default function TopicSearchHistory(props) {
           <Fragment key={`li${index}`}>
             <ListItem button onClick={() => toggleTopic(topic.topicID)}>
               <ListItemText primary={topic.topicText} />
-              {isTopicOpen(topic.topicID) ? <ExpandLess /> : <ExpandMore />}
+              <ListItemSecondaryAction>
+                <IconButton edge="end" size="small" onClick={() => dispatch(deleteTopic(topic.topicID))}>
+                  <CloseIcon className={classes.deleteIcon} />
+                </IconButton>
+                {isTopicOpen(topic.topicID) ? 
+                  <IconButton edge="end">
+                    <ExpandLess />
+                  </IconButton>
+                  : 
+                  <IconButton edge="end">
+                    <ExpandMore />
+                  </IconButton>
+                }
+              </ListItemSecondaryAction>
             </ListItem>
             <Collapse in={isTopicOpen(topic.topicID)} timeout="auto" unmountOnExit>
               {topic.searches.map((search, index) => {
@@ -87,8 +103,13 @@ export default function TopicSearchHistory(props) {
                       button
                       className={classes.nested}
                       selected={selectedSearch && selectedSearch.searchId === search.searchId}
-                      onClick={() => setSearchParams(search)}>
+                      onClick={() => setSearchParams(search, topic)}>
                       <ListItemText primary={search.searchText} />
+                      <ListItemSecondaryAction>
+                        <IconButton edge="end" aria-label="comments" size="small" onClick={() => dispatch(deleteSearch(topic.topicID, search.searchId))} >
+                          <CloseIcon className={classes.deleteIcon} />
+                        </IconButton>
+                      </ListItemSecondaryAction>
                     </ListItem>
                   </List>
                 );

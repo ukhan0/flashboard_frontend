@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Card, Button, Divider } from '@material-ui/core';
+import { Grid, Card, Button, Divider, Snackbar } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import TopicSaveDialog from './TopicSaveDialog';
 import TopicSearchHistory from './TopicSearchHistory';
@@ -12,11 +12,11 @@ import TopicHistoryChart from './TopicHistoryChart';
 import TopicFilters from './TopicFilters';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
-import { setIsSaveDlgOpen } from '../../reducers/Topic';
+import { setIsSaveDlgOpen, setIsSearchDeleteErr, setIsTopicDeleteErr } from '../../reducers/Topic';
 
 const Topic = () => {
   const classes = topicStyles();
-  const { searchText, isSaveDlgOpen } = useSelector(state => state.Topic);
+  const { searchText, isSaveDlgOpen, isSearchDeleteError, isTopicDeleteError } = useSelector(state => state.Topic);
   const [showFilters, setShowFilters] = useState(false);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const dispatch = useDispatch();
@@ -90,6 +90,20 @@ const Topic = () => {
           :
           null
       }
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        open={isSearchDeleteError}
+        autoHideDuration={6000}
+        onClose={() => dispatch(setIsSearchDeleteErr(false))}
+        message="Sorry, we are unable to delete search"
+      />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isTopicDeleteError}
+        autoHideDuration={6000}
+        onClose={() => dispatch(setIsTopicDeleteErr(false))}
+        message="Sorry, we are unable to delete topic"
+      />
     </div>
   );
 };

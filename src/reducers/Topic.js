@@ -16,6 +16,26 @@ export const SET_TOPICS_LIST = 'TOPIC/SET_TOPICS_LIST';
 export const SET_IS_SAVE_DLG_OPEN = 'TOPIC/SET_IS_SAVE_DLG_OPEN';
 export const SET_IS_SEARCH_SAVE_ERROR = 'TOPIC/SET_IS_SEARCH_SAVE_ERROR';
 export const SET_IS_SAVE_DLG_OPEN_AND_ERROR = 'TOPIC/SET_IS_SAVE_DLG_OPEN_AND_ERROR';
+export const SET_IS_SEARCH_DELETE_ERROR = 'TOPIC/SET_IS_SEARCH_DELETE_ERROR';
+export const SET_IS_TOPIC_DELETE_ERROR = 'TOPIC/SET_IS_TOPIC_DELETE_ERROR';
+export const SET_SELECTED_SEARCH = 'TOPIC/SET_SELECTED_SEARCH';
+
+
+export const setSelectedSearch = (selectedSearch, selectedTopic) => ({
+  type: SET_SELECTED_SEARCH,
+  selectedSearch,
+  selectedTopic
+})
+
+export const setIsSearchDeleteErr = isSearchDeleteError => ({
+  type: SET_IS_SEARCH_DELETE_ERROR,
+  isSearchDeleteError
+})
+
+export const setIsTopicDeleteErr = isTopicDeleteError => ({
+  type: SET_IS_TOPIC_DELETE_ERROR,
+  isTopicDeleteError
+})
 
 export const setTopicSelectedDocumentType = documentType => ({
   type: SET_DOCUMENT_TYPE,
@@ -110,6 +130,10 @@ const getDefaultState = () => {
     topicsList: [],
     isSaveDlgOpen: false,
     isSearchSaveError: false,
+    isSearchDeleteError: false,
+    isTopicDeleteError: false,
+    selectedSearch: null,
+    selectedTopic: null,
   };
 };
 
@@ -159,6 +183,12 @@ export default function reducer(
       return { ...state, isSearchSaveError: action.isSearchSaveError};
     case SET_IS_SAVE_DLG_OPEN_AND_ERROR:
       return { ...state, isSearchSaveError: action.isSearchSaveError, isSaveDlgOpen: action.isSaveDlgOpen};
+    case SET_IS_SEARCH_DELETE_ERROR:
+      return { ...state, isSearchDeleteError: action.isSearchDeleteError};
+    case SET_IS_TOPIC_DELETE_ERROR:
+      return { ...state, isTopicDeleteError: action.isTopicDeleteError};
+    case SET_SELECTED_SEARCH:
+      return { ...state, selectedSearch: action.selectedSearch, selectedTopic: action.selectedTopic};
     default:
       break;
   }

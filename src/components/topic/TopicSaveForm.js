@@ -34,6 +34,7 @@ export default function TopicSaveDialog(props) {
         isClearable
         onChange={handleChange}
         options={existingTopics}
+        defaultValue={props.selectedTopicLocal}
       />
       <div className="text-black-50">(Type Topic name if it is not in list)</div>
       

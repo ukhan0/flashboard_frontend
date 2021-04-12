@@ -2,7 +2,6 @@ import { forEach, uniq, cloneDeep } from "lodash-es";
 
 export function getSearchCombinations(suggestions) {
   // remove special character from search text
-  console.log(suggestions)
   const combinations = createCombinations(cloneDeep(suggestions), Object.keys(suggestions).length);
   const quotedCombinations = combinations.map(c => `"${c}"`)
   return quotedCombinations.join(' OR ');
