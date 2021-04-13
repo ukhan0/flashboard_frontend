@@ -39,6 +39,7 @@ const HeaderMenu = props => {
           size="medium"
           color="inherit"
           onClick={gotToTopic}
+          disabled={true}
           className={clsx(
             'btn-inverse font-size-xs mx-2',
             location.pathname === '/topic' ? 'btn-active' : ''
