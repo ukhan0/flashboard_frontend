@@ -4,6 +4,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
 import { get } from 'lodash';
+// import topicSearchResultData from '../../reducers/topicSearchResultData'
 
 export const performTopicSearch = () => {
   return async (dispatch, getState) => {
@@ -23,6 +24,7 @@ export const performTopicSearch = () => {
           page: 0
       });
       const responsePayload = get(response, 'data', null);
+      // const responsePayload = topicSearchResultData
       if(responsePayload) {
         dispatch(setSearchResults(responsePayload))
       } else {

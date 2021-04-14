@@ -9,53 +9,94 @@ const TopicHistoryChart = () => {
     chart: {
       zoomType: 'xy',
       height: 200,
+      backgroundColor: "#ffffff",
+      borderRadius: 0,
+      marginTop: 0,
     },
     title: {
       text: 'Documents Count Over Time'
     },
+    colors: ["#0088cc", "#339900"],
+    credits: {
+      enabled: false
+    },
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      area: {
+          lineWidth: 2.5,
+          fillOpacity: .1,
+          marker: {
+              lineColor: "#fff",
+              lineWidth: 1,
+              radius: 3.5,
+              symbol: "circle"
+          },
+          shadow: !1
+      },
+      column: {
+          lineWidth: 16,
+          shadow: !1,
+          borderWidth: 0,
+          groupPadding: .05
+      }
+    },
     xAxis: [
       {
-        categories: [],
-        crosshair: true,
+        type: "datetime",
+        title: {
+            text: null
+        },
+        tickmarkPlacement: "off",
+        // dateTimeLabelFormats: {
+        //     day: "%b %e"
+        // },
+        gridLineColor: "#eeeeee",
+        gridLineWidth: 0,
         labels: {
-          formatter: function() {
-            return Highcharts.dateFormat('%e %b, %y', new Date(this.value));
-          }
+            style: {
+                color: "#999999"
+            },
+            formatter: function() {
+              return Highcharts.dateFormat('%b %e', new Date(this.value));
+            }
+          
         }
       }
     ],
     yAxis: [
       {
+        showFirstLabel: !1,
+        showLastLabel: !1,
+        tickPixelInterval: 50,
+        endOnTick: !1,
         title: {
           text: 'File Count',
-          style: {
-            color: Highcharts.getOptions().colors[0]
-          }
         },
+        gridLineColor: "#eeeeee",
+        gridLineWidth: .5,
+        zIndex: 2,
         labels: {
           format: '{value}',
+          align: "right",
           style: {
-            color: Highcharts.getOptions().colors[0]
-          }
+              color: "#999999"
+          },
+          x: -4
         }
       }
     ],
     tooltip: {
       shared: true
     },
-    legend: {
-      enabled: false
-    },
     series: [
       {
+        type: "area",
         name: 'Documents Count',
-        type: 'spline',
         data: []
       }
-    ],
-    credits: {
-      enabled: false
-    },
+    ]
   };
   const { searchResult } = useSelector(state => state.Topic);
   const history = get(searchResult, 'buckets.history', []);

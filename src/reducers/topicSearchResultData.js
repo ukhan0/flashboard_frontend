@@ -109,6 +109,48 @@ export default {
     },
     {
       company_id: '',
+      summary_id: '90001735410',
+      company_name: 'nLIGHT, Inc. 2',
+      document_date: '2019-03-15',
+      id: '1735410',
+      document_id: '105408886',
+      doc_format: null,
+      document_type: '10-K',
+      term: 'corona',
+      score: null,
+      results: [
+        {
+          title: 'sma_data_json.10-k.P1.I1.l4',
+          content: [
+            'For example, in some cases, a single <span class="yellowColor">Corona</span> fiber laser with the ability to program the size and shape of its output beam can take the place of several less-flexible lasers.',
+            'Our <span class="yellowColor">Corona</span> fiber lasers incorporate proprietary all-fiber technology that allows our customers to program the output beam spot size and shape, while retaining the full operating power of\n the fiber laser, without the complexity, cost, or performance trade-offs that accompany other beam shaping methods.'
+          ]
+        }
+      ]
+    },
+    {
+      company_id: '',
+      summary_id: '90001735410',
+      company_name: 'nLIGHT, Inc. 3',
+      document_date: '2019-03-15',
+      id: '1735410',
+      document_id: '105408886',
+      doc_format: null,
+      document_type: '10-K',
+      term: 'corona',
+      score: null,
+      results: [
+        {
+          title: 'sma_data_json.10-k.P1.I1.l4',
+          content: [
+            'For example, in some cases, a single <span class="yellowColor">Corona</span> fiber laser with the ability to program the size and shape of its output beam can take the place of several less-flexible lasers.',
+            'Our <span class="yellowColor">Corona</span> fiber lasers incorporate proprietary all-fiber technology that allows our customers to program the output beam spot size and shape, while retaining the full operating power of\n the fiber laser, without the complexity, cost, or performance trade-offs that accompany other beam shaping methods.'
+          ]
+        }
+      ]
+    },
+    {
+      company_id: '',
       summary_id: '90003974661',
       company_name: 'Zumiez Inc.',
       document_date: '2020-12-07',
@@ -356,6 +398,90 @@ export default {
           ]
         }
       ]
-    }
+    },
+    {
+      company_id: '',
+      summary_id: '90001735410',
+      company_name: 'nLIGHT, Inc.',
+      document_date: '2019-03-15',
+      id: '1735410',
+      document_id: '105408886',
+      doc_format: null,
+      document_type: '10-K',
+      term: 'corona',
+      score: null,
+      results: [
+        {
+          title: 'sma_data_json.10-k.P1.I1.l4',
+          content: [
+            'For example, in some cases, a single <span class="yellowColor">Corona</span> fiber laser with the ability to program the size and shape of its output beam can take the place of several less-flexible lasers.',
+            'Our <span class="yellowColor">Corona</span> fiber lasers incorporate proprietary all-fiber technology that allows our customers to program the output beam spot size and shape, while retaining the full operating power of\n the fiber laser, without the complexity, cost, or performance trade-offs that accompany other beam shaping methods.'
+          ]
+        }
+      ]
+    },
+    {
+      company_id: '',
+      summary_id: '90001735410',
+      company_name: 'nLIGHT, Inc.',
+      document_date: '2019-03-15',
+      id: '1735410',
+      document_id: '105408886',
+      doc_format: null,
+      document_type: '10-K',
+      term: 'corona',
+      score: null,
+      results: [
+        {
+          title: 'sma_data_json.10-k.P1.I1.l4',
+          content: [
+            'For example, in some cases, a single <span class="yellowColor">Corona</span> fiber laser with the ability to program the size and shape of its output beam can take the place of several less-flexible lasers.',
+            'Our <span class="yellowColor">Corona</span> fiber lasers incorporate proprietary all-fiber technology that allows our customers to program the output beam spot size and shape, while retaining the full operating power of\n the fiber laser, without the complexity, cost, or performance trade-offs that accompany other beam shaping methods.'
+          ]
+        }
+      ]
+    },
+    {
+      company_id: '',
+      summary_id: '90001735410',
+      company_name: 'nLIGHT, Inc.',
+      document_date: '2019-03-15',
+      id: '1735410',
+      document_id: '105408886',
+      doc_format: null,
+      document_type: '10-K',
+      term: 'corona',
+      score: null,
+      results: [
+        {
+          title: 'sma_data_json.10-k.P1.I1.l4',
+          content: [
+            'For example, in some cases, a single <span class="yellowColor">Corona</span> fiber laser with the ability to program the size and shape of its output beam can take the place of several less-flexible lasers.',
+            'Our <span class="yellowColor">Corona</span> fiber lasers incorporate proprietary all-fiber technology that allows our customers to program the output beam spot size and shape, while retaining the full operating power of\n the fiber laser, without the complexity, cost, or performance trade-offs that accompany other beam shaping methods.'
+          ]
+        }
+      ]
+    },
+    {
+      company_id: '',
+      summary_id: '90001735410',
+      company_name: 'nLIGHT, Inc.',
+      document_date: '2019-03-15',
+      id: '1735410',
+      document_id: '105408886',
+      doc_format: null,
+      document_type: '10-K',
+      term: 'corona',
+      score: null,
+      results: [
+        {
+          title: 'sma_data_json.10-k.P1.I1.l4',
+          content: [
+            'For example, in some cases, a single <span class="yellowColor">Corona</span> fiber laser with the ability to program the size and shape of its output beam can take the place of several less-flexible lasers.',
+            'Our <span class="yellowColor">Corona</span> fiber lasers incorporate proprietary all-fiber technology that allows our customers to program the output beam spot size and shape, while retaining the full operating power of\n the fiber laser, without the complexity, cost, or performance trade-offs that accompany other beam shaping methods.'
+          ]
+        }
+      ]
+    },
   ]
 };

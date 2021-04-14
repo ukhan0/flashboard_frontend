@@ -43,6 +43,11 @@ const TopicSearchResults = () => {
         resultsCount
     }
   })
+
+  const handlePagination = () => {
+    console.log('y axis end reached')
+  }
+
   const companyResults = allComapnyResults.filter(cr => cr.company_name === companyNames[selectCompanyIndex].company_name)
 
   return (
@@ -67,7 +72,9 @@ const TopicSearchResults = () => {
             />
           </div>
           <Divider />
-          <PerfectScrollbar>
+          <PerfectScrollbar
+            onYReachEnd={handlePagination}
+          >
             <TopicResultsSummary 
               summaryByCompany={summaryByCompany}
               onCompanySelect={(newIndex) => setSelectCompanyIndex(newIndex)}
