@@ -45,7 +45,7 @@ const TopicSearchResults = () => {
   })
 
   const handlePagination = () => {
-    console.log('y axis end reached')
+    // console.log('y axis end reached')
   }
 
   const companyResults = allComapnyResults.filter(cr => cr.company_name === companyNames[selectCompanyIndex].company_name)

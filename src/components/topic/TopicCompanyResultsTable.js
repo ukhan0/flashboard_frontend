@@ -32,7 +32,7 @@ export default function TopicCompantResultsTable() {
           <div className="card-header--title font-weight-bold">Companies</div>
         </div>
         
-        <PerfectScrollbar className="scroll-area-sm mb-2">
+        <PerfectScrollbar className="scroll-area-md mb-2">
           <div className="table-responsive">
             <table className="table mb-0">
               <thead>
