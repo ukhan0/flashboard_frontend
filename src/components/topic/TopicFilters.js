@@ -31,7 +31,6 @@ const isSearchAllowed = searchText => {
 const TopicFilters = (props) => {
   const classes = useStyles();
   const { searchText, isSearchLoading, isSearchError } = useSelector(state => state.Topic);
-  console.log(isSearchError)
   const dispatch = useDispatch()
   return (
     <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>

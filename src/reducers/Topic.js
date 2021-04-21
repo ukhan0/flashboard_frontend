@@ -19,7 +19,19 @@ export const SET_IS_SAVE_DLG_OPEN_AND_ERROR = 'TOPIC/SET_IS_SAVE_DLG_OPEN_AND_ER
 export const SET_IS_SEARCH_DELETE_ERROR = 'TOPIC/SET_IS_SEARCH_DELETE_ERROR';
 export const SET_IS_TOPIC_DELETE_ERROR = 'TOPIC/SET_IS_TOPIC_DELETE_ERROR';
 export const SET_SELECTED_SEARCH = 'TOPIC/SET_SELECTED_SEARCH';
+export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
+export const SET_SUGGESTIONS_IS_LOADING = 'TOPIC/SET_SUGGESTIONS_IS_LOADING';
+export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 
+export const setResultsPage = pageNo => ({
+  type: SET_SEARCH_PAGE_NO,
+  pageNo,
+})
+
+export const setSuggestionsIsLoading = suggestionsIsLoading => ({
+  type: SET_SUGGESTIONS_IS_LOADING,
+  suggestionsIsLoading,
+})
 
 export const setSelectedSearch = (selectedSearch, selectedTopic) => ({
   type: SET_SELECTED_SEARCH,
@@ -111,6 +123,10 @@ export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
   isSaveDlgOpen, isSearchSaveError
 })
 
+export const resetSuggestions = () => ({
+  type: RESET_SUGGESTIONS
+})
+
 
 const getDefaultState = () => {
   return {
@@ -122,6 +138,7 @@ const getDefaultState = () => {
     orderBy: 'desc',
     sortBy: 'document_date',
     selectedSuggestions: {},
+    pageNo: 0,
     documentTypes: documentTypesData,
     suggestions: {},
     searchResult: {},
@@ -134,6 +151,7 @@ const getDefaultState = () => {
     isTopicDeleteError: false,
     selectedSearch: null,
     selectedTopic: null,
+    suggestionsIsLoading: false,
   };
 };
 
@@ -189,6 +207,13 @@ export default function reducer(
       return { ...state, isTopicDeleteError: action.isTopicDeleteError};
     case SET_SELECTED_SEARCH:
       return { ...state, selectedSearch: action.selectedSearch, selectedTopic: action.selectedTopic};
+    case RESET_SUGGESTIONS:
+      return { ...state, selectedSuggestions: {}, suggestions: {} };
+    case SET_SUGGESTIONS_IS_LOADING:
+      return { ...state, suggestionsIsLoading: action.suggestionsIsLoading };
+    case SET_SEARCH_PAGE_NO:
+      return { ...state, pageNo: action.pageNo };
+      
     default:
       break;
   }

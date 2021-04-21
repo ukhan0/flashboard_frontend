@@ -1,13 +1,14 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
-import { get, uniqBy, filter, flatten, flattenDeep, uniq } from 'lodash';
+import { get, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty } from 'lodash';
 import clsx from 'clsx';
 
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
+
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -44,10 +45,6 @@ const TopicSearchResults = () => {
     }
   })
 
-  const handlePagination = () => {
-    // console.log('y axis end reached')
-  }
-
   const companyResults = allComapnyResults.filter(cr => cr.company_name === companyNames[selectCompanyIndex].company_name)
 
   return (
@@ -72,9 +69,7 @@ const TopicSearchResults = () => {
             />
           </div>
           <Divider />
-          <PerfectScrollbar
-            onYReachEnd={handlePagination}
-          >
+          <PerfectScrollbar>
             <TopicResultsSummary 
               summaryByCompany={summaryByCompany}
               onCompanySelect={(newIndex) => setSelectCompanyIndex(newIndex)}
@@ -87,7 +82,7 @@ const TopicSearchResults = () => {
         <div className="app-inner-content-layout--main bg-white p-0">
           <PerfectScrollbar className="mb-4 p-4">
             {
-              isSearchLoading ?
+              (isSearchLoading && isEmpty(searchResult)) ?
                 <h4 className="font-size-lg">Loading...</h4>
               :
                 companyResults.map((companyResult, index) => {

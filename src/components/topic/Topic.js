@@ -76,7 +76,6 @@ const Topic = () => {
             isOpen={isSuggestionsDlgOpen}
             onClose={() => null}
             handleClose={() => setIsSuggestionsDlgOpen(false)}
-            searchText={searchText}
           />
           :
           null

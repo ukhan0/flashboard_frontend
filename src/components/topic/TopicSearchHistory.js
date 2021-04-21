@@ -5,7 +5,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { includes, get, remove } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAllSearchParams, setSelectedSearch } from '../../reducers/Topic';
+import { setAllSearchParams, setSelectedSearch, setSuggestions } from '../../reducers/Topic';
 import { performTopicSearch, fetchTopicsList, deleteTopic, deleteSearch } from './topicActions';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -36,6 +36,7 @@ export default function TopicSearchHistory(props) {
 
   const setSearchParams = useCallback((searchObj, topicObj) => {
     dispatch(setSelectedSearch(searchObj, topicObj));
+    dispatch(setSuggestions({}));
     dispatch(setAllSearchParams(searchObj));
     setTimeout(() => {
       dispatch(performTopicSearch());

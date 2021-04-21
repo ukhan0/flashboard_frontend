@@ -20,6 +20,9 @@ const Cache = () => {
     axios.get(`${apiUrl}=all`).then(response => {
       localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(get(response, 'data.data.content', [])));
       dispatch(setCompleteDataLoadedFlag(true));
+    }).catch(function (error) {
+      // handle error
+      console.log(error);
     });
   }, [dispatch, user]);
 

@@ -1,17 +1,18 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
-import { setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
+import { setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
-import { get } from 'lodash';
-// import topicSearchResultData from '../../reducers/topicSearchResultData'
+import { get, isEmpty, isArray, forEach, concat } from 'lodash';
+import topicSearchResultData from '../../reducers/topicSearchResultData'
 
 export const performTopicSearch = () => {
   return async (dispatch, getState) => {
-    const { searchText, startDate, endDate, selectedDocumentType, orderBy, sortBy, selectedSuggestions } = getState().Topic
+    const { searchResult, searchText, pageNo, startDate, endDate, selectedDocumentType, orderBy, sortBy, selectedSuggestions } = getState().Topic
     dispatch(setSearchStart())
     const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
     const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
+    console.log('make API call')
     try {
       const response = await axios.post(`${config.apiUrl}/api/dictionary/search_results`, {
           searchTerm: fullSearchText,
@@ -21,12 +22,17 @@ export const performTopicSearch = () => {
           document_type: selectedDocumentType === 'all' ? '' : selectedDocumentType,
           orderBy,
           sortBy,
-          page: 0
+          page: pageNo,
       });
-      const responsePayload = get(response, 'data', null);
-      // const responsePayload = topicSearchResultData
-      if(responsePayload) {
-        dispatch(setSearchResults(responsePayload))
+      let newSearchResults = get(response, 'data', null);
+      // let newSearchResults = topicSearchResultData
+      if(newSearchResults) {
+        if(pageNo > 0) {
+          const existingData = get(searchResult, 'data', [])
+          const newData = get(newSearchResults, 'data', [])
+          newSearchResults.data = concat(existingData, newData)
+        }
+        dispatch(setSearchResults(newSearchResults))
       } else {
         dispatch(setSearchError(true))
       }
@@ -36,6 +42,15 @@ export const performTopicSearch = () => {
     }
   }
 }
+
+export const goToNextPage = () => {
+  return async (dispatch, getState) => {
+    const { pageNo } = getState().Topic
+    dispatch(setResultsPage(pageNo + 1))
+    dispatch(performTopicSearch())
+  }
+}
+
 export const fetchTopicsList = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch) => {
@@ -136,6 +151,38 @@ export const deleteSearch = (topicId, searchId) => {
       dispatch(fetchTopicsList());
     } else {
       dispatch(setIsSearchDeleteErr(true));
+    }
+  }
+}
+
+export const findSuggestions = () => {
+  return async (dispatch, getState) => {
+    const { searchText, suggestions, selectedSuggestions } = getState().Topic
+    if(!isEmpty(suggestions) || !searchText){
+      return
+    }
+    dispatch(setSuggestionsIsLoading(true))
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/dictionary/search`, {
+        searchTerm: searchText
+      });
+      const responsePayload = get(response, 'data', null);
+      let newSuggestions = get(responsePayload, 'results', {})
+      if(isArray(newSuggestions) &&  newSuggestions.length === 0) {
+        newSuggestions = {}
+      }
+      let newSelectedSuggestions = {}
+      if(isEmpty(selectedSuggestions)) {
+        forEach(newSuggestions, (_values, keyWord) => {
+          newSelectedSuggestions[keyWord] = []
+        })
+        dispatch(setSuggestionsWithSelections(newSuggestions, newSelectedSuggestions));
+      } else {
+        dispatch(setSuggestions(newSuggestions));
+      }
+      dispatch(setSuggestionsIsLoading(false));
+    } catch (error) {
+      dispatch(setSuggestionsIsLoading(false));
     }
   }
 }
