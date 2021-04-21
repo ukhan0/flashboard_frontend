@@ -25,11 +25,13 @@ const TopicSearchResults = (props) => {
     }
   }
 
+  const filteredSummaryByCompany = summaryByCompany.filter(s => s.companyName.toLowerCase().includes(props.resultsCompanyFilterText.toLowerCase()))
+
   return (
     <List className="pt-0" style={{ height: 600 }}>
       
       {
-        summaryByCompany.map((summary, index) => {
+        filteredSummaryByCompany.map((summary, index) => {
           return (
             <Fragment key={`sbc${index}`}>
               <ListItem button selected={index === props.selectCompanyIndex} onClick={() => props.onCompanySelect(index)}>

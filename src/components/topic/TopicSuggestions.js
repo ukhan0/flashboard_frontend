@@ -28,7 +28,7 @@ export default function TopicSuggestionsDialog(props) {
 
   useEffect(() => {
     dispatch(findSuggestions())
-  }, [])
+  }, [dispatch])
 
   const isSuggestionChecked = (suggestion) => {
     let selectedSelectionsArr = []

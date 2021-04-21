@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
@@ -32,6 +32,7 @@ const TopicSearchResults = () => {
   const classes = useStyles();
   const { searchResult, isSearchLoading } = useSelector(state => state.Topic);
   const [selectCompanyIndex, setSelectCompanyIndex] = useState(0);
+  const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
   const allComapnyResults = get(searchResult, 'data', []);
   const companyNames = uniqBy(allComapnyResults, 'company_name');
   const summaryByCompany = companyNames.map(c => {
@@ -44,6 +45,10 @@ const TopicSearchResults = () => {
         resultsCount
     }
   })
+
+  const handleCompanySearch = (event) => {
+    setResultsCompanyFilterText(event.target.value)
+  }
 
   const companyResults = allComapnyResults.filter(cr => cr.company_name === companyNames[selectCompanyIndex].company_name)
 
@@ -58,7 +63,8 @@ const TopicSearchResults = () => {
               margin="dense"
               placeholder="Company Name ..."
               variant="outlined"
-              disabled={true}
+              disabled={false}
+              onChange={handleCompanySearch}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -74,6 +80,7 @@ const TopicSearchResults = () => {
               summaryByCompany={summaryByCompany}
               onCompanySelect={(newIndex) => setSelectCompanyIndex(newIndex)}
               selectCompanyIndex={selectCompanyIndex}
+              resultsCompanyFilterText={resultsCompanyFilterText}
             />
           </PerfectScrollbar>
         </div>

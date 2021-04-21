@@ -64,13 +64,14 @@ const TopicDatePickerTextField = props => {
           }}>
           <form className={classes.container} noValidate>
           <DateRangePicker
-              onChange={handleDateChange}
-              showSelectionPreview={true}
-              moveRangeOnFirstSelection={false}
-              months={1}
-              ranges={dateRange}
-              direction="horizontal"
-            />
+            editableDateInputs={true}
+            onChange={handleDateChange}
+            showSelectionPreview={true}
+            moveRangeOnFirstSelection={false}
+            months={2}
+            ranges={dateRange}
+            direction="horizontal"
+          />
           </form>
           <div style={{padding:10}}>
             <Button

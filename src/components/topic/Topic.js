@@ -16,7 +16,7 @@ import { setIsSaveDlgOpen, setIsSearchDeleteErr, setIsTopicDeleteErr } from '../
 
 const Topic = () => {
   const classes = topicStyles();
-  const { searchText, isSaveDlgOpen, isSearchDeleteError, isTopicDeleteError } = useSelector(state => state.Topic);
+  const { isSaveDlgOpen, isSearchDeleteError, isTopicDeleteError } = useSelector(state => state.Topic);
   const [showFilters, setShowFilters] = useState(false);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const dispatch = useDispatch();
