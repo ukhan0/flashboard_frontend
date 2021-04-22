@@ -22,6 +22,13 @@ export const SET_SELECTED_SEARCH = 'TOPIC/SET_SELECTED_SEARCH';
 export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
 export const SET_SUGGESTIONS_IS_LOADING = 'TOPIC/SET_SUGGESTIONS_IS_LOADING';
 export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
+export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
+
+export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
+  type: SET_SEARCH_BACKDROP,
+  cancelTokenSource,
+  showBackdrop
+})
 
 export const setResultsPage = pageNo => ({
   type: SET_SEARCH_PAGE_NO,
@@ -152,6 +159,8 @@ const getDefaultState = () => {
     selectedSearch: null,
     selectedTopic: null,
     suggestionsIsLoading: false,
+    cancelTokenSource: null,
+    showBackdrop: false,
   };
 };
 
@@ -213,6 +222,8 @@ export default function reducer(
       return { ...state, suggestionsIsLoading: action.suggestionsIsLoading };
     case SET_SEARCH_PAGE_NO:
       return { ...state, pageNo: action.pageNo };
+    case SET_SEARCH_BACKDROP:
+      return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop };
       
     default:
       break;

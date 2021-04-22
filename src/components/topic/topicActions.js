@@ -1,15 +1,20 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
-import { setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
+import { setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
 import { get, isEmpty, isArray, forEach, concat } from 'lodash';
-import topicSearchResultData from '../../reducers/topicSearchResultData'
+// import topicSearchResultData from '../../reducers/topicSearchResultData'
 
-export const performTopicSearch = () => {
+export const performTopicSearch = (showBackdrop = false) => {
   return async (dispatch, getState) => {
+    const cancelTokenSource = axios.CancelToken.source();
     const { searchResult, searchText, pageNo, startDate, endDate, selectedDocumentType, orderBy, sortBy, selectedSuggestions } = getState().Topic
     dispatch(setSearchStart())
+    console.log(showBackdrop)
+    if(showBackdrop) {
+      dispatch(setSearchBackdrop(cancelTokenSource, true))
+    }
     const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
     const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
     console.log('make API call')
@@ -23,6 +28,8 @@ export const performTopicSearch = () => {
           orderBy,
           sortBy,
           page: pageNo,
+      }, {
+        cancelToken: cancelTokenSource.token,
       });
       let newSearchResults = get(response, 'data', null);
       // let newSearchResults = topicSearchResultData
@@ -33,11 +40,14 @@ export const performTopicSearch = () => {
           newSearchResults.data = concat(existingData, newData)
         }
         dispatch(setSearchResults(newSearchResults))
+        dispatch(setSearchBackdrop(null, false))
       } else {
+        dispatch(setSearchBackdrop(null, false))
         dispatch(setSearchError(true))
       }
     } catch (error) {
       console.log(error)
+      dispatch(setSearchBackdrop(null, false))
       dispatch(setSearchError(true))
     }
   }

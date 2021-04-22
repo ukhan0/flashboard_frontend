@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setAllSearchParams, setSelectedSearch, setSuggestions } from '../../reducers/Topic';
 import { performTopicSearch, fetchTopicsList, deleteTopic, deleteSearch } from './topicActions';
 import CloseIcon from '@material-ui/icons/Close';
+import SmsIcon from '@material-ui/icons/Sms';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   deleteIcon: {
     fontSize: '.7rem',
   },
+  topicIcon: {
+    marginRight: 5,
+  }
 }));
 
 export default function TopicSearchHistory(props) {
@@ -39,7 +43,7 @@ export default function TopicSearchHistory(props) {
     dispatch(setSuggestions({}));
     dispatch(setAllSearchParams(searchObj));
     setTimeout(() => {
-      dispatch(performTopicSearch());
+      dispatch(performTopicSearch(true));
     },1000)
   }, [dispatch]);
 
@@ -80,17 +84,20 @@ export default function TopicSearchHistory(props) {
         return (
           <Fragment key={`li${index}`}>
             <ListItem button onClick={() => toggleTopic(topic.topicID)}>
+              {/* <ListItemIcon> */}
+                <SmsIcon className={classes.topicIcon} />
+              {/* </ListItemIcon> */}
               <ListItemText primary={topic.topicText} />
               <ListItemSecondaryAction>
                 <IconButton edge="end" size="small" onClick={() => dispatch(deleteTopic(topic.topicID))}>
                   <CloseIcon className={classes.deleteIcon} />
                 </IconButton>
                 {isTopicOpen(topic.topicID) ? 
-                  <IconButton edge="end">
+                  <IconButton edge="end" onClick={() => toggleTopic(topic.topicID)}>
                     <ExpandLess />
                   </IconButton>
                   : 
-                  <IconButton edge="end">
+                  <IconButton edge="end" onClick={() => toggleTopic(topic.topicID)}>
                     <ExpandMore />
                   </IconButton>
                 }

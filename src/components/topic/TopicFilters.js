@@ -88,7 +88,7 @@ const TopicFilters = (props) => {
                   null
               }
               <div className="mr-2"></div>
-              <Button variant="contained" color="primary" onClick={() => dispatch(performTopicSearch())}>
+              <Button variant="contained" color="primary" onClick={() => dispatch(performTopicSearch(true))}>
                 Search
               </Button>
             </div>
