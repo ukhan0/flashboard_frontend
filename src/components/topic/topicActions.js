@@ -17,7 +17,6 @@ export const performTopicSearch = (showBackdrop = false) => {
     }
     const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
     const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
-    console.log('make API call')
     try {
       const response = await axios.post(`${config.apiUrl}/api/dictionary/search_results`, {
           searchTerm: fullSearchText,
@@ -75,6 +74,8 @@ export const fetchTopicsList = () => {
 }
 
 const createSearchSaveMiniPayload = (topicState) => {
+  const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText)
+  const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText
   return {
     selectedSuggestions: topicState.selectedSuggestions,
     startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
@@ -82,6 +83,7 @@ const createSearchSaveMiniPayload = (topicState) => {
     orderBy: topicState.orderBy,
     sortBy: topicState.sortBy,
     selectedDocumentType: topicState.selectedDocumentType,
+    searchTerm: fullSearchText,
   }
 }
 
