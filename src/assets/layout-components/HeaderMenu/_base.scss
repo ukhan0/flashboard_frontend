@@ -26,7 +26,7 @@ body {
     margin-left: ($spacer / 2);
 
     @include media-breakpoint-down(md) {
-      display: none;
+      display: block;
     }
   }
 }

@@ -62,6 +62,7 @@ const Header = props => {
               </Link>
               <Hidden smDown>
                 <Box className="app-logo-text">SMA</Box>
+                <HeaderMenuSimple />
               </Hidden>
             </Box>
           </Hidden>
