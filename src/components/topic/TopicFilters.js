@@ -7,6 +7,7 @@ import TopicButtonGroup from './TopicButtonGroup';
 import TopicDatePickerTextField from './TopicDatePickerTextField';
 import { useSelector, useDispatch } from 'react-redux';
 import { performTopicSearch } from './topicActions';
+import { forEach, concat } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -21,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   },
   suggestionsBtnSection: {
     minWidth: 64,
+  },
+  selectedSuggestionsList: {
+    marginLeft: 5,
   }
 }));
 
@@ -30,17 +34,28 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = (props) => {
   const classes = useStyles();
-  const { searchText, isSearchLoading, isSearchError } = useSelector(state => state.Topic);
+  const { searchText, isSearchLoading, isSearchError, selectedSuggestions } = useSelector(state => state.Topic);
   const dispatch = useDispatch()
+
+  let selectedSuggestionsArr = []
+  forEach(selectedSuggestions, values => {
+    selectedSuggestionsArr = concat(selectedSuggestionsArr, values)
+  })
+
   return (
     <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
       <Grid item xs={8}>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <h6>Search</h6>
             <div className={classes.searchContainer}>
               <div className={classes.searchFieldContainer}>
                 <TopicSearchTextField />
+                <div className={classes.selectedSuggestionsList}>
+                  {
+                    selectedSuggestionsArr.map((v, index) => <span className="text-black-50">{`${v} ${index !== selectedSuggestionsArr.length - 1 ? ',' : ''}`}</span>)
+                  }
+                </div>
               </div>
               <div className={classes.suggestionsBtnSection}>
                 {
@@ -55,7 +70,7 @@ const TopicFilters = (props) => {
               </div>
             </div>
           </Grid>
-          <Grid item xs={6}></Grid>
+          <Grid item xs={4}></Grid>
           <Grid item xs={3}>
             <h6>Document Type:</h6>
             <TopicDocumentTypeDropdown />
