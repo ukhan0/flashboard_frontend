@@ -18,9 +18,7 @@ const TopicSearchResults = (props) => {
   const classes = useStyles()
 
   const handlePagination = () => {
-    console.log(isSearchLoading, searchResult)
     if(!isSearchLoading && !isEmpty(searchResult)) {
-      console.log('page end reached')
       dispatch(goToNextPage())
     }
   }

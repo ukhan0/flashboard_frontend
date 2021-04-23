@@ -1,5 +1,5 @@
 export default [
-  { label: 'All', value: 'all' },
+  // { label: 'All', value: 'all' },
   { label: '10-K', value: '10-K' },
   { label: '10-K/A', value: '10-K/A' },
   { label: '10-K405', value: '10-K405' },

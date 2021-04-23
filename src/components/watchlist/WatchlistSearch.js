@@ -22,7 +22,6 @@ const WatchlistTopicSearch = props => {
 
   const handleSearchTextChange = debounce(async text => {
     try {
-      console.log(loading);
       setLoading(true);
       const response = await axios.post(`${config.apiUrl}/api/get_wish_list_items`, { q: text });
       const symbolCodes = get(response, 'data.data', []);

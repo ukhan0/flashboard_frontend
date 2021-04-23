@@ -1,7 +1,7 @@
 import documentTypesData from './documentTypesData';
 import { subDays } from 'date-fns';
 
-export const SET_DOCUMENT_TYPE = 'TOPIC/SET_DOCUMENT_TYPE';
+export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
 export const SET_SEARCH_TEXT = 'TOPIC/SET_SEARCH_TEXT';
 export const SET_DATE_RANGE = 'TOPIC/SET_DATE_RANGE';
 export const SET_SEARCH_RESULT = 'TOPIC/SET_SEARCH_RESULT';
@@ -56,9 +56,9 @@ export const setIsTopicDeleteErr = isTopicDeleteError => ({
   isTopicDeleteError
 })
 
-export const setTopicSelectedDocumentType = documentType => ({
-  type: SET_DOCUMENT_TYPE,
-  documentType
+export const setSelectedDocumentTypes = selectedDocumentTypes => ({
+  type: SET_SELECTED_DOCUMENT_TYPES,
+  selectedDocumentTypes
 })
 
 export const setTopicSearchText = text => ({
@@ -138,7 +138,7 @@ export const resetSuggestions = () => ({
 const getDefaultState = () => {
   return {
     searchText: '',
-    selectedDocumentType: 'all',
+    selectedDocumentTypes: ['10-K', '10-Q'],
     selectedUniverse: null,
     startDate: subDays(new Date(), 365),
     endDate: new Date(),
@@ -171,8 +171,8 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case SET_DOCUMENT_TYPE:
-      return { ...state, selectedDocumentType: action.documentType };
+    case SET_SELECTED_DOCUMENT_TYPES:
+      return { ...state, selectedDocumentTypes: action.selectedDocumentTypes };
     case SET_SEARCH_TEXT:
       return { ...state, searchText: action.text };
     case SET_DATE_RANGE:
@@ -189,7 +189,7 @@ export default function reducer(
       return { 
         ...state,
         searchText: action.searchObj.searchText,
-        selectedDocumentType: action.searchObj.searchJSON.selectedDocumentType,
+        selectedDocumentTypes: action.searchObj.searchJSON.selectedDocumentTypes,
         startDate: new Date(action.searchObj.searchJSON.startDate),
         endDate: new Date(action.searchObj.searchJSON.endDate),
         orderBy: action.searchObj.searchJSON.orderBy,

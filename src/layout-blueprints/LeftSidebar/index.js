@@ -43,8 +43,8 @@ const LeftSidebar = props => {
         <Backdrop className={classes.backdrop} open={showBackdrop}>
           <div className={classes.backdropContent}>
             <CircularProgress color="inherit" />
-            <p class="mb-2"></p>
-            <p class="text-white mb-2">Performing Search</p>
+            <p className="mb-2"></p>
+            <p className="text-white mb-2">Performing Search</p>
             <Button color="primary" className={'text-danger'} onClick={closeBackdrop}>Cancel</Button>
           </div>
         </Backdrop>

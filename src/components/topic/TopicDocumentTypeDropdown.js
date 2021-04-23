@@ -1,29 +1,45 @@
 import React from 'react';
-import { TextField, MenuItem } from '@material-ui/core';
+import { MenuItem, Select, Checkbox, ListItemText, Input } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTopicSelectedDocumentType } from '../../reducers/Topic';
+import { setSelectedDocumentTypes } from '../../reducers/Topic';
+
+const useStyles = makeStyles(theme => ({
+  multiSelect: {
+    width: '100%',
+    height: '2.2rem',
+  },
+}));
 
 const TopicDocumentTypeDropdown = props => {
-  const { documentTypes, selectedDocumentType } = useSelector(state => state.Topic);
+  const classes = useStyles()
+  const { documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
+
+  
+  const handleSelectionChange = (e) => {
+    dispatch(setSelectedDocumentTypes(e.target.value))
+  }
   
   return (
-    <TextField
-      size="small"
-      fullWidth
-      select
-      value={selectedDocumentType}
-      onChange={event => {
-        console.log(event.target.value)
-        dispatch(setTopicSelectedDocumentType(event.target.value));
-      }}
-      variant="outlined">
+    <Select
+      labelId="topicDocumentTypeDropdownLabel"
+      id="topicDocumentTypeDropdownId"
+      multiple
+      value={selectedDocumentTypes}
+      onChange={handleSelectionChange}
+      input={<Input />}
+      renderValue={(selectedValues) => selectedValues.join(', ')}
+      className={classes.multiSelect}
+      // MenuProps={MenuProps}
+    >
       {documentTypes.map(documentType => (
         <MenuItem key={documentType.value} value={documentType.value}>
-          { documentType.label }
+          <Checkbox checked={selectedDocumentTypes.indexOf(documentType.value) > -1} />
+          <ListItemText primary={documentType.label} />
         </MenuItem>
       ))}
-    </TextField>
+    </Select>
   );
 };
 export default TopicDocumentTypeDropdown;

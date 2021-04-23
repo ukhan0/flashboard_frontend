@@ -1,5 +1,5 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
-import { setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
+import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
@@ -9,9 +9,8 @@ import { get, isEmpty, isArray, forEach, concat } from 'lodash';
 export const performTopicSearch = (showBackdrop = false) => {
   return async (dispatch, getState) => {
     const cancelTokenSource = axios.CancelToken.source();
-    const { searchResult, searchText, pageNo, startDate, endDate, selectedDocumentType, orderBy, sortBy, selectedSuggestions } = getState().Topic
+    const { searchResult, searchText, pageNo, startDate, endDate, selectedDocumentTypes, orderBy, sortBy, selectedSuggestions } = getState().Topic
     dispatch(setSearchStart())
-    console.log(showBackdrop)
     if(showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true))
     }
@@ -23,7 +22,7 @@ export const performTopicSearch = (showBackdrop = false) => {
           searchfrom: '',
           startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
           endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
-          document_type: selectedDocumentType === 'all' ? '' : selectedDocumentType,
+          document_types: selectedDocumentTypes,
           orderBy,
           sortBy,
           page: pageNo,
@@ -31,8 +30,9 @@ export const performTopicSearch = (showBackdrop = false) => {
         cancelToken: cancelTokenSource.token,
       });
       let newSearchResults = get(response, 'data', null);
+      const isError = get(newSearchResults, 'error', null)
       // let newSearchResults = topicSearchResultData
-      if(newSearchResults) {
+      if(newSearchResults && !isError) {
         if(pageNo > 0) {
           const existingData = get(searchResult, 'data', [])
           const newData = get(newSearchResults, 'data', [])
@@ -82,7 +82,7 @@ const createSearchSaveMiniPayload = (topicState) => {
     endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
     orderBy: topicState.orderBy,
     sortBy: topicState.sortBy,
-    selectedDocumentType: topicState.selectedDocumentType,
+    selectedDocumentTypes: topicState.selectedDocumentTypes,
     searchTerm: fullSearchText,
   }
 }
@@ -143,10 +143,14 @@ export const updateSaveSearch = (topicId, searchId) => {
 
 export const deleteTopic = (topicId) => {
   const user = JSON.parse(localStorage.getItem('user'));
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { selectedTopic } = getState().Topic
     const response = await axios.delete(`${config.apiUrl}/api/topic/${topicId}/${user.id}`);
     const isDeleted = get(response, 'data.data.status', false)
     if(isDeleted) {
+      if(selectedTopic && selectedTopic.topicID === topicId) {
+        dispatch(setSelectedSearch(null, null));
+      }
       dispatch(fetchTopicsList());
     } else {
       dispatch(setIsTopicDeleteErr(true));
@@ -156,10 +160,14 @@ export const deleteTopic = (topicId) => {
 
 export const deleteSearch = (topicId, searchId) => {
   const user = JSON.parse(localStorage.getItem('user'));
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { selectedSearch } = getState().Topic
     const response = await axios.delete(`${config.apiUrl}/api/topic/${topicId}/search/${searchId}/${user.id}`);
     const isDeleted = get(response, 'data.data.status', false)
     if(isDeleted) {
+      if(selectedSearch && selectedSearch.searchId === searchId) {
+        dispatch(setSelectedSearch(null, null));
+      }
       dispatch(fetchTopicsList());
     } else {
       dispatch(setIsSearchDeleteErr(true));

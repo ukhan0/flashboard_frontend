@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 export default function TopicSuggestionsDialog(props) {
   const { selectedSearch, selectedTopic } = useSelector(state => state.Topic);
   const [selectedTopicLocal, setSelectedTopicLocal] = useState(selectedTopic ? {label: selectedTopic.topicText, value: selectedTopic.topicID} : null)
-  console.log(selectedTopicLocal)
+  
   const isNewTopic = useRef(null)
   const dispatch = useDispatch();
   
@@ -37,13 +37,23 @@ export default function TopicSuggestionsDialog(props) {
           Cancel
         </Button>
         {
-          selectedTopicLocal && selectedTopic && selectedTopicLocal.value === selectedTopic.topicID ?
-            <Button onClick={() => dispatch(updateSaveSearch(selectedTopic.topicID, selectedSearch.searchId))} color="primary" disabled={selectedTopic === null}>
-              Save
-            </Button>
+          selectedSearch ?
+            <>
+              {
+                selectedTopicLocal && selectedTopic && selectedTopicLocal.value === selectedTopic.topicID ?
+                  <Button onClick={() => dispatch(updateSaveSearch(selectedTopic.topicID, selectedSearch.searchId))} color="primary" disabled={selectedTopic === null}>
+                    { 'Update' }
+                  </Button>
+                  :
+                  null
+              }
+              <Button onClick={() => dispatch(handleSaveSearch(selectedTopicLocal, isNewTopic.current))} color="primary" disabled={selectedTopicLocal === null}>
+                { 'Save as New' }
+              </Button>
+            </>
             :
             <Button onClick={() => dispatch(handleSaveSearch(selectedTopicLocal, isNewTopic.current))} color="primary" disabled={selectedTopicLocal === null}>
-              { selectedTopic === null ? 'Save' : 'Save as New' }
+              { 'Save'}
             </Button>
         }
       </DialogActions>

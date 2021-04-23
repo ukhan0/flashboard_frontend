@@ -6,6 +6,8 @@ import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
 import TopicButtonGroup from './TopicButtonGroup';
 import TopicDatePickerTextField from './TopicDatePickerTextField';
 import { useSelector, useDispatch } from 'react-redux';
+
+import { setResultsPage } from '../../reducers/Topic';
 import { performTopicSearch } from './topicActions';
 import { forEach, concat } from 'lodash';
 
@@ -36,6 +38,11 @@ const TopicFilters = (props) => {
   const classes = useStyles();
   const { searchText, isSearchLoading, isSearchError, selectedSuggestions } = useSelector(state => state.Topic);
   const dispatch = useDispatch()
+
+  const handleSearch = () => {
+    dispatch(setResultsPage(0))
+    dispatch(performTopicSearch(true))
+  }
 
   let selectedSuggestionsArr = []
   forEach(selectedSuggestions, values => {
@@ -72,7 +79,7 @@ const TopicFilters = (props) => {
           </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={3}>
-            <h6>Document Type:</h6>
+            <h6>Document Types:</h6>
             <TopicDocumentTypeDropdown />
           </Grid>
           <Grid item xs={3}>
@@ -103,7 +110,7 @@ const TopicFilters = (props) => {
                   null
               }
               <div className="mr-2"></div>
-              <Button variant="contained" color="primary" onClick={() => dispatch(performTopicSearch(true))}>
+              <Button variant="contained" color="primary" onClick={handleSearch}>
                 Search
               </Button>
             </div>

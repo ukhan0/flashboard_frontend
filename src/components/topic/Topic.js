@@ -34,6 +34,7 @@ const Topic = () => {
             <div className="p-3 bg-white">
               <Button
                 onClick={() => {
+                  window.scrollTo(0, 0);
                   setShowFilters(!showFilters);
                 }}
                 variant="contained"
