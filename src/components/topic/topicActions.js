@@ -4,12 +4,13 @@ import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
 import { get, isEmpty, isArray, forEach, concat } from 'lodash';
-// import topicSearchResultData from '../../reducers/topicSearchResultData'
+import topicSearchResultData from '../../reducers/topicSearchResultData'
 
-export const performTopicSearch = (showBackdrop = false) => {
+export const performTopicSearch = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const cancelTokenSource = axios.CancelToken.source();
-    const { searchResult, searchText, pageNo, startDate, endDate, selectedDocumentTypes, orderBy, sortBy, selectedSuggestions } = getState().Topic
+    const { searchResult, searchText, selectedSearch, pageNo, startDate, endDate, selectedDocumentTypes, orderBy, sortBy, selectedSuggestions } = getState().Topic
+    const searchId = get(selectedSearch, 'searchId', null);
     dispatch(setSearchStart())
     if(showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true))
@@ -26,12 +27,14 @@ export const performTopicSearch = (showBackdrop = false) => {
           orderBy,
           sortBy,
           page: pageNo,
+          searchId: (!freshSearch && searchId && pageNo === 0 ) ? searchId : undefined,
+          refresh_search: false,
       }, {
         cancelToken: cancelTokenSource.token,
       });
       let newSearchResults = get(response, 'data', null);
-      const isError = get(newSearchResults, 'error', null)
       // let newSearchResults = topicSearchResultData
+      const isError = get(newSearchResults, 'error', null)
       if(newSearchResults && !isError) {
         if(pageNo > 0) {
           const existingData = get(searchResult, 'data', [])

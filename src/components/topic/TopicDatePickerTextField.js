@@ -1,22 +1,44 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { format } from 'date-fns';
-import { DateRangePicker } from 'react-date-range';
+import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchDateRange } from '../../reducers/Topic';
-// import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     backgroundColor: 'white'
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 200
+  },
+  dateSelection: {
+    textAlign: 'right',
+    padding: 10,
+    backgroundColor: '#7092e6',
+    color: 'white',
+    borderRadius: 12,
+    cursor: 'pointer',
+  },
+  dateRangeSelector: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 76,
+    right: 9,
+    zIndex: 1,
+    border: '1px solid black',
+    padding: 10,
+    width: '20rem',
+  },
+  dateRangeSelectorControls: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: 25,
   }
 }));
 
@@ -25,59 +47,52 @@ const TopicDatePickerTextField = props => {
   const dispatch = useDispatch();
   const [isDateRangeSelectorOpen, setIsDateRangeSelectorOpen] = React.useState(false);
   const { startDate, endDate } = useSelector(state => state.Topic);
-  const [dateRange, setDateRange] = React.useState([
-    {
-      startDate: startDate,
-      endDate: endDate,
-      key: 'selection'
-    }
-  ]);
+  const dateFormat = 'MMMM yyyy';
 
-  const handleDateChange = (item) => {
-    setDateRange([item.selection])
-    dispatch(setTopicSearchDateRange({startDate: item.selection.startDate, endDate: item.selection.endDate}))
+
+  const handleStartDateChange = (newStartDate) => {
+    console.log(newStartDate)
+    dispatch(setTopicSearchDateRange({startDate: startOfMonth(newStartDate), endDate: endDate}))
+  }
+
+  const handleEndDateChange = (newEndDate) => {
+    console.log(newEndDate)
+    dispatch(setTopicSearchDateRange({startDate: startDate, endDate: endOfMonth(newEndDate)}))
   }
 
   return (
     <div>
-      <Button
-        style={{ backgroundColor: '#f5f5f5'}}
-        variant="text"
+      <div
+        className={classes.dateSelection}
         onClick={() => {
           setIsDateRangeSelectorOpen(true);
         }}>
-        <span style={{backgroundColor: "white",paddingLeft: 5, paddingRight: 5 }} >
-          {format(dateRange[0].startDate, 'dd MMM yy')}
-          { ' - ' }
-          {format(dateRange[0].endDate, 'dd MMM yy')}
-        </span>
-      </Button>
+        <span className='font-weight-bold'>{format(startDate, dateFormat)}</span>
+        <span className='text-white'>{ '  -  ' }</span>
+        <span className='font-weight-bold'>{format(endDate, dateFormat)} </span>
+      </div>
       {isDateRangeSelectorOpen ? (
-        <div
-          style={{
-            backgroundColor: 'white',
-            position: 'absolute',
-            top: 60,
-            right: 20,
-            zIndex: 1,
-            border: '2px inset black'
-          }}>
-          <form className={classes.container} noValidate>
-          <DateRangePicker
-            editableDateInputs={true}
-            onChange={handleDateChange}
-            showSelectionPreview={true}
-            moveRangeOnFirstSelection={false}
-            months={2}
-            ranges={dateRange}
-            direction="horizontal"
-          />
-          </form>
-          <div style={{padding:10}}>
+        <div className={classes.dateRangeSelector}>
+          <div className={classes.container}>
+            <KeyboardDatePicker 
+              value={startDate} 
+              onChange={handleStartDateChange}
+              label="Start Date"
+              format={dateFormat}
+              views={["year", "month"]}
+            />
+            <div className='mb-2'></div>
+            <KeyboardDatePicker 
+              value={endDate}
+              onChange={handleEndDateChange}
+              label="End Date"
+              format={dateFormat}
+              views={["year", "month"]}
+            />
+          </div>
+          <div className={classes.dateRangeSelectorControls}>
             <Button
-              style={{ marginTop: 10, marginBottom: 5, marginLeft: 500 }}
               color="primary"
-              variant="contained"
               onClick={() => {
                 setIsDateRangeSelectorOpen(false);
               }}>

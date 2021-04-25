@@ -1,5 +1,5 @@
 import documentTypesData from './documentTypesData';
-import { subDays } from 'date-fns';
+import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
 export const SET_SEARCH_TEXT = 'TOPIC/SET_SEARCH_TEXT';
@@ -140,8 +140,8 @@ const getDefaultState = () => {
     searchText: '',
     selectedDocumentTypes: ['10-K', '10-Q'],
     selectedUniverse: null,
-    startDate: subDays(new Date(), 365),
-    endDate: new Date(),
+    startDate: subMonths(startOfMonth(new Date()), 12),
+    endDate: endOfMonth(new Date()),
     orderBy: 'desc',
     sortBy: 'document_date',
     selectedSuggestions: {},

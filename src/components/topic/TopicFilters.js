@@ -41,7 +41,7 @@ const TopicFilters = (props) => {
 
   const handleSearch = () => {
     dispatch(setResultsPage(0))
-    dispatch(performTopicSearch(true))
+    dispatch(performTopicSearch(true, true))
   }
 
   let selectedSuggestionsArr = []
@@ -60,7 +60,7 @@ const TopicFilters = (props) => {
                 <TopicSearchTextField />
                 <div className={classes.selectedSuggestionsList}>
                   {
-                    selectedSuggestionsArr.map((v, index) => <span className="text-black-50">{`${v} ${index !== selectedSuggestionsArr.length - 1 ? ',' : ''}`}</span>)
+                    selectedSuggestionsArr.map((v, index) => <span key={`ssa${index}`} className="text-black-50">{`${v} ${index !== selectedSuggestionsArr.length - 1 ? ',' : ''}`}</span>)
                   }
                 </div>
               </div>
