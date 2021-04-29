@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Card } from '@material-ui/core';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -23,9 +23,7 @@ const useStyles = makeStyles(_theme => ({
 export default function TopicSectorChart() {
   const classes = useStyles()
   const { searchResult } = useSelector(state => state.Topic);
-  const [selectedType, setSelectedType] = useState('sector');
 
-  console.log(searchResult);
   const rawData = get(searchResult, 'buckets.groupBySectorIndustry', []);
   const sectorData = [];
   const industryData = [];
@@ -90,7 +88,6 @@ export default function TopicSectorChart() {
     }
   };
 
-  console.log(options);
   return (
     <Fragment>
       <Card className="card-box mb-4">

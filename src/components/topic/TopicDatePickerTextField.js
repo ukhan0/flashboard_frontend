@@ -51,12 +51,10 @@ const TopicDatePickerTextField = props => {
 
 
   const handleStartDateChange = (newStartDate) => {
-    console.log(newStartDate)
     dispatch(setTopicSearchDateRange({startDate: startOfMonth(newStartDate), endDate: endDate}))
   }
 
   const handleEndDateChange = (newEndDate) => {
-    console.log(newEndDate)
     dispatch(setTopicSearchDateRange({startDate: startDate, endDate: endOfMonth(newEndDate)}))
   }
 
