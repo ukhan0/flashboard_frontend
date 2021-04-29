@@ -4,7 +4,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
 import { get, isEmpty, isArray, forEach, concat } from 'lodash';
-import topicSearchResultData from '../../reducers/topicSearchResultData'
+// import topicSearchResultData from '../../reducers/topicSearchResultData'
 
 export const performTopicSearch = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {

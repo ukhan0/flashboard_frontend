@@ -4,11 +4,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
 import { get, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty } from 'lodash';
 import clsx from 'clsx';
-
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
-
+import { createResultTitle } from './topicHelpers'
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -24,10 +23,6 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
-const createTitle = (rawTitle) => {
-  return rawTitle ? rawTitle.replace('sma_data_json.', '') : null
-}
-
 const TopicSearchResults = () => {
   const classes = useStyles();
   const { searchResult, isSearchLoading } = useSelector(state => state.Topic);
@@ -37,10 +32,12 @@ const TopicSearchResults = () => {
   const companyNames = uniqBy(allComapnyResults, 'company_name');
   const summaryByCompany = companyNames.map(c => {
     const companyResults = filter(allComapnyResults, r => r.company_name === c.company_name);
-    const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
+    const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
+    const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
     const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
     return {
         companyName: c.company_name,
+        uniqTitleCodes,
         uniqTitles,
         resultsCount
     }
@@ -124,7 +121,7 @@ const TopicSearchResults = () => {
                           companyResult.results.map((result, index) => {
                             return (
                               <div key={`rst${index}`}>
-                                <p className="font-size-lg mb-2 text-black-100">{createTitle(result.title)}</p>
+                                <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
                                 {
                                   result.content.map((content, index) => <p key={`rstc${index}`} className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')} dangerouslySetInnerHTML={{__html: content}}></p>)
                                 }

@@ -1,4 +1,5 @@
-import { forEach, uniq, cloneDeep } from "lodash-es";
+import { get, forEach, uniq, cloneDeep } from 'lodash';
+import searchHeadingMapping from '../../config/searchHeadingMapping'
 
 export function getSearchCombinations(suggestions) {
   // remove special character from search text
@@ -61,4 +62,27 @@ function createCombinations(suggestions, length) {
     }
   }
   return result;
+}
+
+export const createResultTitle = (rawTitle) => {
+  if(!rawTitle) {
+    return ''
+  }
+  // rawTitle is "sma_data_json.10-q.P1.I2.l4"
+  const actualTitle = rawTitle.replace('sma_data_json.', '')
+  // actualTitle is 10-q.P1.I2.l4
+  console.log(actualTitle)
+  const actualTitleArr = actualTitle.split('.')
+  console.log(actualTitleArr)
+  let titleText = null
+  for(let i = actualTitleArr.length; i > 0; i--){
+    const titleCode = actualTitleArr.slice(0, i).join('.')
+    if(!titleText) {
+      titleText = get(searchHeadingMapping, titleCode.toUpperCase(), null)
+    }
+  }
+  if(!titleText) {
+    titleText = actualTitle
+  } 
+  return titleText
 }
