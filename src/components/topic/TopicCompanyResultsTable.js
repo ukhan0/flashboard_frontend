@@ -60,7 +60,10 @@ const useStyles = makeStyles(theme => ({
   titleheader: {
     paddingTop: '.3rem',
     paddingBottom: '.3rem',
-  }
+  },
+  contentSection: {
+    height: 300,
+  },
 }));
 
 export default function TopicCompantResultsTable() {
@@ -101,7 +104,7 @@ export default function TopicCompantResultsTable() {
           </div>
         </div>
         
-        <PerfectScrollbar className="scroll-area-md mb-2">
+        <PerfectScrollbar className={clsx('mb-2', classes.contentSection)}>
           <div className="table-responsive">
             <table className="table mb-0">
               <thead>
