@@ -39,7 +39,7 @@ const TopicSearchResults = (props) => {
                   <Grid
                      container
                      direction="row"
-                     justify="center"
+                     justify="flex-start"
                      alignItems="center"
                      >
                        <Grid item>
