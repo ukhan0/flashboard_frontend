@@ -39,7 +39,8 @@ const TopicSearchResults = () => {
         companyName: c.company_name,
         uniqTitleCodes,
         uniqTitles,
-        resultsCount
+        resultsCount,
+        ticker:c.ticker
     }
   })
 
