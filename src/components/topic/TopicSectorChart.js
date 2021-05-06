@@ -63,7 +63,8 @@ export default function TopicSectorChart() {
     },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span>{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span>{point.name}</span>: <b>{point.y}</b>',
+      enabled: false
   },
     plotOptions: {
       series: {

@@ -14,7 +14,7 @@ const TopicHistoryChart = () => {
       marginTop: 0,
     },
     title: {
-      text: 'Documents Count Over Time'
+      text: 'Document Count'
     },
     colors: ["#339900", "#0088cc"],
     credits: {
