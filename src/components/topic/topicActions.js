@@ -190,7 +190,7 @@ export const findSuggestions = () => {
         searchTerm: searchText
       });
       const responsePayload = get(response, 'data', null);
-      const rawSuggestions = get(responsePayload, 'results', {})
+      let rawSuggestions = get(responsePayload, 'results', {})
       if(isArray(rawSuggestions) &&  rawSuggestions.length === 0) {
         rawSuggestions = {}
       }
