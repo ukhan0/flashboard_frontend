@@ -7,7 +7,8 @@ import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
-import {Button} from "@material-ui/core"
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 
 const styles = theme => ({
 	root: {
@@ -25,22 +26,24 @@ const styles = theme => ({
 })
 
 const DialogTitle = withStyles(styles)(props => {
-	const { children, classes, onClose } = props
-
+	const { children, classes, onClose, closeBtnComponent } = props
+console.log(closeBtnComponent)
 	return (
 		<MuiDialogTitle id={'dialogHeading'} disableTypography className={classes.root}>
 			<Typography id={'dialogTitle'} variant="h5" className={classes.headingFont}>{children}</Typography>
 			{onClose ? (
-				<Button
-				    className={classes.closeButton}
-				    style={{marginRight:"5px",marginTop:"5px"}}
-				    variant="contained"
-				    color="primary"
-				    onClick={onClose}
-				>
-                    Done
-				</Button>
+        <IconButton
+          id={'closeDlgBtn'}
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
 			) : null}
+      {
+        closeBtnComponent ? closeBtnComponent : null
+      }
 		</MuiDialogTitle>
 	)
 })
@@ -65,6 +68,7 @@ export default function GenericDialog(props) {
 				<DialogTitle
 					id="customized-dialog-title"
 					onClose={props.onClose}
+          closeBtnComponent={props.closeBtnComponent}
 				>
 					{props.title}
 				</DialogTitle>
@@ -84,9 +88,10 @@ GenericDialog.propTypes = {
 		PropTypes.object,
 	]).isRequired,
 	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
+	onClose: PropTypes.func,
 	size: PropTypes.string,
 	keepMounted: PropTypes.bool,
+  closeBtnComponent: PropTypes.object,
 }
 
 GenericDialog.defaultProps = {

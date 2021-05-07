@@ -4,7 +4,7 @@ import searchHeadingMapping from '../../config/searchHeadingMapping'
 export function getSearchCombinations(suggestions) {
   // remove special character from search text
   const combinations = createCombinations(cloneDeep(suggestions), Object.keys(suggestions).length);
-  const quotedCombinations = combinations.map(c => `"${c}"`)
+  const quotedCombinations = combinations.map(c => `'${c}'`)
   return quotedCombinations.join(' OR ');
 }
 
@@ -71,9 +71,7 @@ export const createResultTitle = (rawTitle) => {
   // rawTitle is "sma_data_json.10-q.P1.I2.l4"
   const actualTitle = rawTitle.replace('sma_data_json.', '')
   // actualTitle is 10-q.P1.I2.l4
-  console.log(actualTitle)
   const actualTitleArr = actualTitle.split('.')
-  console.log(actualTitleArr)
   let titleText = null
   for(let i = actualTitleArr.length; i > 0; i--){
     const titleCode = actualTitleArr.slice(0, i).join('.')
@@ -85,4 +83,22 @@ export const createResultTitle = (rawTitle) => {
     titleText = actualTitle
   } 
   return titleText
+}
+
+export const removeDuplicateSuggestions = (suggestionsObj) => {
+  let suggestionsArr = []
+  const cleanSuggestionsObj = {}
+  forEach(suggestionsObj, (values, keyWord) => {
+    const uniqValues = uniq(values)  
+    uniqValues.forEach(value => {
+      if(!suggestionsArr.includes(value)){
+        if(!cleanSuggestionsObj[keyWord]) {
+          cleanSuggestionsObj[keyWord] = []
+        }
+        cleanSuggestionsObj[keyWord].push(value)
+        suggestionsArr.push(value)
+      }
+    })
+  })
+  return cleanSuggestionsObj
 }

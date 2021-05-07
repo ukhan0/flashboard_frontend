@@ -1,4 +1,4 @@
-import { getSearchCombinations, getSelectedSuggestionAsArr } from './topicHelpers';
+import { getSearchCombinations, getSelectedSuggestionAsArr, removeDuplicateSuggestions } from './topicHelpers';
 import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -190,10 +190,13 @@ export const findSuggestions = () => {
         searchTerm: searchText
       });
       const responsePayload = get(response, 'data', null);
-      let newSuggestions = get(responsePayload, 'results', {})
-      if(isArray(newSuggestions) &&  newSuggestions.length === 0) {
-        newSuggestions = {}
+      const rawSuggestions = get(responsePayload, 'results', {})
+      if(isArray(rawSuggestions) &&  rawSuggestions.length === 0) {
+        rawSuggestions = {}
       }
+      // remove duplicated from suggestions
+      let newSuggestions = removeDuplicateSuggestions(rawSuggestions)
+
       let newSelectedSuggestions = {}
       if(isEmpty(selectedSuggestions)) {
         forEach(newSuggestions, (_values, keyWord) => {
