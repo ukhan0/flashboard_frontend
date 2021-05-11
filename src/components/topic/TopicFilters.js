@@ -4,7 +4,7 @@ import { Grid, Button, Typography } from '@material-ui/core';
 import TopicSearchTextField from './TopicSearchTextField';
 import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
 import TopicButtonGroup from './TopicButtonGroup';
-import TopicDatePickerTextField from './TopicDatePickerTextField';
+import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setResultsPage } from '../../reducers/Topic';
@@ -95,7 +95,7 @@ const TopicFilters = (props) => {
             <div style={{display: 'flex', justifyContent: 'flex-end'}}>
               <div>
                 <h6>Search From (Optional)</h6>
-                <TopicDatePickerTextField />
+                <TopicRangePicker />
               </div>
             </div>
           </Grid>

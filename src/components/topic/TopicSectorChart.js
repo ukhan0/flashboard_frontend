@@ -70,7 +70,7 @@ export default function TopicSectorChart() {
       series: {
         dataLabels: {
             enabled: true,
-            format: '{point.name} ({point.y})'
+            format: '{point.name}'
         }
       }
     },

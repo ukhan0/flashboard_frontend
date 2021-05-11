@@ -42,20 +42,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopicDatePickerTextField = props => {
+function isValidDate(d) {
+  return d instanceof Date && !isNaN(d);
+}
+
+const TopicRangePicker = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [isDateRangeSelectorOpen, setIsDateRangeSelectorOpen] = React.useState(false);
   const { startDate, endDate } = useSelector(state => state.Topic);
-  const dateFormat = 'MMMM yyyy';
-
+  const inputDateFormat = 'MM yyyy';
+  const displayDateFormat = 'MMMM yyyy';
 
   const handleStartDateChange = (newStartDate) => {
-    dispatch(setTopicSearchDateRange({startDate: startOfMonth(newStartDate), endDate: endDate}))
+    if(isValidDate(newStartDate)){
+      dispatch(setTopicSearchDateRange({startDate: startOfMonth(newStartDate), endDate: endDate}))
+    }
   }
 
   const handleEndDateChange = (newEndDate) => {
-    dispatch(setTopicSearchDateRange({startDate: startDate, endDate: endOfMonth(newEndDate)}))
+    if(isValidDate(newEndDate)){
+      dispatch(setTopicSearchDateRange({startDate: startDate, endDate: endOfMonth(newEndDate)}))
+    }
   }
 
   return (
@@ -65,9 +73,9 @@ const TopicDatePickerTextField = props => {
         onClick={() => {
           setIsDateRangeSelectorOpen(true);
         }}>
-        <span className='font-weight-bold'>{format(startDate, dateFormat)}</span>
+        <span className='font-weight-bold'>{format(startDate, displayDateFormat)}</span>
         <span className='text-white'>{ '  -  ' }</span>
-        <span className='font-weight-bold'>{format(endDate, dateFormat)} </span>
+        <span className='font-weight-bold'>{format(endDate, displayDateFormat)} </span>
       </div>
       {isDateRangeSelectorOpen ? (
         <div className={classes.dateRangeSelector}>
@@ -76,7 +84,7 @@ const TopicDatePickerTextField = props => {
               value={startDate} 
               onChange={handleStartDateChange}
               label="Start Date"
-              format={dateFormat}
+              format={inputDateFormat}
               views={["year", "month"]}
             />
             <div className='mb-2'></div>
@@ -84,7 +92,7 @@ const TopicDatePickerTextField = props => {
               value={endDate}
               onChange={handleEndDateChange}
               label="End Date"
-              format={dateFormat}
+              format={inputDateFormat}
               views={["year", "month"]}
             />
           </div>
@@ -104,4 +112,5 @@ const TopicDatePickerTextField = props => {
     </div>
   );
 };
-export default TopicDatePickerTextField;
+
+export default TopicRangePicker
