@@ -27,6 +27,9 @@ const useStyles = makeStyles(theme => ({
   },
   selectedSuggestionsList: {
     marginLeft: 5
+  },
+  dateRange: {
+    textAlign: 'center'
   }
 }));
 
@@ -93,7 +96,7 @@ const TopicFilters = props => {
           <Grid item xs={12}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <div>
-                <h6>Search From (Optional)</h6>
+                <h6 className={classes.dateRange}>Date Range</h6>
                 <TopicRangePicker />
               </div>
             </div>

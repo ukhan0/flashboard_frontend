@@ -9,7 +9,6 @@ import { get, isEmpty, isArray, forEach, concat } from 'lodash';
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const cancelTokenSource = axios.CancelToken.source();
-    const { searchResult, pageNo} = getState().Topic
     dispatch(setSearchStart())
     if(showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true))
@@ -23,11 +22,6 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       // let newSearchResults = topicSearchResultData
       const isError = get(newSearchResults, 'error', null)
       if(newSearchResults && !isError) {
-        if(pageNo > 0) {
-          const existingData = get(searchResult, 'data', [])
-          const newData = get(newSearchResults, 'data', [])
-          newSearchResults.data = concat(existingData, newData)
-        }
         dispatch(setSearchResults(newSearchResults))
         dispatch(setSearchBackdrop(null, false))
       } else {
@@ -58,9 +52,9 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
       const isError = get(newSearchResults, 'error', null)
       if(newSearchResults && !isError) {
         if(pageNo > 0) {
-          const existingData = get(searchResultHighlights, 'data', [])
-          const newData = get(newSearchResults, 'data', [])
-          newSearchResults.data = concat(existingData, newData)
+          const existingData = get(searchResultHighlights, 'highlights', [])
+          const newData = get(newSearchResults, 'highlights', [])
+          newSearchResults.highlights = concat(existingData, newData)
         }
         dispatch(setSearchResultHighlights(newSearchResults))
         dispatch(setSearchBackdropHighlights(null, false))
@@ -96,7 +90,6 @@ export const goToNextPage = () => {
   return async (dispatch, getState) => {
     const { pageNo } = getState().Topic
     dispatch(setResultsPage(pageNo + 1))
-    dispatch(performTopicSearchAggregate())
     dispatch(performTopicSearchHighlights())
   }
 }
