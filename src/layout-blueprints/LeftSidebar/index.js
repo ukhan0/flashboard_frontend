@@ -3,20 +3,28 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { Button, CircularProgress, Backdrop} from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchBackdrop } from '../../reducers/Topic';
+import { setSearchBackdrop,setSearchBackdropHighlights } from '../../reducers/Topic';
 import topicStyles from './leftSidebarStyles';
 import { connect } from 'react-redux';
 import { Sidebar, Header, Footer } from '../../layout-components';
 
 const LeftSidebar = props => {
   const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
-  const { cancelTokenSource, showBackdrop } = useSelector(state => state.Topic);
+  const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
   const dispatch = useDispatch()
   const classes = topicStyles();
 
   const closeBackdrop = () => {
+    if(!cancelTokenSource){
+      cancelTokenSourceHighlights.cancel()
+      dispatch(setSearchBackdropHighlights(null,false))
+    } else 
+    {
     cancelTokenSource.cancel()
+    cancelTokenSourceHighlights.cancel()
     dispatch(setSearchBackdrop(null, false))
+    dispatch(setSearchBackdropHighlights(null,false))
+   }
   }
 
   return (

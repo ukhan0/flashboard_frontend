@@ -8,7 +8,7 @@ import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setResultsPage } from '../../reducers/Topic';
-import { performTopicSearch } from './topicActions';
+import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 import { forEach, concat } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +41,8 @@ const TopicFilters = (props) => {
 
   const handleSearch = () => {
     dispatch(setResultsPage(0))
-    dispatch(performTopicSearch(true, true))
+    dispatch(performTopicSearchAggregate(true, true))
+    dispatch(performTopicSearchHighlights(true, true))
   }
 
   let selectedSuggestionsArr = []

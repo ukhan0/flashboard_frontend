@@ -1,36 +1,23 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr, removeDuplicateSuggestions } from './topicHelpers';
-import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError } from '../../reducers/Topic';
+import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights} from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
 import { get, isEmpty, isArray, forEach, concat } from 'lodash';
 // import topicSearchResultData from '../../reducers/topicSearchResultData'
 
-export const performTopicSearch = (showBackdrop = false, freshSearch = false) => {
+export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const cancelTokenSource = axios.CancelToken.source();
-    const { searchResult, searchText, selectedSearch, pageNo, startDate, endDate, selectedDocumentTypes, orderBy, sortBy, selectedSuggestions } = getState().Topic
-    const searchId = get(selectedSearch, 'searchId', null);
+    const { searchResult, pageNo} = getState().Topic
     dispatch(setSearchStart())
     if(showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true))
     }
-    const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText)
-    const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : searchText
     try {
-      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_results`, {
-          searchTerm: fullSearchText,
-          searchfrom: '',
-          startDate: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
-          endDate: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
-          document_types: selectedDocumentTypes,
-          orderBy,
-          sortBy,
-          page: pageNo,
-          searchId: (!freshSearch && searchId && pageNo === 0 ) ? searchId : undefined,
-          refresh_search: false,
-      }, {
-        cancelToken: cancelTokenSource.token,
+      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_aggregate`,payload(getState().Topic,freshSearch), 
+       {
+        cancelToken:cancelTokenSource.token,
       });
       let newSearchResults = get(response, 'data', null);
       // let newSearchResults = topicSearchResultData
@@ -48,18 +35,69 @@ export const performTopicSearch = (showBackdrop = false, freshSearch = false) =>
         dispatch(setSearchError(true))
       }
     } catch (error) {
-      console.log(error)
       dispatch(setSearchBackdrop(null, false))
       dispatch(setSearchError(true))
     }
   }
 }
-
+export const performTopicSearchHighlights = (showBackdrop = false, freshSearch = false) => {
+  return async (dispatch, getState) => {
+    const cancelTokenSourceHighlights = axios.CancelToken.source();
+    const {pageNo, searchResultHighlights } = getState().Topic
+    dispatch(setSearchStart())
+    if(showBackdrop) {
+      dispatch(setSearchBackdropHighlights(cancelTokenSourceHighlights, true))
+    }
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights`,payload(getState().Topic,freshSearch), 
+      {
+        cancelToken: cancelTokenSourceHighlights.token,
+      });
+      let newSearchResults = get(response, 'data', null);
+      // let newSearchResults = topicSearchResultData
+      const isError = get(newSearchResults, 'error', null)
+      if(newSearchResults && !isError) {
+        if(pageNo > 0) {
+          const existingData = get(searchResultHighlights, 'data', [])
+          const newData = get(newSearchResults, 'data', [])
+          newSearchResults.data = concat(existingData, newData)
+        }
+        dispatch(setSearchResultHighlights(newSearchResults))
+        dispatch(setSearchBackdropHighlights(null, false))
+      } else {
+        dispatch(setSearchBackdropHighlights(null, false))
+        dispatch(setSearchError(true))
+      }
+    } catch (error) {
+      dispatch(setSearchError(true))
+      dispatch(setSearchBackdropHighlights(null, false))
+    }
+  }
+}
+const payload = (topicState,freshSearch) => {
+      const searchId = get(topicState.selectedSearch, 'searchId', null);
+      const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText)
+      const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText
+      const data = {
+          searchTerm: fullSearchText,
+          searchfrom: '',
+          startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
+          endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
+          document_types: topicState.selectedDocumentTypes,
+          orderBy:topicState.orderBy,
+          sortBy:topicState.sortBy,
+          page: topicState.pageNo,
+          searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
+          refresh_search: false,
+      }
+      return data
+    }
 export const goToNextPage = () => {
   return async (dispatch, getState) => {
     const { pageNo } = getState().Topic
     dispatch(setResultsPage(pageNo + 1))
-    dispatch(performTopicSearch())
+    dispatch(performTopicSearchAggregate())
+    dispatch(performTopicSearchHighlights())
   }
 }
 

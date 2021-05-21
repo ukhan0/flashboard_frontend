@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
 import { createResultTitle } from './topicHelpers'
 
+
+
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
     display: 'flex'
@@ -25,10 +27,10 @@ const useStyles = makeStyles(_theme => ({
 
 const TopicSearchResults = () => {
   const classes = useStyles();
-  const { searchResult, isSearchLoading } = useSelector(state => state.Topic);
+  const {isHighlightsSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
   const [selectCompanyIndex, setSelectCompanyIndex] = useState(0);
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
-  const allComapnyResults = get(searchResult, 'data', []);
+  const allComapnyResults = get(searchResultHighlights, 'highlights', []);
   const companyNames = uniqBy(allComapnyResults, 'company_name');
   const summaryByCompany = companyNames.map(c => {
     const companyResults = filter(allComapnyResults, r => r.company_name === c.company_name);
@@ -87,8 +89,8 @@ const TopicSearchResults = () => {
         <div className="app-inner-content-layout--main bg-white p-0">
           <PerfectScrollbar className="mb-4 p-4">
             {
-              (isSearchLoading && isEmpty(searchResult)) ?
-                <h4 className="font-size-lg">Loading...</h4>
+              (isHighlightsSearchLoading && isEmpty(searchResultHighlights)) ?
+              null
               :
                 companyResults.map((companyResult, index) => {
                   return (

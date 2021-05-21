@@ -5,21 +5,26 @@ import { goToNextPage } from './topicActions';
 import { isEmpty } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import TickerLogo from './TopicTickerLogo'
+import { BeatLoader } from 'react-spinners';
 
 const useStyles = makeStyles(_theme => ({
   textAlignCenter: {
+    textAlign: 'center'
+  },
+  margin:{
+    marginTop:'20px',
     textAlign: 'center'
   }
 }));
 
 const TopicSearchResults = (props) => {
   const summaryByCompany = props.summaryByCompany
-  const { isSearchLoading, searchResult } = useSelector(state => state.Topic);
+  const { isHighlightsSearchLoading, searchResultHighlights} = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const classes = useStyles()
 
   const handlePagination = () => {
-    if(!isSearchLoading && !isEmpty(searchResult)) {
+    if(!isHighlightsSearchLoading && !isEmpty(searchResultHighlights)) {
       dispatch(goToNextPage())
     }
   }
@@ -69,10 +74,10 @@ const TopicSearchResults = (props) => {
       }
 
       {
-        isSearchLoading ?
-          <ListItem button>
-            <ListItemText className={classes.textAlignCenter}>Loading...</ListItemText>
-          </ListItem>
+        isHighlightsSearchLoading ?
+           <div className={classes.margin}>
+              <BeatLoader  color={'var(--primary)'}  size={15} />
+           </div>
           :
           <ListItem button>
             <ListItemText className={classes.textAlignCenter} onClick={handlePagination}>Load More</ListItemText>

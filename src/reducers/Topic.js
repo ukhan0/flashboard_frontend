@@ -5,6 +5,7 @@ export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
 export const SET_SEARCH_TEXT = 'TOPIC/SET_SEARCH_TEXT';
 export const SET_DATE_RANGE = 'TOPIC/SET_DATE_RANGE';
 export const SET_SEARCH_RESULT = 'TOPIC/SET_SEARCH_RESULT';
+export const SET_SEARCH_RESULT_HIGHLIGHTS = 'TOPIC/SET_SEARCH_RESULT_HIGHLIGHTS';
 export const SET_SUGGESTIONS_RESULT = 'TOPIC/SET_SUGGESTIONS_RESULT';
 export const SET_SUGGESTIONS_RESULT_AND_SELECTIONS = 'TOPIC/SET_SUGGESTIONS_RESULT_AND_SELECTIONS';
 export const SET_SELECTED_SUGGESTIONS = 'TOPIC/SET_SELECTED_SUGGESTIONS';
@@ -23,10 +24,17 @@ export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
 export const SET_SUGGESTIONS_IS_LOADING = 'TOPIC/SET_SUGGESTIONS_IS_LOADING';
 export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
+export const SET_SEARCH_BACKDROP_HIGHLIGHTS='TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS'
+export const SET_IS_SEARCH_LOADINGG = 'TOPIC/SET_IS_SEARCH_LOADINGG';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
+  showBackdrop
+})
+export const setSearchBackdropHighlights = (cancelTokenSourceHighlights, showBackdrop)  => ({
+  type: SET_SEARCH_BACKDROP_HIGHLIGHTS,
+  cancelTokenSourceHighlights,
   showBackdrop
 })
 
@@ -133,6 +141,14 @@ export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
 export const resetSuggestions = () => ({
   type: RESET_SUGGESTIONS
 })
+export const setSearchResultHighlights = searchResult => ({
+  type: SET_SEARCH_RESULT_HIGHLIGHTS,
+  searchResult
+})
+export const setIsSearchLoadingg = isSearchLoading => ({
+  type: SET_IS_SEARCH_LOADINGG,
+  isSearchLoading
+})
 
 
 const getDefaultState = () => {
@@ -160,7 +176,10 @@ const getDefaultState = () => {
     selectedTopic: null,
     suggestionsIsLoading: false,
     cancelTokenSource: null,
+    cancelTokenSourceHighlights:null,
     showBackdrop: false,
+    searchResultHighlights:{},
+    isHighlightsSearchLoading: false,
   };
 };
 
@@ -199,7 +218,7 @@ export default function reducer(
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
     case SET_SEARCH_START:
-      return { ...state, isSearchLoading: true, isSearchError: false };
+      return { ...state, isSearchLoading: true, isHighlightsSearchLoading:true, isSearchError: false };
     case SET_SEARCH_ERROR:
       return { ...state, isSearchLoading: false, isSearchError: action.isSearchError };
     case SET_TOPICS_LIST:
@@ -223,7 +242,13 @@ export default function reducer(
     case SET_SEARCH_PAGE_NO:
       return { ...state, pageNo: action.pageNo };
     case SET_SEARCH_BACKDROP:
-      return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop };
+      return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop};
+    case SET_SEARCH_RESULT_HIGHLIGHTS:
+      return { ...state, searchResultHighlights: action.searchResult, isHighlightsSearchLoading: false, isSearchError: false };
+    case SET_IS_SEARCH_LOADINGG:
+      return { ...state, isHighlightsSearchLoading: action.isSearchLoading };
+    case SET_SEARCH_BACKDROP_HIGHLIGHTS:
+      return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights, showBackdrop: action.showBackdrop};
       
     default:
       break;
