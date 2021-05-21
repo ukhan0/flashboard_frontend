@@ -14,41 +14,41 @@ import { forEach, concat } from 'lodash';
 const useStyles = makeStyles(theme => ({
   topsection: {
     marginBottom: 15,
-    marginTop: 5,
+    marginTop: 5
   },
   searchContainer: {
     display: 'flex'
   },
   searchFieldContainer: {
-    flexGrow: 2,
+    flexGrow: 2
   },
   suggestionsBtnSection: {
-    minWidth: 64,
+    minWidth: 64
   },
   selectedSuggestionsList: {
-    marginLeft: 5,
+    marginLeft: 5
   }
 }));
 
 const isSearchAllowed = searchText => {
-  return searchText && searchText.length > 2 
-}
+  return searchText && searchText.length > 2;
+};
 
-const TopicFilters = (props) => {
+const TopicFilters = props => {
   const classes = useStyles();
   const { searchText, isSearchLoading, isSearchError, selectedSuggestions } = useSelector(state => state.Topic);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleSearch = () => {
-    dispatch(setResultsPage(0))
-    dispatch(performTopicSearchAggregate(true, true))
-    dispatch(performTopicSearchHighlights(true, true))
-  }
+    dispatch(setResultsPage(0));
+    dispatch(performTopicSearchAggregate(true, true));
+    dispatch(performTopicSearchHighlights(true, true));
+  };
 
-  let selectedSuggestionsArr = []
+  let selectedSuggestionsArr = [];
   forEach(selectedSuggestions, values => {
-    selectedSuggestionsArr = concat(selectedSuggestionsArr, values)
-  })
+    selectedSuggestionsArr = concat(selectedSuggestionsArr, values);
+  });
 
   return (
     <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
@@ -60,21 +60,19 @@ const TopicFilters = (props) => {
               <div className={classes.searchFieldContainer}>
                 <TopicSearchTextField />
                 <div className={classes.selectedSuggestionsList}>
-                  {
-                    selectedSuggestionsArr.map((v, index) => <span key={`ssa${index}`} className="text-black-50">{`${v} ${index !== selectedSuggestionsArr.length - 1 ? ',' : ''}`}</span>)
-                  }
+                  {selectedSuggestionsArr.map((v, index) => (
+                    <span key={`ssa${index}`} className="text-black-50">{`${v} ${
+                      index !== selectedSuggestionsArr.length - 1 ? ',' : ''
+                    }`}</span>
+                  ))}
                 </div>
               </div>
               <div className={classes.suggestionsBtnSection}>
-                {
-                    isSearchAllowed(searchText) ?
-                      <Button color="primary" onClick={props.onShowSuggestions}>
-                        Show Suggestions
-                      </Button>
-                    
-                    :
-                    null
-                }
+                {isSearchAllowed(searchText) ? (
+                  <Button color="primary" onClick={props.onShowSuggestions}>
+                    Show Suggestions
+                  </Button>
+                ) : null}
               </div>
             </div>
           </Grid>
@@ -93,7 +91,7 @@ const TopicFilters = (props) => {
       <Grid item xs={4}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <div>
                 <h6>Search From (Optional)</h6>
                 <TopicRangePicker />
@@ -101,15 +99,12 @@ const TopicFilters = (props) => {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-              {
-                isSearchAllowed(searchText) ?
-                  <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
-                    Save
-                  </Button>
-                  :
-                  null
-              }
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              {isSearchAllowed(searchText) ? (
+                <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
+                  Save
+                </Button>
+              ) : null}
               <div className="mr-2"></div>
               <Button variant="contained" color="primary" onClick={handleSearch}>
                 Search
@@ -117,22 +112,23 @@ const TopicFilters = (props) => {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-              {
-                isSearchError ? <div className="mr-3">
-                  <Typography color="error">
-                    Error Occured
-                  </Typography></div> : null
-              }
-              {
-                isSearchLoading ? <div className="mr-3"><Typography color="primary">{'Searching...'}</Typography></div> : null
-              }
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              {isSearchError ? (
+                <div className="mr-3">
+                  <Typography color="error">Error Occured</Typography>
+                </div>
+              ) : null}
+              {isSearchLoading ? (
+                <div className="mr-3">
+                  <Typography color="primary">{'Searching...'}</Typography>
+                </div>
+              ) : null}
             </div>
           </Grid>
         </Grid>
       </Grid>
     </Grid>
-  )
+  );
 };
 
 export default TopicFilters;
