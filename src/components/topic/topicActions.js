@@ -1,10 +1,10 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr, removeDuplicateSuggestions } from './topicHelpers';
-import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights} from '../../reducers/Topic';
+import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights, setIsSearchHighlightLoading } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
-import { get, isEmpty, isArray, forEach, concat } from 'lodash';
-// import topicSearchResultData from '../../reducers/topicSearchResultData'
+import { get, isEmpty, isArray, forEach, concat, uniqBy } from 'lodash';
+import documentTypesData from '../../config/documentTypesData'
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
@@ -14,12 +14,11 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       dispatch(setSearchBackdrop(cancelTokenSource, true))
     }
     try {
-      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_aggregate`,payload(getState().Topic,freshSearch), 
+      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_aggregate`, createSearchPayload(getState().Topic,freshSearch), 
        {
         cancelToken:cancelTokenSource.token,
       });
       let newSearchResults = get(response, 'data', null);
-      // let newSearchResults = topicSearchResultData
       const isError = get(newSearchResults, 'error', null)
       if(newSearchResults && !isError) {
         dispatch(setSearchResults(newSearchResults))
@@ -34,47 +33,73 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     }
   }
 }
+
 export const performTopicSearchHighlights = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const cancelTokenSourceHighlights = axios.CancelToken.source();
-    const {pageNo, searchResultHighlights } = getState().Topic
+    const { selectedDocumentTypes } = getState().Topic
     dispatch(setSearchStart())
     if(showBackdrop) {
       dispatch(setSearchBackdropHighlights(cancelTokenSourceHighlights, true))
     }
-    try {
-      const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights`,payload(getState().Topic,freshSearch), 
-      {
-        cancelToken: cancelTokenSourceHighlights.token,
-      });
-      let newSearchResults = get(response, 'data', null);
-      // let newSearchResults = topicSearchResultData
-      const isError = get(newSearchResults, 'error', null)
-      if(newSearchResults && !isError) {
-        if(pageNo > 0) {
-          const existingData = get(searchResultHighlights, 'highlights', [])
-          const newData = get(newSearchResults, 'highlights', [])
-          newSearchResults.highlights = concat(existingData, newData)
-        }
-        dispatch(setSearchResultHighlights(newSearchResults))
-        dispatch(setSearchBackdropHighlights(null, false))
-      } else {
-        dispatch(setSearchBackdropHighlights(null, false))
-        dispatch(setSearchError(true))
-      }
-    } catch (error) {
-      dispatch(setSearchError(true))
-      dispatch(setSearchBackdropHighlights(null, false))
-    }
+    const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt))
+    
+    let searchFromsCount = 0
+    documentTypeObjects.forEach((documentType) => {
+      const searchFroms = get(documentType, 'searchFroms', [])
+      searchFroms.forEach(() => {
+        searchFromsCount += 1
+      })
+    })
+
+    let apiResponseCount = 0
+    documentTypeObjects.forEach(documentType => {
+      const searchFroms = get(documentType, 'searchFroms', [])
+      searchFroms.forEach(searchFrom => {
+        axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload(getState().Topic, freshSearch, searchFrom), 
+        {
+          cancelToken: cancelTokenSourceHighlights.token,
+        })
+        .then(function (response) {
+          apiResponseCount++
+          let searchResults = get(response, 'data', null);
+          const isError = get(searchResults, 'error', null)
+          if(searchResults && !isError) {
+            const { searchResultHighlights } = getState().Topic
+            const existingData = searchResultHighlights
+            const newData = get(searchResults, 'highlights', [])
+            let newSearchResults = concat(existingData, newData)
+            newSearchResults = uniqBy(newSearchResults, 'summary_id')
+            dispatch(setSearchResultHighlights(newSearchResults))
+            dispatch(setSearchBackdropHighlights(null, false))
+          } else {
+            dispatch(setSearchBackdropHighlights(null, false))
+            dispatch(setSearchError(true))
+          }
+          if(searchFromsCount === apiResponseCount) {
+            dispatch(setIsSearchHighlightLoading(false))
+          }
+        })
+        .catch(function (error) {
+          apiResponseCount++
+          dispatch(setSearchError(true))
+          dispatch(setSearchBackdropHighlights(null, false))
+          if(searchFromsCount === apiResponseCount) {
+            dispatch(setIsSearchHighlightLoading(false))
+          }
+        })
+      })
+    })
   }
 }
-const payload = (topicState,freshSearch) => {
+
+const createSearchPayload = (topicState, freshSearch, searchFrom = null) => {
       const searchId = get(topicState.selectedSearch, 'searchId', null);
       const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText)
       const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText
       const data = {
           searchTerm: fullSearchText,
-          searchfrom: '',
+          searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
           startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
           endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
           document_types: topicState.selectedDocumentTypes,

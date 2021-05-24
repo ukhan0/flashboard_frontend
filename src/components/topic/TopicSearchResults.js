@@ -2,14 +2,12 @@ import React, { useState, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
-import { get, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty } from 'lodash';
+import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse } from 'lodash';
 import clsx from 'clsx';
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
 import { createResultTitle } from './topicHelpers'
-
-
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -27,31 +25,35 @@ const useStyles = makeStyles(_theme => ({
 
 const TopicSearchResults = () => {
   const classes = useStyles();
-  const {isHighlightsSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
-  const [selectCompanyIndex, setSelectCompanyIndex] = useState(0);
+  const { isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
-  const allComapnyResults = get(searchResultHighlights, 'highlights', []);
-  const companyNames = uniqBy(allComapnyResults, 'company_name');
-  const summaryByCompany = companyNames.map(c => {
-    const companyResults = filter(allComapnyResults, r => r.company_name === c.company_name);
+  const [selectedCompanyName, setSelectedCompanyName] = useState(null)
+  const allComapnyResults = searchResultHighlights.map(srh => ({...srh}))
+  const companyNames = uniqBy(allComapnyResults, 'company_name')
+  const summaryByCompany = reverse(sortBy(companyNames.map(c => {
+    const companyResults = filter(allComapnyResults, cr => cr.company_name === c.company_name);
+    const documentDates = sortBy(filter(uniq(companyResults.map(cr => cr.document_date)), v => v), [d => new Date(d).getTime()]);
     const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
     const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
     const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
+    const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null
     return {
         companyName: c.company_name,
         uniqTitleCodes,
         uniqTitles,
         resultsCount,
-        ticker:c.ticker
+        ticker: c.ticker,
+        documentDates,
+        latestDate
     }
-  })
+  }), ['latestDate']))
 
   const handleCompanySearch = (event) => {
     setResultsCompanyFilterText(event.target.value)
   }
-
-  const companyResults = allComapnyResults.filter(cr => cr.company_name === companyNames[selectCompanyIndex].company_name)
-
+  
+  const companyResults = allComapnyResults.filter(cr => cr.company_name === selectedCompanyName)
+  
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div style={{width: '35%'}}>
@@ -76,10 +78,10 @@ const TopicSearchResults = () => {
           </div>
           <Divider />
           <PerfectScrollbar>
-            <TopicResultsSummary 
+            <TopicResultsSummary
               summaryByCompany={summaryByCompany}
-              onCompanySelect={(newIndex) => setSelectCompanyIndex(newIndex)}
-              selectCompanyIndex={selectCompanyIndex}
+              onCompanySelect={(newCompanyName) => setSelectedCompanyName(newCompanyName)}
+              selectedCompanyName={selectedCompanyName}
               resultsCompanyFilterText={resultsCompanyFilterText}
             />
           </PerfectScrollbar>
@@ -89,8 +91,8 @@ const TopicSearchResults = () => {
         <div className="app-inner-content-layout--main bg-white p-0">
           <PerfectScrollbar className="mb-4 p-4">
             {
-              (isHighlightsSearchLoading && isEmpty(searchResultHighlights)) ?
-              null
+              (isSearchLoading && isEmpty(searchResultHighlights)) ?
+                <h4 className="font-size-lg">Loading...</h4>
               :
                 companyResults.map((companyResult, index) => {
                   return (

@@ -14,7 +14,7 @@ const useStyles = makeStyles(_theme => ({
   margin: {
     marginTop: '20px',
     textAlign: 'center'
-  }
+  },
 }));
 
 const TopicSearchResults = props => {
@@ -38,26 +38,26 @@ const TopicSearchResults = props => {
       {filteredSummaryByCompany.map((summary, index) => {
         return (
           <Fragment key={`sbc${index}`}>
-            <ListItem button selected={index === props.selectCompanyIndex} onClick={() => props.onCompanySelect(index)}>
-              <div className="rounded-0 p-2">
-                <div>
-                  <Grid container direction="row" justify="flex-start" alignItems="center">
-                    <Grid item>
-                      <TickerLogo value={summary.ticker} />
-                    </Grid>
-                    <Grid item>
-                      <div className="font-weight-bold my-2" style={{ marginLeft: '5px' }}>
-                        {summary.companyName}
-                      </div>
-                    </Grid>
+            <ListItem button selected={summary.companyName === props.selectedCompanyName} onClick={() => props.onCompanySelect(summary.companyName)}>
+              <div>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  <Grid item>
+                    <TickerLogo value={summary.ticker} />
                   </Grid>
-                  <div className="d-flex justify-content-between text-black-50">{summary.resultsCount} matches</div>
-                  {summary.uniqTitles.map((title, index) => (
-                    <p key={`sbct${index}`} className="font-size-xs mb-0">
-                      {title}
-                    </p>
-                  ))}
+                  <Grid item>
+                    <div className="font-weight-bold my-2" style={{ marginLeft: '5px' }}>
+                      {summary.companyName}
+                    </div>
+                  </Grid>
+                </Grid>
+                <div className="d-flex justify-content-between text-black-50">
+                  <span>{ summary.resultsCount } {'matches  '} { summary.documentDates.length ? summary.documentDates[summary.documentDates.length - 1] : null }</span>
                 </div>
+                {summary.uniqTitles.map((title, index) => (
+                  <p key={`sbct${index}`} className="font-size-xs mb-0">
+                    {title}
+                  </p>
+                ))}
               </div>
             </ListItem>
             <Divider />

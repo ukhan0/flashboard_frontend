@@ -7,7 +7,7 @@ import TopicButtonGroup from './TopicButtonGroup';
 import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setResultsPage } from '../../reducers/Topic';
+import { resetResultsPage } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 import { forEach, concat } from 'lodash';
 
@@ -43,7 +43,7 @@ const TopicFilters = props => {
   const dispatch = useDispatch();
 
   const handleSearch = () => {
-    dispatch(setResultsPage(0));
+    dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
     dispatch(performTopicSearchHighlights(true, true));
   };

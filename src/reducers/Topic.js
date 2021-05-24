@@ -1,4 +1,4 @@
-import documentTypesData from './documentTypesData';
+import documentTypesData from '../config/documentTypesData';
 import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
@@ -25,7 +25,8 @@ export const SET_SUGGESTIONS_IS_LOADING = 'TOPIC/SET_SUGGESTIONS_IS_LOADING';
 export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
 export const SET_SEARCH_BACKDROP_HIGHLIGHTS='TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS'
-export const SET_IS_SEARCH_LOADINGG = 'TOPIC/SET_IS_SEARCH_LOADINGG';
+export const RESET_SEARCH_RESULTS = 'TOPIC/RESET_SEARCH_RESULTS';
+export const SET_IS_SEARCH_HIGHLIGHT_LOADING = 'TOPIC/SET_IS_SEARCH_HIGHLIGHT_LOADING';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
@@ -41,6 +42,10 @@ export const setSearchBackdropHighlights = (cancelTokenSourceHighlights, showBac
 export const setResultsPage = pageNo => ({
   type: SET_SEARCH_PAGE_NO,
   pageNo,
+})
+
+export const resetResultsPage = () => ({
+  type: RESET_SEARCH_RESULTS,
 })
 
 export const setSuggestionsIsLoading = suggestionsIsLoading => ({
@@ -145,9 +150,9 @@ export const setSearchResultHighlights = searchResult => ({
   type: SET_SEARCH_RESULT_HIGHLIGHTS,
   searchResult
 })
-export const setIsSearchLoadingg = isSearchLoading => ({
-  type: SET_IS_SEARCH_LOADINGG,
-  isSearchLoading
+export const setIsSearchHighlightLoading = isHighlightsSearchLoading => ({
+  type: SET_IS_SEARCH_HIGHLIGHT_LOADING,
+  isHighlightsSearchLoading
 })
 
 
@@ -178,7 +183,7 @@ const getDefaultState = () => {
     cancelTokenSource: null,
     cancelTokenSourceHighlights:null,
     showBackdrop: false,
-    searchResultHighlights:{},
+    searchResultHighlights: [],
     isHighlightsSearchLoading: false,
   };
 };
@@ -218,7 +223,7 @@ export default function reducer(
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
     case SET_SEARCH_START:
-      return { ...state, isSearchLoading: true, isHighlightsSearchLoading:true, isSearchError: false };
+      return { ...state, isSearchLoading: true, isHighlightsSearchLoading: true, isSearchError: false };
     case SET_SEARCH_ERROR:
       return { ...state, isSearchLoading: false, isSearchError: action.isSearchError };
     case SET_TOPICS_LIST:
@@ -244,11 +249,13 @@ export default function reducer(
     case SET_SEARCH_BACKDROP:
       return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop};
     case SET_SEARCH_RESULT_HIGHLIGHTS:
-      return { ...state, searchResultHighlights: action.searchResult, isHighlightsSearchLoading: false, isSearchError: false };
-    case SET_IS_SEARCH_LOADINGG:
-      return { ...state, isHighlightsSearchLoading: action.isSearchLoading };
+      return { ...state, searchResultHighlights: action.searchResult, isSearchError: false };
+    case SET_IS_SEARCH_HIGHLIGHT_LOADING:
+      return { ...state, isHighlightsSearchLoading: action.isHighlightsSearchLoading };
     case SET_SEARCH_BACKDROP_HIGHLIGHTS:
       return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights, showBackdrop: action.showBackdrop};
+    case RESET_SEARCH_RESULTS:
+      return { ...state, searchResultHighlights: [], pageNo: 0 };
       
     default:
       break;

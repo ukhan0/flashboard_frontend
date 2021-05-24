@@ -5,7 +5,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { includes, get, remove } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAllSearchParams, setSelectedSearch, setSuggestions, setResultsPage } from '../../reducers/Topic';
+import { setAllSearchParams, setSelectedSearch, setSuggestions, resetResultsPage } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
   performTopicSearchHighlights,
@@ -50,7 +50,7 @@ export default function TopicSearchHistory(props) {
       dispatch(setSuggestions({}));
       dispatch(setAllSearchParams(searchObj));
       setTimeout(() => {
-        dispatch(setResultsPage(0));
+        dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(true, true));
         dispatch(performTopicSearchHighlights(true, true));
       }, 1000);
