@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import TickerLogo from './TopicTickerLogo';
 import { BeatLoader } from 'react-spinners';
+import moment from 'moment';
 
 const useStyles = makeStyles(_theme => ({
   textAlignCenter: {
@@ -38,7 +39,7 @@ const TopicSearchResults = props => {
       {filteredSummaryByCompany.map((summary, index) => {
         return (
           <Fragment key={`sbc${index}`}>
-            <ListItem button selected={summary.companyName === props.selectedCompanyName} onClick={() => props.onCompanySelect(summary.companyName)}>
+            <ListItem button selected={index === props.selectedCompanyIndex} onClick={() => props.onCompanySelect(index)}>
               <div>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Grid item>
@@ -51,7 +52,8 @@ const TopicSearchResults = props => {
                   </Grid>
                 </Grid>
                 <div className="d-flex justify-content-between text-black-50">
-                  <span>{ summary.resultsCount } {'matches  '} { summary.documentDates.length ? summary.documentDates[summary.documentDates.length - 1] : null }</span>
+                  <div>{ summary.resultsCount } {'matches  '}</div>
+                  <div>{ summary.latestDate ? moment(summary.latestDate).format('DD/MM/YYYY') : null }</div>
                 </div>
                 {summary.uniqTitles.map((title, index) => (
                   <p key={`sbct${index}`} className="font-size-xs mb-0">

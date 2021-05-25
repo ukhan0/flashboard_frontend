@@ -53,14 +53,14 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
     })
 
     let apiResponseCount = 0
-    documentTypeObjects.forEach(documentType => {
+    for(const documentType of documentTypeObjects) {
       const searchFroms = get(documentType, 'searchFroms', [])
-      searchFroms.forEach(searchFrom => {
-        axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload(getState().Topic, freshSearch, searchFrom), 
-        {
-          cancelToken: cancelTokenSourceHighlights.token,
-        })
-        .then(function (response) {
+      for(const searchFrom of searchFroms) {
+        try {
+          const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload({...getState().Topic}, freshSearch, searchFrom), 
+          {
+            cancelToken: cancelTokenSourceHighlights.token,
+          })
           apiResponseCount++
           let searchResults = get(response, 'data', null);
           const isError = get(searchResults, 'error', null)
@@ -79,17 +79,16 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
           if(searchFromsCount === apiResponseCount) {
             dispatch(setIsSearchHighlightLoading(false))
           }
-        })
-        .catch(function (error) {
+        } catch(error) {
           apiResponseCount++
           dispatch(setSearchError(true))
           dispatch(setSearchBackdropHighlights(null, false))
           if(searchFromsCount === apiResponseCount) {
             dispatch(setIsSearchHighlightLoading(false))
           }
-        })
-      })
-    })
+        }
+      }
+    }
   }
 }
 

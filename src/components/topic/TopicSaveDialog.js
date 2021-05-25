@@ -48,7 +48,7 @@ export default function TopicSuggestionsDialog(props) {
                   null
               }
               <Button onClick={() => dispatch(handleSaveSearch(selectedTopicLocal, isNewTopic.current))} color="primary" disabled={selectedTopicLocal === null}>
-                { 'Save as New' }
+                { 'Save' }
               </Button>
             </>
             :

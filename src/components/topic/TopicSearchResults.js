@@ -2,12 +2,13 @@ import React, { useState, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
-import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse } from 'lodash';
+import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get } from 'lodash';
 import clsx from 'clsx';
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
 import { createResultTitle } from './topicHelpers'
+import moment from 'moment'
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -27,12 +28,12 @@ const TopicSearchResults = () => {
   const classes = useStyles();
   const { isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
-  const [selectedCompanyName, setSelectedCompanyName] = useState(null)
+  const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0)
   const allComapnyResults = searchResultHighlights.map(srh => ({...srh}))
   const companyNames = uniqBy(allComapnyResults, 'company_name')
   const summaryByCompany = reverse(sortBy(companyNames.map(c => {
     const companyResults = filter(allComapnyResults, cr => cr.company_name === c.company_name);
-    const documentDates = sortBy(filter(uniq(companyResults.map(cr => cr.document_date)), v => v), [d => new Date(d).getTime()]);
+    const documentDates = sortBy(uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date))));
     const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
     const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
     const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
@@ -44,7 +45,8 @@ const TopicSearchResults = () => {
         resultsCount,
         ticker: c.ticker,
         documentDates,
-        latestDate
+        latestDate,
+        results: allComapnyResults.filter(cr => cr.company_name === c.company_name)
     }
   }), ['latestDate']))
 
@@ -52,7 +54,7 @@ const TopicSearchResults = () => {
     setResultsCompanyFilterText(event.target.value)
   }
   
-  const companyResults = allComapnyResults.filter(cr => cr.company_name === selectedCompanyName)
+  const companyResults = get(get(summaryByCompany, selectedCompanyIndex, null), 'results', [])
   
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -80,8 +82,8 @@ const TopicSearchResults = () => {
           <PerfectScrollbar>
             <TopicResultsSummary
               summaryByCompany={summaryByCompany}
-              onCompanySelect={(newCompanyName) => setSelectedCompanyName(newCompanyName)}
-              selectedCompanyName={selectedCompanyName}
+              onCompanySelect={(index) => setSelectedCompanyIndex(index)}
+              selectedCompanyIndex={selectedCompanyIndex}
               resultsCompanyFilterText={resultsCompanyFilterText}
             />
           </PerfectScrollbar>
@@ -118,7 +120,7 @@ const TopicSearchResults = () => {
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document Date:{' '}
-                              <b className="text-first">{companyResult.document_date}</b>
+                              <b className="text-first">{companyResult.document_date ? moment(new Date(companyResult.document_date).getTime()).format('DD/MM/YYYY') : null}</b>
                             </small>
                           </Grid>
                         </Grid>
