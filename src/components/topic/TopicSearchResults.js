@@ -120,7 +120,7 @@ const TopicSearchResults = () => {
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document Date:{' '}
-                              <b className="text-first">{companyResult.document_date ? moment(new Date(companyResult.document_date).getTime()).format('DD/MM/YYYY') : null}</b>
+                              <b className="text-first">{companyResult.document_date ? moment(new Date(companyResult.document_date).getTime()).format('MM/DD/YYYY') : null}</b>
                             </small>
                           </Grid>
                         </Grid>

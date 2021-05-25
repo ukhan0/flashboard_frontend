@@ -16,6 +16,9 @@ const useStyles = makeStyles(_theme => ({
     marginTop: '20px',
     textAlign: 'center'
   },
+  listItemContent: {
+    width: '100%',
+  },
 }));
 
 const TopicSearchResults = props => {
@@ -40,7 +43,7 @@ const TopicSearchResults = props => {
         return (
           <Fragment key={`sbc${index}`}>
             <ListItem button selected={index === props.selectedCompanyIndex} onClick={() => props.onCompanySelect(index)}>
-              <div>
+              <div className={classes.listItemContent}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Grid item>
                     <TickerLogo value={summary.ticker} />
@@ -53,7 +56,7 @@ const TopicSearchResults = props => {
                 </Grid>
                 <div className="d-flex justify-content-between text-black-50">
                   <div>{ summary.resultsCount } {'matches  '}</div>
-                  <div>{ summary.latestDate ? moment(summary.latestDate).format('DD/MM/YYYY') : null }</div>
+                  <div>{ summary.latestDate ? moment(summary.latestDate).format('MM/DD/YYYY') : null }</div>
                 </div>
                 {summary.uniqTitles.map((title, index) => (
                   <p key={`sbct${index}`} className="font-size-xs mb-0">
