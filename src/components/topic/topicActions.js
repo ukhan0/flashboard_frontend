@@ -38,6 +38,7 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
   return async (dispatch, getState) => {
     const cancelToken = axios.CancelToken.source();
     const { selectedDocumentTypes } = getState().Topic
+    const topicState = {...getState().Topic}
     dispatch(setSearchStart())
     if(showBackdrop) {
       dispatch(setSearchBackdropHighlights(cancelToken, true))
@@ -66,7 +67,7 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
           break
         }
         try {
-          const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload({...getState().Topic}, freshSearch, searchFrom), 
+          const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload(topicState, freshSearch, searchFrom), 
           {
             cancelToken: cancelToken.token,
           })
