@@ -7,7 +7,7 @@ import TopicButtonGroup from './TopicButtonGroup';
 import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { resetResultsPage } from '../../reducers/Topic';
+import { resetResultsPage, cancelExistingHightlightsCalls } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 import { forEach, concat } from 'lodash';
 
@@ -39,13 +39,22 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = props => {
   const classes = useStyles();
-  const { searchText, isSearchLoading, isSearchError, selectedSuggestions } = useSelector(state => state.Topic);
+  const { searchText, isSearchLoading, isSearchError, selectedSuggestions, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
 
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
-    dispatch(performTopicSearchHighlights(true, true));
+    // cancel existing calls if there are any
+    if(cancelTokenSourceHighlights) {
+      cancelTokenSourceHighlights.cancel()
+    }
+    dispatch(cancelExistingHightlightsCalls(true));
+    // now perform actual search
+    setTimeout(() => {
+      dispatch(cancelExistingHightlightsCalls(false));
+      dispatch(performTopicSearchHighlights(true, true));
+    }, 1000)
   };
 
   let selectedSuggestionsArr = [];

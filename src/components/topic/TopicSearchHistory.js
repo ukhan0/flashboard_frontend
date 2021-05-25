@@ -5,7 +5,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { includes, get, remove } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAllSearchParams, setSelectedSearch, setSuggestions, resetResultsPage } from '../../reducers/Topic';
+import { setAllSearchParams, setSelectedSearch, setSuggestions, resetResultsPage, cancelExistingHightlightsCalls } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
   performTopicSearchHighlights,
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
-  const { topicsList, selectedSearch } = useSelector(state => state.Topic);
+  const { topicsList, selectedSearch, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
   const [openedTopics, setOpenedTopics] = useState([]);
   const dispatch = useDispatch();
   const firstTimeLoad = useRef(false);
@@ -52,10 +52,19 @@ export default function TopicSearchHistory(props) {
       setTimeout(() => {
         dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(true, true));
-        dispatch(performTopicSearchHighlights(true, true));
+         // cancel existing calls if there are any
+        if(cancelTokenSourceHighlights) {
+          cancelTokenSourceHighlights.cancel()
+        }
+         dispatch(cancelExistingHightlightsCalls(true));
+        // now perform actual search
+        setTimeout(() => {
+          dispatch(cancelExistingHightlightsCalls(false));
+          dispatch(performTopicSearchHighlights(true, true));
+        }, 1000)
       }, 1000);
     },
-    [dispatch]
+    [dispatch, cancelTokenSourceHighlights]
   );
 
   const toggleTopic = useCallback(

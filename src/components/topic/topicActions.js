@@ -1,5 +1,5 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr, removeDuplicateSuggestions } from './topicHelpers';
-import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights, setIsSearchHighlightLoading } from '../../reducers/Topic';
+import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights, setIsSearchHighlightLoading, setIsSearchLoading } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
@@ -36,12 +36,13 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
 
 export const performTopicSearchHighlights = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
-    const cancelTokenSourceHighlights = axios.CancelToken.source();
+    const cancelToken = axios.CancelToken.source();
     const { selectedDocumentTypes } = getState().Topic
     dispatch(setSearchStart())
     if(showBackdrop) {
-      dispatch(setSearchBackdropHighlights(cancelTokenSourceHighlights, true))
+      dispatch(setSearchBackdropHighlights(cancelToken, true))
     }
+
     const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt))
     
     let searchFromsCount = 0
@@ -55,11 +56,19 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
     let apiResponseCount = 0
     for(const documentType of documentTypeObjects) {
       const searchFroms = get(documentType, 'searchFroms', [])
+      if(getState().Topic.cancelExistingHighlightCalls) {
+        // break the loop
+        break
+      }
       for(const searchFrom of searchFroms) {
+        if(getState().Topic.cancelExistingHighlightCalls) {
+          // break the loop
+          break
+        }
         try {
           const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload({...getState().Topic}, freshSearch, searchFrom), 
           {
-            cancelToken: cancelTokenSourceHighlights.token,
+            cancelToken: cancelToken.token,
           })
           apiResponseCount++
           let searchResults = get(response, 'data', null);
@@ -71,9 +80,9 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
             let newSearchResults = concat(existingData, newData)
             newSearchResults = uniqBy(newSearchResults, 'summary_id')
             dispatch(setSearchResultHighlights(newSearchResults))
-            dispatch(setSearchBackdropHighlights(null, false))
+            dispatch(setSearchBackdropHighlights(cancelToken, false))
           } else {
-            dispatch(setSearchBackdropHighlights(null, false))
+            dispatch(setSearchBackdropHighlights(cancelToken, false))
             dispatch(setSearchError(true))
           }
           if(searchFromsCount === apiResponseCount) {
@@ -82,7 +91,7 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
         } catch(error) {
           apiResponseCount++
           dispatch(setSearchError(true))
-          dispatch(setSearchBackdropHighlights(null, false))
+          dispatch(setSearchBackdropHighlights(cancelToken, false))
           if(searchFromsCount === apiResponseCount) {
             dispatch(setIsSearchHighlightLoading(false))
           }
@@ -93,28 +102,30 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
 }
 
 const createSearchPayload = (topicState, freshSearch, searchFrom = null) => {
-      const searchId = get(topicState.selectedSearch, 'searchId', null);
-      const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText)
-      const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText
-      const data = {
-          searchTerm: fullSearchText,
-          searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
-          startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
-          endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
-          document_types: topicState.selectedDocumentTypes,
-          orderBy:topicState.orderBy,
-          sortBy:topicState.sortBy,
-          page: topicState.pageNo,
-          searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
-          refresh_search: false,
-      }
-      return data
-    }
+  const searchId = get(topicState.selectedSearch, 'searchId', null);
+  const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText)
+  const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText
+  const data = {
+      searchTerm: fullSearchText,
+      searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
+      startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
+      endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
+      document_types: topicState.selectedDocumentTypes,
+      orderBy:topicState.orderBy,
+      sortBy:topicState.sortBy,
+      page: topicState.pageNo,
+      searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
+      refresh_search: false,
+  }
+  return data
+}
+
 export const goToNextPage = () => {
   return async (dispatch, getState) => {
     const { pageNo } = getState().Topic
     dispatch(setResultsPage(pageNo + 1))
     dispatch(performTopicSearchHighlights())
+    dispatch(setIsSearchLoading(false))
   }
 }
 

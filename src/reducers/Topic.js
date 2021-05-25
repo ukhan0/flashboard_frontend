@@ -24,15 +24,17 @@ export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
 export const SET_SUGGESTIONS_IS_LOADING = 'TOPIC/SET_SUGGESTIONS_IS_LOADING';
 export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
-export const SET_SEARCH_BACKDROP_HIGHLIGHTS='TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS'
+export const SET_SEARCH_BACKDROP_HIGHLIGHTS ='TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS'
 export const RESET_SEARCH_RESULTS = 'TOPIC/RESET_SEARCH_RESULTS';
 export const SET_IS_SEARCH_HIGHLIGHT_LOADING = 'TOPIC/SET_IS_SEARCH_HIGHLIGHT_LOADING';
+export const SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS = 'TOPIC/SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
   showBackdrop
 })
+
 export const setSearchBackdropHighlights = (cancelTokenSourceHighlights, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP_HIGHLIGHTS,
   cancelTokenSourceHighlights,
@@ -146,13 +148,20 @@ export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
 export const resetSuggestions = () => ({
   type: RESET_SUGGESTIONS
 })
+
 export const setSearchResultHighlights = searchResult => ({
   type: SET_SEARCH_RESULT_HIGHLIGHTS,
   searchResult
 })
+
 export const setIsSearchHighlightLoading = isHighlightsSearchLoading => ({
   type: SET_IS_SEARCH_HIGHLIGHT_LOADING,
   isHighlightsSearchLoading
+})
+
+export const cancelExistingHightlightsCalls = (flag) => ({
+  type: SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS,
+  flag
 })
 
 
@@ -185,6 +194,7 @@ const getDefaultState = () => {
     showBackdrop: false,
     searchResultHighlights: [],
     isHighlightsSearchLoading: false,
+    cancelExistingHighlightCalls: false,
   };
 };
 
@@ -256,7 +266,8 @@ export default function reducer(
       return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights, showBackdrop: action.showBackdrop};
     case RESET_SEARCH_RESULTS:
       return { ...state, searchResultHighlights: [], pageNo: 0 };
-      
+    case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:
+      return { ...state, cancelExistingHighlightCalls: action.flag };
     default:
       break;
   }
