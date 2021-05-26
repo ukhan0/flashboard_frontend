@@ -130,11 +130,6 @@ const TopicFilters = props => {
                   <Typography color="error">Error Occured</Typography>
                 </div>
               ) : null}
-              {isSearchLoading ? (
-                <div className="mr-3">
-                  <Typography color="primary">{'Searching...'}</Typography>
-                </div>
-              ) : null}
             </div>
           </Grid>
         </Grid>
