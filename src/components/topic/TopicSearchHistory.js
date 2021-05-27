@@ -5,7 +5,15 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { includes, get, remove } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAllSearchParams, setSelectedSearch, setSuggestions, resetResultsPage, cancelExistingHightlightsCalls } from '../../reducers/Topic';
+import {
+  setAllSearchParams,
+  setSelectedSearch,
+  setSuggestions,
+  resetResultsPage,
+  cancelExistingHightlightsCalls,
+  setShowComposeNew,
+  setShowUpdateButton
+} from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
   performTopicSearchHighlights,
@@ -15,6 +23,7 @@ import {
 } from './topicActions';
 import CloseIcon from '@material-ui/icons/Close';
 import SmsIcon from '@material-ui/icons/Sms';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,6 +39,13 @@ const useStyles = makeStyles(theme => ({
   },
   topicIcon: {
     marginRight: 5
+  },
+  editIcon: {
+    fontSize: '.7rem'
+  },
+  editButton: {
+    marginRight: '10px',
+    fontSize: '.7rem'
   }
 }));
 
@@ -44,6 +60,12 @@ export default function TopicSearchHistory(props) {
     dispatch(fetchTopicsList());
   }, [dispatch]);
 
+  const setSearchParamsEdit = (searchObj, topicObj) => {
+    dispatch(setSelectedSearch(searchObj, topicObj));
+    dispatch(setSuggestions({}));
+    dispatch(setAllSearchParams(searchObj));
+  };
+
   const setSearchParams = useCallback(
     (searchObj, topicObj) => {
       dispatch(setSelectedSearch(searchObj, topicObj));
@@ -52,16 +74,16 @@ export default function TopicSearchHistory(props) {
       setTimeout(() => {
         dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(true, true));
-         // cancel existing calls if there are any
-        if(cancelTokenSourceHighlights) {
-          cancelTokenSourceHighlights.cancel()
+        // cancel existing calls if there are any
+        if (cancelTokenSourceHighlights) {
+          cancelTokenSourceHighlights.cancel();
         }
-         dispatch(cancelExistingHightlightsCalls(true));
+        dispatch(cancelExistingHightlightsCalls(true));
         // now perform actual search
         setTimeout(() => {
           dispatch(cancelExistingHightlightsCalls(false));
           dispatch(performTopicSearchHighlights(true, true));
-        }, 1000)
+        }, 1000);
       }, 1000);
     },
     [dispatch, cancelTokenSourceHighlights]
@@ -137,6 +159,16 @@ export default function TopicSearchHistory(props) {
                       onClick={() => setSearchParams(search, topic)}>
                       <ListItemText primary={search.searchText} />
                       <ListItemSecondaryAction>
+                        <IconButton
+                          aria-label="comments"
+                          size="small"
+                          onClick={() => {
+                            dispatch(setShowUpdateButton(true));
+                            dispatch(setShowComposeNew(true));
+                            setSearchParamsEdit(search, topic);
+                          }}>
+                          <EditIcon className={classes.deleteIcon} />
+                        </IconButton>
                         <IconButton
                           edge="end"
                           aria-label="comments"

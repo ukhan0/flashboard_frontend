@@ -43,5 +43,9 @@ export default makeStyles(theme => ({
     backgroundColor: '#f5f5f5',
     position: 'sticky',
     top: 0,
-  }
+  },
+  closeBtnSection: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }));

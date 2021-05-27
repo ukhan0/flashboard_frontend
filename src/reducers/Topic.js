@@ -28,6 +28,9 @@ export const SET_SEARCH_BACKDROP_HIGHLIGHTS ='TOPIC/SET_SEARCH_BACKDROP_HIGHLIGH
 export const RESET_SEARCH_RESULTS = 'TOPIC/RESET_SEARCH_RESULTS';
 export const SET_IS_SEARCH_HIGHLIGHT_LOADING = 'TOPIC/SET_IS_SEARCH_HIGHLIGHT_LOADING';
 export const SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS = 'TOPIC/SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS';
+export const SET_SHOW_COMPOSE_NEW = 'TOPIC/SET_SHOW_COMPOSE_NEW';
+export const SET_SHOW_UPDATE_BUTTON = 'TOPIC/SET_BUTTON_UPDATE_BUTTON';
+export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
@@ -164,17 +167,35 @@ export const cancelExistingHightlightsCalls = (flag) => ({
   flag
 })
 
+export const setShowComposeNew = showFilters => ({
+  type: SET_SHOW_COMPOSE_NEW,
+  showFilters
+})
+
+export const setShowUpdateButton = showUpdateButton => ({
+  type: SET_SHOW_UPDATE_BUTTON,
+  showUpdateButton
+})
+export const resetAllSearchParams = () => ({
+  type: RESET_ALL_SEARCH_PARAMS
+})
+
+
+
+const searchDefaultState = () => ({
+  searchText: '',
+  startDate: subMonths(startOfMonth(new Date()), 12),
+  endDate: endOfMonth(new Date()),
+  orderBy: 'desc',
+  sortBy: 'document_date',
+  selectedSuggestions: {},
+  selectedDocumentTypes: ['10-K', '10-Q'],
+  selectedUniverse: null,
+})
 
 const getDefaultState = () => {
   return {
-    searchText: '',
-    selectedDocumentTypes: ['10-K', '10-Q'],
-    selectedUniverse: null,
-    startDate: subMonths(startOfMonth(new Date()), 12),
-    endDate: endOfMonth(new Date()),
-    orderBy: 'desc',
-    sortBy: 'document_date',
-    selectedSuggestions: {},
+    ...searchDefaultState(),
     pageNo: 0,
     documentTypes: documentTypesData,
     suggestions: {},
@@ -195,6 +216,8 @@ const getDefaultState = () => {
     searchResultHighlights: [],
     isHighlightsSearchLoading: false,
     cancelExistingHighlightCalls: false,
+    showFilters: false,
+    showUpdateButton: false
   };
 };
 
@@ -229,6 +252,11 @@ export default function reducer(
         orderBy: action.searchObj.searchJSON.orderBy,
         sortBy: action.searchObj.searchJSON.sortBy,
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
+      };
+    case RESET_ALL_SEARCH_PARAMS:
+      return { 
+        ...state,
+        ...searchDefaultState(),
       };
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
@@ -268,6 +296,10 @@ export default function reducer(
       return { ...state, searchResultHighlights: [], pageNo: 0 };
     case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:
       return { ...state, cancelExistingHighlightCalls: action.flag };
+    case SET_SHOW_COMPOSE_NEW:
+      return{...state, showFilters: action.showFilters};
+    case SET_SHOW_UPDATE_BUTTON:
+        return{...state, showUpdateButton: action.showUpdateButton};
     default:
       break;
   }

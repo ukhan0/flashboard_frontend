@@ -39,7 +39,7 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = props => {
   const classes = useStyles();
-  const { searchText, isSearchLoading, isSearchError, selectedSuggestions, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
+  const { searchText, isSearchError, selectedSuggestions, cancelTokenSourceHighlights, showUpdateButton } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
 
   const handleSearch = () => {
@@ -113,6 +113,11 @@ const TopicFilters = props => {
           <Grid item xs={12}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               {isSearchAllowed(searchText) ? (
+                 showUpdateButton ?
+                 <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
+                   Update
+                 </Button>
+                 :
                 <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
                   Save
                 </Button>
