@@ -79,7 +79,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build:dev": "env-cmd -f .env.dev react-scripts build",
-    "build:sma:staging": "env-cmd -f .env.dev react-scripts build",
+    "build:sma:staging": "env-cmd -f .env.stag react-scripts build",
     "build:sma:live": "env-cmd -f .env.live react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
