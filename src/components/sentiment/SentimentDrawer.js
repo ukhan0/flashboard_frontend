@@ -39,7 +39,7 @@ const SentimentDrawer = props => {
     for (var prop in obj) {
       var li = {};
       path += `.${prop}`
-      if (prop != 'Headingtag' && prop != 'Sectiontext' && prop != 'data') {
+      if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
         li = {path, lvl, prop};
         acc.push(li);
       }

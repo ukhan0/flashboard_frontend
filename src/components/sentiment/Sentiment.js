@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SentimentCard from './SentimentCard';
 import SentimentSection from './SentimentSection';
 import SentimentDrawer from './SentimentDrawer';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getSentimentData } from './sentimentActions';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 
@@ -24,7 +24,6 @@ const useStyles = makeStyles(theme => ({
 
 const Sentiment = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
-  const { data } = useSelector(state => state.Sentiment);
   const dispatch = useDispatch()
   const classes = useStyles()
   const contentTopRef = useRef(null)
