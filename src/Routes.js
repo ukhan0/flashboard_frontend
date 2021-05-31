@@ -16,7 +16,6 @@ import PagesRegister from './example-pages/PagesRegister';
 import PagesRecoverPassword from './example-pages/PagesRecoverPassword';
 import PagesError404 from './example-pages/PagesError404';
 const LandingPage = lazy(() => import('./example-pages/LandingPage'));
-const ProfilePage = lazy(() => import('./example-pages/PagesProfile'));
 const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 const Comparision = lazy(() => import('./components/comparision'));

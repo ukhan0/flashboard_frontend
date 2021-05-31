@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import { getSentimentData } from './sentimentActions';
-import { useSelector, useDispatch } from 'react-redux';
+import {useDispatch } from 'react-redux';
 const useStyles = makeStyles({
   list: {
     width: 250
@@ -24,7 +24,7 @@ const SentimentDrawer = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const { sentimentData} = useSelector(state => state.Sentiment);
+  // const { sentimentData} = useSelector(state => state.Sentiment);
 
   const toggleDrawer = () => {
     setOpenDrawer(true);
