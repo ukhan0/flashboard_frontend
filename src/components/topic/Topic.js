@@ -82,20 +82,20 @@ const Topic = () => {
           </div>
         </Grid>
         <Grid item xs={9}>
-          <div style={{ display: 'flex', flexDirection: 'row', space: 'wrap' }}>
+          <Grid container>
             <Grid item xs={6}>
               <TopicSectorChart />
             </Grid>
-            <Grid item xs={6} style={{ marginLeft: 10 }}>
+            <Grid item xs={6} >
               <TopicCompanyResultsTable />
             </Grid>
-          </div>
+        </Grid>
           <Grid item xs={12}>
             <Card className="card-box mb-4">
               <TopicHistoryChart />
             </Card>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} >
             <TopicSearchResults />
           </Grid>
         </Grid>

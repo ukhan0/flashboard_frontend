@@ -38,7 +38,7 @@ const TopicSearchResults = props => {
   );
 
   return (
-    <List className="pt-0" style={{ height: 600 }}>
+    <List className="pt-0" style={{ height: 635 }}>
       {filteredSummaryByCompany.map((summary, index) => {
         return (
           <Fragment key={`sbc${index}`}>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Card } from '@material-ui/core';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -90,7 +90,7 @@ export default function TopicSectorChart() {
   };
 
   return (
-    <Fragment>
+    <>
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
@@ -101,6 +101,6 @@ export default function TopicSectorChart() {
           <HighchartsReact highcharts={Highcharts} options={options} />
         </div>
       </Card>
-    </Fragment>
+    </>
   );
 }

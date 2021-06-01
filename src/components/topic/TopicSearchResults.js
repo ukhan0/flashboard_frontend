@@ -89,7 +89,7 @@ const TopicSearchResults = () => {
           </PerfectScrollbar>
         </div>
       </div>
-      <div style={{width: '75%'}}>
+      <div style={{width: '65%'}}>
         <div className="app-inner-content-layout--main bg-white p-0">
           <PerfectScrollbar className="mb-4 p-4">
             {

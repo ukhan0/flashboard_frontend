@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
@@ -84,7 +84,7 @@ export default function TopicCompantResultsTable() {
   }
 
   return (
-    <Fragment>
+    <>
       <Card className="card-box mb-4">
         <div className={clsx(classes.titleheader, 'card-header')}>
           <div className="card-header--title font-weight-bold">Companies</div>
@@ -146,6 +146,6 @@ export default function TopicCompantResultsTable() {
         </PerfectScrollbar>
         
       </Card>
-    </Fragment>
+    </>
   );
 }
