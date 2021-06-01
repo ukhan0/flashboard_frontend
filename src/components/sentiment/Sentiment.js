@@ -1,12 +1,70 @@
-import React from 'react';
-import SentimentCard from './SentimentCard'
-import SentimentSection from  "./SentimentSection"
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Fab } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
+import SentimentCard from './SentimentCard';
+import SentimentSection from './SentimentSection';
+import SentimentDrawer from './SentimentDrawer';
+import { useSelector, useDispatch } from 'react-redux';
+import { getSentimentData } from './sentimentActions';
+import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+
+const useStyles = makeStyles(theme => ({
+  drawerOpener: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  goToTopContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    position: 'sticky',
+    right: 20,
+    bottom: 20,
+  },
+}));
 
 const Sentiment = () => {
-  return <div>
-     <SentimentCard/>
-     <SentimentSection/>
-  </div>
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const { data } = useSelector(state => state.Sentiment);
+  const dispatch = useDispatch()
+  const classes = useStyles()
+  const contentTopRef = useRef(null)
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  useEffect(() => {
+    // dispatch(getSentimentData());
+  }, [dispatch]);
+
+  const handleSelection = (path) => {
+    setIsDrawerOpen(false)
+    setTimeout(() => {
+      document.getElementById(path).scrollIntoView();
+    }, 100)
+  }
+
+  return (
+    <div ref={contentTopRef}>
+      <SentimentCard />
+      <div className={classes.drawerOpener}>
+        <Button color="primary" onClick={toggleDrawer}>
+          Table of contents
+        </Button>
+      </div>
+      <SentimentSection />
+      <SentimentDrawer 
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)} 
+        onSelection={handleSelection}
+      />
+      <div className={classes.goToTopContainer}>
+        <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
+          <UpIcon />
+        </Fab>
+      </div>
+    </div>
+  );
 };
 
 export default Sentiment;

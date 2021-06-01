@@ -1,11 +1,13 @@
+import mockSentimentData from './mockSentimentData'
 export const SET_SENTIMENT_RESULT = 'SENTIMENT/SET_SENTIMENT_RESPONSE_DATA';
 export const SET_SEARCH_ID = 'SENTIMENT/SET_SEARCH_ID';
 export const SET_CARD_GRAPH_DATA = 'SENTIMENT/SET_GRAPH_DATA';
 
-export const setSentimentResult = sentimentData => ({
+export const setSentimentResult = data => ({
   type: SET_SENTIMENT_RESULT,
-  sentimentData
+  data
 });
+
 export const setSearchId = searchId => ({
   type: SET_SEARCH_ID,
   searchId
@@ -17,8 +19,6 @@ export const setCardGraphData = cardGraphData => ({
 
 const getDefaultState = () => {
   return {
-    sentimentData: {},
-    searchId: '',
     cardGraphData: [
       {
         heading: 'RISK & FACTORS',
@@ -35,7 +35,8 @@ const getDefaultState = () => {
         data:[0,10,6,3,10,12,56]
       },
       { heading: 'NOTES TO  FINANCIAL STATEMENT', content: 'High', num: 93, percent: 21,data:[0,10,6,3,9,5,17] }
-    ]
+    ],
+    data: mockSentimentData,
   };
 };
 
@@ -47,7 +48,7 @@ export default function reducer(
 ) {
   switch (action.type) {
     case SET_SENTIMENT_RESULT:
-      return { ...state, sentimentData: action.sentimentData };
+      return { ...state, data: action.data };
     case SET_SEARCH_ID:
       return { ...state, searchId: action.searchId };
     case SET_CARD_GRAPH_DATA:
