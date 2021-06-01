@@ -4,9 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import SentimentCard from './SentimentCard';
 import SentimentSection from './SentimentSection';
 import SentimentDrawer from './SentimentDrawer';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getSentimentData } from './sentimentActions';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
@@ -24,9 +25,15 @@ const useStyles = makeStyles(theme => ({
 
 const Sentiment = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch()
   const classes = useStyles()
   const contentTopRef = useRef(null)
+
+  const history = useHistory();
+  if (!selectedItem) {
+    history.push('/watchlist');
+  }
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);

@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Drawer, IconButton } from '@material-ui/core';
+import { Drawer, IconButton, Typography } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { BeatLoader } from 'react-spinners';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -23,14 +24,24 @@ const useStyles = makeStyles(theme => {
     drawerBtn: {
       textAlign: 'center',
       marginTop: '5px'
-    }
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    loaderSection: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
   }
 });
 
 const SentimentDrawer = props => {
   const classes = useStyles();
 
-  const { data } = useSelector(state => state.Sentiment);
+  const { data, isLoading } = useSelector(state => state.Sentiment);
 
   const displayData = []
   function visitOutlineObj (acc, obj, lvl, path) {
@@ -48,24 +59,39 @@ const SentimentDrawer = props => {
       }
     }
   }
-  visitOutlineObj(displayData, data, 0, '')
+  if(data) {
+    visitOutlineObj(displayData, data, 0, '')
+  }
+
   return (
     <React.Fragment>
       <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
         <div className={classes.list}>
-          {/* <Button className={classes.drawerBtn} variant="contained" color="primary" onClick={props.onClose}>
-            close
-          </Button> */}
-          <IconButton onClick={props.onClose}>
-            <ArrowBackIcon fontSize="small" />
-          </IconButton>
-          {
-            displayData.map((d, index) =>
-              <div key={index} style={{paddingLeft: (d.lvl * 4) +4}} className={classes.listItem} onClick={() => props.onSelection(d.path)}>
-                {d.prop}
+        {
+          isLoading ?
+            <div className={classes.loaderSection}>
+              <BeatLoader color={'var(--primary)'} size={15} />
+            </div>
+          :
+          <>
+            <div className={classes.header}>
+              <IconButton onClick={props.onClose}>
+                <ArrowBackIcon fontSize="small" />
+              </IconButton>
+              <div>
+                <Typography variant={"h4"}>Table of contents</Typography>
               </div>
-            )
-          }
+              <div></div>
+            </div>
+            {
+              displayData.map((d, index) =>
+                <div key={index} style={{paddingLeft: (d.lvl * 4) +4}} className={classes.listItem} onClick={() => props.onSelection(d.path)}>
+                  {d.prop}
+                </div>
+              )
+            }
+          </>
+        }
         </div>
       </Drawer>
     </React.Fragment>

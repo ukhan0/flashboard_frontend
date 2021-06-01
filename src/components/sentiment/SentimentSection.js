@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-const SentimentSection = props => {
+const SentimentSection = (props) => {
 
   const { data } = useSelector(state => state.Sentiment);
 
@@ -26,13 +26,22 @@ const SentimentSection = props => {
       }
     }
   }
-  visitOutlineObj(displayData, data, 0, '')
+
+  if(data) {
+    visitOutlineObj(displayData, data, 0, '')
+  }
 
   return (
     <div>
       {
         displayData.map((d, index) =>
-          <div key={index} style={{paddingLeft: (d.lvl * 4) +4,fontSize:d.lvl===1?40:100/d.lvl}} id={d.path}>
+          <div 
+            key={index} 
+            style={{
+              paddingLeft: (d.lvl * 4) + 4,
+              fontSize:d.lvl === 1 ? 40 : 100/d.lvl
+            }} 
+            id={d.path}>
             {d.content ? d.content : d.prop}
           </div>
         )
