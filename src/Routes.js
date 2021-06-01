@@ -16,11 +16,11 @@ import PagesRegister from './example-pages/PagesRegister';
 import PagesRecoverPassword from './example-pages/PagesRecoverPassword';
 import PagesError404 from './example-pages/PagesError404';
 const LandingPage = lazy(() => import('./example-pages/LandingPage'));
-const ProfilePage = lazy(() => import('./example-pages/PagesProfile'));
 const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 const Comparision = lazy(() => import('./components/comparision'));
 const Topic = lazy(() => import('./components/topic'));
+const Sentiment = lazy(()=> import('./components/sentiment'));
 
 const pageVariants = {
   initial: {
@@ -125,7 +125,7 @@ const Routes = () => {
                         <Route path="/watchlist" component={WatchList} />
                         <Route path="/filings" component={DashboardReports} />
                         <Route path="/comparision" component={Comparision} />
-                        <Route path="/sentiment" component={ProfilePage} />
+                        <Route path="/sentiment" component={Sentiment} />
                         <Route path="/topic" component={Topic} />
                       </motion.div>
                     </Switch>
