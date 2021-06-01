@@ -33,7 +33,7 @@ const Sentiment = () => {
   };
 
   useEffect(() => {
-    // dispatch(getSentimentData());
+    dispatch(getSentimentData());
   }, [dispatch]);
 
   const handleSelection = (path) => {

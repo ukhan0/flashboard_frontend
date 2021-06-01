@@ -20,7 +20,7 @@ const SentimentSection = props => {
         visitOutlineObj(acc, obj[prop], lvl, path);
       } else {  
         if (prop !== 'Headingtag' && prop !== 'Sectiontext') {
-          li = {path, lvl: lvl+2, prop, content: obj[prop].replaceAll('\n', '<br/>')};
+          li = {path, lvl: lvl+2, prop, content: obj[prop].replace('<br/>','\n', )};
           acc.push(li);
         }
       }
@@ -32,7 +32,7 @@ const SentimentSection = props => {
     <div>
       {
         displayData.map((d, index) =>
-          <div key={index} style={{paddingLeft: (d.lvl * 4) +4}} id={d.path}>
+          <div key={index} style={{paddingLeft: (d.lvl * 4) +4,fontSize:d.lvl===1?40:100/d.lvl}} id={d.path}>
             {d.content ? d.content : d.prop}
           </div>
         )
