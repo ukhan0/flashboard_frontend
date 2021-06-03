@@ -8,7 +8,7 @@ import { BeatLoader } from 'react-spinners';
 const useStyles = makeStyles(theme => {
   return {
     list: {
-      width: '40vw',
+      width: '40vw'
     },
     listItem: {
       whiteSpace: 'nowrap',
@@ -18,8 +18,8 @@ const useStyles = makeStyles(theme => {
       cursor: 'pointer',
       color: '#0a30f3',
       '&:hover': {
-        textDecoration: 'underline',
-      },
+        textDecoration: 'underline'
+      }
     },
     drawerBtn: {
       textAlign: 'center',
@@ -28,14 +28,12 @@ const useStyles = makeStyles(theme => {
     header: {
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     loaderSection: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-  }
+      textAlign: 'center'
+    }
+  };
 });
 
 const SentimentDrawer = props => {
@@ -43,15 +41,15 @@ const SentimentDrawer = props => {
 
   const { data, isLoading } = useSelector(state => state.Sentiment);
 
-  const displayData = []
-  function visitOutlineObj (acc, obj, lvl, path) {
+  const displayData = [];
+  function visitOutlineObj(acc, obj, lvl, path) {
     if (lvl > 4) return;
     lvl += 1;
     for (var prop in obj) {
       var li = {};
-      path += `.${prop}`
+      path += `.${prop}`;
       if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
-        li = {path, lvl, prop};
+        li = { path, lvl, prop };
         acc.push(li);
       }
       if (typeof obj[prop] === 'object') {
@@ -59,39 +57,38 @@ const SentimentDrawer = props => {
       }
     }
   }
-  if(data) {
-    visitOutlineObj(displayData, data, 0, '')
+  if (data) {
+    visitOutlineObj(displayData, data, 0, '');
   }
 
   return (
     <React.Fragment>
       <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
         <div className={classes.list}>
-        {
-          isLoading ?
+          <div className={classes.header}>
+            <IconButton onClick={props.onClose}>
+              <ArrowBackIcon fontSize="small" />
+            </IconButton>
+            <div>
+              <Typography variant={'h4'}>Table of contents</Typography>
+            </div>
+            <div></div>
+          </div>
+          {isLoading ? (
             <div className={classes.loaderSection}>
               <BeatLoader color={'var(--primary)'} size={15} />
             </div>
-          :
-          <>
-            <div className={classes.header}>
-              <IconButton onClick={props.onClose}>
-                <ArrowBackIcon fontSize="small" />
-              </IconButton>
-              <div>
-                <Typography variant={"h4"}>Table of contents</Typography>
+          ) : (
+            displayData.map((d, index) => (
+              <div
+                key={index}
+                style={{ paddingLeft: d.lvl * 4 + 4 }}
+                className={classes.listItem}
+                onClick={() => props.onSelection(d.path)}>
+                {d.prop}
               </div>
-              <div></div>
-            </div>
-            {
-              displayData.map((d, index) =>
-                <div key={index} style={{paddingLeft: (d.lvl * 4) +4}} className={classes.listItem} onClick={() => props.onSelection(d.path)}>
-                  {d.prop}
-                </div>
-              )
-            }
-          </>
-        }
+            ))
+          )}
         </div>
       </Drawer>
     </React.Fragment>

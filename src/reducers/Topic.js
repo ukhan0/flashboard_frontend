@@ -38,10 +38,9 @@ export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   showBackdrop
 })
 
-export const setSearchBackdropHighlights = (cancelTokenSourceHighlights, showBackdrop)  => ({
+export const setSearchBackdropHighlights = (cancelTokenSourceHighlights)  => ({
   type: SET_SEARCH_BACKDROP_HIGHLIGHTS,
-  cancelTokenSourceHighlights,
-  showBackdrop
+  cancelTokenSourceHighlights, 
 })
 
 export const setResultsPage = pageNo => ({
@@ -291,7 +290,7 @@ export default function reducer(
     case SET_IS_SEARCH_HIGHLIGHT_LOADING:
       return { ...state, isHighlightsSearchLoading: action.isHighlightsSearchLoading };
     case SET_SEARCH_BACKDROP_HIGHLIGHTS:
-      return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights, showBackdrop: action.showBackdrop};
+      return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights};
     case RESET_SEARCH_RESULTS:
       return { ...state, searchResultHighlights: [], pageNo: 0 };
     case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:

@@ -34,14 +34,14 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
   }
 }
 
-export const performTopicSearchHighlights = (showBackdrop = false, freshSearch = false) => {
+export const performTopicSearchHighlights = (freshSearch = false) => {
   return async (dispatch, getState) => {
     const cancelToken = axios.CancelToken.source();
     const { selectedDocumentTypes } = getState().Topic
     const topicState = {...getState().Topic}
     dispatch(setSearchStart())
-    if(showBackdrop) {
-      dispatch(setSearchBackdropHighlights(cancelToken, true))
+    if(freshSearch) {
+      dispatch(setSearchBackdropHighlights(cancelToken))
     }
 
     const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt))
@@ -81,18 +81,18 @@ export const performTopicSearchHighlights = (showBackdrop = false, freshSearch =
             let newSearchResults = concat(existingData, newData)
             newSearchResults = uniqBy(newSearchResults, 'summary_id')
             dispatch(setSearchResultHighlights(newSearchResults))
-            dispatch(setSearchBackdropHighlights(cancelToken, false))
+            dispatch(setSearchBackdropHighlights(cancelToken))
           } else {
-            dispatch(setSearchBackdropHighlights(cancelToken, false))
+            dispatch(setSearchBackdropHighlights(cancelToken))
             dispatch(setSearchError(true))
           }
           if(searchFromsCount === apiResponseCount) {
-            dispatch(setIsSearchHighlightLoading(false))
+            dispatch(setIsSearchHighlightLoading(false,null))
           }
         } catch(error) {
           apiResponseCount++
           dispatch(setSearchError(true))
-          dispatch(setSearchBackdropHighlights(cancelToken, false))
+          dispatch(setSearchBackdropHighlights(cancelToken))
           if(searchFromsCount === apiResponseCount) {
             dispatch(setIsSearchHighlightLoading(false))
           }

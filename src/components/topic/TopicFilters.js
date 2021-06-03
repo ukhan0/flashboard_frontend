@@ -53,7 +53,7 @@ const TopicFilters = props => {
     // now perform actual search
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
-      dispatch(performTopicSearchHighlights(true, true));
+      dispatch(performTopicSearchHighlights(true));
     }, 1000)
   };
 

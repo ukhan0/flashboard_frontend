@@ -13,17 +13,16 @@ const LeftSidebar = props => {
   const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
   const dispatch = useDispatch()
   const classes = topicStyles();
-
   const closeBackdrop = () => {
     if(!cancelTokenSource){
       cancelTokenSourceHighlights.cancel()
-      dispatch(setSearchBackdropHighlights(null,false))
+      dispatch(setSearchBackdropHighlights(null))
     } else 
     {
     cancelTokenSource.cancel()
     cancelTokenSourceHighlights.cancel()
     dispatch(setSearchBackdrop(null, false))
-    dispatch(setSearchBackdropHighlights(null,false))
+    dispatch(setSearchBackdropHighlights(null))
    }
   }
 

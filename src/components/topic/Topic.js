@@ -82,7 +82,7 @@ const Topic = () => {
           </div>
         </Grid>
         <Grid item xs={9}>
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item xs={6}>
               <TopicSectorChart />
             </Grid>

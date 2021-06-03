@@ -82,7 +82,7 @@ export default function TopicSearchHistory(props) {
         // now perform actual search
         setTimeout(() => {
           dispatch(cancelExistingHightlightsCalls(false));
-          dispatch(performTopicSearchHighlights(true, true));
+          dispatch(performTopicSearchHighlights(true));
         }, 1000);
       }, 1000);
     },

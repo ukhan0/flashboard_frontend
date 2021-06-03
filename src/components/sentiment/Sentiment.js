@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
     justifyContent: 'flex-end',
+    marginTop: 5,
   },
   goToTopContainer: {
     display: 'flex',
@@ -54,7 +55,7 @@ const Sentiment = () => {
     <div ref={contentTopRef}>
       <SentimentCard />
       <div className={classes.drawerOpener}>
-        <Button color="primary" onClick={toggleDrawer}>
+        <Button color="primary" variant="outlined"  onClick={toggleDrawer}>
           Table of contents
         </Button>
       </div>
