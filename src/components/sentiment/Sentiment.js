@@ -13,7 +13,9 @@ const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: 5,
+    top: 100,
+    marginTop:5,
+    position: 'sticky'
   },
   goToTopContainer: {
     display: 'flex',
@@ -22,10 +24,16 @@ const useStyles = makeStyles(theme => ({
     right: 20,
     bottom: 20,
   },
+  btnClr:{
+    backgroundColor: "white",
+    "&:hover": {
+      backgroundColor: "white"
+    }
+  }
 }));
 
 const Sentiment = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch()
   const classes = useStyles()
@@ -55,7 +63,7 @@ const Sentiment = () => {
     <div ref={contentTopRef}>
       <SentimentCard />
       <div className={classes.drawerOpener}>
-        <Button color="primary" variant="outlined"  onClick={toggleDrawer}>
+        <Button color="primary" variant="outlined" className={classes.btnClr}  onClick={toggleDrawer}>
           Table of contents
         </Button>
       </div>

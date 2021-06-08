@@ -7,8 +7,8 @@ const useStyles = makeStyles(theme => ({
     fontSize: 12
   },
   loaderSection: {
-    marginLeft:400
-  },
+    textAlign: 'center'
+  }
 }));
 const SentimentSection = props => {
   const classes = useStyles();
@@ -52,7 +52,8 @@ const SentimentSection = props => {
             key={index}
             style={{
               paddingLeft: d.lvl * 4 + 4,
-              fontSize: d.lvl === 1 ? 40 : 100 / d.lvl
+              fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
+              scrollMarginTop:'3em'    
             }}
             id={d.path}>
             {d.content ? <p className={classes.content}>{d.content}</p> : d.prop}
