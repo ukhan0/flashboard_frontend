@@ -1,14 +1,15 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
-import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get } from 'lodash';
+import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex } from 'lodash';
 import clsx from 'clsx';
 import SearchIcon from '@material-ui/icons/Search';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
 import { createResultTitle } from './topicHelpers'
 import moment from 'moment'
+import { setSelectedCompanyName } from '../../reducers/Topic'
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -26,38 +27,66 @@ const useStyles = makeStyles(_theme => ({
 
 const TopicSearchResults = () => {
   const classes = useStyles();
-  const { isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
+  const resultsSection = useRef(null);
+  const scrollIntoViewRequired = useRef(false);
+  const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
+  const dispatch = useDispatch();
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0)
-  const allComapnyResults = searchResultHighlights.map(srh => ({...srh}))
-  const companyNames = uniqBy(allComapnyResults, 'company_name')
-  const summaryByCompany = reverse(sortBy(companyNames.map(c => {
-    const companyResults = filter(allComapnyResults, cr => cr.company_name === c.company_name);
-    const documentDates = sortBy(uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date))));
-    const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
-    const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
-    const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
-    const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null
-    return {
-        companyName: c.company_name,
-        uniqTitleCodes,
-        uniqTitles,
-        resultsCount,
-        ticker: c.ticker,
-        documentDates,
-        latestDate,
-        results: allComapnyResults.filter(cr => cr.company_name === c.company_name)
-    }
-  }), ['latestDate']))
+  const [companyResults, setCompanyResults] = useState([])
+  const [summaryByCompany, setSummaryByCompany] = useState([])
+  
 
+  useEffect(() => {
+    const allComapnyResults = searchResultHighlights.map(srh => ({...srh}))
+    const companyNames = uniqBy(allComapnyResults, 'company_name')
+    const summaryByCompanyData = reverse(sortBy(companyNames.map(c => {
+      const companyResults = filter(allComapnyResults, cr => cr.company_name === c.company_name);
+      const documentDates = sortBy(uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date))));
+      const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
+      const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
+      const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
+      const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null
+      return {
+          companyName: c.company_name,
+          uniqTitleCodes,
+          uniqTitles,
+          resultsCount,
+          ticker: c.ticker,
+          documentDates,
+          latestDate,
+          results: allComapnyResults.filter(cr => cr.company_name === c.company_name)
+      }
+    }), ['latestDate']))
+    const companyResults = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'results', [])
+    setSummaryByCompany(summaryByCompanyData)
+    setCompanyResults(companyResults)
+  }, [searchResultHighlights, selectedCompanyIndex])
+  
   const handleCompanySearch = (event) => {
     setResultsCompanyFilterText(event.target.value)
   }
+
+  useEffect(() => {
+    if(!selectedCompanyName) {
+      return
+    }
+    const companyIndex = findIndex(summaryByCompany, cr => cr.companyName === selectedCompanyName)
+    resultsSection.current.scrollIntoView()
+    if(companyIndex !== -1) {
+      scrollIntoViewRequired.current = true
+      setSelectedCompanyIndex(companyIndex)
+    }
+  }, [selectedCompanyName, summaryByCompany])
   
-  const companyResults = get(get(summaryByCompany, selectedCompanyIndex, null), 'results', [])
-  
+  const handleCompanySelect = (index) => {
+    scrollIntoViewRequired.current = false
+    setSelectedCompanyIndex(index)
+    dispatch(setSelectedCompanyName(null))
+  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <div style={{ display: 'flex', flexDirection: 'row' }} ref={resultsSection}>
       <div style={{width: '35%'}}>
         <div
           className={clsx( 'bg-white border-right', { 'layout-sidebar-open': false })}>
@@ -82,15 +111,16 @@ const TopicSearchResults = () => {
           <PerfectScrollbar>
             <TopicResultsSummary
               summaryByCompany={summaryByCompany}
-              onCompanySelect={(index) => setSelectedCompanyIndex(index)}
+              onCompanySelect={(index) => handleCompanySelect(index)}
               selectedCompanyIndex={selectedCompanyIndex}
               resultsCompanyFilterText={resultsCompanyFilterText}
+              scrollIntoViewRequired={scrollIntoViewRequired.current}
             />
           </PerfectScrollbar>
         </div>
       </div>
       <div style={{width: '65%'}}>
-        <div className="app-inner-content-layout--main bg-white p-0">
+        <div className="bg-white p-0" style={{ height: 733 }}>
           <PerfectScrollbar className="mb-4 p-4">
             {
               (isSearchLoading && isEmpty(searchResultHighlights)) ?

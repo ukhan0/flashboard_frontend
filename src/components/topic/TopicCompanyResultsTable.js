@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
-import { useSelector } from 'react-redux';
-import { get, round, isEmpty } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
+import { get, round, isEmpty, uniq } from 'lodash';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
+import { setSelectedCompanyName } from '../../reducers/Topic'
+import { performTopicSearchHighlights } from './topicActions'
+
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
@@ -64,11 +67,18 @@ const useStyles = makeStyles(theme => ({
   contentSection: {
     height: 300,
   },
+  companyRow: {
+    '&:hover': {
+      backgroundColor: '#f3ebf2',
+      cursor: 'pointer'
+    },
+  }
 }));
 
 export default function TopicCompantResultsTable() {
   const classes = useStyles()
-  const { searchResult, isSearchLoading } = useSelector(state => state.Topic);
+  const { searchResult, isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
+  const dispatch = useDispatch();
   const [ filterText, setFilterText ] = useState('');
   const results = get(searchResult, 'buckets.companyNames', [])
   const totalHits = results.reduce((accumulator, currentValue) => accumulator + currentValue.doc_count, 0 )
@@ -81,6 +91,17 @@ export default function TopicCompantResultsTable() {
 
   const handleSearchTextChange = (event) => {
     setFilterText(event.target.value)
+  }
+  const handleCompanyClick = (companyName) => {
+    // check if data for this company exists or not
+    console.log(searchResultHighlights)
+    const uniqCompanyNames = uniq(searchResultHighlights.map(sr => sr.company_name).filter(n => n))
+    const companyIndex = uniqCompanyNames.indexOf(companyName)
+    if(companyIndex === -1) {
+      // get data for this company
+      dispatch(performTopicSearchHighlights(true, companyName))
+    }
+    dispatch(setSelectedCompanyName(companyName))
   }
 
   return (
@@ -123,10 +144,9 @@ export default function TopicCompantResultsTable() {
                     :
                     computedResults.filter(c => c.key.toLowerCase().includes(filterText.toLowerCase())).map((result, index) => {
                       return (
-                        <tr key={`r${index}`}>
+                        <tr key={`r${index}`} className={classes.companyRow} onClick={() => handleCompanyClick(result.key)}>
                           <td>
                             <div className="align-box-row">
-                              <flag-icon className="font-size-xxl mr-2" country="us"></flag-icon>
                               <span>{result.key}</span>
                             </div>
                           </td>

@@ -31,6 +31,7 @@ export const SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS = 'TOPIC/SET_CANCEL_EXISTING_H
 export const SET_SHOW_COMPOSE_NEW = 'TOPIC/SET_SHOW_COMPOSE_NEW';
 export const SET_SHOW_UPDATE_BUTTON = 'TOPIC/SET_BUTTON_UPDATE_BUTTON';
 export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
+export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
@@ -175,10 +176,15 @@ export const setShowUpdateButton = showUpdateButton => ({
   type: SET_SHOW_UPDATE_BUTTON,
   showUpdateButton
 })
+
 export const resetAllSearchParams = () => ({
   type: RESET_ALL_SEARCH_PARAMS
 })
 
+export const setSelectedCompanyName = (selectedCompanyName) => ({
+  type: SET_SELECTED_COMPANY_NAME,
+  selectedCompanyName
+})
 
 
 const searchDefaultState = () => ({
@@ -215,8 +221,9 @@ const getDefaultState = () => {
     searchResultHighlights: [],
     isHighlightsSearchLoading: false,
     cancelExistingHighlightCalls: false,
-    showFilters: false,
-    showUpdateButton: false
+    showFilters: true,
+    showUpdateButton: false,
+    selectedCompanyName: null,
   };
 };
 
@@ -296,9 +303,11 @@ export default function reducer(
     case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:
       return { ...state, cancelExistingHighlightCalls: action.flag };
     case SET_SHOW_COMPOSE_NEW:
-      return{...state, showFilters: action.showFilters};
+      return {...state, showFilters: action.showFilters};
     case SET_SHOW_UPDATE_BUTTON:
-        return{...state, showUpdateButton: action.showUpdateButton};
+        return {...state, showUpdateButton: action.showUpdateButton};
+    case SET_SELECTED_COMPANY_NAME:
+      return {...state, selectedCompanyName: action.selectedCompanyName};
     default:
       break;
   }

@@ -28,6 +28,14 @@ const Topic = () => {
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const dispatch = useDispatch();
 
+  const handleComposeNew = () => {
+    window.scrollTo(0, 0);
+    dispatch(setShowComposeNew(true));
+    dispatch(setShowUpdateButton(false));
+    dispatch(setSelectedSearch(null, null));
+    dispatch(resetAllSearchParams());
+  }
+
   return (
     <div className={classes.root}>
       {showFilters ? (
@@ -43,13 +51,7 @@ const Topic = () => {
               <Grid container spacing={2}>
                 <Grid item xs={8}>
                   <Button
-                    onClick={() => {
-                      window.scrollTo(0, 0);
-                      dispatch(setShowComposeNew(true));
-                      dispatch(setShowUpdateButton(false));
-                      dispatch(setSelectedSearch(null, null));
-                      dispatch(resetAllSearchParams());
-                    }}
+                    onClick={handleComposeNew}
                     variant="contained"
                     color="primary"
                     className="d-block w-100">

@@ -34,14 +34,18 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
   }
 }
 
-export const performTopicSearchHighlights = (freshSearch = false) => {
+export const performTopicSearchHighlights = (freshSearch = false, companyName = null) => {
   return async (dispatch, getState) => {
     const cancelToken = axios.CancelToken.source();
     const { selectedDocumentTypes } = getState().Topic
     const topicState = {...getState().Topic}
     dispatch(setSearchStart())
     if(freshSearch) {
-      dispatch(setSearchBackdropHighlights(cancelToken))
+      if(companyName) {
+        dispatch(setSearchBackdrop(cancelToken, true))
+      } else {
+        dispatch(setSearchBackdropHighlights(cancelToken))
+      }
     }
 
     const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt))
@@ -67,7 +71,7 @@ export const performTopicSearchHighlights = (freshSearch = false) => {
           break
         }
         try {
-          const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload(topicState, freshSearch, searchFrom), 
+          const response = await axios.post(`${config.apiUrl}/api/dictionary/search_highlights_by_index`, createSearchPayload(topicState, freshSearch, searchFrom, companyName), 
           {
             cancelToken: cancelToken.token,
           })
@@ -86,6 +90,9 @@ export const performTopicSearchHighlights = (freshSearch = false) => {
             dispatch(setSearchBackdropHighlights(cancelToken))
             dispatch(setSearchError(true))
           }
+          if(freshSearch && companyName) {
+            dispatch(setSearchBackdrop(null, false))
+          }
           if(searchFromsCount === apiResponseCount) {
             dispatch(setIsSearchHighlightLoading(false,null))
           }
@@ -96,13 +103,16 @@ export const performTopicSearchHighlights = (freshSearch = false) => {
           if(searchFromsCount === apiResponseCount) {
             dispatch(setIsSearchHighlightLoading(false))
           }
+          if(freshSearch && companyName) {
+            dispatch(setSearchBackdrop(null, false))
+          }
         }
       }
     }
   }
 }
 
-const createSearchPayload = (topicState, freshSearch, searchFrom = null) => {
+const createSearchPayload = (topicState, freshSearch, searchFrom = null, companyName = null) => {
   const searchId = get(topicState.selectedSearch, 'searchId', null);
   const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText)
   const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText
@@ -117,6 +127,7 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null) => {
       page: topicState.pageNo,
       searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
       refresh_search: false,
+      company_name: companyName ? companyName : undefined,
   }
   return data
 }
