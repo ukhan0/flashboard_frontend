@@ -94,7 +94,7 @@ const TopicFilters = props => {
             <TopicDocumentTypeDropdown />
           </Grid>
           <Grid item xs={3}>
-            <h6 className="text-black-50">Search Universe:</h6>
+            <h6>Search Universe:</h6>
             <TopicButtonGroup />
           </Grid>
           <Grid item xs={6}></Grid>
