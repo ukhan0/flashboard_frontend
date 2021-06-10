@@ -22,6 +22,7 @@ import {
   resetAllSearchParams,
   resetResultsPage,
   cancelExistingHightlightsCalls,
+  setSelectedIndustries,
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 
@@ -37,6 +38,7 @@ const Topic = () => {
     dispatch(setShowUpdateButton(false));
     dispatch(setSelectedSearch(null, null));
     dispatch(resetAllSearchParams());
+    dispatch(setSelectedIndustries([]));
   }
 
   const handleSearch = () => {

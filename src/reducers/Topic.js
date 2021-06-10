@@ -35,6 +35,7 @@ export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
 export const SET_SELECTED_UNIVERSE = 'TOPIC/SET_SELECTED_UNIVERSE';
 export const SET_SELECTED_SECTOR = 'TOPIC/SET_SELECTED_SECTOR';
+export const SET_SELECTED_INDUSTRIES ='TOPIC/SET_SELECTED_INDUSTRIES';
 export const SET_SELECTED_WATCHLIST_COMPANY_NAME = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAME';
 
 
@@ -201,6 +202,11 @@ export const setSelectedSector = (selectedSector) => ({
   selectedSector
 })
 
+export const setSelectedIndustries = (selectedIndustries) => ({
+  type: SET_SELECTED_INDUSTRIES,
+  selectedIndustries
+})
+
 export const setSelectedWatchlistCompanyName = ( selectedWatchlistCompanyName) => ({
   type: SET_SELECTED_WATCHLIST_COMPANY_NAME,
    selectedWatchlistCompanyName
@@ -216,7 +222,8 @@ const searchDefaultState = () => ({
   selectedDocumentTypes: ['10-K', '10-Q'],
   selectedUniverse: 'all',
   selectedSector: null,
-   selectedWatchlistCompanyName: null,
+  selectedIndustries: [],
+  selectedWatchlistCompanyName: null,
 })
 
 const getDefaultState = () => {
@@ -281,6 +288,7 @@ export default function reducer(
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
         selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
+        selectedIndustries: get(action.searchObj, 'searchJSON.industry_arr', searchDefaultState().selectedIndustries),
         selectedWatchlistCompanyName: get(action.searchObj, 'searchJSON.company_name', searchDefaultState().selectedWatchlistCompanyName),
       };
     case RESET_ALL_SEARCH_PARAMS:
@@ -336,9 +344,10 @@ export default function reducer(
       return {...state, selectedUniverse: action.selectedUniverse};
     case SET_SELECTED_SECTOR:
       return {...state, selectedSector: action.selectedSector};
+    case SET_SELECTED_INDUSTRIES:
+      return {...state, selectedIndustries: action.selectedIndustries};
     case SET_SELECTED_WATCHLIST_COMPANY_NAME:
-      return {...state,  selectedWatchlistCompanyName: action. selectedWatchlistCompanyName};
-      
+      return {...state, selectedWatchlistCompanyName: action.selectedWatchlistCompanyName};
     default:
       break;
   }

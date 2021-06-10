@@ -122,13 +122,14 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
       endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
       document_types: topicState.selectedDocumentTypes,
-      orderBy:topicState.orderBy,
-      sortBy:topicState.sortBy,
+      orderBy: topicState.orderBy,
+      sortBy: topicState.sortBy,
       page: topicState.pageNo,
       searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
       refresh_search: false,
-      company_name: companyName ? companyName : topicState.selectedWatchlistCompanyName ? topicState.selectedWatchlistCompanyName : undefined,
-      sector: topicState.selectedSector ? topicState.selectedSector : undefined
+      company_name: companyName ? companyName : undefined,
+      sector: topicState.selectedSector ? topicState.selectedSector : undefined,
+      industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries.length : undefined
   }
   return data
 }
@@ -168,6 +169,7 @@ const createSearchSaveMiniPayload = (topicState) => {
     searchTerm: fullSearchText,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     universe: topicState.selectedUniverse,
+    industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     company_name: topicState.selectedWatchlistCompanyName ? topicState.selectedWatchlistCompanyName : undefined
   }
 }

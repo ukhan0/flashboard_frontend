@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem, Select, ListItemText, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedSector } from '../../reducers/Topic';
+import { setSelectedSector ,setSelectedIndustries } from '../../reducers/Topic';
 import sectors from '../../config/gicsData'
 
 const useStyles = makeStyles(theme => ({
@@ -24,6 +24,7 @@ const TopicSectorDropDown = props => {
       value = null
     }
     dispatch(setSelectedSector(value))
+    dispatch(setSelectedIndustries([]))
   }
   
   const sectorValues = sectors.map(s => s.value)

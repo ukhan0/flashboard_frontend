@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import TopicSectorIndustry from './TopicSectorIndustry';
 import TopicWatchlistDropDown from './TopicWatchlistDropDown';
-import TopicSectorDropDown from './TopicSectorDropDown';
+
 
 const TopicUniverseSubFilters = props => {
   const { selectedUniverse } = useSelector(state => state.Topic);
@@ -18,7 +19,7 @@ const TopicUniverseSubFilters = props => {
       break;
     case 'sector':
       component = (
-        <TopicSectorDropDown />
+        <TopicSectorIndustry/>
       );
       break;
     case 'Custom':
