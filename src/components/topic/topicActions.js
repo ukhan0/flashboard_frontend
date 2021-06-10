@@ -127,7 +127,7 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       page: topicState.pageNo,
       searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
       refresh_search: false,
-      company_name: companyName ? companyName : undefined,
+      company_name: companyName ? companyName : topicState.selectedWatchlistCompanyName ? topicState.selectedWatchlistCompanyName : undefined,
       sector: topicState.selectedSector ? topicState.selectedSector : undefined,
       industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries.length : undefined
   }
