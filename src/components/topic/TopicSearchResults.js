@@ -124,7 +124,7 @@ const TopicSearchResults = () => {
           <PerfectScrollbar className="mb-4 p-4">
             {
               (isSearchLoading && isEmpty(searchResultHighlights)) ?
-                <h4 className="font-size-lg">Loading...</h4>
+                <h4 className="font-size-lg">{' '}</h4>
               :
                 companyResults.map((companyResult, index) => {
                   return (

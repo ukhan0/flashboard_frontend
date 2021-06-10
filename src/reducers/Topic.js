@@ -1,5 +1,6 @@
 import documentTypesData from '../config/documentTypesData';
 import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
+import { get } from 'lodash';
 
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
 export const SET_SEARCH_TEXT = 'TOPIC/SET_SEARCH_TEXT';
@@ -32,6 +33,9 @@ export const SET_SHOW_COMPOSE_NEW = 'TOPIC/SET_SHOW_COMPOSE_NEW';
 export const SET_SHOW_UPDATE_BUTTON = 'TOPIC/SET_BUTTON_UPDATE_BUTTON';
 export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
+export const SET_SELECTED_UNIVERSE = 'TOPIC/SET_SELECTED_UNIVERSE';
+export const SET_SELECTED_SECTOR = 'TOPIC/SET_SELECTED_SECTOR';
+
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
@@ -186,6 +190,15 @@ export const setSelectedCompanyName = (selectedCompanyName) => ({
   selectedCompanyName
 })
 
+export const setSelectedUniverse = (selectedUniverse) => ({
+  type: SET_SELECTED_UNIVERSE,
+  selectedUniverse
+})
+
+export const setSelectedSector = (selectedSector) => ({
+  type: SET_SELECTED_SECTOR,
+  selectedSector
+})
 
 const searchDefaultState = () => ({
   searchText: '',
@@ -195,7 +208,8 @@ const searchDefaultState = () => ({
   sortBy: 'document_date',
   selectedSuggestions: {},
   selectedDocumentTypes: ['10-K', '10-Q'],
-  selectedUniverse: null,
+  selectedUniverse: 'all',
+  selectedSector: null,
 })
 
 const getDefaultState = () => {
@@ -258,6 +272,8 @@ export default function reducer(
         orderBy: action.searchObj.searchJSON.orderBy,
         sortBy: action.searchObj.searchJSON.sortBy,
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
+        selectedUniverse: get(action.searchObj, 'searchJSON.selectedUniverse', searchDefaultState().selectedUniverse),
+        selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector)
       };
     case RESET_ALL_SEARCH_PARAMS:
       return { 
@@ -308,6 +324,10 @@ export default function reducer(
         return {...state, showUpdateButton: action.showUpdateButton};
     case SET_SELECTED_COMPANY_NAME:
       return {...state, selectedCompanyName: action.selectedCompanyName};
+    case SET_SELECTED_UNIVERSE:
+      return {...state, selectedUniverse: action.selectedUniverse};
+    case SET_SELECTED_SECTOR:
+      return {...state, selectedSector: action.selectedSector};
     default:
       break;
   }

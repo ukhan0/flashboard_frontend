@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, Typography } from '@material-ui/core';
 import TopicSearchTextField from './TopicSearchTextField';
 import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
-import TopicButtonGroup from './TopicButtonGroup';
+import TopicUniverseGroup from './TopicUniverseGroup';
+import TopicSectionGroup from './TopicSectionGroup';
+import TopicUniverseSubFilters from './TopicUniverseSubFilters';
 import TopicRangePicker from './TopicRangePicker';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { resetResultsPage, cancelExistingHightlightsCalls } from '../../reducers/Topic';
-import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 import { forEach, concat } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
@@ -39,23 +39,7 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = props => {
   const classes = useStyles();
-  const { searchText, isSearchError, selectedSuggestions, cancelTokenSourceHighlights, showUpdateButton } = useSelector(state => state.Topic);
-  const dispatch = useDispatch();
-
-  const handleSearch = () => {
-    dispatch(resetResultsPage());
-    dispatch(performTopicSearchAggregate(true, true));
-    // cancel existing calls if there are any
-    if(cancelTokenSourceHighlights) {
-      cancelTokenSourceHighlights.cancel()
-    }
-    dispatch(cancelExistingHightlightsCalls(true));
-    // now perform actual search
-    setTimeout(() => {
-      dispatch(cancelExistingHightlightsCalls(false));
-      dispatch(performTopicSearchHighlights(true));
-    }, 1000)
-  };
+  const { searchText, isSearchError, selectedSuggestions, showUpdateButton } = useSelector(state => state.Topic);
 
   let selectedSuggestionsArr = [];
   forEach(selectedSuggestions, values => {
@@ -93,11 +77,18 @@ const TopicFilters = props => {
             <h6>Document Types:</h6>
             <TopicDocumentTypeDropdown />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <h6>Search Universe:</h6>
-            <TopicButtonGroup />
+            <TopicUniverseGroup />
           </Grid>
-          <Grid item xs={6}></Grid>
+          <Grid item xs={4}>
+            <h6 className={'text-black-50'}>Section:</h6>
+            <TopicSectionGroup />
+          </Grid>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={4}>
+            <TopicUniverseSubFilters />
+          </Grid>
         </Grid>
       </Grid>
       <Grid item xs={4}>
@@ -123,7 +114,7 @@ const TopicFilters = props => {
                 </Button>
               ) : null}
               <div className="mr-2"></div>
-              <Button variant="contained" color="primary" onClick={handleSearch}>
+              <Button variant="contained" color="primary" onClick={props.onSearch}>
                 Search
               </Button>
             </div>

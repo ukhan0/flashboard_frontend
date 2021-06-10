@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card } from '@material-ui/core';
 import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import TopicSectorSingleChart from './TopicSectorSingleChart'
+import TopicSectorMultiChart from './TopicSectorMultiChart'
 import { useSelector } from 'react-redux';
 import { get, findIndex } from 'lodash';
 import drilldown from 'highcharts/modules/drilldown';
@@ -20,7 +21,7 @@ const useStyles = makeStyles(_theme => ({
   },
 }));
 
-export default function TopicSectorChart() {
+export default function TopicSectorChart(props) {
   const classes = useStyles()
   const { searchResult } = useSelector(state => state.Topic);
 
@@ -53,52 +54,25 @@ export default function TopicSectorChart() {
     }
   });
 
-  const options = {
-    chart: {
-      type: 'pie',
-      height: '300px',
-    },
-    title: {
-      text: null
-    },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span>{point.name}</span>: <b>{point.y}</b>',
-      enabled: false
-  },
-    plotOptions: {
-      series: {
-        dataLabels: {
-            enabled: true,
-            format: '{point.name}'
-        }
-      }
-    },
-    series: [
-      {
-        name: 'Documents Count',
-        colorByPoint: true,
-        data: sectorData
-      }
-    ],
-    drilldown: {
-      series: industryData
-    },
-    credits: {
-      enabled: false
-    }
-  };
+  let chartComponent = null
+  let title = 'Sector'
+  if(sectorData.length === 1) {
+    chartComponent = <TopicSectorSingleChart />
+    title = 'Industry'
+  } else if (sectorData.length > 1) {
+    chartComponent = <TopicSectorMultiChart handleSectorClick={props.onSectorSelect} />
+  }
 
   return (
     <>
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
-            <span className={'font-weight-bold'}>Sector</span>
+            <span className={'font-weight-bold'}>{title}</span>
           </div>
         </div>
         <div className={clsx('mb-2', classes.contentSection)}>
-          <HighchartsReact highcharts={Highcharts} options={options} />
+          { chartComponent }
         </div>
       </Card>
     </>

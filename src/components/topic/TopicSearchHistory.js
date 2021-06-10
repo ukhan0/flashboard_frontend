@@ -12,7 +12,7 @@ import {
   resetResultsPage,
   cancelExistingHightlightsCalls,
   setShowComposeNew,
-  setShowUpdateButton
+  setShowUpdateButton,
 } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,

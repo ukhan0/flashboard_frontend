@@ -19,12 +19,15 @@ import {
   setShowComposeNew,
   setShowUpdateButton,
   setSelectedSearch,
-  resetAllSearchParams
+  resetAllSearchParams,
+  resetResultsPage,
+  cancelExistingHightlightsCalls,
 } from '../../reducers/Topic';
+import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 
 const Topic = () => {
   const classes = topicStyles();
-  const { isSaveDlgOpen, isSearchDeleteError, isTopicDeleteError, showFilters } = useSelector(state => state.Topic);
+  const { isSaveDlgOpen, isSearchDeleteError, isTopicDeleteError, showFilters, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -36,12 +39,28 @@ const Topic = () => {
     dispatch(resetAllSearchParams());
   }
 
+  const handleSearch = () => {
+    dispatch(resetResultsPage());
+    dispatch(performTopicSearchAggregate(true, true));
+    // cancel existing calls if there are any
+    if(cancelTokenSourceHighlights) {
+      cancelTokenSourceHighlights.cancel()
+    }
+    dispatch(cancelExistingHightlightsCalls(true));
+    // now perform actual search
+    setTimeout(() => {
+      dispatch(cancelExistingHightlightsCalls(false));
+      dispatch(performTopicSearchHighlights(true));
+    }, 1000)
+  };
+
   return (
     <div className={classes.root}>
       {showFilters ? (
         <TopicFilters
           onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
           onSaveSearch={() => dispatch(setIsSaveDlgOpen(true))}
+          onSearch={handleSearch}
         />
       ) : null}
       <Grid container spacing={4}>
@@ -86,7 +105,7 @@ const Topic = () => {
         <Grid item xs={9}>
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <TopicSectorChart />
+              <TopicSectorChart onSectorSelect={handleSearch}/>
             </Grid>
             <Grid item xs={6} >
               <TopicCompanyResultsTable />
