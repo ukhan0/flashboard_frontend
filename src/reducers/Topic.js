@@ -35,6 +35,7 @@ export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
 export const SET_SELECTED_UNIVERSE = 'TOPIC/SET_SELECTED_UNIVERSE';
 export const SET_SELECTED_SECTOR = 'TOPIC/SET_SELECTED_SECTOR';
+export const SET_SELECTED_WATCHLIST_COMPANY_NAME = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAME';
 
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
@@ -200,6 +201,11 @@ export const setSelectedSector = (selectedSector) => ({
   selectedSector
 })
 
+export const setSelectedWatchlistCompanyName = ( selectedWatchlistCompanyName) => ({
+  type: SET_SELECTED_WATCHLIST_COMPANY_NAME,
+   selectedWatchlistCompanyName
+})
+
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -210,6 +216,7 @@ const searchDefaultState = () => ({
   selectedDocumentTypes: ['10-K', '10-Q'],
   selectedUniverse: 'all',
   selectedSector: null,
+   selectedWatchlistCompanyName: null,
 })
 
 const getDefaultState = () => {
@@ -272,8 +279,9 @@ export default function reducer(
         orderBy: action.searchObj.searchJSON.orderBy,
         sortBy: action.searchObj.searchJSON.sortBy,
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
-        selectedUniverse: get(action.searchObj, 'searchJSON.selectedUniverse', searchDefaultState().selectedUniverse),
-        selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector)
+        selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
+        selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
+        selectedWatchlistCompanyName: get(action.searchObj, 'searchJSON.company_name', searchDefaultState().selectedWatchlistCompanyName),
       };
     case RESET_ALL_SEARCH_PARAMS:
       return { 
@@ -328,6 +336,9 @@ export default function reducer(
       return {...state, selectedUniverse: action.selectedUniverse};
     case SET_SELECTED_SECTOR:
       return {...state, selectedSector: action.selectedSector};
+    case SET_SELECTED_WATCHLIST_COMPANY_NAME:
+      return {...state,  selectedWatchlistCompanyName: action. selectedWatchlistCompanyName};
+      
     default:
       break;
   }

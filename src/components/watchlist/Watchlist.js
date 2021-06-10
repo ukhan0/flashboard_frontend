@@ -33,6 +33,7 @@ import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
 import WatchlistSearch from './WatchlistSearch';
 import { isObject } from 'lodash';
+import watchlistApiCalls from './watchlistApiCalls'
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -78,11 +79,7 @@ const Watchlist = props => {
         }
       } else {
         setLoading(true);
-        const user = JSON.parse(localStorage.getItem('user'));
-        const response = await axios.get(
-          `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`
-        );
-        rawData = get(response, 'data.data.content', []);
+        rawData = await watchlistApiCalls.getWatchlist(selectedUniverse, selectedFileType)
       }
 
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {

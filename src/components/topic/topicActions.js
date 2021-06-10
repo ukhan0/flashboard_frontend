@@ -127,7 +127,7 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       page: topicState.pageNo,
       searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
       refresh_search: false,
-      company_name: companyName ? companyName : undefined,
+      company_name: companyName ? companyName : topicState.selectedWatchlistCompanyName ? topicState.selectedWatchlistCompanyName : undefined,
       sector: topicState.selectedSector ? topicState.selectedSector : undefined
   }
   return data
@@ -168,6 +168,7 @@ const createSearchSaveMiniPayload = (topicState) => {
     searchTerm: fullSearchText,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     universe: topicState.selectedUniverse,
+    company_name: topicState.selectedWatchlistCompanyName ? topicState.selectedWatchlistCompanyName : undefined
   }
 }
 

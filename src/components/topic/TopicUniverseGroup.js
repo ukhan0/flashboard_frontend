@@ -1,6 +1,6 @@
 import React from 'react';
 import { ButtonGroup, Button } from '@material-ui/core';
-import { setSelectedUniverse, setSelectedSector } from '../../reducers/Topic'
+import { setSelectedUniverse, setSelectedSector, setSelectedWatchlistCompanyName } from '../../reducers/Topic'
 import { useSelector, useDispatch } from 'react-redux';
 
 const TopicButtonGroup = () => {
@@ -10,13 +10,18 @@ const TopicButtonGroup = () => {
 
   const universeSelection = [
     { label: 'All', key: 'all', disabled: false },
-    { label: 'Watchlist', key: 'watchlist', disabled: true },
+    { label: 'Watchlist', key: 'watchlist', disabled: false },
     { label: 'Sector', key: 'sector', disabled:false },
     { label: 'Custom', key: 'custom', disabled:true  }
   ];
 
   const handleUniverseSelection = (universeKey) => {
     if(universeKey === 'all') {
+      dispatch(setSelectedSector(null))
+      dispatch(setSelectedWatchlistCompanyName(null))
+    } else if(universeKey === 'sector') {
+      dispatch(setSelectedWatchlistCompanyName(null))
+    } else if(universeKey === 'watchlist') {
       dispatch(setSelectedSector(null))
     }
     dispatch(setSelectedUniverse(universeKey))
