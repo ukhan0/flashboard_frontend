@@ -17,6 +17,7 @@ const TopicWatchlistDropDown = props => {
   const { selectedWatchlistCompanyNames } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [watchlistCompanies, setWatchlistCompanies] = useState([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       const rawData = await watchlistApiCalls.getWatchlist('watchlist', '');
@@ -25,7 +26,8 @@ const TopicWatchlistDropDown = props => {
       dispatch(setSelectedWatchlistCompanyNames(selectAll))    
     };
     fetchData();
-  }, []);
+  }, [dispatch]);
+
   const handleSelectionChange = e => {
     dispatch(setSelectedWatchlistCompanyNames(e.target.value));
   };
