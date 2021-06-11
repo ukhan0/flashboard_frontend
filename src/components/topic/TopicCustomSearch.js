@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField } from '@material-ui/core';
+import { FormControl, TextField, Chip } from '@material-ui/core';
 import useStyles from '../watchlist/watchlistStyles';
 import config from '../../config/config';
 import { debounce, get } from 'lodash';
-import { useDispatch } from 'react-redux';
-import { setSelectedWatchlistCompanyName } from '../../reducers/Topic';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedWatchlistCompanyNames } from '../../reducers/Topic';
 
 const createOptionLabel = option => {
   return `${option.ticker} - ${option.name}`;
 };
+const createOptionLabelWithTicker = option => {
+  return `${option.ticker}`;
+};
 
 const TopicCustomSearch = props => {
+  const { selectedWatchlistCompanyNames } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(null);
   const [availableCompanyNames, setAvailableCompanyNames] = useState([]);
 
   const handleSearchTextChange = debounce(async text => {
@@ -32,23 +35,26 @@ const TopicCustomSearch = props => {
     }
   }, 1000);
 
-  const selectionChanged = (e, newSelectedCompany) => {
-    if (newSelectedCompany) {
-      setSelectedValue(newSelectedCompany);
-      dispatch(setSelectedWatchlistCompanyName(newSelectedCompany.name));
+  const selectionChanged = (e, newSelectedCompanies) => {
+    if (newSelectedCompanies) {
+      let companies = newSelectedCompanies.map(c => c.name);
+      dispatch(setSelectedWatchlistCompanyNames(companies));
     }
   };
 
   return (
     <FormControl className={classes.formControl}>
       <Autocomplete
+        multiple
+        id="topic-custom-search"
         loading={loading}
-        loadingText={'Loading...'}
-        className={classes.searchField}
         onChange={selectionChanged}
         options={availableCompanyNames}
-        value={selectedValue}
         getOptionLabel={option => createOptionLabel(option)}
+        defaultValue={selectedWatchlistCompanyNames}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => <Chip label={createOptionLabelWithTicker(option)} {...getTagProps({ index })} />)
+        }
         renderInput={params => (
           <TextField
             {...params}

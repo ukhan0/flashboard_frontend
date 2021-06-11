@@ -15,17 +15,15 @@ const TopicIndustryDropDown = props => {
   const classes = useStyles();
   const { selectedIndustries, selectedSector } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-
-  const handleSelectionChange = (e) => {
+  const handleSelectionChange = e => {
     dispatch(setSelectedIndustries(e.target.value));
   };
 
   let sectorIndustries = [];
-  const sector = sectorsData.find(sd => sd.value === selectedSector)
-  if(sector) {
-    sectorIndustries = sector.industries
+  const sector = sectorsData.find(sd => sd.value === selectedSector);
+  if (sector) {
+    sectorIndustries = sector.industries;
   }
-
 
   return (
     <Select

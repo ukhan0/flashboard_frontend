@@ -1,51 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { MenuItem, Select, Checkbox, ListItemText, Input } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedWatchlistCompanyName } from '../../reducers/Topic';
-import watchlistApiCalls from '../watchlist/watchlistApiCalls'
-import Select from 'react-select';
+import { setSelectedWatchlistCompanyNames } from '../../reducers/Topic';
+import watchlistApiCalls from '../watchlist/watchlistApiCalls';
 
 const useStyles = makeStyles(theme => ({
-  singleSelect: {
+  multiSelect: {
     width: '100%',
-    height: '2.2rem',
-  },
+    height: '2.2rem'
+  }
 }));
 
 const TopicWatchlistDropDown = props => {
-  const classes = useStyles()
-  const { selectedWatchlistCompanyName } = useSelector(state => state.Topic);
+  const classes = useStyles();
+  const { selectedWatchlistCompanyNames } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-  const [watchlistCompanies, setWatchlistCompanies] = useState([])
-  const [selectedCompany, setSelectedCompany] =  useState(selectedWatchlistCompanyName ? {value: selectedWatchlistCompanyName, label: selectedWatchlistCompanyName} : null)
-
+  const [watchlistCompanies, setWatchlistCompanies] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const rawData = await watchlistApiCalls.getWatchlist('watchlist', '')
-      setWatchlistCompanies(rawData.map(d => ({value: d.b, label: d.b})))
-    }
-    fetchData()
+      const rawData = await watchlistApiCalls.getWatchlist('watchlist', '');
+      let selectAll =rawData.map(d => d.b)
+      setWatchlistCompanies(selectAll)
+      dispatch(setSelectedWatchlistCompanyNames(selectAll))    
+    };
+    fetchData();
   }, []);
-
-  const handleSelectionChange = (newSelectedCompany) => {
-    setSelectedCompany(newSelectedCompany)
-    let newValue = null
-    if(newSelectedCompany) {
-      newValue = newSelectedCompany.value
-    }
-    dispatch(setSelectedWatchlistCompanyName(newValue))
-  }
-
+  const handleSelectionChange = e => {
+    dispatch(setSelectedWatchlistCompanyNames(e.target.value));
+  };
+ 
   return (
     <Select
-      isClearable={true}
-      isSearchable={true}
-      value={selectedCompany}
+      labelId="TopicWatchListDropDownLabel"
+      id="TopicWatchListDropDownId"
+      multiple
+      value={selectedWatchlistCompanyNames}
       onChange={handleSelectionChange}
-      className={classes.singleSelect}
-      options={watchlistCompanies}
-    />
-     
+      input={<Input />}
+      renderValue={selectedValues => selectedValues.join(', ')}
+      className={classes.multiSelect}>
+      {watchlistCompanies.map(cmp => (
+        <MenuItem key={cmp} value={cmp}>
+          <Checkbox checked={selectedWatchlistCompanyNames.indexOf(cmp) > -1} />
+          <ListItemText primary={cmp} />
+        </MenuItem>
+      ))}
+    </Select>
   );
 };
 

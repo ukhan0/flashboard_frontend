@@ -36,7 +36,7 @@ export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
 export const SET_SELECTED_UNIVERSE = 'TOPIC/SET_SELECTED_UNIVERSE';
 export const SET_SELECTED_SECTOR = 'TOPIC/SET_SELECTED_SECTOR';
 export const SET_SELECTED_INDUSTRIES ='TOPIC/SET_SELECTED_INDUSTRIES';
-export const SET_SELECTED_WATCHLIST_COMPANY_NAME = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAME';
+export const SET_SELECTED_WATCHLIST_COMPANY_NAMES = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAMES';
 
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
@@ -207,9 +207,9 @@ export const setSelectedIndustries = (selectedIndustries) => ({
   selectedIndustries
 })
 
-export const setSelectedWatchlistCompanyName = ( selectedWatchlistCompanyName) => ({
-  type: SET_SELECTED_WATCHLIST_COMPANY_NAME,
-   selectedWatchlistCompanyName
+export const setSelectedWatchlistCompanyNames = ( selectedWatchlistCompanyNames) => ({
+  type: SET_SELECTED_WATCHLIST_COMPANY_NAMES,
+   selectedWatchlistCompanyNames
 })
 
 const searchDefaultState = () => ({
@@ -223,7 +223,7 @@ const searchDefaultState = () => ({
   selectedUniverse: 'all',
   selectedSector: null,
   selectedIndustries: [],
-  selectedWatchlistCompanyName: null,
+  selectedWatchlistCompanyNames: [],
 })
 
 const getDefaultState = () => {
@@ -289,7 +289,7 @@ export default function reducer(
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
         selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
         selectedIndustries: get(action.searchObj, 'searchJSON.industry_arr', searchDefaultState().selectedIndustries),
-        selectedWatchlistCompanyName: get(action.searchObj, 'searchJSON.company_name', searchDefaultState().selectedWatchlistCompanyName),
+        selectedWatchlistCompanyNames: get(action.searchObj, 'searchJSON.company_arr', searchDefaultState().selectedWatchlistCompanyNames),
       };
     case RESET_ALL_SEARCH_PARAMS:
       return { 
@@ -346,8 +346,8 @@ export default function reducer(
       return {...state, selectedSector: action.selectedSector};
     case SET_SELECTED_INDUSTRIES:
       return {...state, selectedIndustries: action.selectedIndustries};
-    case SET_SELECTED_WATCHLIST_COMPANY_NAME:
-      return {...state, selectedWatchlistCompanyName: action.selectedWatchlistCompanyName};
+    case SET_SELECTED_WATCHLIST_COMPANY_NAMES:
+      return {...state, selectedWatchlistCompanyNames: action.selectedWatchlistCompanyNames};
     default:
       break;
   }
