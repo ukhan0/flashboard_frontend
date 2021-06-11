@@ -12,7 +12,7 @@ const TopicUniverseGroup = () => {
     { label: 'All', key: 'all', disabled: false },
     { label: 'Watchlist', key: 'watchlist', disabled: false },
     { label: 'Sector', key: 'sector', disabled:false },
-    { label: 'Custom', key: 'custom', disabled:true  }
+    { label: 'Custom', key: 'custom', disabled:false }
   ];
 
   const handleUniverseSelection = (universeKey) => {
@@ -23,6 +23,11 @@ const TopicUniverseGroup = () => {
     } else if(universeKey === 'sector') {
       dispatch(setSelectedWatchlistCompanyName(null))
     } else if(universeKey === 'watchlist') {
+      dispatch(setSelectedWatchlistCompanyName(null))
+      dispatch(setSelectedSector(null))
+      dispatch(setSelectedIndustries([]))
+    } else if(universeKey === 'custom' ) {
+      dispatch(setSelectedWatchlistCompanyName(null))
       dispatch(setSelectedSector(null))
       dispatch(setSelectedIndustries([]))
     }

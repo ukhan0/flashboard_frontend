@@ -29,7 +29,6 @@ const TopicWatchlistDropDown = props => {
 
   const handleSelectionChange = (newSelectedCompany) => {
     setSelectedCompany(newSelectedCompany)
-    console.log(newSelectedCompany)
     let newValue = null
     if(newSelectedCompany) {
       newValue = newSelectedCompany.value

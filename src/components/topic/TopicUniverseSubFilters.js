@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import TopicSectorIndustry from './TopicSectorIndustry';
 import TopicWatchlistDropDown from './TopicWatchlistDropDown';
+import TopicCustomSearch from './TopicCustomSearch';
 
 
 const TopicUniverseSubFilters = props => {
@@ -22,8 +23,10 @@ const TopicUniverseSubFilters = props => {
         <TopicSectorIndustry/>
       );
       break;
-    case 'Custom':
-      component = null;
+    case 'custom':
+      component = (
+        <TopicCustomSearch/>
+      );
       break;
     default:
       component = null;
