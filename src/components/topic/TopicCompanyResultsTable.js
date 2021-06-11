@@ -94,7 +94,6 @@ export default function TopicCompantResultsTable() {
   }
   const handleCompanyClick = (companyName) => {
     // check if data for this company exists or not
-    console.log(searchResultHighlights)
     const uniqCompanyNames = uniq(searchResultHighlights.map(sr => sr.company_name).filter(n => n))
     const companyIndex = uniqCompanyNames.indexOf(companyName)
     if(companyIndex === -1) {

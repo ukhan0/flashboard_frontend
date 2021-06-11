@@ -2,6 +2,7 @@ import React, { Fragment, useRef, useEffect } from 'react';
 import { List, ListItem, Divider, ListItemText, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { goToNextPage } from './topicActions';
+import { setSelectedCompanyName } from '../../reducers/Topic'
 import { isEmpty } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import TickerLogo from './TopicTickerLogo';
@@ -45,10 +46,11 @@ const TopicSearchResults = props => {
         const companyRef = document.getElementById(createHash(selectedCompanyName))
         if(companyRef) {
           companyRef.scrollIntoView()
+          dispatch(setSelectedCompanyName(null))
         }
       }, 1000)
     }
-  }, [props.scrollIntoViewRequired, selectedCompanyName]);
+  }, [dispatch, props.scrollIntoViewRequired, selectedCompanyName]);
 
   return (
     <List className="pt-0" style={{ height: 650 }} ref={resultsSection}>
