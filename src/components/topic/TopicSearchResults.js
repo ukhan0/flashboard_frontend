@@ -72,8 +72,8 @@ const TopicSearchResults = () => {
       return
     }
     const companyIndex = findIndex(summaryByCompany, cr => cr.companyName === selectedCompanyName)
-    resultsSection.current.scrollIntoView()
     if(companyIndex !== -1) {
+      resultsSection.current.scrollIntoView()
       scrollIntoViewRequired.current = true
       setSelectedCompanyIndex(companyIndex)
     }
