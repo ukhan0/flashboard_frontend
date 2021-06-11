@@ -249,7 +249,7 @@ const getDefaultState = () => {
     searchResultHighlights: [],
     isHighlightsSearchLoading: false,
     cancelExistingHighlightCalls: false,
-    showFilters: true,
+    showFilters: false,
     showUpdateButton: false,
     selectedCompanyName: null,
   };
