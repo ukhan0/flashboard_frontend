@@ -1,7 +1,7 @@
 export default [
   // { label: 'All', value: 'all' },
-  { label: '10-K', value: '10-K', searchFroms: ['10-k.P1.*', '10-k.P2.*', '10-k.P3.*', '10-k.P4.*'] },
-  { label: '10-Q', value: '10-Q', searchFroms: ['10-q.P1.*', '10-q.P2.*'] },
+  { label: '10-K', value: '10-K', searchFroms: ['10-k.p1.*', '10-k.p2.*', '10-k.p3.*', '10-k.p4.*'] },
+  { label: '10-Q', value: '10-Q', searchFroms: ['10-q.p1.*', '10-q.p2.*'] },
   { label: '8-K', value: '8-K', searchFroms: ['8-k.*'] },
   { label: '40-F', value: '40-F', searchFroms: ['40-f.*'] },
   { label: '20-F', value: '20-F', searchFroms: ['20-f.*'] },
