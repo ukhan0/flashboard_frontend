@@ -12,8 +12,8 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   highlightHeading: {
-    color: 'white',
-    background: 'black'
+    background:'#CCC',
+    display:'inline'
   }
 }));
 
@@ -25,7 +25,7 @@ const SentimentSection = props => {
     if (selectedHeadingId) {
       setTimeout(() => {
         dispatch(setSelectedHeadingId(null));
-      }, 3000);
+      }, 2000);
     }
   }, [selectedHeadingId, dispatch]);
 
@@ -62,22 +62,25 @@ const SentimentSection = props => {
           <BeatLoader color={'var(--primary)'} size={15} />
         </div>
       ) : (
-        displayData.map((d, index) => (
-          <div
-            key={index}
-            style={{
-              paddingLeft: d.lvl * 4 + 4,
-              fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
-              scrollMarginTop: '5em'
-            }}
-            id={createHash(d.path)}>
-            {d.content ? (
-              <p className={classes.content}>{d.content}</p>
-            ) : (
-              <p className={selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null}>{d.prop}</p>
-            )}
-          </div>
-        ))
+        displayData.map((d, index) => {
+          return (
+            <div
+              key={index}
+              style={{
+                paddingLeft: d.lvl * 4 + 4,
+                fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
+                scrollMarginTop: '5em',
+                textTransform:'capitalize'
+              }}
+              id={createHash(d.path)}>
+              {d.content ? (
+                <p className={classes.content}>{d.content}</p>
+              ) : (
+                <p className={selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null}>{d.prop}</p>
+              )}
+            </div>
+            ) 
+        })
       )}
     </div>
   );

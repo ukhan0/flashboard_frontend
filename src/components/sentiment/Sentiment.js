@@ -13,8 +13,7 @@ const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
     justifyContent: 'flex-end',
-    top: 100,
-    marginTop:5,
+    top: 70,
     position: 'sticky'
   },
   goToTopContainer: {
@@ -23,12 +22,6 @@ const useStyles = makeStyles(theme => ({
     position: 'sticky',
     right: 20,
     bottom: 20,
-  },
-  btnClr:{
-    backgroundColor: "white",
-    "&:hover": {
-      backgroundColor: "white"
-    }
   }
 }));
 
@@ -63,7 +56,7 @@ const Sentiment = () => {
     <div ref={contentTopRef}>
       <SentimentCard />
       <div className={classes.drawerOpener}>
-        <Button color="primary" variant="outlined" className={classes.btnClr}  onClick={toggleDrawer}>
+        <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
           Table of contents
         </Button>
       </div>
