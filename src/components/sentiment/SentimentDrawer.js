@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, IconButton, Typography } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BeatLoader } from 'react-spinners';
-
+import { createHash } from '../../utils/helpers';
+import { setSelectedHeadingId } from '../../reducers/Sentiment';
 const useStyles = makeStyles(theme => {
   return {
     list: {
@@ -38,9 +39,8 @@ const useStyles = makeStyles(theme => {
 
 const SentimentDrawer = props => {
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   const { data, isLoading } = useSelector(state => state.Sentiment);
-
   const displayData = [];
   function visitOutlineObj(acc, obj, lvl, path) {
     if (lvl > 4) return;
@@ -61,6 +61,11 @@ const SentimentDrawer = props => {
     visitOutlineObj(displayData, data, 0, '');
   }
 
+  const clickHandle = (path) => {
+    props.onSelection(createHash(path));
+    dispatch(setSelectedHeadingId(createHash(path)));
+  };
+  
   return (
     <React.Fragment>
       <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
@@ -84,7 +89,9 @@ const SentimentDrawer = props => {
                 key={index}
                 style={{ paddingLeft: d.lvl * 4 + 4 }}
                 className={classes.listItem}
-                onClick={() => props.onSelection(d.path)}>
+                onClick={() => {
+                  clickHandle(d.path);
+                }}>
                 {d.prop}
               </div>
             ))

@@ -1,18 +1,33 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { BeatLoader } from 'react-spinners';
+import { createHash } from '../../utils/helpers';
+import { setSelectedHeadingId } from '../../reducers/Sentiment';
 const useStyles = makeStyles(theme => ({
   content: {
     fontSize: 12
   },
   loaderSection: {
     textAlign: 'center'
+  },
+  highlightHeading: {
+    color: 'white',
+    background: 'black'
   }
 }));
+
 const SentimentSection = props => {
   const classes = useStyles();
-  const { data, isLoading } = useSelector(state => state.Sentiment);
+  const dispatch = useDispatch();
+  const { data, isLoading, selectedHeadingId } = useSelector(state => state.Sentiment);
+  useEffect(() => {
+    if (selectedHeadingId) {
+      setTimeout(() => {
+        dispatch(setSelectedHeadingId(null));
+      }, 3000);
+    }
+  }, [selectedHeadingId, dispatch]);
 
   const displayData = [];
   function visitOutlineObj(acc, obj, lvl, path) {
@@ -53,10 +68,14 @@ const SentimentSection = props => {
             style={{
               paddingLeft: d.lvl * 4 + 4,
               fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
-              scrollMarginTop:'3em'    
+              scrollMarginTop: '5em'
             }}
-            id={d.path}>
-            {d.content ? <p className={classes.content}>{d.content}</p> : d.prop}
+            id={createHash(d.path)}>
+            {d.content ? (
+              <p className={classes.content}>{d.content}</p>
+            ) : (
+              <p className={selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null}>{d.prop}</p>
+            )}
           </div>
         ))
       )}

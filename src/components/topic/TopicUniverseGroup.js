@@ -5,13 +5,14 @@ import { useSelector, useDispatch } from 'react-redux';
 
 const TopicUniverseGroup = () => {
   
-  const { selectedUniverse } = useSelector(state => state.Topic);
+  const { selectedUniverse, selectedSector } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
+  let showSelectedSector = selectedSector ? selectedSector : 'Sector'
 
   const universeSelection = [
     { label: 'All', key: 'all', disabled: false },
     { label: 'Watchlist', key: 'watchlist', disabled: false },
-    { label: 'Sector', key: 'sector', disabled:false },
+    { label: showSelectedSector, key: 'sector', disabled:false },
     { label: 'Custom', key: 'custom', disabled:false }
   ];
 
