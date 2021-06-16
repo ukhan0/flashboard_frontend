@@ -3,7 +3,7 @@ import { Grid, Card, Button, Divider, Snackbar } from '@material-ui/core';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import TopicSaveDialog from './TopicSaveDialog';
 import TopicSearchHistory from './TopicSearchHistory';
-import TopicSectorChart from './TopicSectorChart';
+import TopicPieChart from './TopicPieChart';
 import TopicCompanyResultsTable from './TopicCompanyResultsTable';
 import TopicSearchResults from './TopicSearchResults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -107,7 +107,7 @@ const Topic = () => {
         <Grid item xs={9}>
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <TopicSectorChart onSectorSelect={handleSearch}/>
+              <TopicPieChart onChange={handleSearch} />
             </Grid>
             <Grid item xs={6} >
               <TopicCompanyResultsTable />

@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 const TopicSectorDropDown = props => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const { selectedSector } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const handleClose = () => {

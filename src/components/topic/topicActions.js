@@ -127,7 +127,7 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       page: topicState.pageNo,
       searchId: (!freshSearch && searchId && topicState.pageNo === 0 ) ? searchId : undefined,
       refresh_search: false,
-      company_arr: companyName ? companyName : topicState.selectedWatchlistCompanyNames ? topicState.selectedWatchlistCompanyNames : undefined,
+      company_arr: companyName ? [companyName] : topicState.selectedWatchlistCompanyNames.length ? topicState.selectedWatchlistCompanyNames : undefined,
       sector: topicState.selectedSector ? topicState.selectedSector : undefined,
       industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined
   }
@@ -170,7 +170,7 @@ const createSearchSaveMiniPayload = (topicState) => {
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     universe: topicState.selectedUniverse,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
-    company_arr: topicState.selectedWatchlistCompanyNames ? topicState.selectedWatchlistCompanyNames : undefined
+    company_arr: topicState.selectedWatchlistCompanyNames.length !== 0 ? topicState.selectedWatchlistCompanyNames : undefined
   }
 }
 

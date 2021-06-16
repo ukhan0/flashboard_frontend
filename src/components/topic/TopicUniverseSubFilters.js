@@ -18,11 +18,6 @@ const TopicUniverseSubFilters = props => {
         <TopicWatchlistDropDown />
       );
       break;
-    case 'sector':
-      component = (
-        <TopicSectorIndustry/>
-      );
-      break;
     case 'custom':
       component = (
         <TopicCustomSearch/>
