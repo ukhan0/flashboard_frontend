@@ -219,7 +219,7 @@ const searchDefaultState = () => ({
   orderBy: 'desc',
   sortBy: 'document_date',
   selectedSuggestions: {},
-  selectedDocumentTypes: ['10-K', '10-Q'],
+  selectedDocumentTypes: ['10-K'],
   selectedUniverse: 'all',
   selectedSector: null,
   selectedIndustries: [],
