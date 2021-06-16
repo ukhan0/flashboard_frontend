@@ -6,6 +6,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
+import { capitalize } from 'lodash'
+
 const useStyles = makeStyles(theme => {
   return {
     list: {
@@ -85,6 +87,7 @@ const SentimentDrawer = props => {
             </div>
           ) : (
             displayData.map((d, index) => (
+              index !== 0 ?
               <div
                 key={index}
                 style={{ paddingLeft: d.lvl * 4 + 4 }}
@@ -92,8 +95,10 @@ const SentimentDrawer = props => {
                 onClick={() => {
                   clickHandle(d.path);
                 }}>
-                {d.prop}
+                {capitalize(d.prop)}
               </div>
+              :
+              null
             ))
           )}
         </div>
