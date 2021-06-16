@@ -64,7 +64,7 @@ export default function TopicPieChart(props) {
           { 
             selectedSector ?
               <div>
-                <Button className="m-0 p-0 btn text-warning" size="small" onClick={resetChartSelection}>Rest</Button>
+                <Button className="m-0 p-0 btn text-warning" size="small" onClick={resetChartSelection}>Reset</Button>
               </div>
             :
             null

@@ -64,21 +64,24 @@ const SentimentSection = props => {
       ) : (
         displayData.map((d, index) => {
           return (
-            <div
-              key={index}
-              style={{
-                paddingLeft: d.lvl * 4 + 4,
-                fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
-                scrollMarginTop: '5em',
-                textTransform:'capitalize'
-              }}
-              id={createHash(d.path)}>
-              {d.content ? (
-                <p className={classes.content}>{d.content}</p>
-              ) : (
-                <p className={selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null}>{d.prop}</p>
-              )}
-            </div>
+            index !== 0 ?
+              <div
+                key={index}
+                style={{
+                  paddingLeft: d.lvl * 4 + 4,
+                  fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
+                  scrollMarginTop: '5em',
+                  textTransform:'capitalize'
+                }}
+                id={createHash(d.path)}>
+                {d.content ? (
+                  <p className={classes.content}>{d.content}</p>
+                ) : (
+                  <p className={selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null}>{d.prop}</p>
+                )}
+              </div>
+              :
+              null
             ) 
         })
       )}
