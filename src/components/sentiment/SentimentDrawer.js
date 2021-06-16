@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { capitalize } from 'lodash'
+import { startCase } from 'lodash'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -95,7 +95,7 @@ const SentimentDrawer = props => {
                 onClick={() => {
                   clickHandle(d.path);
                 }}>
-                {capitalize(d.prop)}
+                {startCase(d.prop)}
               </div>
               :
               null
