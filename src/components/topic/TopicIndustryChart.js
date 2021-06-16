@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { get, findIndex, cloneDeep } from 'lodash';
+import { setSelectedIndustries } from '../../reducers/Topic';
 
 const baseGraphOptions = {
   chart: {
@@ -22,6 +23,10 @@ const baseGraphOptions = {
       dataLabels: {
         enabled: true,
         format: '{point.name}'
+      },
+      events: {
+        click: function() {
+        }
       }
     }
   },
@@ -37,10 +42,16 @@ const baseGraphOptions = {
   }
 };
 
-export default function TopicSectorSingleChart() {
-  const { searchResult } = useSelector(state => state.Topic);
+export default function TopicIndustryChart(props) {
+  const { searchResult, selectedIndustries } = useSelector(state => state.Topic);
   const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions))
+  const dispatch = useDispatch()
   
+  const handleIndustryClick = useCallback((industryName) => {
+    dispatch(setSelectedIndustries([...selectedIndustries, industryName]))
+    props.handleIndustryClick()
+  }, [dispatch, props, selectedIndustries])
+
   useEffect(() => {
     const rawData = get(searchResult, 'buckets.groupBySectorIndustry', []);
     const industryData = [];
@@ -62,6 +73,9 @@ export default function TopicSectorSingleChart() {
     });
     const newGraphOptions = cloneDeep(baseGraphOptions)
     newGraphOptions.series[0].data = industryData
+    newGraphOptions.plotOptions.series.events.click = (event) => {
+      handleIndustryClick(event.point.name)
+    }
     setGraphOptions(newGraphOptions)
   }, [searchResult])
   

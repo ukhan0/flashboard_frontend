@@ -48,9 +48,9 @@ const TopicFilters = props => {
 
   return (
     <Grid container direction="row" justify="space-between" alignItems="flex-start" className={classes.topsection}>
-      <Grid item xs={8}>
+      <Grid item xs={10}>
         <Grid container spacing={2}>
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <h6>Search</h6>
             <div className={classes.searchContainer}>
               <div className={classes.searchFieldContainer}>
@@ -72,16 +72,16 @@ const TopicFilters = props => {
               </div>
             </div>
           </Grid>
-          <Grid item xs={4}></Grid>
+          <Grid item xs={6}></Grid>
           <Grid item xs={3}>
             <h6>Document Types:</h6>
             <TopicDocumentTypeDropdown />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item>
             <h6>Search Universe:</h6>
             <TopicUniverseGroup />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item>
             <h6 className={'text-black-50'}>Section:</h6>
             <TopicSectionGroup />
           </Grid>
@@ -91,7 +91,7 @@ const TopicFilters = props => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={2}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
