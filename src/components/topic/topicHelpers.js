@@ -69,14 +69,14 @@ export const createResultTitle = (rawTitle) => {
     return ''
   }
   // rawTitle is "sma_data_json.10-q.P1.I2.l4"
-  const actualTitle = rawTitle.replace('sma_data_json.', '')
+  const actualTitle = rawTitle.replace('sma_data_json.', '').toLowerCase()
   // actualTitle is 10-q.P1.I2.l4
   const actualTitleArr = actualTitle.split('.')
   let titleText = null
   for(let i = actualTitleArr.length; i > 0; i--){
     const titleCode = actualTitleArr.slice(0, i).join('.')
     if(!titleText) {
-      titleText = get(searchHeadingMapping, titleCode.toUpperCase(), null)
+      titleText = get(searchHeadingMapping, titleCode.toLowerCase(), null)
     }
   }
   if(!titleText) {
