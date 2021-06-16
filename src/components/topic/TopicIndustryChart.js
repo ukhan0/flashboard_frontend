@@ -77,7 +77,7 @@ export default function TopicIndustryChart(props) {
       handleIndustryClick(event.point.name)
     }
     setGraphOptions(newGraphOptions)
-  }, [searchResult])
+  }, [searchResult, handleIndustryClick])
   
   return <HighchartsReact highcharts={Highcharts} options={graphOptions} />;
 }
