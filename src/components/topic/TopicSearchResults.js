@@ -8,8 +8,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import { useSelector, useDispatch } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
 import { createResultTitle } from './topicHelpers'
+import { useHistory } from 'react-router-dom';
 import moment from 'moment'
 import { setSelectedCompanyName } from '../../reducers/Topic'
+import { setSelectedWatchlist } from '../../reducers/Watchlist'
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -22,12 +24,16 @@ const useStyles = makeStyles(_theme => ({
       paddingRight: 2,
       borderRadius: 4,
     }
+  },
+  clickable: {
+    cursor: 'pointer',
   }
 }));
 
 const TopicSearchResults = () => {
   const classes = useStyles();
   const resultsSection = useRef(null);
+  const history = useHistory();
   const scrollIntoViewRequired = useRef(false);
   const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
@@ -83,6 +89,11 @@ const TopicSearchResults = () => {
     scrollIntoViewRequired.current = false
     setSelectedCompanyIndex(index)
     dispatch(setSelectedCompanyName(null))
+  }
+
+  const goToSentimentScreen = (fileId) => {
+    dispatch(setSelectedWatchlist({recentId: fileId.toString().replace('9000', '')}));
+    history.push('/sentiment');
   }
 
   return (
@@ -142,7 +153,7 @@ const TopicSearchResults = () => {
                           <Grid item>
                             <small className="text-black-50 pt-1 pr-2">
                               Filing ID:{' '}
-                              <b className="text-first">{companyResult.summary_id}</b>
+                              <b className={clsx(classes.clickable, "text-first")} onClick={() => goToSentimentScreen(companyResult.summary_id)}>{companyResult.summary_id}</b>
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document ID:{' '}

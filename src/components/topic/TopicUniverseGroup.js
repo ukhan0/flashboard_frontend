@@ -67,7 +67,6 @@ const TopicUniverseGroup = () => {
           return universe.key === 'sector' ? (
             <Button
               ref={sectorDropdownRef}
-              variant="contained"
               key={`uni_${i}`}
               endIcon={<ArrowDropDownIcon />}
               onClick={() => handleUniverseSelection(universe.key)}
