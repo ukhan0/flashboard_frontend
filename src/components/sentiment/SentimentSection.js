@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
+import clsx  from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
 const useStyles = makeStyles(theme => ({
   content: {
@@ -14,6 +15,9 @@ const useStyles = makeStyles(theme => ({
   highlightHeading: {
     background:'#CCC',
     display:'inline'
+  },
+  upper:{
+    textTransform:'capitalize'
   }
 }));
 
@@ -70,14 +74,13 @@ const SentimentSection = props => {
                 style={{
                   paddingLeft: d.lvl * 4 + 4,
                   fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
-                  scrollMarginTop: '5em',
-                  textTransform:'capitalize'
+                  scrollMarginTop: '5em'
                 }}
                 id={createHash(d.path)}>
                 {d.content ? (
                   <p className={classes.content}>{d.content}</p>
                 ) : (
-                  <p className={selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null}>{d.prop}</p>
+                  <p className={clsx(classes.upper,selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null)}>{d.prop}</p>
                 )}
               </div>
               :
