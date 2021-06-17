@@ -105,7 +105,7 @@ const TopicHistoryChart = () => {
                 color: "#999999"
             },
             formatter: function() {
-              return Highcharts.dateFormat('%b %e', new Date(this.value));
+              return Highcharts.dateFormat('%b %Y', new Date(this.value));
             }
           
         }

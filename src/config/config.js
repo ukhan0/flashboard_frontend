@@ -3,7 +3,7 @@ const config = {
   // apiUrl: 'http://34.209.84.170/flashboard/public',
   comparisionSite: process.env.REACT_APP_COMPARISION_SITE_URL,
   agGridLicense: process.env.REACT_APP_AGGRID_LICENSE,
-  sentimentUrl:'http://engine-spirit.s-factors.com/dictionary/downloaddatajson',
+  sentimentUrl: process.env.REACT_APP_SENTIMENT_URL
 };
 
 export default config;

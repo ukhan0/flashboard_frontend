@@ -35,9 +35,11 @@ export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
 export const SET_SELECTED_UNIVERSE = 'TOPIC/SET_SELECTED_UNIVERSE';
 export const SET_SELECTED_SECTOR = 'TOPIC/SET_SELECTED_SECTOR';
-export const SET_SELECTED_INDUSTRIES ='TOPIC/SET_SELECTED_INDUSTRIES';
+export const SET_SELECTED_INDUSTRIES = 'TOPIC/SET_SELECTED_INDUSTRIES';
 export const SET_SELECTED_WATCHLIST_COMPANY_NAMES = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAMES';
-
+export const SET_SAVED_SEARCHES = 'TOPIC/SET_SAVED_SEARCHES';
+export const SET_SEARCH_LABEL = 'TOPIC/SET_SEARCHE_LABEL';
+export const SET_SNACKBAR_ACTIVE = 'TOPIC/SET_SNACKBAR_ACTIVE';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
   type: SET_SEARCH_BACKDROP,
@@ -212,6 +214,22 @@ export const setSelectedWatchlistCompanyNames = ( selectedWatchlistCompanyNames)
    selectedWatchlistCompanyNames
 })
 
+export const setSavedSearches = ( savedSearches) => ({
+  type: SET_SAVED_SEARCHES,
+  savedSearches
+})
+
+export const setSearchLabel = ( searchLabel) => ({
+  type: SET_SEARCH_LABEL,
+  searchLabel
+})
+
+export const setSnackBarActive = ( isSnackBarActive, snackBarSeverity, snackBarMessage) => ({
+  type: SET_SNACKBAR_ACTIVE,
+  isSnackBarActive,
+  snackBarSeverity,
+  snackBarMessage
+})
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -252,6 +270,11 @@ const getDefaultState = () => {
     showFilters: false,
     showUpdateButton: false,
     selectedCompanyName: null,
+    savedSearches:[],
+    searchLabel:null,
+    isSnackBarActive:false,
+    snackBarMessage:null,
+    snackBarSeverity:null
   };
 };
 
@@ -348,6 +371,12 @@ export default function reducer(
       return {...state, selectedIndustries: action.selectedIndustries};
     case SET_SELECTED_WATCHLIST_COMPANY_NAMES:
       return {...state, selectedWatchlistCompanyNames: action.selectedWatchlistCompanyNames};
+    case SET_SAVED_SEARCHES:
+      return {...state, savedSearches: action.savedSearches};
+    case SET_SEARCH_LABEL:
+      return {...state, searchLabel: action.searchLabel};
+    case SET_SNACKBAR_ACTIVE:
+      return {...state, isSnackBarActive: action.isSnackBarActive, snackBarSeverity: action.snackBarSeverity, snackBarMessage: action.snackBarMessage};
     default:
       break;
   }

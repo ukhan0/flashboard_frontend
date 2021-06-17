@@ -1,20 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
 import TopicSaveForm from './TopicSaveForm'
 import { setIsSaveDlgOpenAndError } from '../../reducers/Topic';
-import { handleSaveSearch, updateSaveSearch } from './topicActions'
-import { useSelector, useDispatch } from 'react-redux';
+import { handleSaveSearch } from './topicActions'
+import { useDispatch } from 'react-redux';
 
 export default function TopicSuggestionsDialog(props) {
-  const { selectedSearch, selectedTopic } = useSelector(state => state.Topic);
-  const [selectedTopicLocal, setSelectedTopicLocal] = useState(selectedTopic ? {label: selectedTopic.topicText, value: selectedTopic.topicID} : null)
-  
-  const isNewTopic = useRef(null)
+  const [searchLabel, setSearchLabel] = useState(null)
   const dispatch = useDispatch();
   
-  const handleTopicSelect = (topic, isNew) => {
-    setSelectedTopicLocal(topic)
-    isNewTopic.current = isNew
+  const handleTopicSelect = (topic) => {
+    setSearchLabel(topic)
   }
 
   return (
@@ -29,32 +25,20 @@ export default function TopicSuggestionsDialog(props) {
         }
         <TopicSaveForm 
           onTopicSelect={handleTopicSelect}
-          selectedTopicLocal={selectedTopicLocal}
+          searchLabel={searchLabel}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={() => dispatch(setIsSaveDlgOpenAndError(false, false))} color="primary">
           Cancel
         </Button>
-        {
-          selectedSearch ?
-            <>
-              {
-                selectedTopicLocal && selectedTopic && selectedTopicLocal.value === selectedTopic.topicID ?
-                  <Button onClick={() => dispatch(updateSaveSearch(selectedTopic.topicID, selectedSearch.searchId))} color="primary" disabled={selectedTopic === null}>
-                    { 'Update' }
-                  </Button>
-                  :
-                  null
-              }
-              <Button onClick={() => dispatch(handleSaveSearch(selectedTopicLocal, isNewTopic.current))} color="primary" disabled={selectedTopicLocal === null}>
-                { 'Save' }
-              </Button>
-            </>
-            :
-            <Button onClick={() => dispatch(handleSaveSearch(selectedTopicLocal, isNewTopic.current))} color="primary" disabled={selectedTopicLocal === null}>
+        { 
+          searchLabel ?
+            <Button onClick={() => dispatch(handleSaveSearch(searchLabel))} color="primary">
               { 'Save'}
-            </Button>
+            </Button> 
+            : 
+            null
         }
       </DialogActions>
     </Dialog>

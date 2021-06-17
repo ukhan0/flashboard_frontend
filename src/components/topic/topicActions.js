@@ -1,5 +1,5 @@
 import { getSearchCombinations, getSelectedSuggestionAsArr, removeDuplicateSuggestions } from './topicHelpers';
-import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setIsSearchDeleteErr, setSearchResults, setSearchError, setSearchStart, setTopicsList, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights, setIsSearchHighlightLoading, setIsSearchLoading } from '../../reducers/Topic';
+import { setSelectedSearch, setSearchBackdrop, setResultsPage, setSuggestionsWithSelections, setSuggestions, setSuggestionsIsLoading, setIsTopicDeleteErr, setSearchResults, setSearchError, setSearchStart, setIsSaveDlgOpenAndError, setIsSaveSearchError, setSearchResultHighlights, setSearchBackdropHighlights, setIsSearchHighlightLoading, setIsSearchLoading, setSavedSearches, setSnackBarActive, resetAllSearchParams } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
@@ -146,12 +146,13 @@ export const goToNextPage = () => {
 export const fetchTopicsList = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch) => {
-    const response = await axios.get(`${config.apiUrl}/api/topic/list/${user.id}`);
-    const topics = get(response, 'data.data', [])
-    if(topics && topics.length) {
-      dispatch(setTopicsList(topics));
+    const response = await axios.get(`${config.apiUrl}/api/search/list_searches/${user.id}`);
+    const savedSearch = get(response, 'data.data', [])
+    
+    if(savedSearch.length>0) {
+      dispatch(setSavedSearches(savedSearch));
     } else {
-      dispatch(setTopicsList([]));
+      dispatch(setSavedSearches([]));
     }
   }
 }
@@ -174,29 +175,27 @@ const createSearchSaveMiniPayload = (topicState) => {
   }
 }
 
-export const handleSaveSearch = (topic, isNewTopic) => {
+export const handleSaveSearch = (searchLabel) => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
     const { searchText } = getState().Topic
     const payload = {
       userId: user.id,
       searchText: searchText,
+      searchLabel:searchLabel,
       searchJSON: createSearchSaveMiniPayload(getState().Topic)
-    }
-    if(isNewTopic) {
-      payload.topicText = topic.value
-    } else {
-      payload.topicId = topic.value
     }
   
     try {
-      const response = await axios.post(`${config.apiUrl}/api/topic/save`, payload);
+      const response = await axios.post(`${config.apiUrl}/api/search/save_search`, payload);
       const responsePayload = get(response, 'data', null);
       if(responsePayload) {
         dispatch(setIsSaveDlgOpenAndError(false, false));
         dispatch(fetchTopicsList());
+        dispatch(setSnackBarActive(true,'success','Search Saved successfully'))
       } else {
         dispatch(setIsSaveSearchError(true))
+        dispatch(setSnackBarActive(true,'error','Something wroung'))
       }
     } catch (error) {
       dispatch(setIsSaveSearchError(true))
@@ -204,23 +203,26 @@ export const handleSaveSearch = (topic, isNewTopic) => {
   }
 }
 
-export const updateSaveSearch = (topicId, searchId) => {
+export const updateSaveSearch = (searchId) => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText } = getState().Topic
+    const { searchText, searchLabel } = getState().Topic
     const payload = {
       searchText: searchText,
+      searchLabel:searchLabel,
       searchJSON: createSearchSaveMiniPayload(getState().Topic)
     }
 
     try {
-      const response = await axios.put(`${config.apiUrl}/api/topic/${topicId}/update_search/${searchId}/${user.id}`, payload);
+      const response = await axios.put(`${config.apiUrl}/api/search/update_search/${searchId}/${user.id}`, payload);
       const isSuccess = get(response, 'data.data', null);
       if(isSuccess) {
         dispatch(setIsSaveDlgOpenAndError(false, false));
         dispatch(fetchTopicsList());
+        dispatch(setSnackBarActive(true,'success','Search updated successfully'))
       } else {
         dispatch(setIsSaveSearchError(true))
+        dispatch(setSnackBarActive(true,'error','Search Saved successfully'))
       }
     } catch (error) {
       dispatch(setIsSaveSearchError(true))
@@ -245,19 +247,21 @@ export const deleteTopic = (topicId) => {
   }
 }
 
-export const deleteSearch = (topicId, searchId) => {
+export const deleteSearch = (searchId) => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
     const { selectedSearch } = getState().Topic
-    const response = await axios.delete(`${config.apiUrl}/api/topic/${topicId}/search/${searchId}/${user.id}`);
+    const response = await axios.delete(`${config.apiUrl}/api/search/delete_search/${searchId}/${user.id}`);
     const isDeleted = get(response, 'data.data.status', false)
     if(isDeleted) {
       if(selectedSearch && selectedSearch.searchId === searchId) {
         dispatch(setSelectedSearch(null, null));
       }
+      dispatch(resetAllSearchParams());
+      dispatch(setSnackBarActive(true,'success','Search Deleted successfully'))
       dispatch(fetchTopicsList());
     } else {
-      dispatch(setIsSearchDeleteErr(true));
+      dispatch(setSnackBarActive(true,'error','Something wroung'))
     }
   }
 }

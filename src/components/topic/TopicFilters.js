@@ -7,9 +7,9 @@ import TopicUniverseGroup from './TopicUniverseGroup';
 import TopicSectionGroup from './TopicSectionGroup';
 import TopicUniverseSubFilters from './TopicUniverseSubFilters';
 import TopicRangePicker from './TopicRangePicker';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 import { forEach, concat } from 'lodash';
+import { updateSaveSearch } from './topicActions';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -39,8 +39,8 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = props => {
   const classes = useStyles();
-  const { searchText, isSearchError, selectedSuggestions, showUpdateButton } = useSelector(state => state.Topic);
-
+  const dispatch = useDispatch()
+  const { searchText, isSearchError, selectedSuggestions, showUpdateButton, selectedSearch } = useSelector(state => state.Topic);
   let selectedSuggestionsArr = [];
   forEach(selectedSuggestions, values => {
     selectedSuggestionsArr = concat(selectedSuggestionsArr, values);
@@ -105,7 +105,7 @@ const TopicFilters = props => {
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               {isSearchAllowed(searchText) ? (
                  showUpdateButton ?
-                 <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
+                 <Button variant="contained" color="secondary" onClick={()=>{dispatch(updateSaveSearch(selectedSearch.searchId))}}>
                    Update
                  </Button>
                  :
