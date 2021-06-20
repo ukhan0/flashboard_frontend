@@ -48,7 +48,7 @@ const SentimentSection = props => {
         visitOutlineObj(acc, obj[prop], lvl, path);
       } else {
         if (prop !== 'Headingtag' && prop !== 'Sectiontext') {
-          li = { path, lvl: lvl + 2, prop, content: obj[prop].replace('<br/>', '\n') };
+          li = { path, lvl: lvl + 2, prop, content: obj[prop].replaceAll('\n', '<br/>')};
           acc.push(li);
         }
       }
@@ -78,7 +78,7 @@ const SentimentSection = props => {
                 }}
                 id={createHash(d.path)}>
                 {d.content ? (
-                  <p className={classes.content}>{d.content}</p>
+                  <p className={classes.content} dangerouslySetInnerHTML = {{__html:d.content}}></p>
                 ) : (
                   <p className={clsx(classes.upper,selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null)}>{d.prop}</p>
                 )}
