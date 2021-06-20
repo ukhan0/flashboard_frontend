@@ -11,7 +11,8 @@ import {
   getColumnState,
   getFilteringState,
   checkIsFilterActive,
-  checkIsSortActive
+  checkIsSortActive,
+  syncCachedData,
 } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
@@ -22,7 +23,7 @@ import {
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import WatchlistConfirmationDialog from './ActionConfirmation';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
 import Snackbar from '../Snackbar';
@@ -39,8 +40,10 @@ const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
 };
 
-const Watchlist = props => {
+const Watchlist = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch()
+  const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count } = useSelector(state => state.Watchlist)
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
   const [isSortActive, setIsSortActive] = useState(checkIsSortActive());
@@ -55,20 +58,6 @@ const Watchlist = props => {
   const [errorSnackbar, setErrorSnackbar] = React.useState(false);
   const firstTimeLoad = useRef(true);
 
-  const {
-    selectedFileType,
-    selectedUniverse,
-    overwriteCheckBox,
-    selectedMetric,
-    setSelectedWatchlist,
-    setSidebarDisplay,
-    selectedSymbols,
-    setWatchlistSelectedSymbols,
-    setOverwriteCheckBox,
-    count,
-    setCount
-  } = props;
-
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
@@ -80,11 +69,13 @@ const Watchlist = props => {
       } else {
         setLoading(true);
         rawData = await watchlistApiCalls.getWatchlist(selectedUniverse, selectedFileType)
+        // update cached data of all (Complete) watchlist
+        syncCachedData(rawData)
       }
 
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
         setTopicDialogOpen(true);
-        setCount(count + 1);
+        dispatch(setCount(count + 1));
       }
       setWatchlistData(formatData(rawData));
       setLoading(false);
@@ -92,7 +83,7 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse, selectedFileType, count, setCount]);
+  }, [selectedUniverse, selectedFileType, count, dispatch]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -116,15 +107,15 @@ const Watchlist = props => {
       if (rowData.isTickerActive) {
         // remove ticker
         deleteTicker(rowData.ticker);
-        setSelectedWatchlist(rowData);
+        dispatch(setSelectedWatchlist(rowData));
       } else {
         // add ticker
         handleUpload(rowData.ticker);
-        setSelectedWatchlist(rowData);
+        dispatch(setSelectedWatchlist(rowData));
       }
     } else {
-      setSelectedWatchlist(rowData);
-      setSidebarDisplay(true);
+      dispatch(setSelectedWatchlist(rowData));
+      dispatch(setSidebarDisplay(true));
     }
   };
 
@@ -180,8 +171,8 @@ const Watchlist = props => {
         setTopicDialogOpen(false);
         const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
         debouncedSave();
-        setWatchlistSelectedSymbols([]);
-        setOverwriteCheckBox(false);
+        dispatch(setWatchlistSelectedSymbols([]));
+        dispatch(setOverwriteCheckBox(false));
         setAddTickersnackbar(true);
       } else {
         setTopicAddingError(true);
@@ -345,21 +336,4 @@ const Watchlist = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  selectedFileType: state.Watchlist.selectedFileType,
-  selectedUniverse: state.Watchlist.selectedUniverse,
-  selectedMetric: state.Watchlist.selectedMetric,
-  selectedSymbols: state.Watchlist.selectedSymbols,
-  overwriteCheckBox: state.Watchlist.overwriteCheckBox,
-  count: state.Watchlist.count
-});
-
-const mapDispatchToProps = dispatch => ({
-  setSelectedWatchlist: value => dispatch(setSelectedWatchlist(value)),
-  setSidebarDisplay: value => dispatch(setSidebarDisplay(value)),
-  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value)),
-  setOverwriteCheckBox: value => dispatch(setOverwriteCheckBox(value)),
-  setCount: value => dispatch(setCount(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Watchlist);
+export default Watchlist;

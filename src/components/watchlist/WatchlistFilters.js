@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, ButtonGroup, Button } from '@material-ui/core';
 import { setWatchlistFileType, setWatchlistUniverse, setWatchlistMetric } from '../../reducers/Watchlist';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 
 const fileTypesSelection = [
@@ -21,16 +21,10 @@ const metricsSelection = [
   // { label: 'FSS', key: 'fss' }
 ];
 
-const WatchlistFilters = props => {
-  const {
-    selectedFileType,
-    selectedUniverse,
-    selectedMetric,
-    setWatchlistFileType,
-    setWatchlistUniverse,
-    setWatchlistMetric,
-    completeDataLoaded
-  } = props;
+const WatchlistFilters = (props) => {
+
+  const { selectedFileType, selectedUniverse, selectedMetric, completeDataLoaded } = useSelector(state => state.Watchlist)
+  const dispatch = useDispatch()
 
   const canItbeUsed = universeType => {
     let flag = false;
@@ -49,7 +43,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`ft_${i}`}
-              onClick={() => setWatchlistFileType(fileType.key)}
+              onClick={() => dispatch(setWatchlistFileType(fileType.key))}
               variant={selectedFileType === fileType.key ? 'contained' : 'outlined'}>
               {fileType.label}
             </Button>
@@ -63,7 +57,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`uni_${i}`}
-              onClick={() => setWatchlistUniverse(universe.key)}
+              onClick={() => dispatch(setWatchlistUniverse(universe.key))}
               disabled={canItbeUsed(universe.key)}
               variant={selectedUniverse === universe.key ? 'contained' : 'outlined'}>
               {universe.label}
@@ -83,7 +77,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`met_${i}`}
-              onClick={() => setWatchlistMetric(metric.key)}
+              onClick={() => dispatch(setWatchlistMetric(metric.key))}
               variant={selectedMetric === metric.key ? 'contained' : 'outlined'}>
               {metric.label}
             </Button>
@@ -93,17 +87,5 @@ const WatchlistFilters = props => {
     </Grid>
   );
 };
-const mapStateToProps = state => ({
-  selectedFileType: state.Watchlist.selectedFileType,
-  selectedUniverse: state.Watchlist.selectedUniverse,
-  selectedMetric: state.Watchlist.selectedMetric,
-  completeDataLoaded: state.Watchlist.completeDataLoaded
-});
 
-const mapDispatchToProps = dispatch => ({
-  setWatchlistFileType: value => dispatch(setWatchlistFileType(value)),
-  setWatchlistUniverse: value => dispatch(setWatchlistUniverse(value)),
-  setWatchlistMetric: value => dispatch(setWatchlistMetric(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(WatchlistFilters);
+export default WatchlistFilters;

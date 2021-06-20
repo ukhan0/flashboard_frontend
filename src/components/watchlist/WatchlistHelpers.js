@@ -1,4 +1,5 @@
 import { forEach, get, isEmpty } from 'lodash';
+import cjson from 'compressed-json';
 
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
@@ -146,4 +147,17 @@ export const checkIsSortActive = () => {
     }
   }
   return activeSortColumns.length === 0 ? false : true;
+};
+
+export const syncCachedData = (newData) => {
+  let rawCompleteData = localStorage.getItem(`watchlist-data-all`);
+  if(!rawCompleteData) {
+    return
+  }
+  rawCompleteData = cjson.decompress.fromString(rawCompleteData);
+  newData.forEach(nd => {
+    const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker)
+    rawCompleteData[tickerIndex] = nd
+  })
+  localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(rawCompleteData));
 };
