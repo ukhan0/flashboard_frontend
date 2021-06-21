@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
 import { Avatar, Box } from '@material-ui/core';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+import config from '../../config/config'
 
-const SidebarUserbox = props => {
-  const { sidebarToggle, sidebarHover, selectedItem } = props;
-
+const SidebarUserbox = (props) => {
+  const { sidebarToggle, sidebarHover } = useSelector(state => state.ThemeOptions);
+  const { selectedItem } = useSelector(state => state.Watchlist);
+  
   return (
     <Fragment>
       <Box
@@ -14,7 +16,7 @@ const SidebarUserbox = props => {
         })}>
         <Avatar
           alt="Symbol"
-          src={`https://activetraders.socialmarketanalytics.com/images/stock_icons/${selectedItem.ticker}.png`}
+          src={`${config.companyLogoPath}${selectedItem.ticker}.png`}
           className="app-sidebar-userbox-avatar"
         />
         <Box className="app-sidebar-userbox-name">
@@ -28,10 +30,4 @@ const SidebarUserbox = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  sidebarToggle: state.ThemeOptions.sidebarToggle,
-  sidebarHover: state.ThemeOptions.sidebarHover,
-  selectedItem: state.Watchlist.selectedItem
-});
-
-export default connect(mapStateToProps)(SidebarUserbox);
+export default SidebarUserbox;

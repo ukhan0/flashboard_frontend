@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Fab } from '@material-ui/core'
+import { Button, Fab, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import SentimentCard from './SentimentCard';
 import SentimentSection from './SentimentSection';
@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getSentimentData } from './sentimentActions';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { useHistory } from 'react-router-dom';
+import SentimentCompanyDetails from './SentimentCompanyDetails'
 
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
@@ -55,6 +56,13 @@ const Sentiment = () => {
   return (
     <div ref={contentTopRef}>
       <SentimentCard />
+      { selectedItem ?
+        <Box m={2}>
+          <SentimentCompanyDetails />
+        </Box>
+        :
+        null
+      }
       <div className={classes.drawerOpener}>
         <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
           Table of contents

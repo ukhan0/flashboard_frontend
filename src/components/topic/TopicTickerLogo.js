@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar,Box} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import config from '../../config/config'
 
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
@@ -21,7 +22,7 @@ export default function TickerLogo(props) {
     <Box className={classes.tickerLogo}>
       <Avatar
         alt="-"
-        src={`https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.png`}
+        src={`${config.companyLogoPath}${props.value}.png`}
         className={classes.logo}
       />
     </Box>

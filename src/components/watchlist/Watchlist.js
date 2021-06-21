@@ -93,7 +93,8 @@ const Watchlist = (props) => {
         ...watchlist[selectedFileType][selectedMetric],
         last: selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q,
         recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
-        oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q']
+        oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
+        documentType: selectedFileType,
       };
       delete data['10k'];
       delete data['10q'];

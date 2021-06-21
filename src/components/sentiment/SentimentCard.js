@@ -270,38 +270,36 @@ const SentimentCard = () => {
   // const { cardGraphData } = useSelector(state => state.Sentiment);
   const classes = useStyles();
   return (
-    <div>
-      <Grid container spacing={2}>
-        {cardArray.map((data, index) => (
-          <Grid item xs={4} key={index}>
-            <Card className={classes.card}>
-              <Grid container>
-                <Grid item xs={6}>
-                  <CardContent>
-                    <p>{data.heading}</p>
-                    <h3>{`${data.content} (${data.num})`}</h3>
-                    {data.percent > 35 ? (
-                      <p style={{ color: 'green' }}>
-                        {data.percent + '%'}
-                        <ExpandMoreIcon></ExpandMoreIcon>
-                      </p>
-                    ) : (
-                      <p style={{ color: 'red' }}>
-                        {data.percent + '%'}
-                        <ExpandMoreIcon></ExpandMoreIcon>
-                      </p>
-                    )}
-                  </CardContent>
-                </Grid>
-                <Grid item xs={6} className={classes.chart}>
-                  <HighchartsReact highcharts={Highcharts} options={data.options} />
-                </Grid>
+    <Grid container spacing={2}>
+      {cardArray.map((data, index) => (
+        <Grid item xs={4} key={index}>
+          <Card className={classes.card}>
+            <Grid container>
+              <Grid item xs={6}>
+                <CardContent>
+                  <p>{data.heading}</p>
+                  <h3>{`${data.content} (${data.num})`}</h3>
+                  {data.percent > 35 ? (
+                    <p style={{ color: 'green' }}>
+                      {data.percent + '%'}
+                      <ExpandMoreIcon></ExpandMoreIcon>
+                    </p>
+                  ) : (
+                    <p style={{ color: 'red' }}>
+                      {data.percent + '%'}
+                      <ExpandMoreIcon></ExpandMoreIcon>
+                    </p>
+                  )}
+                </CardContent>
               </Grid>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+              <Grid item xs={6} className={classes.chart}>
+                <HighchartsReact highcharts={Highcharts} options={data.options} />
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

@@ -75,26 +75,28 @@ const formatFileTypeData = (fileTypeFields, rawData) => {
 };
 
 export const formatData = rawDataArr => {
-  return rawDataArr.map(rawData => {
-    return {
-      ticker: rawData.ticker,
-      companyName: rawData.b,
-      industry: rawData.d,
-      sector: rawData.c,
-      mktcap: rawData.e,
-      adv: rawData.f,
-      last10k: rawData.last_10k,
-      last10q: rawData.last_10q,
-      '10k': formatFileTypeData(fields10k, rawData),
-      '10q': formatFileTypeData(fields10q, rawData),
-      recentId10k: rawData['bu'],
-      recentId10q: rawData['bw'],
-      oldId10k: rawData['bv'],
-      oldId10q: rawData['bx'],
-      isTickerActive: get(rawData, 'isTickerActive', false)
-    };
-  });
+  return rawDataArr.map(rawData => formatComapnyData(rawData));
 };
+
+export const formatComapnyData = (rawData) => {
+  return {
+    ticker: rawData.ticker,
+    companyName: rawData.b,
+    industry: rawData.d,
+    sector: rawData.c,
+    mktcap: rawData.e,
+    adv: rawData.f,
+    last10k: rawData.last_10k,
+    last10q: rawData.last_10q,
+    '10k': formatFileTypeData(fields10k, rawData),
+    '10q': formatFileTypeData(fields10q, rawData),
+    recentId10k: rawData['bu'],
+    recentId10q: rawData['bw'],
+    oldId10k: rawData['bv'],
+    oldId10q: rawData['bx'],
+    isTickerActive: get(rawData, 'isTickerActive', false)
+  };
+}
 
 const stateKey = 'watchlist::state';
 const filteringModelKey = 'watchlist::filtering';

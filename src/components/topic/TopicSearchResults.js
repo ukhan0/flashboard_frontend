@@ -9,9 +9,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import TopicResultsSummary from './TopicResultsSummary'
 import { createResultTitle } from './topicHelpers'
 import { useHistory } from 'react-router-dom';
-import moment from 'moment'
 import { setSelectedCompanyName } from '../../reducers/Topic'
 import { setSelectedWatchlist } from '../../reducers/Watchlist'
+import cjson from 'compressed-json';
+import { formatComapnyData }  from '../watchlist/WatchlistHelpers'
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -91,8 +92,27 @@ const TopicSearchResults = () => {
     dispatch(setSelectedCompanyName(null))
   }
 
-  const goToSentimentScreen = (fileId) => {
-    dispatch(setSelectedWatchlist({recentId: fileId.toString().replace('9000', '')}));
+  const goToSentimentScreen = (companyDocumentResultData) => {
+    
+    const companyName = get(companyDocumentResultData, 'company_name', null)
+    const fileId = get(companyDocumentResultData, 'summary_id', null)
+    const documentType = get(companyDocumentResultData, 'document_type', null)
+    const documentDate = get(companyDocumentResultData, 'document_date', null)
+
+    const companiesListcompressed = localStorage.getItem(`watchlist-data-all`);
+    const companiesList = cjson.decompress.fromString(companiesListcompressed);
+    let company = companiesList.find(c => c.b === companyName)
+    const recentId = fileId.toString().replace('9000', '')
+
+    if(company) {
+      company = formatComapnyData(company)
+      company.recentId = recentId
+      company.documentType = documentType
+      company.last = documentDate
+      dispatch(setSelectedWatchlist(company));
+    } else {
+      dispatch(setSelectedWatchlist({recentId: recentId}));
+    }
     history.push('/sentiment');
   }
 
@@ -153,7 +173,7 @@ const TopicSearchResults = () => {
                           <Grid item>
                             <small className="text-black-50 pt-1 pr-2">
                               Filing ID:{' '}
-                              <b className={clsx(classes.clickable, "text-first")} onClick={() => goToSentimentScreen(companyResult.summary_id)}>{companyResult.summary_id}</b>
+                              <b className={clsx(classes.clickable, "text-first")} onClick={() => goToSentimentScreen(companyResult)}>{companyResult.summary_id}</b>
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document ID:{' '}
@@ -161,7 +181,7 @@ const TopicSearchResults = () => {
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document Date:{' '}
-                              <b className="text-first">{companyResult.document_date ? moment(new Date(companyResult.document_date).getTime()).format('MM/DD/YYYY') : null}</b>
+                              <b className="text-first">{companyResult.document_date ? (new Date(companyResult.document_date)).toLocaleDateString() : null}</b>
                             </small>
                           </Grid>
                         </Grid>
