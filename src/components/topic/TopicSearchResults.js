@@ -6,13 +6,13 @@ import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, g
 import clsx from 'clsx';
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector, useDispatch } from 'react-redux';
-import TopicResultsSummary from './TopicResultsSummary'
-import { createResultTitle } from './topicHelpers'
+import TopicResultsSummary from './TopicResultsSummary';
+import { createResultTitle } from './topicHelpers';
 import { useHistory } from 'react-router-dom';
-import { setSelectedCompanyName } from '../../reducers/Topic'
-import { setSelectedWatchlist } from '../../reducers/Watchlist'
+import { setSelectedCompanyName } from '../../reducers/Topic';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import cjson from 'compressed-json';
-import { formatComapnyData }  from '../watchlist/WatchlistHelpers'
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -23,11 +23,11 @@ const useStyles = makeStyles(_theme => ({
       backgroundColor: 'orange',
       paddingLeft: 2,
       paddingRight: 2,
-      borderRadius: 4,
+      borderRadius: 4
     }
   },
   clickable: {
-    cursor: 'pointer',
+    cursor: 'pointer'
   }
 }));
 
@@ -39,88 +39,92 @@ const TopicSearchResults = () => {
   const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
-  const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0)
-  const [companyResults, setCompanyResults] = useState([])
-  const [summaryByCompany, setSummaryByCompany] = useState([])
-  
+  const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0);
+  const [companyResults, setCompanyResults] = useState([]);
+  const [summaryByCompany, setSummaryByCompany] = useState([]);
 
   useEffect(() => {
-    const allComapnyResults = searchResultHighlights.map(srh => ({...srh}))
-    const companyNames = uniqBy(allComapnyResults, 'company_name')
-    const summaryByCompanyData = reverse(sortBy(companyNames.map(c => {
-      const companyResults = filter(allComapnyResults, cr => cr.company_name === c.company_name);
-      const documentDates = sortBy(uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date))));
-      const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
-      const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
-      const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
-      const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null
-      return {
-          companyName: c.company_name,
-          uniqTitleCodes,
-          uniqTitles,
-          resultsCount,
-          ticker: c.ticker,
-          documentDates,
-          latestDate,
-          results: allComapnyResults.filter(cr => cr.company_name === c.company_name)
-      }
-    }), ['latestDate']))
-    const companyResults = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'results', [])
-    setSummaryByCompany(summaryByCompanyData)
-    setCompanyResults(companyResults)
-  }, [searchResultHighlights, selectedCompanyIndex])
-  
-  const handleCompanySearch = (event) => {
-    setResultsCompanyFilterText(event.target.value)
-  }
+    const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
+    const companyNames = uniqBy(allComapnyResults, 'company_name');
+    const summaryByCompanyData = reverse(
+      sortBy(
+        companyNames.map(c => {
+          const companyResults = filter(allComapnyResults, cr => cr.company_name === c.company_name);
+          const documentDates = sortBy(
+            uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date)))
+          );
+          const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
+          const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
+          const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
+          const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null;
+          return {
+            companyName: c.company_name,
+            uniqTitleCodes,
+            uniqTitles,
+            resultsCount,
+            ticker: c.ticker,
+            documentDates,
+            latestDate,
+            results: allComapnyResults.filter(cr => cr.company_name === c.company_name)
+          };
+        }),
+        ['latestDate']
+      )
+    );
+    const companyResults = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'results', []);
+    setSummaryByCompany(summaryByCompanyData);
+    setCompanyResults(companyResults);
+  }, [searchResultHighlights, selectedCompanyIndex]);
+
+  const handleCompanySearch = event => {
+    setResultsCompanyFilterText(event.target.value);
+  };
 
   useEffect(() => {
-    if(!selectedCompanyName) {
-      return
+    if (!selectedCompanyName) {
+      return;
     }
-    const companyIndex = findIndex(summaryByCompany, cr => cr.companyName === selectedCompanyName)
-    if(companyIndex !== -1) {
-      resultsSection.current.scrollIntoView()
-      scrollIntoViewRequired.current = true
-      setSelectedCompanyIndex(companyIndex)
+    const companyIndex = findIndex(summaryByCompany, cr => cr.companyName === selectedCompanyName);
+    if (companyIndex !== -1) {
+      resultsSection.current.scrollIntoView();
+      scrollIntoViewRequired.current = true;
+      setSelectedCompanyIndex(companyIndex);
     }
-  }, [selectedCompanyName, summaryByCompany])
-  
-  const handleCompanySelect = (index) => {
-    scrollIntoViewRequired.current = false
-    setSelectedCompanyIndex(index)
-    dispatch(setSelectedCompanyName(null))
-  }
+  }, [selectedCompanyName, summaryByCompany]);
 
-  const goToSentimentScreen = (companyDocumentResultData) => {
-    
-    const companyName = get(companyDocumentResultData, 'company_name', null)
-    const fileId = get(companyDocumentResultData, 'summary_id', null)
-    const documentType = get(companyDocumentResultData, 'document_type', null)
-    const documentDate = get(companyDocumentResultData, 'document_date', null)
+  const handleCompanySelect = index => {
+    scrollIntoViewRequired.current = false;
+    setSelectedCompanyIndex(index);
+    dispatch(setSelectedCompanyName(null));
+  };
+
+  const goToSentimentScreen = companyDocumentResultData => {
+    const companyName = get(companyDocumentResultData, 'company_name', null);
+    const fileId = get(companyDocumentResultData, 'summary_id', null);
+    const documentType = get(companyDocumentResultData, 'document_type', null);
+    const documentDate = get(companyDocumentResultData, 'document_date', null);
 
     const companiesListcompressed = localStorage.getItem(`watchlist-data-all`);
     const companiesList = cjson.decompress.fromString(companiesListcompressed);
-    let company = companiesList.find(c => c.b === companyName)
-    const recentId = fileId.toString().replace('9000', '')
+    let company = companiesList.find(c => c.b === companyName);
+    const recentId = fileId.toString().replace('9000', '');
 
-    if(company) {
-      company = formatComapnyData(company)
-      company.recentId = recentId
-      company.documentType = documentType
-      company.last = documentDate
+    if (company) {
+      company = formatComapnyData(company);
+      company.recentId = recentId;
+      company.documentType = documentType;
+      company.last = documentDate;
       dispatch(setSelectedWatchlist(company));
     } else {
-      dispatch(setSelectedWatchlist({recentId: recentId}));
+      dispatch(setSelectedWatchlist({ recentId: recentId }));
     }
     history.push('/sentiment');
-  }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }} ref={resultsSection}>
-      <div style={{width: '35%'}}>
-        <div
-          className={clsx( 'bg-white border-right', { 'layout-sidebar-open': false })}>
+      <div style={{ width: '35%' }}>
+        <div className={clsx('bg-white border-right', { 'layout-sidebar-open': false })}>
           <div className="p-3">
             <TextField
               fullWidth
@@ -142,7 +146,7 @@ const TopicSearchResults = () => {
           <PerfectScrollbar>
             <TopicResultsSummary
               summaryByCompany={summaryByCompany}
-              onCompanySelect={(index) => handleCompanySelect(index)}
+              onCompanySelect={index => handleCompanySelect(index)}
               selectedCompanyIndex={selectedCompanyIndex}
               resultsCompanyFilterText={resultsCompanyFilterText}
               scrollIntoViewRequired={scrollIntoViewRequired.current}
@@ -150,61 +154,62 @@ const TopicSearchResults = () => {
           </PerfectScrollbar>
         </div>
       </div>
-      <div style={{width: '65%'}}>
+      <div style={{ width: '65%' }}>
         <div className="bg-white p-0" style={{ height: 733 }}>
           <PerfectScrollbar className="mb-4 p-4">
-            {
-              (isSearchLoading && isEmpty(searchResultHighlights)) ?
-                <h4 className="font-size-lg">{' '}</h4>
-              :
-                companyResults.map((companyResult, index) => {
-                  return (
-                    <Fragment key={`rs${index}`}>
-                      <div className={classes.resultSection}>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="space-between"
-                          alignItems="flex-start"
-                        >
-                          <Grid item>
-                            <h3 className="font-size-lg mb-3 font-weight-bold">{companyResult.document_type}</h3>
-                          </Grid>
-                          <Grid item>
-                            <small className="text-black-50 pt-1 pr-2">
-                              Filing ID:{' '}
-                              <b className={clsx(classes.clickable, "text-first")} onClick={() => goToSentimentScreen(companyResult)}>{companyResult.summary_id}</b>
-                            </small>
-                            <small className="text-black-50 pt-1 pr-2">
-                              Document ID:{' '}
-                              <b className="text-first">{companyResult.document_id}</b>
-                            </small>
-                            <small className="text-black-50 pt-1 pr-2">
-                              Document Date:{' '}
-                              <b className="text-first">{companyResult.document_date ? (new Date(companyResult.document_date)).toLocaleDateString() : null}</b>
-                            </small>
-                          </Grid>
+            {isSearchLoading && isEmpty(searchResultHighlights) ? (
+              <h4 className="font-size-lg"> </h4>
+            ) : (
+              companyResults.map((companyResult, index) => {
+                return (
+                  <Fragment key={`rs${index}`}>
+                    <div className={classes.resultSection}>
+                      <Grid container direction="row" justify="space-between" alignItems="flex-start">
+                        <Grid item>
+                          <h3 className="font-size-lg mb-3 font-weight-bold">{companyResult.document_type}</h3>
                         </Grid>
-                        {
-                          companyResult.results.map((result, index) => {
-                            return (
-                              <div key={`rst${index}`}>
-                                <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
-                                {
-                                  result.content.map((content, index) => <p key={`rstc${index}`} className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')} dangerouslySetInnerHTML={{__html: content}}></p>)
-                                }
-                              </div>
-                            )
-                          })
-                        }
-                      </div>
-                      <Divider />
-                      <div className="mb-2"></div>
-                    </Fragment>
-
-                  )
-                })
-            }
+                        <Grid item>
+                          <small className="text-black-50 pt-1 pr-2">
+                            Filing ID:{' '}
+                            <b
+                              className={clsx(classes.clickable, 'text-first')}
+                              onClick={() => goToSentimentScreen(companyResult)}>
+                              {companyResult.summary_id}
+                            </b>
+                          </small>
+                          <small className="text-black-50 pt-1 pr-2">
+                            Document ID: <b className="text-first">{companyResult.document_id}</b>
+                          </small>
+                          <small className="text-black-50 pt-1 pr-2">
+                            Document Date:{' '}
+                            <b className="text-first">
+                              {companyResult.document_date
+                                ? new Date(companyResult.document_date).toLocaleDateString()
+                                : null}
+                            </b>
+                          </small>
+                        </Grid>
+                      </Grid>
+                      {companyResult.results.map((result, index) => {
+                        return (
+                          <div key={`rst${index}`}>
+                            <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                            {result.content.map((content, index) => (
+                              <p
+                                key={`rstc${index}`}
+                                className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')}
+                                dangerouslySetInnerHTML={{ __html: content }}></p>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <Divider />
+                    <div className="mb-2"></div>
+                  </Fragment>
+                );
+              })
+            )}
           </PerfectScrollbar>
         </div>
       </div>

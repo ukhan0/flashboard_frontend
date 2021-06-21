@@ -1,4 +1,4 @@
-import React, { useEffect,  useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';
 import { get } from 'lodash';
@@ -11,7 +11,7 @@ import {
   cancelExistingHightlightsCalls,
   setShowComposeNew,
   setShowUpdateButton,
-  setSearchLabel,
+  setSearchLabel
 } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: 5
   },
   editIcon: {
-    fontSize: '1.5rem',
+    fontSize: '1.5rem'
   },
   editButton: {
     marginRight: '10px',
@@ -56,15 +56,15 @@ export default function TopicSearchHistory(props) {
     dispatch(fetchTopicsList());
   }, [dispatch]);
 
-  const setSearchParamsEdit = (searchObj) => {
+  const setSearchParamsEdit = searchObj => {
     dispatch(setSelectedSearch(searchObj));
     dispatch(setSuggestions({}));
     dispatch(setAllSearchParams(searchObj));
-    dispatch(setSearchLabel(searchObj.searchLabel))
+    dispatch(setSearchLabel(searchObj.searchLabel));
   };
 
   const setSearchParams = useCallback(
-    (searchObj) => {
+    searchObj => {
       dispatch(setSelectedSearch(searchObj));
       dispatch(setSuggestions({}));
       dispatch(setAllSearchParams(searchObj));
@@ -92,51 +92,47 @@ export default function TopicSearchHistory(props) {
       // set first search of first topic as default search
       const firstSearch = get(savedSearches, '[0]', null);
       if (firstSearch) {
-          setSearchParams(firstSearch);
-        }
+        setSearchParams(firstSearch);
+      }
     }
   }, [savedSearches, setSearchParams]);
 
-
   return (
     <>
-    <List component="nav" className={classes.root}>
-      {savedSearches.map((s, index) => {
-        return (
-          <List component="div" disablePadding key={`lil${index}`}>
-            <ListItem
-              button
-              className={classes.nested}
-              selected={selectedSearch && selectedSearch.searchId === s.searchId}
-              onClick={() => setSearchParams(s)}>
-              <ListItemText primary={s.searchLabel} />
-              <ListItemSecondaryAction>
-                <IconButton
-                  aria-label="comments"
-                  size="small"
-                  onClick={() => {
-                    dispatch(setShowUpdateButton(true));
-                    dispatch(setShowComposeNew(true));
-                    setSearchParamsEdit(s);
-                    
-                  }}>
-                  <EditIcon className={classes.editIcon} />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="comments"
-                  size="small"
-                  onClick={() => dispatch(deleteSearch(s.searchId))}>
-                  <CloseIcon className={classes.deleteIcon} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-        );
-      })}
-    </List>
-    
-
+      <List component="nav" className={classes.root}>
+        {savedSearches.map((s, index) => {
+          return (
+            <List component="div" disablePadding key={`lil${index}`}>
+              <ListItem
+                button
+                className={classes.nested}
+                selected={selectedSearch && selectedSearch.searchId === s.searchId}
+                onClick={() => setSearchParams(s)}>
+                <ListItemText primary={s.searchLabel} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    aria-label="comments"
+                    size="small"
+                    onClick={() => {
+                      dispatch(setShowUpdateButton(true));
+                      dispatch(setShowComposeNew(true));
+                      setSearchParamsEdit(s);
+                    }}>
+                    <EditIcon className={classes.editIcon} />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="comments"
+                    size="small"
+                    onClick={() => dispatch(deleteSearch(s.searchId))}>
+                    <CloseIcon className={classes.deleteIcon} />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+          );
+        })}
+      </List>
     </>
   );
 }

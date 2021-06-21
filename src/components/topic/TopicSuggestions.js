@@ -59,7 +59,7 @@ export default function TopicSuggestionsDialog(props) {
       );
     } else {
       forEach(suggestionsObj, (values, keyWord) => {
-        let filteredData = values.filter(item => (item.indexOf('https') === -1 && item.indexOf(')') === -1));
+        let filteredData = values.filter(item => item.indexOf('https') === -1 && item.indexOf(')') === -1);
         content.push(
           <Fragment key={keyWord}>
             <Grid item xs={12}>

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
-import clsx  from 'clsx';
+import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
 const useStyles = makeStyles(theme => ({
   content: {
@@ -13,11 +13,11 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   highlightHeading: {
-    background:'#CCC',
-    display:'inline'
+    background: '#CCC',
+    display: 'inline'
   },
-  upper:{
-    textTransform:'capitalize'
+  upper: {
+    textTransform: 'capitalize'
   }
 }));
 
@@ -48,7 +48,7 @@ const SentimentSection = props => {
         visitOutlineObj(acc, obj[prop], lvl, path);
       } else {
         if (prop !== 'Headingtag' && prop !== 'Sectiontext') {
-          li = { path, lvl: lvl + 2, prop, content: obj[prop].replaceAll('\n', '<br/>')};
+          li = { path, lvl: lvl + 2, prop, content: obj[prop].replaceAll('\n', '<br/>') };
           acc.push(li);
         }
       }
@@ -67,25 +67,28 @@ const SentimentSection = props => {
         </div>
       ) : (
         displayData.map((d, index) => {
-          return (
-            index !== 0 ?
-              <div
-                key={index}
-                style={{
-                  paddingLeft: d.lvl * 4 + 4,
-                  fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
-                  scrollMarginTop: '5em'
-                }}
-                id={createHash(d.path)}>
-                {d.content ? (
-                  <p className={classes.content} dangerouslySetInnerHTML = {{__html:d.content}}></p>
-                ) : (
-                  <p className={clsx(classes.upper,selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null)}>{d.prop}</p>
-                )}
-              </div>
-              :
-              null
-            ) 
+          return index !== 0 ? (
+            <div
+              key={index}
+              style={{
+                paddingLeft: d.lvl * 4 + 4,
+                fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
+                scrollMarginTop: '5em'
+              }}
+              id={createHash(d.path)}>
+              {d.content ? (
+                <p className={classes.content} dangerouslySetInnerHTML={{ __html: d.content }}></p>
+              ) : (
+                <p
+                  className={clsx(
+                    classes.upper,
+                    selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
+                  )}>
+                  {d.prop}
+                </p>
+              )}
+            </div>
+          ) : null;
         })
       )}
     </div>

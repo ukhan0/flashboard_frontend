@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import TopicWatchlistDropDown from './TopicWatchlistDropDown';
 import TopicCustomSearch from './TopicCustomSearch';
 
-
 const TopicUniverseSubFilters = props => {
   const { selectedUniverse } = useSelector(state => state.Topic);
 
@@ -13,14 +12,10 @@ const TopicUniverseSubFilters = props => {
       component = null;
       break;
     case 'watchlist':
-      component = (
-        <TopicWatchlistDropDown />
-      );
+      component = <TopicWatchlistDropDown />;
       break;
     case 'custom':
-      component = (
-        <TopicCustomSearch/>
-      );
+      component = <TopicCustomSearch />;
       break;
     default:
       component = null;

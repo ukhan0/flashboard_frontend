@@ -2,13 +2,13 @@ import React, { Fragment, useRef, useEffect } from 'react';
 import { List, ListItem, Divider, ListItemText, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { goToNextPage } from './topicActions';
-import { setSelectedCompanyName } from '../../reducers/Topic'
+import { setSelectedCompanyName } from '../../reducers/Topic';
 import { isEmpty } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import TickerLogo from './TopicTickerLogo';
 import { BeatLoader } from 'react-spinners';
 import moment from 'moment';
-import { createHash } from '../../utils/helpers'
+import { createHash } from '../../utils/helpers';
 
 const useStyles = makeStyles(_theme => ({
   textAlignCenter: {
@@ -19,8 +19,8 @@ const useStyles = makeStyles(_theme => ({
     textAlign: 'center'
   },
   listItemContent: {
-    width: '100%',
-  },
+    width: '100%'
+  }
 }));
 
 const TopicSearchResults = props => {
@@ -41,14 +41,14 @@ const TopicSearchResults = props => {
   );
 
   useEffect(() => {
-    if(selectedCompanyName && props.scrollIntoViewRequired) {
+    if (selectedCompanyName && props.scrollIntoViewRequired) {
       setTimeout(() => {
-        const companyRef = document.getElementById(createHash(selectedCompanyName))
-        if(companyRef) {
-          companyRef.scrollIntoView()
-          dispatch(setSelectedCompanyName(null))
+        const companyRef = document.getElementById(createHash(selectedCompanyName));
+        if (companyRef) {
+          companyRef.scrollIntoView();
+          dispatch(setSelectedCompanyName(null));
         }
-      }, 1000)
+      }, 1000);
     }
   }, [dispatch, props.scrollIntoViewRequired, selectedCompanyName]);
 
@@ -57,7 +57,11 @@ const TopicSearchResults = props => {
       {filteredSummaryByCompany.map((summary, index) => {
         return (
           <Fragment key={`sbc${index}`}>
-            <ListItem button selected={index === props.selectedCompanyIndex} onClick={() => props.onCompanySelect(index)} id={createHash(summary.companyName)}>
+            <ListItem
+              button
+              selected={index === props.selectedCompanyIndex}
+              onClick={() => props.onCompanySelect(index)}
+              id={createHash(summary.companyName)}>
               <div className={classes.listItemContent}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Grid item>
@@ -70,8 +74,10 @@ const TopicSearchResults = props => {
                   </Grid>
                 </Grid>
                 <div className="d-flex justify-content-between text-black-50">
-                  <div>{ summary.resultsCount } {'matches  '}</div>
-                  <div>{ summary.latestDate ? moment(summary.latestDate).format('MM/DD/YYYY') : null }</div>
+                  <div>
+                    {summary.resultsCount} {'matches  '}
+                  </div>
+                  <div>{summary.latestDate ? moment(summary.latestDate).format('MM/DD/YYYY') : null}</div>
                 </div>
                 {summary.uniqTitles.map((title, index) => (
                   <p key={`sbct${index}`} className="font-size-xs mb-0">

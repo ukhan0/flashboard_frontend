@@ -55,10 +55,10 @@ const TopicUniverseGroup = () => {
     dispatch(setSelectedUniverse(universeKey));
   };
 
-  const handleSectorSelection = (sector) => {
+  const handleSectorSelection = sector => {
     dispatch(setSelectedIndustries([]));
     dispatch(setSelectedSector(sector));
-  }
+  };
 
   return (
     <>

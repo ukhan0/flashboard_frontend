@@ -28,18 +28,18 @@ class WatchListService {
     this.agGridAPI.sizeColumnsToFit();
   };
 
-  clearSort = (sort) => {
+  clearSort = sort => {
     this.agGridColumnAPI.applyColumnState({
       defaultState: { sort: null }
     });
     this.agGridColumnAPI.applyColumnState({
       state: [
-          {
-              colId: 'last',
-              sort: sort
-          }
+        {
+          colId: 'last',
+          sort: sort
+        }
       ]
-  });
+    });
   };
 
   clearFilter = () => {

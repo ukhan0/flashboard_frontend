@@ -1,8 +1,8 @@
 import React from 'react';
 import Dialog from '../shared/dialog';
 import TopicSuggestions from './TopicSuggestions';
-import { makeStyles } from '@material-ui/core/styles'
-import { Button  } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   closeButton: {

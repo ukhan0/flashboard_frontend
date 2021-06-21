@@ -25,8 +25,7 @@ const baseGraphOptions = {
         format: '{point.name}'
       },
       events: {
-        click: function() {
-        }
+        click: function() {}
       }
     }
   },
@@ -44,13 +43,16 @@ const baseGraphOptions = {
 
 export default function TopicIndustryChart(props) {
   const { searchResult, selectedIndustries } = useSelector(state => state.Topic);
-  const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions))
-  const dispatch = useDispatch()
-  
-  const handleIndustryClick = useCallback((industryName) => {
-    dispatch(setSelectedIndustries([...selectedIndustries, industryName]))
-    props.handleIndustryClick()
-  }, [dispatch, props, selectedIndustries])
+  const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
+  const dispatch = useDispatch();
+
+  const handleIndustryClick = useCallback(
+    industryName => {
+      dispatch(setSelectedIndustries([...selectedIndustries, industryName]));
+      props.handleIndustryClick();
+    },
+    [dispatch, props, selectedIndustries]
+  );
 
   useEffect(() => {
     const rawData = get(searchResult, 'buckets.groupBySectorIndustry', []);
@@ -71,13 +73,13 @@ export default function TopicIndustryChart(props) {
         });
       }
     });
-    const newGraphOptions = cloneDeep(baseGraphOptions)
-    newGraphOptions.series[0].data = industryData
-    newGraphOptions.plotOptions.series.events.click = (event) => {
-      handleIndustryClick(event.point.name)
-    }
-    setGraphOptions(newGraphOptions)
-  }, [searchResult, handleIndustryClick])
-  
+    const newGraphOptions = cloneDeep(baseGraphOptions);
+    newGraphOptions.series[0].data = industryData;
+    newGraphOptions.plotOptions.series.events.click = event => {
+      handleIndustryClick(event.point.name);
+    };
+    setGraphOptions(newGraphOptions);
+  }, [searchResult, handleIndustryClick]);
+
   return <HighchartsReact highcharts={Highcharts} options={graphOptions} />;
 }

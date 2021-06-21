@@ -1,35 +1,35 @@
 import { get, forEach, uniq, cloneDeep } from 'lodash';
-import searchHeadingMapping from '../../config/searchHeadingMapping'
+import searchHeadingMapping from '../../config/searchHeadingMapping';
 
 export function getSearchCombinations(suggestions) {
   // remove special character from search text
   const combinations = createCombinations(cloneDeep(suggestions), Object.keys(suggestions).length);
-  const quotedCombinations = combinations.map(c => `'${c}'`)
+  const quotedCombinations = combinations.map(c => `'${c}'`);
   return quotedCombinations.join(' OR ');
 }
 
 function getSearchKeyWords(searchText) {
-  let cleanSearchText = searchText.replace(/[^a-zA-Z ]/g, "");
-  return cleanSearchText.split(' ').filter(c => c)
+  let cleanSearchText = searchText.replace(/[^a-zA-Z ]/g, '');
+  return cleanSearchText.split(' ').filter(c => c);
 }
 
 export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
-  const suggestionsArr = []
-  let suggestionsSingleArr = []
-  const suggestionsObj = cloneDeep(suggestionsObjOrignal)
-  const searchKeyWords = getSearchKeyWords(searchText)
-  for(const searchKeyWord of searchKeyWords) {
-    if(suggestionsObj[searchKeyWord]){
-      suggestionsObj[searchKeyWord] = [searchKeyWord, ...suggestionsObj[searchKeyWord]]
+  const suggestionsArr = [];
+  let suggestionsSingleArr = [];
+  const suggestionsObj = cloneDeep(suggestionsObjOrignal);
+  const searchKeyWords = getSearchKeyWords(searchText);
+  for (const searchKeyWord of searchKeyWords) {
+    if (suggestionsObj[searchKeyWord]) {
+      suggestionsObj[searchKeyWord] = [searchKeyWord, ...suggestionsObj[searchKeyWord]];
     }
   }
-  forEach(suggestionsObj, (values) => {
-    if(values.length) {
-      suggestionsArr.push(uniq([...values]))
-      suggestionsSingleArr = [...suggestionsSingleArr, ...values]
+  forEach(suggestionsObj, values => {
+    if (values.length) {
+      suggestionsArr.push(uniq([...values]));
+      suggestionsSingleArr = [...suggestionsSingleArr, ...values];
     }
-  })
-  return {suggestionsArr, suggestionsSingleArr}
+  });
+  return { suggestionsArr, suggestionsSingleArr };
 }
 
 /*
@@ -64,41 +64,41 @@ function createCombinations(suggestions, length) {
   return result;
 }
 
-export const createResultTitle = (rawTitle) => {
-  if(!rawTitle) {
-    return ''
+export const createResultTitle = rawTitle => {
+  if (!rawTitle) {
+    return '';
   }
   // rawTitle is "sma_data_json.10-q.P1.I2.l4"
-  const actualTitle = rawTitle.replace('sma_data_json.', '').toLowerCase()
+  const actualTitle = rawTitle.replace('sma_data_json.', '').toLowerCase();
   // actualTitle is 10-q.P1.I2.l4
-  const actualTitleArr = actualTitle.split('.')
-  let titleText = null
-  for(let i = actualTitleArr.length; i > 0; i--){
-    const titleCode = actualTitleArr.slice(0, i).join('.')
-    if(!titleText) {
-      titleText = get(searchHeadingMapping, titleCode.toLowerCase(), null)
+  const actualTitleArr = actualTitle.split('.');
+  let titleText = null;
+  for (let i = actualTitleArr.length; i > 0; i--) {
+    const titleCode = actualTitleArr.slice(0, i).join('.');
+    if (!titleText) {
+      titleText = get(searchHeadingMapping, titleCode.toLowerCase(), null);
     }
   }
-  if(!titleText) {
-    titleText = actualTitle
-  } 
-  return titleText
-}
+  if (!titleText) {
+    titleText = actualTitle;
+  }
+  return titleText;
+};
 
-export const removeDuplicateSuggestions = (suggestionsObj) => {
-  let suggestionsArr = []
-  const cleanSuggestionsObj = {}
+export const removeDuplicateSuggestions = suggestionsObj => {
+  let suggestionsArr = [];
+  const cleanSuggestionsObj = {};
   forEach(suggestionsObj, (values, keyWord) => {
-    const uniqValues = uniq(values)  
+    const uniqValues = uniq(values);
     uniqValues.forEach(value => {
-      if(!suggestionsArr.includes(value)){
-        if(!cleanSuggestionsObj[keyWord]) {
-          cleanSuggestionsObj[keyWord] = []
+      if (!suggestionsArr.includes(value)) {
+        if (!cleanSuggestionsObj[keyWord]) {
+          cleanSuggestionsObj[keyWord] = [];
         }
-        cleanSuggestionsObj[keyWord].push(value)
-        suggestionsArr.push(value)
+        cleanSuggestionsObj[keyWord].push(value);
+        suggestionsArr.push(value);
       }
-    })
-  })
-  return cleanSuggestionsObj
-}
+    });
+  });
+  return cleanSuggestionsObj;
+};

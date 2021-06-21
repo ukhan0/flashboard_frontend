@@ -78,7 +78,7 @@ export const formatData = rawDataArr => {
   return rawDataArr.map(rawData => formatComapnyData(rawData));
 };
 
-export const formatComapnyData = (rawData) => {
+export const formatComapnyData = rawData => {
   return {
     ticker: rawData.ticker,
     companyName: rawData.b,
@@ -96,7 +96,7 @@ export const formatComapnyData = (rawData) => {
     oldId10q: rawData['bx'],
     isTickerActive: get(rawData, 'isTickerActive', false)
   };
-}
+};
 
 const stateKey = 'watchlist::state';
 const filteringModelKey = 'watchlist::filtering';
@@ -151,15 +151,15 @@ export const checkIsSortActive = () => {
   return activeSortColumns.length === 0 ? false : true;
 };
 
-export const syncCachedData = (newData) => {
+export const syncCachedData = newData => {
   let rawCompleteData = localStorage.getItem(`watchlist-data-all`);
-  if(!rawCompleteData) {
-    return
+  if (!rawCompleteData) {
+    return;
   }
   rawCompleteData = cjson.decompress.fromString(rawCompleteData);
   newData.forEach(nd => {
-    const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker)
-    rawCompleteData[tickerIndex] = nd
-  })
+    const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+    rawCompleteData[tickerIndex] = nd;
+  });
   localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(rawCompleteData));
 };

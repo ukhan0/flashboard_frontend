@@ -6,30 +6,29 @@ import { useSelector, useDispatch } from 'react-redux';
 import { get, round, isEmpty, uniq } from 'lodash';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
-import { setSelectedCompanyName } from '../../reducers/Topic'
-import { performTopicSearchHighlights } from './topicActions'
-
+import { setSelectedCompanyName } from '../../reducers/Topic';
+import { performTopicSearchHighlights } from './topicActions';
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
-    textAlign: 'right',
+    textAlign: 'right'
   },
   loadingTd: {
-    textAlign: 'center',
+    textAlign: 'center'
   },
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: fade(theme.palette.common.white, 0.25)
     },
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
+      width: 'auto'
+    }
   },
   searchIconContainer: {
     padding: theme.spacing(0, 2),
@@ -38,14 +37,14 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   searchIcon: {
-    fontSize: '.8rem',
+    fontSize: '.8rem'
   },
   inputRoot: {
     color: 'inherit',
-    borderBottom: '1px solid #ece1e1',
+    borderBottom: '1px solid #ece1e1'
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -56,52 +55,52 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: '12ch',
       '&:focus': {
-        width: '20ch',
-      },
-    },
+        width: '20ch'
+      }
+    }
   },
   titleheader: {
     paddingTop: '.3rem',
-    paddingBottom: '.3rem',
+    paddingBottom: '.3rem'
   },
   contentSection: {
-    height: 300,
+    height: 300
   },
   companyRow: {
     '&:hover': {
       backgroundColor: '#f3ebf2',
       cursor: 'pointer'
-    },
+    }
   }
 }));
 
 export default function TopicCompantResultsTable() {
-  const classes = useStyles()
+  const classes = useStyles();
   const { searchResult, isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-  const [ filterText, setFilterText ] = useState('');
-  const results = get(searchResult, 'buckets.companyNames', [])
-  const totalHits = results.reduce((accumulator, currentValue) => accumulator + currentValue.doc_count, 0 )
+  const [filterText, setFilterText] = useState('');
+  const results = get(searchResult, 'buckets.companyNames', []);
+  const totalHits = results.reduce((accumulator, currentValue) => accumulator + currentValue.doc_count, 0);
   const computedResults = results.map(result => {
     return {
       ...result,
-      percentage: round(( result.doc_count / totalHits ) * 100)
-    }
-  })
+      percentage: round((result.doc_count / totalHits) * 100)
+    };
+  });
 
-  const handleSearchTextChange = (event) => {
-    setFilterText(event.target.value)
-  }
-  const handleCompanyClick = (companyName) => {
+  const handleSearchTextChange = event => {
+    setFilterText(event.target.value);
+  };
+  const handleCompanyClick = companyName => {
     // check if data for this company exists or not
-    const uniqCompanyNames = uniq(searchResultHighlights.map(sr => sr.company_name).filter(n => n))
-    const companyIndex = uniqCompanyNames.indexOf(companyName)
-    if(companyIndex === -1) {
+    const uniqCompanyNames = uniq(searchResultHighlights.map(sr => sr.company_name).filter(n => n));
+    const companyIndex = uniqCompanyNames.indexOf(companyName);
+    if (companyIndex === -1) {
       // get data for this company
-      dispatch(performTopicSearchHighlights(true, companyName))
+      dispatch(performTopicSearchHighlights(true, companyName));
     }
-    dispatch(setSelectedCompanyName(companyName))
-  }
+    dispatch(setSelectedCompanyName(companyName));
+  };
 
   return (
     <>
@@ -116,14 +115,14 @@ export default function TopicCompantResultsTable() {
               placeholder="Search..."
               classes={{
                 root: classes.inputRoot,
-                input: classes.inputInput,
+                input: classes.inputInput
               }}
               inputProps={{ 'aria-label': 'search' }}
               onChange={handleSearchTextChange}
             />
           </div>
         </div>
-        
+
         <PerfectScrollbar className={clsx('mb-2', classes.contentSection)}>
           <div className="table-responsive">
             <table className="table mb-0">
@@ -135,35 +134,40 @@ export default function TopicCompantResultsTable() {
                 </tr>
               </thead>
               <tbody>
-                {
-                  isSearchLoading && isEmpty(searchResult) ? 
-                    <tr>
-                      <td colSpan={3} className={classes.loadingTd}>Loading...</td>
-                    </tr>
-                    :
-                    computedResults.filter(c => c.key.toLowerCase().includes(filterText.toLowerCase())).map((result, index) => {
+                {isSearchLoading && isEmpty(searchResult) ? (
+                  <tr>
+                    <td colSpan={3} className={classes.loadingTd}>
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  computedResults
+                    .filter(c => c.key.toLowerCase().includes(filterText.toLowerCase()))
+                    .map((result, index) => {
                       return (
-                        <tr key={`r${index}`} className={classes.companyRow} onClick={() => handleCompanyClick(result.key)}>
+                        <tr
+                          key={`r${index}`}
+                          className={classes.companyRow}
+                          onClick={() => handleCompanyClick(result.key)}>
                           <td>
                             <div className="align-box-row">
                               <span>{result.key}</span>
                             </div>
                           </td>
                           <td className={classes.rightAlign}>
-                              <small className="text-black-50 d-block">{result.doc_count}</small>
+                            <small className="text-black-50 d-block">{result.doc_count}</small>
                           </td>
                           <td className={classes.rightAlign}>
-                              <small className="text-black-50 d-block">{result.percentage}%</small>
+                            <small className="text-black-50 d-block">{result.percentage}%</small>
                           </td>
                         </tr>
-                      )
+                      );
                     })
-                }
+                )}
               </tbody>
             </table>
           </div>
         </PerfectScrollbar>
-        
       </Card>
     </>
   );

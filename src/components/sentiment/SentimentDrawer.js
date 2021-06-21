@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { startCase } from 'lodash'
+import { startCase } from 'lodash';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -63,11 +63,11 @@ const SentimentDrawer = props => {
     visitOutlineObj(displayData, data, 0, '');
   }
 
-  const clickHandle = (path) => {
+  const clickHandle = path => {
     props.onSelection(createHash(path));
     dispatch(setSelectedHeadingId(createHash(path)));
   };
-  
+
   return (
     <React.Fragment>
       <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
@@ -86,20 +86,19 @@ const SentimentDrawer = props => {
               <BeatLoader color={'var(--primary)'} size={15} />
             </div>
           ) : (
-            displayData.map((d, index) => (
-              index !== 0 ?
-              <div
-                key={index}
-                style={{ paddingLeft: d.lvl * 4 + 4 }}
-                className={classes.listItem}
-                onClick={() => {
-                  clickHandle(d.path);
-                }}>
-                {startCase(d.prop)}
-              </div>
-              :
-              null
-            ))
+            displayData.map((d, index) =>
+              index !== 0 ? (
+                <div
+                  key={index}
+                  style={{ paddingLeft: d.lvl * 4 + 4 }}
+                  className={classes.listItem}
+                  onClick={() => {
+                    clickHandle(d.path);
+                  }}>
+                  {startCase(d.prop)}
+                </div>
+              ) : null
+            )
           )}
         </div>
       </Drawer>

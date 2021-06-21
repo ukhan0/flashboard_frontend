@@ -6,7 +6,6 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-
 const useStyles = makeStyles(theme => ({
   card: {
     height: 180

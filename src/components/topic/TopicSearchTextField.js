@@ -14,9 +14,9 @@ const TopicSearchTextField = props => {
       placeholder={props.text}
       value={searchText}
       onChange={event => {
-        const value = event.target.value
+        const value = event.target.value;
         dispatch(setTopicSearchText(value));
-        if(value === null || value === '' || searchText !== value) {
+        if (value === null || value === '' || searchText !== value) {
           dispatch(resetSuggestions());
         }
       }}

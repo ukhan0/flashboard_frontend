@@ -1,11 +1,6 @@
 import React, { Fragment } from 'react';
 
-import {
-  Grid,
-  FormControlLabel,
-  Checkbox,
-  FormControl,
-} from '@material-ui/core';
+import { Grid, FormControlLabel, Checkbox, FormControl } from '@material-ui/core';
 
 import { FormLabel } from '@material-ui/core';
 

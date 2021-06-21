@@ -21,10 +21,11 @@ const metricsSelection = [
   // { label: 'FSS', key: 'fss' }
 ];
 
-const WatchlistFilters = (props) => {
-
-  const { selectedFileType, selectedUniverse, selectedMetric, completeDataLoaded } = useSelector(state => state.Watchlist)
-  const dispatch = useDispatch()
+const WatchlistFilters = props => {
+  const { selectedFileType, selectedUniverse, selectedMetric, completeDataLoaded } = useSelector(
+    state => state.Watchlist
+  );
+  const dispatch = useDispatch();
 
   const canItbeUsed = universeType => {
     let flag = false;

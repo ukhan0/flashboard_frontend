@@ -12,7 +12,7 @@ import TopicHistoryChart from './TopicHistoryChart';
 import TopicFilters from './TopicFilters';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
-import TopicSnackbar from './TopicSnackbar'
+import TopicSnackbar from './TopicSnackbar';
 import {
   setIsSaveDlgOpen,
   setIsSearchDeleteErr,
@@ -30,13 +30,22 @@ import { performTopicSearchAggregate, performTopicSearchHighlights } from './top
 
 const Topic = () => {
   const classes = topicStyles();
-  const { isSaveDlgOpen, isSearchDeleteError, isTopicDeleteError, showFilters, cancelTokenSourceHighlights, isSnackBarActive, snackBarMessage, snackBarSeverity } = useSelector(state => state.Topic);
+  const {
+    isSaveDlgOpen,
+    isSearchDeleteError,
+    isTopicDeleteError,
+    showFilters,
+    cancelTokenSourceHighlights,
+    isSnackBarActive,
+    snackBarMessage,
+    snackBarSeverity
+  } = useSelector(state => state.Topic);
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const handleClose = ()=>{
-    dispatch(setSnackBarActive(false))
-  }
+  const handleClose = () => {
+    dispatch(setSnackBarActive(false));
+  };
   const handleComposeNew = () => {
     window.scrollTo(0, 0);
     dispatch(setShowComposeNew(true));
@@ -44,21 +53,21 @@ const Topic = () => {
     dispatch(setSelectedSearch(null, null));
     dispatch(resetAllSearchParams());
     dispatch(setSelectedIndustries([]));
-  }
+  };
 
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
     // cancel existing calls if there are any
-    if(cancelTokenSourceHighlights) {
-      cancelTokenSourceHighlights.cancel()
+    if (cancelTokenSourceHighlights) {
+      cancelTokenSourceHighlights.cancel();
     }
     dispatch(cancelExistingHightlightsCalls(true));
     // now perform actual search
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
       dispatch(performTopicSearchHighlights(true));
-    }, 1000)
+    }, 1000);
   };
 
   return (
@@ -76,11 +85,7 @@ const Topic = () => {
             <div className="p-3 bg-white">
               <Grid container spacing={2}>
                 <Grid item xs={8}>
-                  <Button
-                    onClick={handleComposeNew}
-                    variant="contained"
-                    color="primary"
-                    className="d-block w-100">
+                  <Button onClick={handleComposeNew} variant="contained" color="primary" className="d-block w-100">
                     <span className="btn-wrapper--icon">
                       <FontAwesomeIcon icon={['fas', 'upload']} />
                     </span>
@@ -114,16 +119,16 @@ const Topic = () => {
             <Grid item xs={6}>
               <TopicPieChart onChange={handleSearch} />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={6}>
               <TopicCompanyResultsTable />
             </Grid>
-        </Grid>
+          </Grid>
           <Grid item xs={12}>
             <Card className="card-box mb-4">
               <TopicHistoryChart />
             </Card>
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <TopicSearchResults />
           </Grid>
         </Grid>
@@ -151,10 +156,12 @@ const Topic = () => {
         message="Sorry, we are unable to delete topic"
       />
       <TopicSnackbar
-       open={isSnackBarActive}
-       onClose={()=>{handleClose()}}
-       message={snackBarMessage}
-       severity={snackBarSeverity}
+        open={isSnackBarActive}
+        onClose={() => {
+          handleClose();
+        }}
+        message={snackBarMessage}
+        severity={snackBarSeverity}
       />
     </div>
   );

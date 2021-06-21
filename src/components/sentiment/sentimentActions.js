@@ -5,12 +5,12 @@ import config from '../../config/config';
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
-    const recentId = get(selectedItem, 'recentId', null)
-    if(!recentId) {
-      return
+    const recentId = get(selectedItem, 'recentId', null);
+    if (!recentId) {
+      return;
     }
     try {
-      dispatch(setIsLoading(true))
+      dispatch(setIsLoading(true));
       const response = await axios.get(`${config.sentimentUrl}?id=${recentId}`);
       const data = get(response, 'data', []);
       if (response) {
@@ -18,10 +18,10 @@ export const getSentimentData = () => {
       } else {
         dispatch(setSentimentResult(null));
       }
-      dispatch(setIsLoading(false))
+      dispatch(setIsLoading(false));
     } catch (error) {
       dispatch(setSentimentResult(null));
-      dispatch(setIsLoading(false))
+      dispatch(setIsLoading(false));
     }
   };
 };

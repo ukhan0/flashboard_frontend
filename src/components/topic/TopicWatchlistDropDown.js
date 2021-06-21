@@ -17,13 +17,13 @@ const TopicWatchlistDropDown = props => {
   const { selectedWatchlistCompanyNames } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [watchlistCompanies, setWatchlistCompanies] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const rawData = await watchlistApiCalls.getWatchlist('watchlist', '');
-      let selectAll =rawData.map(d => d.b)
-      setWatchlistCompanies(selectAll)
-      dispatch(setSelectedWatchlistCompanyNames(selectAll))    
+      let selectAll = rawData.map(d => d.b);
+      setWatchlistCompanies(selectAll);
+      dispatch(setSelectedWatchlistCompanyNames(selectAll));
     };
     fetchData();
   }, [dispatch]);
@@ -31,7 +31,7 @@ const TopicWatchlistDropDown = props => {
   const handleSelectionChange = e => {
     dispatch(setSelectedWatchlistCompanyNames(e.target.value));
   };
- 
+
   return (
     <Select
       labelId="TopicWatchListDropDownLabel"

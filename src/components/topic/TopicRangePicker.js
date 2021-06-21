@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
-import { KeyboardDatePicker } from "@material-ui/pickers";
+import { KeyboardDatePicker } from '@material-ui/pickers';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchDateRange } from '../../reducers/Topic';
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#7092e6',
     color: 'white',
     borderRadius: 12,
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   dateRangeSelector: {
     backgroundColor: 'white',
@@ -33,12 +33,12 @@ const useStyles = makeStyles(theme => ({
     zIndex: 1,
     border: '1px solid black',
     padding: 10,
-    width: '20rem',
+    width: '20rem'
   },
   dateRangeSelectorControls: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: 25,
+    marginTop: 25
   }
 }));
 
@@ -54,17 +54,17 @@ const TopicRangePicker = props => {
   const inputDateFormat = 'MM-yyyy';
   const displayDateFormat = 'MMMM yyyy';
 
-  const handleStartDateChange = (newStartDate) => {
-    if(isValidDate(newStartDate)){
-      dispatch(setTopicSearchDateRange({startDate: startOfMonth(newStartDate), endDate: endDate}))
+  const handleStartDateChange = newStartDate => {
+    if (isValidDate(newStartDate)) {
+      dispatch(setTopicSearchDateRange({ startDate: startOfMonth(newStartDate), endDate: endDate }));
     }
-  }
+  };
 
-  const handleEndDateChange = (newEndDate) => {
-    if(isValidDate(newEndDate)){
-      dispatch(setTopicSearchDateRange({startDate: startDate, endDate: endOfMonth(newEndDate)}))
+  const handleEndDateChange = newEndDate => {
+    if (isValidDate(newEndDate)) {
+      dispatch(setTopicSearchDateRange({ startDate: startDate, endDate: endOfMonth(newEndDate) }));
     }
-  }
+  };
 
   return (
     <div>
@@ -73,27 +73,27 @@ const TopicRangePicker = props => {
         onClick={() => {
           setIsDateRangeSelectorOpen(true);
         }}>
-        <span className='font-weight-bold'>{format(startDate, displayDateFormat)}</span>
-        <span className='text-white'>{ '  -  ' }</span>
-        <span className='font-weight-bold'>{format(endDate, displayDateFormat)} </span>
+        <span className="font-weight-bold">{format(startDate, displayDateFormat)}</span>
+        <span className="text-white">{'  -  '}</span>
+        <span className="font-weight-bold">{format(endDate, displayDateFormat)} </span>
       </div>
       {isDateRangeSelectorOpen ? (
         <div className={classes.dateRangeSelector}>
           <div className={classes.container}>
-            <KeyboardDatePicker 
-              value={startDate} 
+            <KeyboardDatePicker
+              value={startDate}
               onChange={handleStartDateChange}
               label="Start Date"
               format={inputDateFormat}
-              views={["year", "month"]}
+              views={['year', 'month']}
             />
-            <div className='mb-2'></div>
-            <KeyboardDatePicker 
+            <div className="mb-2"></div>
+            <KeyboardDatePicker
               value={endDate}
               onChange={handleEndDateChange}
               label="End Date"
               format={inputDateFormat}
-              views={["year", "month"]}
+              views={['year', 'month']}
             />
           </div>
           <div className={classes.dateRangeSelectorControls}>
@@ -113,4 +113,4 @@ const TopicRangePicker = props => {
   );
 };
 
-export default TopicRangePicker
+export default TopicRangePicker;

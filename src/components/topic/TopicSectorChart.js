@@ -25,10 +25,9 @@ const baseGraphOptions = {
         format: '{point.name}'
       },
       events: {
-        click: function() {
-        }
-      },
-    },
+        click: function() {}
+      }
+    }
   },
   series: [
     {
@@ -43,17 +42,19 @@ const baseGraphOptions = {
 };
 
 export default function TopicSectorChart(props) {
-
   const { searchResult } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-  const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions))
+  const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
 
-  const handleSectorClick = useCallback((sectorName) => {
-    dispatch(setSelectedUniverse('sector'))
-    dispatch(setSelectedSector(sectorName))
-    dispatch(setSelectedIndustries([]))
-    props.handleSectorClick()
-  }, [dispatch, props])
+  const handleSectorClick = useCallback(
+    sectorName => {
+      dispatch(setSelectedUniverse('sector'));
+      dispatch(setSelectedSector(sectorName));
+      dispatch(setSelectedIndustries([]));
+      props.handleSectorClick();
+    },
+    [dispatch, props]
+  );
 
   useEffect(() => {
     const rawData = get(searchResult, 'buckets.groupBySectorIndustry', []);
@@ -85,12 +86,12 @@ export default function TopicSectorChart(props) {
         });
       }
     });
-    const newGraphOptions = cloneDeep(baseGraphOptions)
-    newGraphOptions.series[0].data = sectorData
-    newGraphOptions.plotOptions.series.events.click = (event) => {
-      handleSectorClick(event.point.name)
-    }
-    setGraphOptions(newGraphOptions)
+    const newGraphOptions = cloneDeep(baseGraphOptions);
+    newGraphOptions.series[0].data = sectorData;
+    newGraphOptions.plotOptions.series.events.click = event => {
+      handleSectorClick(event.point.name);
+    };
+    setGraphOptions(newGraphOptions);
   }, [searchResult, handleSectorClick]);
 
   return <HighchartsReact highcharts={Highcharts} options={graphOptions} />;

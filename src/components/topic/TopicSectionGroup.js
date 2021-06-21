@@ -3,7 +3,7 @@ import { ButtonGroup, Button } from '@material-ui/core';
 
 const TopicSectionGroup = () => {
   const [selectedButton, setSelectedButton] = React.useState('all');
-  
+
   const metricsSelection = [
     { label: 'Total', key: 'totdoc' },
     { label: 'MD&A', key: 'mda' },

@@ -17,7 +17,6 @@ const WatchlistTopicSearch = props => {
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
-  // const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const [availableSymbols, setAvailableSymbols] = useState([]);
 
   const handleSearchTextChange = debounce(async text => {

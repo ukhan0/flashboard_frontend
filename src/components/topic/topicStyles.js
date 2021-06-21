@@ -36,16 +36,16 @@ export default makeStyles(theme => ({
   },
   topsection: {
     marginBottom: 15,
-    marginTop: 5,
+    marginTop: 5
   },
   sideFilterSection: {
     height: 600,
     backgroundColor: '#f5f5f5',
     position: 'sticky',
-    top: 0,
+    top: 0
   },
   closeBtnSection: {
     display: 'flex',
-    justifyContent: 'flex-end',
-  },
+    justifyContent: 'flex-end'
+  }
 }));

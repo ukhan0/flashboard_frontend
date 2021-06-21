@@ -7,20 +7,19 @@ import { setSelectedDocumentTypes } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   multiSelect: {
     width: '100%',
-    height: '2.2rem',
-  },
+    height: '2.2rem'
+  }
 }));
 
 const TopicDocumentTypeDropdown = props => {
-  const classes = useStyles()
+  const classes = useStyles();
   const { documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
 
-  
-  const handleSelectionChange = (e) => {
-    dispatch(setSelectedDocumentTypes(e.target.value))
-  }
-  
+  const handleSelectionChange = e => {
+    dispatch(setSelectedDocumentTypes(e.target.value));
+  };
+
   return (
     <Select
       labelId="topicDocumentTypeDropdownLabel"
@@ -29,7 +28,7 @@ const TopicDocumentTypeDropdown = props => {
       value={selectedDocumentTypes}
       onChange={handleSelectionChange}
       input={<Input />}
-      renderValue={(selectedValues) => selectedValues.join(', ')}
+      renderValue={selectedValues => selectedValues.join(', ')}
       className={classes.multiSelect}
       // MenuProps={MenuProps}
     >

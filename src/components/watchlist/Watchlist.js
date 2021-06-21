@@ -12,7 +12,7 @@ import {
   getFilteringState,
   checkIsFilterActive,
   checkIsSortActive,
-  syncCachedData,
+  syncCachedData
 } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
@@ -34,16 +34,18 @@ import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
 import WatchlistSearch from './WatchlistSearch';
 import { isObject } from 'lodash';
-import watchlistApiCalls from './watchlistApiCalls'
+import watchlistApiCalls from './watchlistApiCalls';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
 };
 
-const Watchlist = (props) => {
+const Watchlist = props => {
   const classes = useStyles();
-  const dispatch = useDispatch()
-  const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count } = useSelector(state => state.Watchlist)
+  const dispatch = useDispatch();
+  const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count } = useSelector(
+    state => state.Watchlist
+  );
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
   const [isSortActive, setIsSortActive] = useState(checkIsSortActive());
@@ -68,9 +70,9 @@ const Watchlist = (props) => {
         }
       } else {
         setLoading(true);
-        rawData = await watchlistApiCalls.getWatchlist(selectedUniverse, selectedFileType)
+        rawData = await watchlistApiCalls.getWatchlist(selectedUniverse, selectedFileType);
         // update cached data of all (Complete) watchlist
-        syncCachedData(rawData)
+        syncCachedData(rawData);
       }
 
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
@@ -94,7 +96,7 @@ const Watchlist = (props) => {
         last: selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q,
         recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
         oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
-        documentType: selectedFileType,
+        documentType: selectedFileType
       };
       delete data['10k'];
       delete data['10q'];
