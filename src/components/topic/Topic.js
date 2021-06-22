@@ -29,7 +29,7 @@ const Topic = () => {
     snackBarMessage,
     snackBarSeverity
   } = useSelector(state => state.Topic);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -56,7 +56,7 @@ const Topic = () => {
     <div className={classes.root}>
       <div className={classes.topicDrawerOpener}>
         <Button color="primary" variant="contained" className="m-2" onClick={() => setIsDrawerOpen(!isDrawerOpen)}>
-          Actions
+          My Searches
         </Button>
       </div>
       <TopicDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} handleSearch={handleSearch} />
