@@ -25,8 +25,7 @@ import EditIcon from '@material-ui/icons/Edit';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    maxWidth: 'auto',
-    backgroundColor: theme.palette.background.paper
+    maxWidth: 'auto'
   },
   nested: {
     paddingLeft: theme.spacing(4)
@@ -43,6 +42,12 @@ const useStyles = makeStyles(theme => ({
   editButton: {
     marginRight: '10px',
     fontSize: '.7rem'
+  },
+  savedSearchesSection: {
+    marginTop: 10
+  },
+  title: {
+    marginLeft: 5
   }
 }));
 
@@ -92,13 +97,17 @@ export default function TopicSearchHistory(props) {
       // set first search of first topic as default search
       const firstSearch = get(savedSearches, '[0]', null);
       if (firstSearch) {
-        setSearchParams(firstSearch);
+        // temporariiy disable first search select
+        // setSearchParams(firstSearch);
       }
     }
   }, [savedSearches, setSearchParams]);
 
   return (
-    <>
+    <div className={classes.savedSearchesSection}>
+      <div className={classes.title}>
+        <h5>Saved Searches</h5>
+      </div>
       <List component="nav" className={classes.root}>
         {savedSearches.map((s, index) => {
           return (
@@ -133,6 +142,6 @@ export default function TopicSearchHistory(props) {
           );
         })}
       </List>
-    </>
+    </div>
   );
 }

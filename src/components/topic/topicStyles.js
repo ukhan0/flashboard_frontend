@@ -40,12 +40,24 @@ export default makeStyles(theme => ({
   },
   sideFilterSection: {
     height: 600,
-    backgroundColor: '#f5f5f5',
-    position: 'sticky',
-    top: 0
+    backgroundColor: '#f5f5f5'
   },
   closeBtnSection: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  topicDrawerContent: {
+    width: '40vw',
+    margin: 20
+  },
+  topicDrawerHeader: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  topicDrawerOpener: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   }
 }));

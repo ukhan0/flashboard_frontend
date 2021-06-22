@@ -25,7 +25,7 @@ export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
 export const SET_SUGGESTIONS_IS_LOADING = 'TOPIC/SET_SUGGESTIONS_IS_LOADING';
 export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
-export const SET_SEARCH_BACKDROP_HIGHLIGHTS ='TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS'
+export const SET_SEARCH_BACKDROP_HIGHLIGHTS = 'TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS';
 export const RESET_SEARCH_RESULTS = 'TOPIC/RESET_SEARCH_RESULTS';
 export const SET_IS_SEARCH_HIGHLIGHT_LOADING = 'TOPIC/SET_IS_SEARCH_HIGHLIGHT_LOADING';
 export const SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS = 'TOPIC/SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS';
@@ -41,195 +41,196 @@ export const SET_SAVED_SEARCHES = 'TOPIC/SET_SAVED_SEARCHES';
 export const SET_SEARCH_LABEL = 'TOPIC/SET_SEARCHE_LABEL';
 export const SET_SNACKBAR_ACTIVE = 'TOPIC/SET_SNACKBAR_ACTIVE';
 
-export const setSearchBackdrop = (cancelTokenSource, showBackdrop)  => ({
+export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
   showBackdrop
-})
+});
 
-export const setSearchBackdropHighlights = (cancelTokenSourceHighlights)  => ({
+export const setSearchBackdropHighlights = cancelTokenSourceHighlights => ({
   type: SET_SEARCH_BACKDROP_HIGHLIGHTS,
-  cancelTokenSourceHighlights, 
-})
+  cancelTokenSourceHighlights
+});
 
 export const setResultsPage = pageNo => ({
   type: SET_SEARCH_PAGE_NO,
-  pageNo,
-})
+  pageNo
+});
 
 export const resetResultsPage = () => ({
-  type: RESET_SEARCH_RESULTS,
-})
+  type: RESET_SEARCH_RESULTS
+});
 
 export const setSuggestionsIsLoading = suggestionsIsLoading => ({
   type: SET_SUGGESTIONS_IS_LOADING,
-  suggestionsIsLoading,
-})
+  suggestionsIsLoading
+});
 
 export const setSelectedSearch = (selectedSearch, selectedTopic) => ({
   type: SET_SELECTED_SEARCH,
   selectedSearch,
   selectedTopic
-})
+});
 
 export const setIsSearchDeleteErr = isSearchDeleteError => ({
   type: SET_IS_SEARCH_DELETE_ERROR,
   isSearchDeleteError
-})
+});
 
 export const setIsTopicDeleteErr = isTopicDeleteError => ({
   type: SET_IS_TOPIC_DELETE_ERROR,
   isTopicDeleteError
-})
+});
 
 export const setSelectedDocumentTypes = selectedDocumentTypes => ({
   type: SET_SELECTED_DOCUMENT_TYPES,
   selectedDocumentTypes
-})
+});
 
 export const setTopicSearchText = text => ({
   type: SET_SEARCH_TEXT,
   text
-})
+});
 
 export const setTopicSearchDateRange = dateRangeObj => ({
   type: SET_DATE_RANGE,
   dateRangeObj
-})
+});
 
 export const setSearchResults = searchResult => ({
   type: SET_SEARCH_RESULT,
   searchResult
-})
+});
 
 export const setSuggestions = suggestions => ({
   type: SET_SUGGESTIONS_RESULT,
   suggestions
-})
+});
 
 export const setSuggestionsWithSelections = (suggestions, selectedSuggestions) => ({
   type: SET_SUGGESTIONS_RESULT_AND_SELECTIONS,
-  data: {suggestions, selectedSuggestions}
-})
+  data: { suggestions, selectedSuggestions }
+});
 
 export const setSelectedSuggestions = selectedSuggestions => ({
   type: SET_SELECTED_SUGGESTIONS,
   selectedSuggestions
-})
+});
 
 export const setAllSearchParams = searchObj => ({
   type: SET_ALL_SEARCH_PARAMS,
   searchObj
-})
+});
 
 export const setIsSearchLoading = isSearchLoading => ({
   type: SET_IS_SEARCH_LOADING,
   isSearchLoading
-})
+});
 
 export const setSearchStart = () => ({
   type: SET_SEARCH_START
-})
+});
 
-export const setSearchError = (isSearchError) => ({
+export const setSearchError = isSearchError => ({
   type: SET_SEARCH_ERROR,
   isSearchError
-})
+});
 
-export const setTopicsList = (topicsList) => ({
+export const setTopicsList = topicsList => ({
   type: SET_TOPICS_LIST,
   topicsList
-})
+});
 
-export const setIsSaveDlgOpen = (isSaveDlgOpen) => ({
+export const setIsSaveDlgOpen = isSaveDlgOpen => ({
   type: SET_IS_SAVE_DLG_OPEN,
   isSaveDlgOpen
-})
+});
 
-export const setIsSaveSearchError = (isSearchSaveError) => ({
+export const setIsSaveSearchError = isSearchSaveError => ({
   type: SET_IS_SEARCH_SAVE_ERROR,
   isSearchSaveError
-})
+});
 
 export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
   type: SET_IS_SAVE_DLG_OPEN_AND_ERROR,
-  isSaveDlgOpen, isSearchSaveError
-})
+  isSaveDlgOpen,
+  isSearchSaveError
+});
 
 export const resetSuggestions = () => ({
   type: RESET_SUGGESTIONS
-})
+});
 
 export const setSearchResultHighlights = searchResult => ({
   type: SET_SEARCH_RESULT_HIGHLIGHTS,
   searchResult
-})
+});
 
 export const setIsSearchHighlightLoading = isHighlightsSearchLoading => ({
   type: SET_IS_SEARCH_HIGHLIGHT_LOADING,
   isHighlightsSearchLoading
-})
+});
 
-export const cancelExistingHightlightsCalls = (flag) => ({
+export const cancelExistingHightlightsCalls = flag => ({
   type: SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS,
   flag
-})
+});
 
 export const setShowComposeNew = showFilters => ({
   type: SET_SHOW_COMPOSE_NEW,
   showFilters
-})
+});
 
 export const setShowUpdateButton = showUpdateButton => ({
   type: SET_SHOW_UPDATE_BUTTON,
   showUpdateButton
-})
+});
 
 export const resetAllSearchParams = () => ({
   type: RESET_ALL_SEARCH_PARAMS
-})
+});
 
-export const setSelectedCompanyName = (selectedCompanyName) => ({
+export const setSelectedCompanyName = selectedCompanyName => ({
   type: SET_SELECTED_COMPANY_NAME,
   selectedCompanyName
-})
+});
 
-export const setSelectedUniverse = (selectedUniverse) => ({
+export const setSelectedUniverse = selectedUniverse => ({
   type: SET_SELECTED_UNIVERSE,
   selectedUniverse
-})
+});
 
-export const setSelectedSector = (selectedSector) => ({
+export const setSelectedSector = selectedSector => ({
   type: SET_SELECTED_SECTOR,
   selectedSector
-})
+});
 
-export const setSelectedIndustries = (selectedIndustries) => ({
+export const setSelectedIndustries = selectedIndustries => ({
   type: SET_SELECTED_INDUSTRIES,
   selectedIndustries
-})
+});
 
-export const setSelectedWatchlistCompanyNames = ( selectedWatchlistCompanyNames) => ({
+export const setSelectedWatchlistCompanyNames = selectedWatchlistCompanyNames => ({
   type: SET_SELECTED_WATCHLIST_COMPANY_NAMES,
-   selectedWatchlistCompanyNames
-})
+  selectedWatchlistCompanyNames
+});
 
-export const setSavedSearches = ( savedSearches) => ({
+export const setSavedSearches = savedSearches => ({
   type: SET_SAVED_SEARCHES,
   savedSearches
-})
+});
 
-export const setSearchLabel = ( searchLabel) => ({
+export const setSearchLabel = searchLabel => ({
   type: SET_SEARCH_LABEL,
   searchLabel
-})
+});
 
-export const setSnackBarActive = ( isSnackBarActive, snackBarSeverity, snackBarMessage) => ({
+export const setSnackBarActive = (isSnackBarActive, snackBarSeverity, snackBarMessage) => ({
   type: SET_SNACKBAR_ACTIVE,
   isSnackBarActive,
   snackBarSeverity,
   snackBarMessage
-})
+});
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -241,8 +242,8 @@ const searchDefaultState = () => ({
   selectedUniverse: 'all',
   selectedSector: null,
   selectedIndustries: [],
-  selectedWatchlistCompanyNames: [],
-})
+  selectedWatchlistCompanyNames: []
+});
 
 const getDefaultState = () => {
   return {
@@ -262,19 +263,19 @@ const getDefaultState = () => {
     selectedTopic: null,
     suggestionsIsLoading: false,
     cancelTokenSource: null,
-    cancelTokenSourceHighlights:null,
+    cancelTokenSourceHighlights: null,
     showBackdrop: false,
     searchResultHighlights: [],
     isHighlightsSearchLoading: false,
     cancelExistingHighlightCalls: false,
-    showFilters: false,
+    showFilters: true,
     showUpdateButton: false,
     selectedCompanyName: null,
-    savedSearches:[],
-    searchLabel:null,
-    isSnackBarActive:false,
-    snackBarMessage:null,
-    snackBarSeverity:null
+    savedSearches: [],
+    searchLabel: null,
+    isSnackBarActive: false,
+    snackBarMessage: null,
+    snackBarSeverity: null
   };
 };
 
@@ -300,7 +301,7 @@ export default function reducer(
     case SET_SELECTED_SUGGESTIONS:
       return { ...state, selectedSuggestions: action.selectedSuggestions };
     case SET_ALL_SEARCH_PARAMS:
-      return { 
+      return {
         ...state,
         searchText: action.searchObj.searchText,
         selectedDocumentTypes: action.searchObj.searchJSON.selectedDocumentTypes,
@@ -312,12 +313,16 @@ export default function reducer(
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
         selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
         selectedIndustries: get(action.searchObj, 'searchJSON.industry_arr', searchDefaultState().selectedIndustries),
-        selectedWatchlistCompanyNames: get(action.searchObj, 'searchJSON.company_arr', searchDefaultState().selectedWatchlistCompanyNames),
+        selectedWatchlistCompanyNames: get(
+          action.searchObj,
+          'searchJSON.company_arr',
+          searchDefaultState().selectedWatchlistCompanyNames
+        )
       };
     case RESET_ALL_SEARCH_PARAMS:
-      return { 
+      return {
         ...state,
-        ...searchDefaultState(),
+        ...searchDefaultState()
       };
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
@@ -328,17 +333,17 @@ export default function reducer(
     case SET_TOPICS_LIST:
       return { ...state, topicsList: action.topicsList };
     case SET_IS_SAVE_DLG_OPEN:
-      return { ...state, isSaveDlgOpen: action.isSaveDlgOpen};
+      return { ...state, isSaveDlgOpen: action.isSaveDlgOpen };
     case SET_IS_SEARCH_SAVE_ERROR:
-      return { ...state, isSearchSaveError: action.isSearchSaveError};
+      return { ...state, isSearchSaveError: action.isSearchSaveError };
     case SET_IS_SAVE_DLG_OPEN_AND_ERROR:
-      return { ...state, isSearchSaveError: action.isSearchSaveError, isSaveDlgOpen: action.isSaveDlgOpen};
+      return { ...state, isSearchSaveError: action.isSearchSaveError, isSaveDlgOpen: action.isSaveDlgOpen };
     case SET_IS_SEARCH_DELETE_ERROR:
-      return { ...state, isSearchDeleteError: action.isSearchDeleteError};
+      return { ...state, isSearchDeleteError: action.isSearchDeleteError };
     case SET_IS_TOPIC_DELETE_ERROR:
-      return { ...state, isTopicDeleteError: action.isTopicDeleteError};
+      return { ...state, isTopicDeleteError: action.isTopicDeleteError };
     case SET_SELECTED_SEARCH:
-      return { ...state, selectedSearch: action.selectedSearch, selectedTopic: action.selectedTopic};
+      return { ...state, selectedSearch: action.selectedSearch, selectedTopic: action.selectedTopic };
     case RESET_SUGGESTIONS:
       return { ...state, selectedSuggestions: {}, suggestions: {} };
     case SET_SUGGESTIONS_IS_LOADING:
@@ -346,37 +351,42 @@ export default function reducer(
     case SET_SEARCH_PAGE_NO:
       return { ...state, pageNo: action.pageNo };
     case SET_SEARCH_BACKDROP:
-      return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop};
+      return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop };
     case SET_SEARCH_RESULT_HIGHLIGHTS:
       return { ...state, searchResultHighlights: action.searchResult, isSearchError: false };
     case SET_IS_SEARCH_HIGHLIGHT_LOADING:
       return { ...state, isHighlightsSearchLoading: action.isHighlightsSearchLoading };
     case SET_SEARCH_BACKDROP_HIGHLIGHTS:
-      return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights};
+      return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights };
     case RESET_SEARCH_RESULTS:
       return { ...state, searchResultHighlights: [], pageNo: 0 };
     case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:
       return { ...state, cancelExistingHighlightCalls: action.flag };
     case SET_SHOW_COMPOSE_NEW:
-      return {...state, showFilters: action.showFilters};
+      return { ...state, showFilters: action.showFilters };
     case SET_SHOW_UPDATE_BUTTON:
-        return {...state, showUpdateButton: action.showUpdateButton};
+      return { ...state, showUpdateButton: action.showUpdateButton };
     case SET_SELECTED_COMPANY_NAME:
-      return {...state, selectedCompanyName: action.selectedCompanyName};
+      return { ...state, selectedCompanyName: action.selectedCompanyName };
     case SET_SELECTED_UNIVERSE:
-      return {...state, selectedUniverse: action.selectedUniverse};
+      return { ...state, selectedUniverse: action.selectedUniverse };
     case SET_SELECTED_SECTOR:
-      return {...state, selectedSector: action.selectedSector};
+      return { ...state, selectedSector: action.selectedSector };
     case SET_SELECTED_INDUSTRIES:
-      return {...state, selectedIndustries: action.selectedIndustries};
+      return { ...state, selectedIndustries: action.selectedIndustries };
     case SET_SELECTED_WATCHLIST_COMPANY_NAMES:
-      return {...state, selectedWatchlistCompanyNames: action.selectedWatchlistCompanyNames};
+      return { ...state, selectedWatchlistCompanyNames: action.selectedWatchlistCompanyNames };
     case SET_SAVED_SEARCHES:
-      return {...state, savedSearches: action.savedSearches};
+      return { ...state, savedSearches: action.savedSearches };
     case SET_SEARCH_LABEL:
-      return {...state, searchLabel: action.searchLabel};
+      return { ...state, searchLabel: action.searchLabel };
     case SET_SNACKBAR_ACTIVE:
-      return {...state, isSnackBarActive: action.isSnackBarActive, snackBarSeverity: action.snackBarSeverity, snackBarMessage: action.snackBarMessage};
+      return {
+        ...state,
+        isSnackBarActive: action.isSnackBarActive,
+        snackBarSeverity: action.snackBarSeverity,
+        snackBarMessage: action.snackBarMessage
+      };
     default:
       break;
   }

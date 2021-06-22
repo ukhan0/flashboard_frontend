@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { get } from 'lodash';
 import { useSelector } from 'react-redux';
-import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Grid, FormControlLabel, Checkbox, Card } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
 const companyColor = '#0388cb';
@@ -55,7 +55,7 @@ const TopicHistoryChart = () => {
   const options = {
     chart: {
       zoomType: 'xy',
-      height: 200,
+      height: 297,
       backgroundColor: '#ffffff',
       borderRadius: 0,
       marginTop: 0
@@ -169,7 +169,7 @@ const TopicHistoryChart = () => {
   }
 
   return (
-    <>
+    <Card className="card-box mb-4">
       <Grid container direction="row" justify="space-between" alignItems="center" className={classes.topContainer}>
         <Grid item>
           <Grid container spacing={2}>
@@ -209,7 +209,7 @@ const TopicHistoryChart = () => {
         </Grid>
       </Grid>
       <HighchartsReact highcharts={Highcharts} options={options} />
-    </>
+    </Card>
   );
 };
 export default TopicHistoryChart;
