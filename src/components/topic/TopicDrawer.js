@@ -8,6 +8,7 @@ import TopicFilters from './TopicFilters';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
 import CloseIcon from '@material-ui/icons/Close';
+import TopicSnackbar from './TopicSnackbar';
 
 import {
   setIsSaveDlgOpen,
@@ -15,15 +16,20 @@ import {
   setShowUpdateButton,
   setSelectedSearch,
   resetAllSearchParams,
-  setSelectedIndustries
+  setSelectedIndustries,
+  setSnackBarActive
 } from '../../reducers/Topic';
 
 const TopicDrawer = props => {
   const classes = topicStyles();
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
-  const { showFilters } = useSelector(state => state.Topic);
+  const { showFilters, isSnackBarActive, snackBarMessage, snackBarSeverity } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
 
+  const handleCloseSnackBar = () => {
+    dispatch(setSnackBarActive(false));
+  };
+  
   const handleComposeNew = () => {
     window.scrollTo(0, 0);
     dispatch(setShowComposeNew(true));
@@ -35,6 +41,12 @@ const TopicDrawer = props => {
 
   return (
     <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
+      <TopicSnackbar
+       open = {isSnackBarActive}
+       onClose = {()=>{handleCloseSnackBar()}}
+       message = {snackBarMessage}
+       severity = {snackBarSeverity}
+      />
       <div className={classes.topicDrawerContent}>
         <div className={classes.topicDrawerHeader}>
           <IconButton onClick={props.onClose}>

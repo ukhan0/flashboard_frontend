@@ -7,14 +7,12 @@ import TopicSearchResults from './TopicSearchResults';
 import TopicHistoryChart from './TopicHistoryChart';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
-import TopicSnackbar from './TopicSnackbar';
 import TopicDrawer from './TopicDrawer';
 import {
   setIsSearchDeleteErr,
   setIsTopicDeleteErr,
   resetResultsPage,
   cancelExistingHightlightsCalls,
-  setSnackBarActive
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 
@@ -25,17 +23,10 @@ const Topic = () => {
     isSearchDeleteError,
     isTopicDeleteError,
     cancelTokenSourceHighlights,
-    isSnackBarActive,
-    snackBarMessage,
-    snackBarSeverity
   } = useSelector(state => state.Topic);
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   const dispatch = useDispatch();
-
-  const handleClose = () => {
-    dispatch(setSnackBarActive(false));
-  };
 
   const handleSearch = () => {
     dispatch(resetResultsPage());
@@ -92,14 +83,6 @@ const Topic = () => {
         autoHideDuration={6000}
         onClose={() => dispatch(setIsTopicDeleteErr(false))}
         message="Sorry, we are unable to delete topic"
-      />
-      <TopicSnackbar
-        open={isSnackBarActive}
-        onClose={() => {
-          handleClose();
-        }}
-        message={snackBarMessage}
-        severity={snackBarSeverity}
       />
     </div>
   );
