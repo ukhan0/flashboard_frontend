@@ -2,7 +2,7 @@ import React, { useState, Fragment, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
-import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex } from 'lodash';
+import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex, toLower } from 'lodash';
 import clsx from 'clsx';
 import SearchIcon from '@material-ui/icons/Search';
 import { useSelector, useDispatch } from 'react-redux';
@@ -106,7 +106,7 @@ const TopicSearchResults = () => {
 
     const companiesListcompressed = localStorage.getItem(`watchlist-data-all`);
     const companiesList = cjson.decompress.fromString(companiesListcompressed);
-    let company = companiesList.find(c => c.b === companyName);
+    let company = companiesList.find(c => toLower(c.b) === toLower(companyName));
     const recentId = fileId.toString().replace('9000', '');
 
     if (company) {
