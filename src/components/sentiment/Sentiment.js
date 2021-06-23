@@ -53,8 +53,20 @@ const Sentiment = () => {
     }, 100);
   };
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <div ref={contentTopRef}>
+      <Button
+        color="primary"
+        className="m-2"
+        onClick={() => {
+          goBack();
+        }}>
+        Back
+      </Button>
       <SentimentCard />
       {selectedItem ? (
         <Box m={2}>

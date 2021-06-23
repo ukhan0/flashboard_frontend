@@ -56,7 +56,6 @@ export default function TopicSearchHistory(props) {
   const { cancelTokenSourceHighlights, savedSearches, selectedSearch } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const firstTimeLoad = useRef(false);
-
   useEffect(() => {
     dispatch(fetchTopicsList());
   }, [dispatch]);
@@ -96,12 +95,11 @@ export default function TopicSearchHistory(props) {
       firstTimeLoad.current = true;
       // set first search of first topic as default search
       const firstSearch = get(savedSearches, '[0]', null);
-      if (firstSearch) {
-        // temporariiy disable first search select
-        // setSearchParams(firstSearch);
+      if (!selectedSearch && firstSearch) {
+        setSearchParams(firstSearch);
       }
     }
-  }, [savedSearches, setSearchParams]);
+  }, [savedSearches, setSearchParams, selectedSearch]);
 
   return (
     <div className={classes.savedSearchesSection}>

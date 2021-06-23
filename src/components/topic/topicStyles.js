@@ -47,7 +47,7 @@ export default makeStyles(theme => ({
     justifyContent: 'flex-end'
   },
   topicDrawerContent: {
-    width: '40vw',
+    width: '30vw',
     margin: 20
   },
   topicDrawerHeader: {

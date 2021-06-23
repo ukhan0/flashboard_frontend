@@ -12,7 +12,7 @@ import {
   setIsSearchDeleteErr,
   setIsTopicDeleteErr,
   resetResultsPage,
-  cancelExistingHightlightsCalls,
+  cancelExistingHightlightsCalls
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 
@@ -42,7 +42,7 @@ const Topic = () => {
       dispatch(performTopicSearchHighlights(true));
     }, 1000);
   };
-
+  
   return (
     <div className={classes.root}>
       <div className={classes.topicDrawerOpener}>

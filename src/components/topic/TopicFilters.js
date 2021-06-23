@@ -47,6 +47,8 @@ const TopicFilters = props => {
   forEach(selectedSuggestions, values => {
     selectedSuggestionsArr = concat(selectedSuggestionsArr, values);
   });
+  
+  const isButtonActive = !(searchText.length > 2)
 
   return (
     <Grid
@@ -103,24 +105,22 @@ const TopicFilters = props => {
       </Grid>
       <Grid item xs={12}>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {isSearchAllowed(searchText) ? (
-            showUpdateButton ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  dispatch(updateSaveSearch(selectedSearch.searchId));
-                }}>
-                Update
-              </Button>
-            ) : (
-              <Button variant="contained" color="secondary" onClick={props.onSaveSearch}>
-                Save
-              </Button>
-            )
-          ) : null}
+          {showUpdateButton ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                dispatch(updateSaveSearch(selectedSearch.searchId));
+              }}>
+              Update
+            </Button>
+          ) : (
+            <Button variant="contained" color="secondary" disabled={isButtonActive} onClick={props.onSaveSearch}>
+              Save
+            </Button>
+          )}
           <div className="mr-2"></div>
-          <Button variant="contained" color="primary" onClick={props.onSearch}>
+          <Button variant="contained" color="primary" disabled={isButtonActive} onClick={props.onSearch}>
             Search
           </Button>
         </div>

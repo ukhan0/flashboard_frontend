@@ -63,7 +63,7 @@ const TopicDrawer = props => {
         <div className={classes.sideFilterSection}>
           <div className="p-3 bg-white">
             <Grid container spacing={2}>
-              <Grid item xs={8}>
+              <Grid item xs={6}>
                 <Button onClick={handleComposeNew} variant="contained" color="primary" className="d-block w-100">
                   <span className="btn-wrapper--icon">
                     <FontAwesomeIcon icon={['fas', 'upload']} />
@@ -71,7 +71,7 @@ const TopicDrawer = props => {
                   <span className="btn-wrapper--label">Compose new</span>
                 </Button>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <div className={classes.closeBtnSection}>
                   {showFilters ? (
                     <Button

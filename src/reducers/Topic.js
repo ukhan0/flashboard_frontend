@@ -231,6 +231,7 @@ export const setSnackBarActive = (isSnackBarActive, snackBarSeverity, snackBarMe
   snackBarSeverity,
   snackBarMessage
 });
+
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -268,14 +269,14 @@ const getDefaultState = () => {
     searchResultHighlights: [],
     isHighlightsSearchLoading: false,
     cancelExistingHighlightCalls: false,
-    showFilters: true,
+    showFilters: false,
     showUpdateButton: false,
     selectedCompanyName: null,
     savedSearches: [],
     searchLabel: null,
     isSnackBarActive: false,
     snackBarMessage: null,
-    snackBarSeverity: null
+    snackBarSeverity: null,
   };
 };
 

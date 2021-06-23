@@ -18,7 +18,8 @@ import {
   setIsSearchLoading,
   setSavedSearches,
   setSnackBarActive,
-  resetAllSearchParams
+  resetAllSearchParams,
+  setShowComposeNew
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -185,6 +186,7 @@ export const fetchTopicsList = () => {
     if (savedSearch.length > 0) {
       dispatch(setSavedSearches(savedSearch));
     } else {
+      dispatch(setShowComposeNew(true))
       dispatch(setSavedSearches([]));
     }
   };
