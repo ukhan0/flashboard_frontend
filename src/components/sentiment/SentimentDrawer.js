@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, IconButton, Typography } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
@@ -73,13 +73,15 @@ const SentimentDrawer = props => {
       <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
         <div className={classes.list}>
           <div className={classes.header}>
-            <IconButton onClick={props.onClose}>
-              <ArrowBackIcon fontSize="small" />
-            </IconButton>
+            <div></div>
             <div>
               <Typography variant={'h4'}>Table of contents</Typography>
             </div>
-            <div></div>
+            <div>
+              <IconButton onClick={props.onClose}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </div>
           </div>
           {isLoading ? (
             <div className={classes.loaderSection}>

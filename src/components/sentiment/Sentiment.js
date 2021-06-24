@@ -47,7 +47,6 @@ const Sentiment = () => {
   }, [dispatch]);
 
   const handleSelection = path => {
-    setIsDrawerOpen(false);
     setTimeout(() => {
       document.getElementById(path).scrollIntoView();
     }, 100);
