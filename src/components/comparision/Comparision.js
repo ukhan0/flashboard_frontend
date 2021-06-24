@@ -3,8 +3,19 @@ import { connect } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
+import ComparisionCompanyDetail from './ComparisionCompanyDetails';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  companyDetail: {
+    marginTop: '10px',
+    marginLeft: '14px',
+    marginRight: '14px'
+  }
+}));
 
 const Comparision = props => {
+  const classes = useStyles();
   const { selectedItem, selectedMetric, selectedFileType } = props;
   let metricQueryParam = '';
   const history = useHistory();
@@ -32,18 +43,25 @@ const Comparision = props => {
       break;
   }
 
-  return selectedItem ? (
-    <iframe
-      src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}`}
-      title="Comparision"
-      width="100%"
-      height={`${window.innerHeight - 100}px`}
-      samesite="None"
-      frameBorder="0"
-      id="comparisionResult"
-    />
-  ) : (
-    <Typography variant="h3">No row selected</Typography>
+  return (
+    <>
+      <div className={classes.companyDetail}>
+        <ComparisionCompanyDetail selectedItem={selectedItem} />
+      </div>
+      {selectedItem ? (
+        <iframe
+          src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}`}
+          title="Comparision"
+          width="100%"
+          height={`${window.innerHeight - 100}px`}
+          samesite="None"
+          frameBorder="0"
+          id="comparisionResult"
+        />
+      ) : (
+        <Typography variant="h3">No row selected</Typography>
+      )}
+    </>
   );
 };
 
