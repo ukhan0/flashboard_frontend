@@ -5,6 +5,7 @@ import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
+import { upperCase } from 'lodash';
 const useStyles = makeStyles(theme => ({
   content: {
     fontSize: 12
@@ -84,7 +85,7 @@ const SentimentSection = props => {
                     classes.upper,
                     selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
                   )}>
-                  {d.prop}
+                  {d.lvl === 3 ? upperCase(d.prop) : d.prop}
                 </p>
               )}
             </div>

@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
     justifyContent: 'flex-end',
-    top: 70,
+    top: 110,
     position: 'sticky'
   },
   goToTopContainer: {
@@ -23,6 +23,10 @@ const useStyles = makeStyles(theme => ({
     position: 'sticky',
     right: 20,
     bottom: 20
+  },
+  companyDetail: {
+    top: 70,
+    position: 'sticky'
   }
 }));
 
@@ -67,11 +71,13 @@ const Sentiment = () => {
         Back
       </Button>
       <SentimentCard />
-      {selectedItem ? (
-        <Box m={2}>
-          <SentimentCompanyDetails />
-        </Box>
-      ) : null}
+      <div className={classes.companyDetail}>
+        {selectedItem ? (
+          <Box m={2}>
+            <SentimentCompanyDetails />
+          </Box>
+        ) : null}
+      </div>
       <div className={classes.drawerOpener}>
         <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
           Table of contents

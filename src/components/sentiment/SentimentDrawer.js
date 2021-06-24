@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { startCase } from 'lodash';
+import { startCase, upperCase } from 'lodash';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -97,7 +97,7 @@ const SentimentDrawer = props => {
                   onClick={() => {
                     clickHandle(d.path);
                   }}>
-                  {startCase(d.prop)}
+                  {d.lvl === 3 ? upperCase(d.prop) : startCase(d.prop)}
                 </div>
               ) : null
             )
