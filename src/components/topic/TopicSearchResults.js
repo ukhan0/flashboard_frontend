@@ -13,6 +13,7 @@ import { setSelectedCompanyName } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import TopicComapnyDetails from './TopicCompanyDetails'
 
 const useStyles = makeStyles(_theme => ({
   resultHeader: {
@@ -40,6 +41,7 @@ const TopicSearchResults = () => {
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0);
   const [companyResults, setCompanyResults] = useState([]);
+  const [companyDetails, setCompanyDetails] = useState({})
   const [summaryByCompany, setSummaryByCompany] = useState([]);
 
   useEffect(() => {
@@ -64,6 +66,8 @@ const TopicSearchResults = () => {
             ticker: c.ticker,
             documentDates,
             latestDate,
+            sector: c.gics_sector ? c.gics_sector : null,
+            industry: c.gics_industry ? c.gics_industry : null,
             results: allComapnyResults.filter(cr => cr.company_name === c.company_name)
           };
         }),
@@ -73,6 +77,12 @@ const TopicSearchResults = () => {
     const companyResults = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'results', []);
     setSummaryByCompany(summaryByCompanyData);
     setCompanyResults(companyResults);
+    const companyDetail = {}
+    companyDetail.companyName = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'companyName', null);
+    companyDetail.sector = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'sector', null);
+    companyDetail.industry = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'industry', null);
+    companyDetail.ticker = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'ticker', null);
+    setCompanyDetails(companyDetail)
   }, [searchResultHighlights, selectedCompanyIndex]);
 
   const handleCompanySearch = event => {
@@ -152,6 +162,9 @@ const TopicSearchResults = () => {
       <div style={{ width: '65%' }}>
         <div className="bg-white p-0" style={{ height: 733 }}>
           <PerfectScrollbar className="mb-4 p-4">
+            <TopicComapnyDetails
+            companyDetail = {companyDetails}
+            />
             {isSearchLoading && isEmpty(searchResultHighlights) ? (
               <h4 className="font-size-lg"> </h4>
             ) : (
