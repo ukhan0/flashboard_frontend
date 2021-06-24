@@ -35,7 +35,6 @@ const TopicSearchResults = () => {
   const classes = useStyles();
   const resultsSection = useRef(null);
   const history = useHistory();
-  const scrollIntoViewRequired = useRef(false);
   const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
@@ -86,14 +85,11 @@ const TopicSearchResults = () => {
     }
     const companyIndex = findIndex(summaryByCompany, cr => cr.companyName === selectedCompanyName);
     if (companyIndex !== -1) {
-      resultsSection.current.scrollIntoView();
-      scrollIntoViewRequired.current = true;
       setSelectedCompanyIndex(companyIndex);
     }
   }, [selectedCompanyName, summaryByCompany]);
 
   const handleCompanySelect = index => {
-    scrollIntoViewRequired.current = false;
     setSelectedCompanyIndex(index);
     dispatch(setSelectedCompanyName(null));
   };
@@ -149,7 +145,6 @@ const TopicSearchResults = () => {
               onCompanySelect={index => handleCompanySelect(index)}
               selectedCompanyIndex={selectedCompanyIndex}
               resultsCompanyFilterText={resultsCompanyFilterText}
-              scrollIntoViewRequired={scrollIntoViewRequired.current}
             />
           </PerfectScrollbar>
         </div>

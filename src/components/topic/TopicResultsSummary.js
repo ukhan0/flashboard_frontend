@@ -41,16 +41,15 @@ const TopicSearchResults = props => {
   );
 
   useEffect(() => {
-    if (selectedCompanyName && props.scrollIntoViewRequired) {
+    if (selectedCompanyName) {
       setTimeout(() => {
         const companyRef = document.getElementById(createHash(selectedCompanyName));
         if (companyRef) {
-          companyRef.scrollIntoView();
           dispatch(setSelectedCompanyName(null));
         }
       }, 1000);
     }
-  }, [dispatch, props.scrollIntoViewRequired, selectedCompanyName]);
+  }, [dispatch, selectedCompanyName]);
 
   return (
     <List className="pt-0" style={{ height: 650 }} ref={resultsSection}>
