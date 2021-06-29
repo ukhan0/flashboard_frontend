@@ -64,10 +64,11 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       }
 
       if (newSearchResults) {
-        const results = get(newSearchResults, 'buckets.companyNames', []);
+        const results = get(newSearchResults, 'buckets.groupByCompanyTicker', []);
         if (results) {
-          let firstCompanySelected = results[0].key;
+          let firstCompanySelected = results[0].key.cn;
           dispatch(setSelectedCompanyName(firstCompanySelected));
+          dispatch(performTopicSearchHighlights(true, firstCompanySelected))
         }
         dispatch(setSearchResults(newSearchResults));
         dispatch(setSearchBackdrop(null, false));

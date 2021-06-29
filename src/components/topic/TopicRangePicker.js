@@ -52,7 +52,7 @@ const TopicRangePicker = props => {
   const [isDateRangeSelectorOpen, setIsDateRangeSelectorOpen] = React.useState(false);
   const { startDate, endDate } = useSelector(state => state.Topic);
   const inputDateFormat = 'MM-yyyy';
-  const displayDateFormat = 'MMMM yyyy';
+  const displayDateFormat = 'MMM yyyy';
 
   const handleStartDateChange = newStartDate => {
     if (isValidDate(newStartDate)) {

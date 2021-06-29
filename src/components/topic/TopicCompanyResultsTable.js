@@ -3,9 +3,12 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { get, round, isEmpty, uniq } from 'lodash';
+import { get, uniq, isEmpty } from 'lodash';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { setSelectedCompanyName } from '../../reducers/Topic';
 import { performTopicSearchHighlights } from './topicActions';
 
@@ -78,27 +81,62 @@ export default function TopicCompantResultsTable() {
   const classes = useStyles();
   const { searchResult, isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-  const [filterText, setFilterText] = useState('');
-  const results = get(searchResult, 'buckets.companyNames', []);
-  const totalHits = results.reduce((accumulator, currentValue) => accumulator + currentValue.doc_count, 0);
-  const computedResults = results.map(result => {
-    return {
-      ...result,
-      percentage: round((result.doc_count / totalHits) * 100)
-    };
+
+  const companyResults = get(searchResult, 'buckets.groupByCompanyTicker', []);
+
+  const finalResult = companyResults.map(v => {
+    return { key: v.key.cn, ticker: v.key.ct, doc_count: v.doc_count };
   });
-  const handleSearchTextChange = event => {
-    setFilterText(event.target.value);
-  };
-  const handleCompanyClick = companyName => {
+
+  const handleCompanyClick = params => {
     // check if data for this company exists or not
     const uniqCompanyNames = uniq(searchResultHighlights.map(sr => sr.company_name).filter(n => n));
-    const companyIndex = uniqCompanyNames.indexOf(companyName);
+    const companyIndex = uniqCompanyNames.indexOf(params.data.key);
     if (companyIndex === -1) {
       // get data for this company
-      dispatch(performTopicSearchHighlights(true, companyName));
+      dispatch(performTopicSearchHighlights(true, params.data.key));
     }
-    dispatch(setSelectedCompanyName(companyName));
+    dispatch(setSelectedCompanyName(params.data.key));
+  };
+
+  const [gridApi, setGridApi] = useState(null);
+
+  const columnDefs = [
+    {
+      headerName: 'COMPANY',
+      field: 'key',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 2,
+      colId: 'companyName'
+    },
+    {
+      headerName: 'TICKER',
+      field: 'ticker',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 1,
+      colId: 'ticker'
+    },
+
+    {
+      headerName: 'HITS',
+      field: 'doc_count',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 1,
+      colId: 'hits'
+    }
+  ];
+
+  const onGridReady = params => {
+    setGridApi(params.api);
+  };
+  const onFilterTextChange = e => {
+    gridApi.setQuickFilter(e.target.value);
   };
 
   return (
@@ -117,54 +155,24 @@ export default function TopicCompantResultsTable() {
                 input: classes.inputInput
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onChange={handleSearchTextChange}
+              onChange={onFilterTextChange}
             />
           </div>
         </div>
-
         <PerfectScrollbar className={clsx('mb-2', classes.contentSection)}>
-          <div className="table-responsive">
-            <table className="table mb-0">
-              <thead>
-                <tr>
-                  <th style={{ width: '70%' }}>Company</th>
-                  <th className={classes.rightAlign}>Hits</th>
-                  <th className={classes.rightAlign}>% Hits</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isSearchLoading && isEmpty(searchResult) ? (
-                  <tr>
-                    <td colSpan={3} className={classes.loadingTd}>
-                      Loading...
-                    </td>
-                  </tr>
-                ) : searchResultHighlights.length < 1 ? null : (
-                  computedResults
-                    .filter(c => c.key.toLowerCase().includes(filterText.toLowerCase()))
-                    .map((result, index) => {
-                      return (
-                        <tr
-                          key={`r${index}`}
-                          className={classes.companyRow}
-                          onClick={() => handleCompanyClick(result.key)}>
-                          <td>
-                            <div className="align-box-row">
-                              <span>{result.key}</span>
-                            </div>
-                          </td>
-                          <td className={classes.rightAlign}>
-                            <small className="text-black-50 d-block">{result.doc_count}</small>
-                          </td>
-                          <td className={classes.rightAlign}>
-                            <small className="text-black-50 d-block">{result.percentage}%</small>
-                          </td>
-                        </tr>
-                      );
-                    })
-                )}
-              </tbody>
-            </table>
+          <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+            {isSearchLoading && isEmpty(searchResult) ? (
+              <AgGridReact rowData={null} columnDefs={null}></AgGridReact>
+            ) : (
+              <AgGridReact
+                onGridReady={onGridReady}
+                onCellClicked={handleCompanyClick}
+                rowData={finalResult}
+                columnDefs={columnDefs}
+                suppressCellSelection={true}
+              >
+              </AgGridReact>
+            )}
           </div>
         </PerfectScrollbar>
       </Card>
