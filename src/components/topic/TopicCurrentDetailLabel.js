@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import TopicDropDown from './TopicDrowpDown';
 import clsx from 'clsx';
 import { format } from 'date-fns';
+import { isEmpty } from 'lodash';
 
 import {
   setOpenTopicSearchDialog,
@@ -36,6 +37,11 @@ const useStyles = makeStyles(theme => ({
 const TopicDialog = props => {
   const classes = useStyles();
   const { currentSearchDetail } = useSelector(state => state.Topic);
+  const isSuggestions = currentSearchDetail.selectedSuggestions;
+  let selectedSug;
+  if (!isEmpty(isSuggestions)) {
+    selectedSug = isSuggestions[Object.keys(isSuggestions)[0]];
+  }
   let startDate = currentSearchDetail.startDate;
   let endDate = currentSearchDetail.endDate;
   let documents = currentSearchDetail.documentType ? currentSearchDetail.documentType : [];
@@ -53,31 +59,32 @@ const TopicDialog = props => {
       <div className={classes.label}>
         <Paper className={clsx('app-page-title')}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Grid container direction="row" justify="space-between" alignItems="flex-start">
-                <Grid item>
-                  <span className="text-black-50 d-block">Searching:</span>
-                  <span className="font-weight-bold">{currentSearchDetail.seachText}</span>
-                </Grid>
-                <Grid item>
-                  <span className="text-black-50 d-block">From:</span>
-                  <span className={clsx('font-weight-bold', classes.from)}>
-                    {currentSearchDetail.selectedUniverse} &nbsp;
-                  </span>
-                  <span className='font-weight-bold'>{documents.join(',')}</span>
-                </Grid>
-                <Grid item>
-                  <span className="text-black-50 d-block">During:</span>
-                  {currentSearchDetail.startDate ? (
-                    <span className="font-weight-bold">{format(startDate, displayDateFormat)}</span>
-                  ) : null}
-                  {currentSearchDetail.startDate ? (
-                    <span className="font-weight-bold">-{format(endDate, displayDateFormat)}</span>
-                  ) : null}
-                </Grid>
-              </Grid>
+            <Grid item xs={3}>
+              <span className="text-black-50 d-block">Searching:</span>
+              <span className="font-weight-bold">{currentSearchDetail.seachText}</span>
+              <br></br>
+              <span className="text-black-50">{selectedSug ? selectedSug.join(', ') : null}</span>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
+              <span className="text-black-50 d-block">From:</span>
+              <span className={clsx('font-weight-bold', classes.from)}>
+                {currentSearchDetail.selectedUniverse} &nbsp;
+              </span>
+              <span className="font-weight-bold">
+                {documents.join(', ')} {currentSearchDetail.selectedSection}
+              </span>
+            </Grid>
+            <Grid item xs={2}>
+              <span className="text-black-50 d-block">During:</span>
+              {currentSearchDetail.startDate ? (
+                <span className="font-weight-bold">{format(startDate, displayDateFormat)}</span>
+              ) : null}
+              {currentSearchDetail.startDate ? (
+                <span className="font-weight-bold">-{format(endDate, displayDateFormat)}</span>
+              ) : null}
+            </Grid>
+
+            <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end" alignItems="center">
                 <Grid item>
                   <TopicDropDown />

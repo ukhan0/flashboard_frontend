@@ -101,8 +101,8 @@ const TopicFilters = props => {
                 <TopicSearchTextField />
                 <div className={classes.selectedSuggestionsList}>
                   {selectedSuggestionsArr.map((v, index) => (
-                    <span key={`ssa${index}`} className="text-black-50">{`${v} ${
-                      index !== selectedSuggestionsArr.length - 1 ? ',' : ''
+                    <span key={`ssa${index}`} className="text-black-50">{`${v}${
+                      index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
                     }`}</span>
                   ))}
                 </div>

@@ -3,7 +3,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { get, uniq, isEmpty } from 'lodash';
+import { get, uniq, isEmpty, orderBy } from 'lodash';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 import { AgGridReact } from 'ag-grid-react';
@@ -87,6 +87,7 @@ export default function TopicCompantResultsTable() {
   const finalResult = companyResults.map(v => {
     return { key: v.key.cn, ticker: v.key.ct, doc_count: v.doc_count };
   });
+  let sortedCompanyData = orderBy(finalResult, ['doc_count', 'key'], ['desc', 'asc']);
 
   const handleCompanyClick = params => {
     // check if data for this company exists or not
@@ -167,11 +168,10 @@ export default function TopicCompantResultsTable() {
               <AgGridReact
                 onGridReady={onGridReady}
                 onCellClicked={handleCompanyClick}
-                rowData={finalResult}
+                rowData={sortedCompanyData}
                 columnDefs={columnDefs}
                 suppressCellSelection={true}
-              >
-              </AgGridReact>
+                multiSortKey={'ctrl'}></AgGridReact>
             )}
           </div>
         </PerfectScrollbar>

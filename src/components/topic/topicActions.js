@@ -26,13 +26,24 @@ import {
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
-import { get, isEmpty, isArray, forEach, concat, uniqBy } from 'lodash';
+import { get, isEmpty, isArray, forEach, concat, uniqBy, orderBy } from 'lodash';
 import documentTypesData from '../../config/documentTypesData';
+import { metricsSelection } from '../../config/filterTypes';
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const { selectedDocumentTypes, selectedSection } = getState().Topic;
     const currentSearchDetail = {};
+    const sltSection = getState().Topic.selectedSection;
+    if (sltSection === 'totdoc') {
+      currentSearchDetail.selectedSection = null;
+    } else {
+      const section = metricsSelection.find(sd => sd.key === sltSection);
+      if (section) {
+        currentSearchDetail.selectedSection = section.label;
+      }
+    }
+    currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
     currentSearchDetail.seachText = getState().Topic.searchText;
     currentSearchDetail.startDate = getState().Topic.startDate ? getState().Topic.startDate : null;
     currentSearchDetail.endDate = getState().Topic.endDate ? getState().Topic.endDate : null;
@@ -82,9 +93,10 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       if (newSearchResults) {
         const results = get(newSearchResults, 'buckets.groupByCompanyTicker', []);
         if (results) {
-          let firstCompanySelected = results[0].key.cn;
+          let sortData = orderBy(results, ['doc_count', 'key.cn'], ['desc', 'asc']);
+          let firstCompanySelected = sortData[0].key.cn;
           dispatch(setSelectedCompanyName(firstCompanySelected));
-          dispatch(performTopicSearchHighlights(true, firstCompanySelected))
+          dispatch(performTopicSearchHighlights(true, firstCompanySelected));
         }
         dispatch(setSearchResults(newSearchResults));
         dispatch(setSearchBackdrop(null, false));
