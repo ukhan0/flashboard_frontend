@@ -3,23 +3,7 @@ import { Grid, ButtonGroup, Button } from '@material-ui/core';
 import { setWatchlistFileType, setWatchlistUniverse, setWatchlistMetric } from '../../reducers/Watchlist';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
-
-const fileTypesSelection = [
-  { label: '10-K', key: '10k' },
-  { label: '10-Q', key: '10q' }
-];
-const universeSelection = [
-  { label: 'Watchlist', key: 'watchlist' },
-  { label: 'Recent', key: 'recent' },
-  { label: 'Complete', key: 'all' }
-];
-const metricsSelection = [
-  { label: 'Total', key: 'totdoc' },
-  { label: 'MD&A', key: 'mda' },
-  { label: 'Risk', key: 'rf' },
-  { label: 'Notes', key: 'notes' }
-  // { label: 'FSS', key: 'fss' }
-];
+import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
 
 const WatchlistFilters = props => {
   const { selectedFileType, selectedUniverse, selectedMetric, completeDataLoaded } = useSelector(

@@ -232,6 +232,13 @@ export const setSnackBarActive = (isSnackBarActive, snackBarSeverity, snackBarMe
   snackBarMessage
 });
 
+export const setSelectedSection = (isSnackBarActive, snackBarSeverity, snackBarMessage) => ({
+  type: SET_SNACKBAR_ACTIVE,
+  isSnackBarActive,
+  snackBarSeverity,
+  snackBarMessage
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -241,6 +248,7 @@ const searchDefaultState = () => ({
   selectedSuggestions: {},
   selectedDocumentTypes: ['10-K'],
   selectedUniverse: 'all',
+  selectedSection: 'totdoc',
   selectedSector: null,
   selectedIndustries: [],
   selectedWatchlistCompanyNames: []
