@@ -6,7 +6,7 @@ export default [
       totdoc: ['10-k.*'],
       mda: ['10k.p2.i7.*'],
       rf: ['10k.p1.i1a.*'],
-      notes: ['10k.N.*']
+      notes: ['10k.n.*']
     }
   },
   {
@@ -16,7 +16,7 @@ export default [
       totdoc: ['10-q.*'],
       mda: ['10q.p1.i2.*'],
       rf: ['10q.p2.i1a.*'],
-      notes: ['10q.N.*']
+      notes: ['10q.n.*']
     }
   },
   {

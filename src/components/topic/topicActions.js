@@ -85,7 +85,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
 export const performTopicSearchHighlights = (freshSearch = false, companyName = null) => {
   return async (dispatch, getState) => {
     const cancelToken = axios.CancelToken.source();
-    const { selectedDocumentTypes } = getState().Topic;
+    const { selectedDocumentTypes, selectedSection } = getState().Topic;
     const topicState = { ...getState().Topic };
     dispatch(setSearchStart());
     if (freshSearch) {
@@ -100,7 +100,7 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
     let searchFromsCount = 0;
     documentTypeObjects.forEach(documentType => {
-      const searchFroms = get(documentType, 'searchFroms', []);
+      const searchFroms = get(documentType, `sections.${selectedSection}`, []);
       searchFroms.forEach(() => {
         searchFromsCount += 1;
       });
@@ -108,7 +108,7 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
     let apiResponseCount = 0;
     for (const documentType of documentTypeObjects) {
-      const searchFroms = get(documentType, 'searchFroms', []);
+      const searchFroms = get(documentType, `sections.${selectedSection}`, []);
       if (getState().Topic.cancelExistingHighlightCalls) {
         // break the loop
         break;
