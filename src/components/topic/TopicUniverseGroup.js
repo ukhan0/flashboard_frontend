@@ -99,7 +99,7 @@ const TopicUniverseGroup = () => {
             style={{
               transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
             }}>
-            <Paper style={{ zIndex: 10000 }}>
+            <Paper style={{ zIndex: 10000, height: 250, overflow: 'scroll' }}>
               <ClickAwayListener onClickAway={() => setIsSectorDropdownOpen(false)}>
                 <MenuList>
                   {sectorValues.map(sector => (
