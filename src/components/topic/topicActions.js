@@ -31,6 +31,7 @@ import documentTypesData from '../../config/documentTypesData';
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
+    const { selectedDocumentTypes, selectedSection } = getState().Topic;
     const currentSearchDetail = {};
     currentSearchDetail.seachText = getState().Topic.searchText;
     currentSearchDetail.startDate = getState().Topic.startDate ? getState().Topic.startDate : null;
@@ -43,10 +44,25 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     if (showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true));
     }
+
+    const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt));
+    let searchFroms = [];
+    documentTypeObjects.forEach(documentType => {
+      const sections = get(documentType, `sections.${selectedSection}`, []);
+      sections.forEach(section => {
+        searchFroms.push(`sma_data_json.${section}`)
+      });
+    });
+
+
     try {
       const response = await axios.post(
         `${config.apiUrl}/api/dictionary/search_aggregate`,
-        createSearchPayload(getState().Topic, freshSearch),
+        {
+          ...createSearchPayload(getState().Topic, freshSearch),
+          searchfromArr: searchFroms,
+          searchfrom: undefined
+        },
         {
           cancelToken: cancelTokenSource.token
         }
