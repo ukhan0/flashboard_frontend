@@ -19,7 +19,6 @@ const useStyles = makeStyles(theme => ({
 const TopicComapnyDetails = props => {
   const classes = useStyles();
   const companyDetail = props.companyDetail;
-
   return (
     <Fragment>
       <Paper className={clsx('app-page-title')}>

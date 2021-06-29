@@ -5,7 +5,7 @@ import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { upperCase } from 'lodash';
+import { upperCase, get } from 'lodash';
 const useStyles = makeStyles(theme => ({
   content: {
     fontSize: 12
@@ -57,7 +57,8 @@ const SentimentSection = props => {
   }
 
   if (data) {
-    visitOutlineObj(displayData, data, 0, '');
+    const content = get(data, 'data_json', []);
+    visitOutlineObj(displayData, content, 0, '');
   }
 
   return (
@@ -74,7 +75,7 @@ const SentimentSection = props => {
               style={{
                 paddingLeft: d.lvl * 4 + 4,
                 fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
-                scrollMarginTop: '5em'
+                scrollMarginTop: '210px'
               }}
               id={createHash(d.path)}>
               {d.content ? (

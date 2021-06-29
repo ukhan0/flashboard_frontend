@@ -41,6 +41,8 @@ export const SET_SAVED_SEARCHES = 'TOPIC/SET_SAVED_SEARCHES';
 export const SET_SEARCH_LABEL = 'TOPIC/SET_SEARCHE_LABEL';
 export const SET_SNACKBAR_ACTIVE = 'TOPIC/SET_SNACKBAR_ACTIVE';
 export const SET_SELECTED_SECTION = 'TOPIC/SET_SELECTED_SECTION';
+export const SET_OPEN_TOPIC_SEARCH_DIALOG = 'TOPIC/SET_OPEN_TOPIC_SEARCH_DIALOG';
+export const SET_CURRENT_SEARCH_DETAIL = 'TOPIC/SET_CURRENT_SEARCH_DETAIL';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -236,6 +238,16 @@ export const setSnackBarActive = (isSnackBarActive, snackBarSeverity, snackBarMe
 export const setSelectedSection = (selectedSection) => ({
   type: SET_SELECTED_SECTION,
   selectedSection,
+})
+
+export const setOpenTopicSearchDialog = openTopicSearchDialog => ({
+  type: SET_OPEN_TOPIC_SEARCH_DIALOG,
+  openTopicSearchDialog
+});
+
+export const setCurrentSearchtDetail = currentSearchDetail => ({
+  type: SET_CURRENT_SEARCH_DETAIL,
+  currentSearchDetail
 });
 
 const searchDefaultState = () => ({
@@ -284,6 +296,8 @@ const getDefaultState = () => {
     isSnackBarActive: false,
     snackBarMessage: null,
     snackBarSeverity: null,
+    openTopicSearchDialog: false,
+    currentSearchDetail: {}
   };
 };
 
@@ -400,6 +414,10 @@ export default function reducer(
         ...state,
         selectedSection: action.selectedSection
       };
+    case SET_OPEN_TOPIC_SEARCH_DIALOG:
+      return { ...state, openTopicSearchDialog: action.openTopicSearchDialog };
+    case SET_CURRENT_SEARCH_DETAIL:
+      return { ...state, currentSearchDetail: action.currentSearchDetail };
     default:
       break;
   }

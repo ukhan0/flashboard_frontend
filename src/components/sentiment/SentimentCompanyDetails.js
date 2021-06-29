@@ -15,11 +15,16 @@ const useStyles = makeStyles(theme => ({
   logo: {
     height: 70,
     width: 70
+  },
+  upperCase: {
+    textTransform: 'uppercase'
   }
 }));
 
 const SentimentSectionPageTitle = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
+  const { data } = useSelector(state => state.Sentiment);
+  const companyDetail = get(data, 'summary_json', []);
   const classes = useStyles();
 
   return (
@@ -32,7 +37,7 @@ const SentimentSectionPageTitle = props => {
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <h5>{get(selectedItem, 'companyName', null)}</h5>
+                <h5>{get(companyDetail, 'Company Name', null)}</h5>
               </Grid>
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">
@@ -40,7 +45,7 @@ const SentimentSectionPageTitle = props => {
                 <label className="text-black-50 d-block">{`DocumentType:`}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'documentType', null)}</h6>
+                <h6 className={classes.upperCase}>{get(companyDetail, 'Document Type', null)}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -58,7 +63,7 @@ const SentimentSectionPageTitle = props => {
                 <label className="text-black-50 d-block">{'Period Date:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'periodDate', null)}</h6>
+                <h6>{data ? new Date(get(companyDetail, 'Period', null)).toLocaleDateString() : null}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -76,7 +81,7 @@ const SentimentSectionPageTitle = props => {
                 <label className="text-black-50 d-block">{'Publish Date:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{new Date(get(selectedItem, 'last', null)).toLocaleDateString()}</h6>
+                <h6>{data ? new Date(get(companyDetail, 'Document Date', null)).toLocaleDateString() : null}</h6>
               </Grid>
             </Grid>
           </Grid>

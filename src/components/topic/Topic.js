@@ -1,30 +1,33 @@
-import React, { useState } from 'react';
-import { Grid, Snackbar, Button } from '@material-ui/core';
-import TopicSaveDialog from './TopicSaveDialog';
+import React from 'react';
+import { Grid, Snackbar } from '@material-ui/core';
 import TopicPieChart from './TopicPieChart';
 import TopicCompanyResultsTable from './TopicCompanyResultsTable';
 import TopicSearchResults from './TopicSearchResults';
 import TopicHistoryChart from './TopicHistoryChart';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
-import TopicDrawer from './TopicDrawer';
+import TopicDialog from './TopicDialog';
+import TopicSnackbar from './TopicSnackbar';
+import TopicCurrentDetailLabel from './TopicCurrentDetailLabel'
 import {
   setIsSearchDeleteErr,
   setIsTopicDeleteErr,
   resetResultsPage,
-  cancelExistingHightlightsCalls
+  cancelExistingHightlightsCalls,
+  setSnackBarActive
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
 
 const Topic = () => {
   const classes = topicStyles();
   const {
-    isSaveDlgOpen,
     isSearchDeleteError,
     isTopicDeleteError,
     cancelTokenSourceHighlights,
+    isSnackBarActive,
+    snackBarMessage,
+    snackBarSeverity
   } = useSelector(state => state.Topic);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -42,15 +45,15 @@ const Topic = () => {
       dispatch(performTopicSearchHighlights(true));
     }, 1000);
   };
-  
+
+  const handleCloseSnackBar = () => {
+    dispatch(setSnackBarActive(false));
+  };
+
   return (
     <div className={classes.root}>
-      <div className={classes.topicDrawerOpener}>
-        <Button color="primary" variant="contained" className="m-2" onClick={() => setIsDrawerOpen(!isDrawerOpen)}>
-          My Searches
-        </Button>
-      </div>
-      <TopicDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} handleSearch={handleSearch} />
+      <TopicCurrentDetailLabel/>
+      <TopicDialog handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Grid container spacing={1}>
@@ -69,7 +72,14 @@ const Topic = () => {
           <TopicSearchResults />
         </Grid>
       </Grid>
-      {isSaveDlgOpen ? <TopicSaveDialog isOpen={isSaveDlgOpen} onClose={() => null} /> : null}
+      <TopicSnackbar
+        open={isSnackBarActive}
+        onClose={() => {
+          handleCloseSnackBar();
+        }}
+        message={snackBarMessage}
+        severity={snackBarSeverity}
+      />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={isSearchDeleteError}

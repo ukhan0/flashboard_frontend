@@ -1,5 +1,4 @@
 export default [
-  // { label: 'All', value: 'all' },
   {
     label: '10-K',
     value: '10-K',

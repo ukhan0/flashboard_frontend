@@ -19,7 +19,9 @@ import {
   setSavedSearches,
   setSnackBarActive,
   resetAllSearchParams,
-  setShowComposeNew
+  setShowComposeNew,
+  setCurrentSearchtDetail,
+  setSelectedCompanyName
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -29,6 +31,13 @@ import documentTypesData from '../../config/documentTypesData';
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
+    const currentSearchDetail = {};
+    currentSearchDetail.seachText = getState().Topic.searchText;
+    currentSearchDetail.startDate = getState().Topic.startDate ? getState().Topic.startDate : null;
+    currentSearchDetail.endDate = getState().Topic.endDate ? getState().Topic.endDate : null;
+    currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
+    currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
+    dispatch(setCurrentSearchtDetail(currentSearchDetail));
     const cancelTokenSource = axios.CancelToken.source();
     dispatch(setSearchStart());
     if (showBackdrop) {
@@ -43,8 +52,23 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         }
       );
       let newSearchResults = get(response, 'data', null);
-      const isError = get(newSearchResults, 'error', null);
-      if (newSearchResults && !isError) {
+      if (typeof newSearchResults === 'string') {
+        let isErrorr = newSearchResults.includes('root_cause');
+        if (isErrorr) {
+          dispatch(setSearchBackdrop(null, false));
+          dispatch(setSearchError(true));
+          let errorMessage =
+            'There are too many results for this search. Try refining your search with more specific keywords';
+          dispatch(setSnackBarActive(true, 'error', errorMessage));
+        }
+      }
+
+      if (newSearchResults) {
+        const results = get(newSearchResults, 'buckets.companyNames', []);
+        if (results) {
+          let firstCompanySelected = results[0].key;
+          dispatch(setSelectedCompanyName(firstCompanySelected));
+        }
         dispatch(setSearchResults(newSearchResults));
         dispatch(setSearchBackdrop(null, false));
       } else {
@@ -186,7 +210,7 @@ export const fetchTopicsList = () => {
     if (savedSearch.length > 0) {
       dispatch(setSavedSearches(savedSearch));
     } else {
-      dispatch(setShowComposeNew(true))
+      dispatch(setShowComposeNew(true));
       dispatch(setSavedSearches([]));
     }
   };
@@ -214,14 +238,13 @@ const createSearchSaveMiniPayload = topicState => {
   };
 };
 
-export const handleSaveSearch = searchLabel => {
+export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
     const { searchText } = getState().Topic;
     const payload = {
       userId: user.id,
       searchText: searchText,
-      searchLabel: searchLabel,
       searchJSON: createSearchSaveMiniPayload(getState().Topic)
     };
 

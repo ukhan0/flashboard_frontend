@@ -11,7 +11,10 @@ import {
   cancelExistingHightlightsCalls,
   setShowComposeNew,
   setShowUpdateButton,
-  setSearchLabel
+  setSearchLabel,
+  setOpenTopicSearchDialog,
+  setSelectedIndustries,
+  resetAllSearchParams
 } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
@@ -19,8 +22,8 @@ import {
   fetchTopicsList,
   deleteSearch
 } from './topicActions';
-import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,6 +68,7 @@ export default function TopicSearchHistory(props) {
     dispatch(setSuggestions({}));
     dispatch(setAllSearchParams(searchObj));
     dispatch(setSearchLabel(searchObj.searchLabel));
+    dispatch(setOpenTopicSearchDialog(true));
   };
 
   const setSearchParams = useCallback(
@@ -101,44 +105,65 @@ export default function TopicSearchHistory(props) {
     }
   }, [savedSearches, setSearchParams, selectedSearch]);
 
+  const clickHereHandle = () => {
+    dispatch(setOpenTopicSearchDialog(true));
+    dispatch(setSelectedIndustries([]));
+    dispatch(setShowUpdateButton(false));
+    dispatch(setSelectedSearch(null, null));
+    dispatch(resetAllSearchParams());
+  };
+
   return (
     <div className={classes.savedSearchesSection}>
-      <div className={classes.title}>
-        <h5>Saved Searches</h5>
-      </div>
       <List component="nav" className={classes.root}>
-        {savedSearches.map((s, index) => {
-          return (
-            <List component="div" disablePadding key={`lil${index}`}>
-              <ListItem
-                button
-                className={classes.nested}
-                selected={selectedSearch && selectedSearch.searchId === s.searchId}
-                onClick={() => setSearchParams(s)}>
-                <ListItemText primary={s.searchLabel} />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    aria-label="comments"
-                    size="small"
-                    onClick={() => {
-                      dispatch(setShowUpdateButton(true));
-                      dispatch(setShowComposeNew(true));
-                      setSearchParamsEdit(s);
-                    }}>
-                    <EditIcon className={classes.editIcon} />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="comments"
-                    size="small"
-                    onClick={() => dispatch(deleteSearch(s.searchId))}>
-                    <CloseIcon className={classes.deleteIcon} />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-          );
-        })}
+        {savedSearches.length > 0 ? (
+          savedSearches.map((s, index) => {
+            return (
+              <List component="div" disablePadding key={`lil${index}`}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  selected={selectedSearch && selectedSearch.searchId === s.searchId}
+                  onClick={() => setSearchParams(s)}>
+                  <ListItemText primary={s.searchText} />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-label="comments"
+                      size="small"
+                      onClick={() => {
+                        dispatch(setShowUpdateButton(true));
+                        dispatch(setShowComposeNew(true));
+                        setSearchParamsEdit(s);
+                        props.handleClose();
+                      }}>
+                      <EditIcon className={classes.editIcon} />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="comments"
+                      size="small"
+                      onClick={() => dispatch(deleteSearch(s.searchId))}>
+                      <DeleteForeverIcon className={classes.deleteIcon} />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            );
+          })
+        ) : (
+          <p>
+            You don't have any saved topics yet. <br></br>
+            <span
+              style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+              onClick={() => {
+                clickHereHandle();
+                props.handleClose();
+              }}>
+              Click here
+            </span>
+            {' '}to create new one{' '}
+          </p>
+        )}
       </List>
     </div>
   );

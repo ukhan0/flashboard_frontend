@@ -87,7 +87,6 @@ export default function TopicCompantResultsTable() {
       percentage: round((result.doc_count / totalHits) * 100)
     };
   });
-
   const handleSearchTextChange = event => {
     setFilterText(event.target.value);
   };
@@ -140,7 +139,7 @@ export default function TopicCompantResultsTable() {
                       Loading...
                     </td>
                   </tr>
-                ) : (
+                ) : searchResultHighlights.length < 1 ? null : (
                   computedResults
                     .filter(c => c.key.toLowerCase().includes(filterText.toLowerCase()))
                     .map((result, index) => {

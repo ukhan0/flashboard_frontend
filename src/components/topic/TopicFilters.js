@@ -9,7 +9,13 @@ import TopicUniverseSubFilters from './TopicUniverseSubFilters';
 import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 import { forEach, concat } from 'lodash';
-import { updateSaveSearch } from './topicActions';
+import {
+  updateSaveSearch,
+  handleSaveSearch,
+  performTopicSearchAggregate,
+  performTopicSearchHighlights
+} from './topicActions';
+import { setOpenTopicSearchDialog, resetResultsPage, cancelExistingHightlightsCalls } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -40,15 +46,43 @@ const isSearchAllowed = searchText => {
 const TopicFilters = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { searchText, isSearchError, selectedSuggestions, showUpdateButton, selectedSearch } = useSelector(
-    state => state.Topic
-  );
+  const {
+    searchText,
+    isSearchError,
+    selectedSuggestions,
+    showUpdateButton,
+    selectedSearch,
+    cancelTokenSourceHighlights
+  } = useSelector(state => state.Topic);
+  const handleUpdateSaveSearch = searchId => {
+    dispatch(resetResultsPage());
+    dispatch(performTopicSearchAggregate(true, true));
+    // cancel existing calls if there are any
+    if (cancelTokenSourceHighlights) {
+      cancelTokenSourceHighlights.cancel();
+    }
+    dispatch(cancelExistingHightlightsCalls(true));
+    // now perform actual search
+    setTimeout(() => {
+      dispatch(cancelExistingHightlightsCalls(false));
+      dispatch(performTopicSearchHighlights(true));
+    }, 1000);
+
+    dispatch(updateSaveSearch(searchId));
+    dispatch(setOpenTopicSearchDialog(false));
+    dispatch(resetResultsPage());
+    dispatch(performTopicSearchAggregate(true, true));
+  };
+  const handleClickSaveSearch = () => {
+    dispatch(handleSaveSearch());
+    dispatch(setOpenTopicSearchDialog(false));
+  };
   let selectedSuggestionsArr = [];
   forEach(selectedSuggestions, values => {
     selectedSuggestionsArr = concat(selectedSuggestionsArr, values);
   });
-  
-  const isButtonActive = !(searchText.length > 2)
+
+  const isButtonActive = !(searchText.length > 2);
 
   return (
     <Grid
@@ -62,21 +96,27 @@ const TopicFilters = props => {
         <h6>Search</h6>
         <div className={classes.searchContainer}>
           <div className={classes.searchFieldContainer}>
-            <TopicSearchTextField />
-            <div className={classes.selectedSuggestionsList}>
-              {selectedSuggestionsArr.map((v, index) => (
-                <span key={`ssa${index}`} className="text-black-50">{`${v} ${
-                  index !== selectedSuggestionsArr.length - 1 ? ',' : ''
-                }`}</span>
-              ))}
-            </div>
-          </div>
-          <div className={classes.suggestionsBtnSection}>
-            {isSearchAllowed(searchText) ? (
-              <Button color="primary" onClick={props.onShowSuggestions}>
-                Show Suggestions
-              </Button>
-            ) : null}
+            <Grid container>
+              <Grid item xs={8}>
+                <TopicSearchTextField />
+                <div className={classes.selectedSuggestionsList}>
+                  {selectedSuggestionsArr.map((v, index) => (
+                    <span key={`ssa${index}`} className="text-black-50">{`${v} ${
+                      index !== selectedSuggestionsArr.length - 1 ? ',' : ''
+                    }`}</span>
+                  ))}
+                </div>
+              </Grid>
+              <Grid item xs={4}>
+                <div className={classes.suggestionsBtnSection}>
+                  {isSearchAllowed(searchText) ? (
+                    <Button color="primary" onClick={props.onShowSuggestions}>
+                      Show Suggestions
+                    </Button>
+                  ) : null}
+                </div>
+              </Grid>
+            </Grid>
           </div>
         </div>
       </Grid>
@@ -104,35 +144,40 @@ const TopicFilters = props => {
         <TopicSectionGroup />
       </Grid>
       <Grid item xs={12}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {showUpdateButton ? (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                dispatch(updateSaveSearch(selectedSearch.searchId));
-              }}>
-              Update
-            </Button>
-          ) : (
-            <Button variant="contained" color="secondary" disabled={isButtonActive} onClick={props.onSaveSearch}>
-              Save
-            </Button>
-          )}
-          <div className="mr-2"></div>
-          <Button variant="contained" color="primary" disabled={isButtonActive} onClick={props.onSearch}>
-            Search
-          </Button>
-        </div>
-      </Grid>
-      <Grid item xs={12}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {isSearchError ? (
-            <div className="mr-3">
-              <Typography color="error">Error Occured</Typography>
-            </div>
-          ) : null}
-        </div>
+        <Grid container spacing={1} direction="row" justify="flex-end" alignItems="flex-end">
+          <Grid item>
+            {showUpdateButton ? (
+              <Button
+                style={{ width: '100px' }}
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  handleUpdateSaveSearch(selectedSearch.searchId);
+                }}>
+                Save
+              </Button>
+            ) : (
+              <Button
+                style={{ width: '100px' }}
+                variant="contained"
+                color="primary"
+                disabled={isButtonActive}
+                onClick={() => {
+                  props.onSearch();
+                  handleClickSaveSearch();
+                }}>
+                Save
+              </Button>
+            )}
+          </Grid>
+          <Grid item>
+            {isSearchError ? (
+              <div style={{ marginBottom: '5px' }}>
+                <Typography color="error">Error Occured</Typography>
+              </div>
+            ) : null}
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
