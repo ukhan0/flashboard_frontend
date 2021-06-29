@@ -54,9 +54,9 @@ const TopicSearchResults = () => {
           const documentDates = sortBy(
             uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date)))
           );
-          const uniqTitleCodes = uniq(flatten(companyResults.map(cr => cr.results.map(r => r.title))));
-          const uniqTitles = uniq(flatten(companyResults.map(cr => cr.results.map(r => createResultTitle(r.title)))));
-          const resultsCount = flattenDeep(companyResults.map(cr => cr.results.map(r => r.content))).length;
+          const uniqTitleCodes = uniq(flatten(companyResults.map(cr => get(cr, 'results', []).map(r => r.title))));
+          const uniqTitles = uniq(flatten(companyResults.map(cr => get(cr, 'results', []).map(r => createResultTitle(r.title)))));
+          const resultsCount = flattenDeep(companyResults.map(cr => get(cr, 'results', []).map(r => r.content))).length;
           const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null;
           return {
             companyName: c.company_name,
@@ -158,7 +158,7 @@ const TopicSearchResults = () => {
                               </small>
                             </Grid>
                           </Grid>
-                          {companyResult.results.map((result, index) => {
+                          {get(companyResult, 'results', []).map((result, index) => {
                             return (
                               <div key={`rst${index}`}>
                                 <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>

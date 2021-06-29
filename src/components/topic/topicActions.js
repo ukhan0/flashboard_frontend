@@ -166,11 +166,11 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
 const createSearchPayload = (topicState, freshSearch, searchFrom = null, companyName = null) => {
   const searchId = get(topicState.selectedSearch, 'searchId', null);
-  const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(
+  const { suggestionsSingleArr } = getSelectedSuggestionAsArr(
     topicState.selectedSuggestions,
     topicState.searchText
   );
-  const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText;
+  const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsSingleArr) : topicState.searchText;
   const data = {
     searchTerm: fullSearchText,
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
