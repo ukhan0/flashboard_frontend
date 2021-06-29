@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { startCase, upperCase } from 'lodash';
+import { startCase, upperCase, get } from 'lodash';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -60,7 +60,8 @@ const SentimentDrawer = props => {
     }
   }
   if (data) {
-    visitOutlineObj(displayData, data, 0, '');
+    const headings = get(data, 'data_json', []);
+    visitOutlineObj(displayData, headings, 0, '');
   }
 
   const clickHandle = path => {

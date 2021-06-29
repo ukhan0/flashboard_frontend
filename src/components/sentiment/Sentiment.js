@@ -9,12 +9,13 @@ import { getSentimentData } from './sentimentActions';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { useHistory } from 'react-router-dom';
 import SentimentCompanyDetails from './SentimentCompanyDetails';
+import config from '../../config/config';
 
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
     justifyContent: 'flex-end',
-    top: 110,
+    top: 170,
     position: 'sticky'
   },
   goToTopContainer: {
@@ -36,7 +37,7 @@ const Sentiment = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const contentTopRef = useRef(null);
-
+  let hideCards = config.hideCard;
   const history = useHistory();
   if (!selectedItem) {
     history.push('/watchlist');
@@ -65,12 +66,13 @@ const Sentiment = () => {
       <Button
         color="primary"
         className="m-2"
+        variant="contained"
         onClick={() => {
           goBack();
         }}>
         Back
       </Button>
-      <SentimentCard />
+      {hideCards === 'true' ? <SentimentCard /> : null}
       <div className={classes.companyDetail}>
         {selectedItem ? (
           <Box m={2}>

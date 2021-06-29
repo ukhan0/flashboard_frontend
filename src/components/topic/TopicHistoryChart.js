@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Grid, FormControlLabel, Checkbox, Card } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
-const companyColor = '#0388cb';
+const companyColor = '#4092e5';
 const fileColor = '#359901';
 
 const useStyles = makeStyles(theme => ({

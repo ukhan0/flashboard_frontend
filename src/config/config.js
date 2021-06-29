@@ -5,6 +5,7 @@ const config = {
   agGridLicense: process.env.REACT_APP_AGGRID_LICENSE,
   sentimentUrl: process.env.REACT_APP_SENTIMENT_URL,
   companyLogoPath: 'https://sma-assets.s3.us-east-2.amazonaws.com/logos/',
+  hideCard:process.env.REACT_APP_HIDE_CARD,
 };
 
 export default config;

@@ -38,14 +38,6 @@ const ComparisionCompanyDetails = props => {
                 <h5>{get(selectedItem, 'companyName', null)}</h5>
               </Grid>
             </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
-                <label className="text-black-50 d-block">{`DocumentType:`}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <h6>{get(selectedItem, 'documentType', null)}</h6>
-              </Grid>
-            </Grid>
           </Grid>
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
@@ -56,14 +48,6 @@ const ComparisionCompanyDetails = props => {
                 <h6>{get(selectedItem, 'sector', null)}</h6>
               </Grid>
             </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
-                <label className="text-black-50 d-block">{'Period Date:'}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <h6>{get(selectedItem, 'periodDate', null)}</h6>
-              </Grid>
-            </Grid>
           </Grid>
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
@@ -72,14 +56,6 @@ const ComparisionCompanyDetails = props => {
               </Grid>
               <Grid item>
                 <h6>{get(selectedItem, 'industry', null)}</h6>
-              </Grid>
-            </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
-                <label className="text-black-50 d-block">{'Publish Date:'}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <h6>{new Date(get(selectedItem, 'last', null)).toLocaleDateString()}</h6>
               </Grid>
             </Grid>
           </Grid>

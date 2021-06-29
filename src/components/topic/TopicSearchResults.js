@@ -1,21 +1,18 @@
 import React, { useState, Fragment, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { InputAdornment, Grid, TextField, Divider } from '@material-ui/core';
+import { Grid, Paper, Box } from '@material-ui/core';
 import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex, toLower } from 'lodash';
 import clsx from 'clsx';
-import SearchIcon from '@material-ui/icons/Search';
 import { useSelector, useDispatch } from 'react-redux';
-import TopicResultsSummary from './TopicResultsSummary';
 import { createResultTitle } from './topicHelpers';
 import { useHistory } from 'react-router-dom';
-import { setSelectedCompanyName } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
-import TopicComapnyDetails from './TopicCompanyDetails'
+import TopicComapnyDetails from './TopicCompanyDetails';
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
   },
@@ -29,6 +26,10 @@ const useStyles = makeStyles(_theme => ({
   },
   clickable: {
     cursor: 'pointer'
+  },
+  margin: {
+    marginTop: '12px',
+    background: 'white',
   }
 }));
 
@@ -38,10 +39,9 @@ const TopicSearchResults = () => {
   const history = useHistory();
   const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-  const [resultsCompanyFilterText, setResultsCompanyFilterText] = useState('');
-  const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0);
+  const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
-  const [companyDetails, setCompanyDetails] = useState({})
+  const [companyDetails, setCompanyDetails] = useState({});
   const [summaryByCompany, setSummaryByCompany] = useState([]);
 
   useEffect(() => {
@@ -77,17 +77,13 @@ const TopicSearchResults = () => {
     const companyResults = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'results', []);
     setSummaryByCompany(summaryByCompanyData);
     setCompanyResults(companyResults);
-    const companyDetail = {}
+    const companyDetail = {};
     companyDetail.companyName = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'companyName', null);
     companyDetail.sector = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'sector', null);
     companyDetail.industry = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'industry', null);
     companyDetail.ticker = get(get(summaryByCompanyData, selectedCompanyIndex, null), 'ticker', null);
-    setCompanyDetails(companyDetail)
+    setCompanyDetails(companyDetail);
   }, [searchResultHighlights, selectedCompanyIndex]);
-
-  const handleCompanySearch = event => {
-    setResultsCompanyFilterText(event.target.value);
-  };
 
   useEffect(() => {
     if (!selectedCompanyName) {
@@ -98,11 +94,6 @@ const TopicSearchResults = () => {
       setSelectedCompanyIndex(companyIndex);
     }
   }, [selectedCompanyName, summaryByCompany]);
-
-  const handleCompanySelect = index => {
-    setSelectedCompanyIndex(index);
-    dispatch(setSelectedCompanyName(null));
-  };
 
   const goToSentimentScreen = companyDocumentResultData => {
     const companyName = get(companyDocumentResultData, 'company_name', null);
@@ -128,91 +119,62 @@ const TopicSearchResults = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }} ref={resultsSection}>
-      <div style={{ width: '35%' }}>
-        <div className={clsx('bg-white border-right', { 'layout-sidebar-open': false })}>
-          <div className="p-3">
-            <TextField
-              fullWidth
-              margin="dense"
-              placeholder="Company Name ..."
-              variant="outlined"
-              disabled={false}
-              onChange={handleCompanySearch}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                )
-              }}
-            />
-          </div>
-          <Divider />
-          <PerfectScrollbar>
-            <TopicResultsSummary
-              summaryByCompany={summaryByCompany}
-              onCompanySelect={index => handleCompanySelect(index)}
-              selectedCompanyIndex={selectedCompanyIndex}
-              resultsCompanyFilterText={resultsCompanyFilterText}
-            />
-          </PerfectScrollbar>
-        </div>
-      </div>
-      <div style={{ width: '65%' }}>
-        <div className="bg-white p-0" style={{ height: 733 }}>
+    <div ref={resultsSection}>
+      <div>
+        <div className="bg-white p-0">
           <PerfectScrollbar className="mb-4 p-4">
-            <TopicComapnyDetails
-            companyDetail = {companyDetails}
-            />
+            <TopicComapnyDetails companyDetail={companyDetails} />
             {isSearchLoading && isEmpty(searchResultHighlights) ? (
               <h4 className="font-size-lg"> </h4>
             ) : (
               companyResults.map((companyResult, index) => {
                 return (
                   <Fragment key={`rs${index}`}>
-                    <div className={classes.resultSection}>
-                      <Grid container direction="row" justify="space-between" alignItems="flex-start">
-                        <Grid item>
-                          <h3 className="font-size-lg mb-3 font-weight-bold">{companyResult.document_type}</h3>
-                        </Grid>
-                        <Grid item>
-                          <small className="text-black-50 pt-1 pr-2">
-                            Filing ID:{' '}
-                            <b
-                              className={clsx(classes.clickable, 'text-first')}
-                              onClick={() => goToSentimentScreen(companyResult)}>
-                              {companyResult.summary_id}
-                            </b>
-                          </small>
-                          <small className="text-black-50 pt-1 pr-2">
-                            Document ID: <b className="text-first">{companyResult.document_id}</b>
-                          </small>
-                          <small className="text-black-50 pt-1 pr-2">
-                            Document Date:{' '}
-                            <b className="text-first">
-                              {companyResult.document_date
-                                ? new Date(companyResult.document_date).toLocaleDateString()
-                                : null}
-                            </b>
-                          </small>
-                        </Grid>
-                      </Grid>
-                      {companyResult.results.map((result, index) => {
-                        return (
-                          <div key={`rst${index}`}>
-                            <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
-                            {result.content.map((content, index) => (
-                              <p
-                                key={`rstc${index}`}
-                                className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')}
-                                dangerouslySetInnerHTML={{ __html: content }}></p>
-                            ))}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <Divider />
+                    <Paper elevation={6} className={classes.margin}>
+                      <Box p={4}>
+                        <div className={classes.resultSection}>
+                          <Grid container direction="row" justify="space-between" alignItems="flex-start">
+                            <Grid item>
+                              <h3 className="font-size-lg mb-3 font-weight-bold">{companyResult.document_type}</h3>
+                            </Grid>
+                            <Grid item>
+                              <small className="text-black-50 pt-1 pr-2">
+                                Filing ID:{' '}
+                                <b
+                                  className={clsx(classes.clickable, 'text-first')}
+                                  onClick={() => goToSentimentScreen(companyResult)}>
+                                  {companyResult.summary_id}
+                                </b>
+                              </small>
+                              <small className="text-black-50 pt-1 pr-2">
+                                Document ID: <b className="text-first">{companyResult.document_id}</b>
+                              </small>
+                              <small className="text-black-50 pt-1 pr-2">
+                                Document Date:{' '}
+                                <b className="text-first">
+                                  {companyResult.document_date
+                                    ? new Date(companyResult.document_date).toLocaleDateString()
+                                    : null}
+                                </b>
+                              </small>
+                            </Grid>
+                          </Grid>
+                          {companyResult.results.map((result, index) => {
+                            return (
+                              <div key={`rst${index}`}>
+                                <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                                {result.content.map((content, index) => (
+                                  <p
+                                    key={`rstc${index}`}
+                                    className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')}
+                                    dangerouslySetInnerHTML={{ __html: content }}></p>
+                                ))}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </Box>
+                    </Paper>
                     <div className="mb-2"></div>
                   </Fragment>
                 );
