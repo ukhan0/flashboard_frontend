@@ -40,6 +40,7 @@ export const SET_SELECTED_WATCHLIST_COMPANY_NAMES = 'TOPIC/SET_SELECTED_WATCHLIS
 export const SET_SAVED_SEARCHES = 'TOPIC/SET_SAVED_SEARCHES';
 export const SET_SEARCH_LABEL = 'TOPIC/SET_SEARCHE_LABEL';
 export const SET_SNACKBAR_ACTIVE = 'TOPIC/SET_SNACKBAR_ACTIVE';
+export const SET_SELECTED_SECTION = 'TOPIC/SET_SELECTED_SECTION';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -232,11 +233,9 @@ export const setSnackBarActive = (isSnackBarActive, snackBarSeverity, snackBarMe
   snackBarMessage
 });
 
-export const setSelectedSection = (isSnackBarActive, snackBarSeverity, snackBarMessage) => ({
-  type: SET_SNACKBAR_ACTIVE,
-  isSnackBarActive,
-  snackBarSeverity,
-  snackBarMessage
+export const setSelectedSection = (selectedSection) => ({
+  type: SET_SELECTED_SECTION,
+  selectedSection,
 });
 
 const searchDefaultState = () => ({
@@ -395,6 +394,11 @@ export default function reducer(
         isSnackBarActive: action.isSnackBarActive,
         snackBarSeverity: action.snackBarSeverity,
         snackBarMessage: action.snackBarMessage
+      };
+    case SET_SELECTED_SECTION:
+      return {
+        ...state,
+        selectedSection: action.selectedSection
       };
     default:
       break;
