@@ -1,3 +1,5 @@
+import cjson from 'compressed-json';
+
 export const createHash = function(str, seed = 0) {
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
   for (let i = 0, ch; i < str.length; i++) {
@@ -9,3 +11,20 @@ export const createHash = function(str, seed = 0) {
   h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
   return 4294967296 * (2097151 & h2) + (h1>>>0);
 };
+
+export const storeCompleteWatchlist = (data) => {
+  localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(data))
+}
+
+export const getCompleteWatchlist = () => {
+  const companiesListcompressed = localStorage.getItem(`watchlist-data-all`)
+  if(!companiesListcompressed) {
+    return null
+  } else {
+    return cjson.decompress.fromString(companiesListcompressed)
+  }
+}
+
+export const eraseCompleteWatchlist = () => {
+  localStorage.removeItem('watchlist-data-all');
+}

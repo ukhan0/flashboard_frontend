@@ -8,9 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createResultTitle } from './topicHelpers';
 import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
+import { getCompleteWatchlist } from '../../utils/helpers'
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -101,8 +101,7 @@ const TopicSearchResults = () => {
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
 
-    const companiesListcompressed = localStorage.getItem(`watchlist-data-all`);
-    const companiesList = cjson.decompress.fromString(companiesListcompressed);
+    const companiesList = getCompleteWatchlist() || []
     let company = companiesList.find(c => toLower(c.b) === toLower(companyName));
     const recentId = fileId.toString().replace('9000', '');
 

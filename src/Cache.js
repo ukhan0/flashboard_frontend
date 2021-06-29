@@ -2,10 +2,10 @@ import React, { useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { get } from 'lodash';
 import config from './config/config';
-import cjson from 'compressed-json';
 import { setCompleteDataLoadedFlag } from './reducers/Watchlist';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { storeCompleteWatchlist, getCompleteWatchlist } from './utils/helpers'
 
 const Cache = () => {
   const { user } = useSelector(state => state.User);
@@ -33,7 +33,7 @@ const Cache = () => {
     axios
       .get(`${apiUrl}=all`)
       .then(response => {
-        localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(get(response, 'data.data.content', [])));
+        storeCompleteWatchlist(get(response, 'data.data.content', []))
         setDataCachedDay();
         dispatch(setCompleteDataLoadedFlag(true));
       })
@@ -44,7 +44,7 @@ const Cache = () => {
   }, [dispatch, user]);
 
   useEffect(() => {
-    const allData = localStorage.getItem(`watchlist-data-all`);
+    const allData = getCompleteWatchlist();
     if (allData) {
       dispatch(setCompleteDataLoadedFlag(true));
     }

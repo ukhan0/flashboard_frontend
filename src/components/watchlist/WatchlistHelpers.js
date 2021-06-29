@@ -1,5 +1,5 @@
-import { forEach, get, isEmpty } from 'lodash';
-import cjson from 'compressed-json';
+import { forEach, get, isEmpty, isArray } from 'lodash';
+import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers'
 
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
@@ -152,14 +152,13 @@ export const checkIsSortActive = () => {
 };
 
 export const syncCachedData = newData => {
-  let rawCompleteData = localStorage.getItem(`watchlist-data-all`);
-  if (!rawCompleteData) {
-    return;
+  const rawCompleteData = getCompleteWatchlist()
+  if(!rawCompleteData || !isArray(rawCompleteData)) {
+    return
   }
-  rawCompleteData = cjson.decompress.fromString(rawCompleteData);
   newData.forEach(nd => {
     const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
     rawCompleteData[tickerIndex] = nd;
   });
-  localStorage.setItem(`watchlist-data-all`, cjson.compress.toString(rawCompleteData));
+  storeCompleteWatchlist(rawCompleteData)
 };

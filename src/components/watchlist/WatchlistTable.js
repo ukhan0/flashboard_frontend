@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
@@ -364,7 +364,8 @@ const colDefs = [
 ];
 
 const WatchlistTable = props => {
-  const { searchText } = props;
+
+  const { searchText } = useSelector(state => state.Watchlist);
 
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
@@ -414,12 +415,11 @@ const WatchlistTable = props => {
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
         pagination={true}
-        // domLayout="autoHeight"
         rowSelection="single"
         gridOptions={gridOptions}
         multiSortKey="ctrl"
-        onCellClicked={cellClicked}
         frameworkComponents={frameworkComponents}
+        onCellClicked={cellClicked}
         onColumnResized={storeColumnsState}
         onColumnMoved={storeColumnsState}
         onColumnVisible={storeColumnsState}
@@ -429,8 +429,4 @@ const WatchlistTable = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  searchText: state.Watchlist.searchText
-});
-
-export default connect(mapStateToProps)(WatchlistTable);
+export default WatchlistTable

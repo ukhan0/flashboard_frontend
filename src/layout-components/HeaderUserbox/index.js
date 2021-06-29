@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 import { get } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { Avatar, Box, Badge, Menu, Button, List, ListItem, Divider } from '@material-ui/core';
-
 import avatar4 from '../../assets/images/avatars/avatar8.png';
 import { withStyles } from '@material-ui/core/styles';
+import { eraseCompleteWatchlist } from '../../utils/helpers';
 
 const StyledBadge = withStyles({
   badge: {
@@ -49,7 +48,7 @@ export default function HeaderUserbox() {
 
   const signout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('watchlist-data-all');
+    eraseCompleteWatchlist();
     // following code will refresh the page and Context will be reset
     window.location.href = '/PagesRegister';
   };
