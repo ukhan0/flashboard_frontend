@@ -280,7 +280,7 @@ const Watchlist = props => {
                 onClick={() => {
                   setTopicDialogOpen(true);
                 }}>
-                Add a List
+                Add to Watchlist
               </Button>
             </Grid>
           </Grid>
