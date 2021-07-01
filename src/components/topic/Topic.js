@@ -42,7 +42,7 @@ const Topic = () => {
     // now perform actual search
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
-      dispatch(performTopicSearchHighlights(true));
+      // dispatch(performTopicSearchHighlights(true));
     }, 1000);
   };
 

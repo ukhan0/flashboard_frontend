@@ -83,11 +83,11 @@ export default function TopicSearchHistory(props) {
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();
         }
-        dispatch(cancelExistingHightlightsCalls(true));
+        // dispatch(cancelExistingHightlightsCalls(true));
         // now perform actual search
         setTimeout(() => {
           dispatch(cancelExistingHightlightsCalls(false));
-          dispatch(performTopicSearchHighlights(true));
+          // dispatch(performTopicSearchHighlights(true));
         }, 1000);
       }, 1000);
     },
@@ -160,8 +160,8 @@ export default function TopicSearchHistory(props) {
                 props.handleClose();
               }}>
               Click here
-            </span>
-            {' '}to create new one{' '}
+            </span>{' '}
+            to create new one{' '}
           </p>
         )}
       </List>

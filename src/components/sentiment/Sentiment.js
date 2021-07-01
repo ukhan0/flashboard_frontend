@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     bottom: 20
   },
   companyDetail: {
-    top: 70,
+    top: 50,
     position: 'sticky'
   }
 }));
@@ -85,6 +85,7 @@ const Sentiment = () => {
           Table of contents
         </Button>
       </div>
+      
       <SentimentSection />
       <SentimentDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} onSelection={handleSelection} />
       <div className={classes.goToTopContainer}>

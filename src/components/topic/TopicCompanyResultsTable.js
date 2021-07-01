@@ -87,7 +87,8 @@ export default function TopicCompantResultsTable() {
   const finalResult = companyResults.map(v => {
     return { key: v.key.cn, ticker: v.key.ct, doc_count: v.doc_count };
   });
-  let sortedCompanyData = orderBy(finalResult, ['doc_count', 'key'], ['desc', 'asc']);
+  const companyNameSorter = v => v.key.toLowerCase();
+  let sortedCompanyData = orderBy(finalResult, ['doc_count', companyNameSorter], ['desc', 'asc']);
 
   const handleCompanyClick = params => {
     // check if data for this company exists or not

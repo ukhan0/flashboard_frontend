@@ -65,7 +65,6 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       });
     });
 
-
     try {
       const response = await axios.post(
         `${config.apiUrl}/api/dictionary/search_aggregate`,
@@ -84,6 +83,8 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         if (isErrorr) {
           dispatch(setSearchBackdrop(null, false));
           dispatch(setSearchError(true));
+          dispatch(setSearchResults({}));
+          dispatch(setSearchResultHighlights([]));
           let errorMessage =
             'There are too many results for this search. Try refining your search with more specific keywords';
           dispatch(setSnackBarActive(true, 'error', errorMessage));
@@ -93,7 +94,8 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       if (newSearchResults) {
         const results = get(newSearchResults, 'buckets.groupByCompanyTicker', []);
         if (results) {
-          let sortData = orderBy(results, ['doc_count', 'key.cn'], ['desc', 'asc']);
+          const companyNameSorter = v => v.key.cn.toLowerCase();
+          let sortData = orderBy(results, ['doc_count', companyNameSorter], ['desc', 'asc']);
           let firstCompanySelected = sortData[0].key.cn;
           dispatch(setSelectedCompanyName(firstCompanySelected));
           dispatch(performTopicSearchHighlights(true, firstCompanySelected));
@@ -103,10 +105,14 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       } else {
         dispatch(setSearchBackdrop(null, false));
         dispatch(setSearchError(true));
+        dispatch(setSearchResults({}));
+        dispatch(setSearchResultHighlights([]));
       }
     } catch (error) {
       dispatch(setSearchBackdrop(null, false));
       dispatch(setSearchError(true));
+      dispatch(setSearchResults({}));
+      dispatch(setSearchResultHighlights([]));
     }
   };
 };
@@ -194,11 +200,10 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
 const createSearchPayload = (topicState, freshSearch, searchFrom = null, companyName = null) => {
   const searchId = get(topicState.selectedSearch, 'searchId', null);
-  const { suggestionsSingleArr } = getSelectedSuggestionAsArr(
-    topicState.selectedSuggestions,
-    topicState.searchText
-  );
-  const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsSingleArr) : topicState.searchText;
+  const { suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
+  const fullSearchText = suggestionsSingleArr.length
+    ? getSearchCombinations(suggestionsSingleArr)
+    : topicState.searchText;
   const data = {
     searchTerm: fullSearchText,
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
