@@ -122,7 +122,6 @@ export default function TopicCompantResultsTable() {
       flex: 1,
       colId: 'ticker'
     },
-
     {
       headerName: 'HITS',
       field: 'doc_count',
@@ -167,6 +166,7 @@ export default function TopicCompantResultsTable() {
               <AgGridReact rowData={null} columnDefs={null}></AgGridReact>
             ) : (
               <AgGridReact
+                rowSelection='single'
                 onGridReady={onGridReady}
                 onCellClicked={handleCompanyClick}
                 rowData={sortedCompanyData}
