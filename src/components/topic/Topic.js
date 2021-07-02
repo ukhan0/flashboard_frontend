@@ -16,7 +16,7 @@ import {
   cancelExistingHightlightsCalls,
   setSnackBarActive
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, performTopicSearchHighlights } from './topicActions';
+import { performTopicSearchAggregate } from './topicActions';
 
 const Topic = () => {
   const classes = topicStyles();
@@ -42,7 +42,6 @@ const Topic = () => {
     // now perform actual search
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
-      // dispatch(performTopicSearchHighlights(true));
     }, 1000);
   };
 

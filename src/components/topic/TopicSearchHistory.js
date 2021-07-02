@@ -18,7 +18,6 @@ import {
 } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
-  performTopicSearchHighlights,
   fetchTopicsList,
   deleteSearch
 } from './topicActions';
@@ -87,7 +86,6 @@ export default function TopicSearchHistory(props) {
         // now perform actual search
         setTimeout(() => {
           dispatch(cancelExistingHightlightsCalls(false));
-          // dispatch(performTopicSearchHighlights(true));
         }, 1000);
       }, 1000);
     },
