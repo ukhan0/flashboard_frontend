@@ -113,6 +113,11 @@ export default function TopicSearchHistory(props) {
     dispatch(resetAllSearchParams());
   };
 
+  const handleSearch = s => {
+    setSearchParams(s);
+    props.handleClose();
+  };
+
   return (
     <div className={classes.savedSearchesSection}>
       <List component="nav" className={classes.root}>
@@ -124,7 +129,9 @@ export default function TopicSearchHistory(props) {
                   button
                   className={classes.nested}
                   selected={selectedSearch && selectedSearch.searchId === s.searchId}
-                  onClick={() => setSearchParams(s)}>
+                  onClick={() => {
+                    handleSearch(s);
+                  }}>
                   <ListItemText primary={s.searchText} />
                   <ListItemSecondaryAction>
                     <IconButton

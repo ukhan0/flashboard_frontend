@@ -210,7 +210,6 @@ const colDefs = [
     filterParams: {
       valueGetter: params => get(params, 'data.sentimentWord', null)
     },
-    cellRenderer: 'WordStatusRenderer'
   },
   {
     headerName: 'Sentiment Change',
@@ -264,7 +263,6 @@ const colDefs = [
     filterParams: {
       valueGetter: params => get(params, 'data.sentimentChangeWord', null)
     },
-    cellRenderer: 'WordStatusRenderer'
   },
   {
     headerName: 'Word Count Change',
@@ -359,7 +357,6 @@ const colDefs = [
     filterParams: {
       valueGetter: params => get(params, 'data.wordCountChangePercentWord', null)
     },
-    cellRenderer: 'WordStatusRenderer'
   }
 ];
 
