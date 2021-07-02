@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import ComparisionCompanyDetail from './ComparisionCompanyDetails';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -11,6 +11,10 @@ const useStyles = makeStyles(theme => ({
     marginTop: '10px',
     marginLeft: '14px',
     marginRight: '14px'
+  },
+  backButton: {
+    marginBottom: '15px',
+    marginLeft: '5px'
   }
 }));
 
@@ -43,8 +47,21 @@ const Comparision = props => {
       break;
   }
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <>
+      <Button
+        className={classes.backButton}
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          goBack();
+        }}>
+        Back
+      </Button>
       <div className={classes.companyDetail}>
         <ComparisionCompanyDetail selectedItem={selectedItem} />
       </div>
