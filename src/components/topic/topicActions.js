@@ -21,7 +21,8 @@ import {
   resetAllSearchParams,
   setShowComposeNew,
   setCurrentSearchtDetail,
-  setSelectedCompanyName
+  setSelectedCompanyName,
+  setOpenTopicSearchDialog
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -61,7 +62,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     documentTypeObjects.forEach(documentType => {
       const sections = get(documentType, `sections.${selectedSection}`, []);
       sections.forEach(section => {
-        searchFroms.push(`sma_data_json.${section}`)
+        searchFroms.push(`sma_data_json.${section}`);
       });
     });
 
@@ -246,6 +247,10 @@ export const fetchTopicsList = () => {
     } else {
       dispatch(setShowComposeNew(true));
       dispatch(setSavedSearches([]));
+      dispatch(setOpenTopicSearchDialog(true));
+      dispatch(setSearchResults({}));
+      dispatch(setSearchResultHighlights([]));
+      dispatch(setCurrentSearchtDetail({}));
     }
   };
 };
