@@ -1,51 +1,11 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Drawer, IconButton, Typography } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
-import CloseIcon from '@material-ui/icons/Close';
-import { BeatLoader } from 'react-spinners';
-import { createHash } from '../../utils/helpers';
-import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { upperCase, get } from 'lodash';
-import clsx from 'clsx';
-const useStyles = makeStyles(theme => {
-  return {
-    list: {
-      width: '40vw'
-    },
-    listItem: {
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      paddingRight: 20,
-      cursor: 'pointer',
-      color: '#0a30f3',
-      '&:hover': {
-        textDecoration: 'underline'
-      }
-    },
-    drawerBtn: {
-      textAlign: 'center',
-      marginTop: '5px'
-    },
-    header: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    },
-    loaderSection: {
-      textAlign: 'center'
-    },
-    upper: {
-      textTransform: 'capitalize'
-    }
-  };
-});
+import { Drawer } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { get } from 'lodash';
+import SentimentTableOfContent from './SentimentTableOfContent';
 
 const SentimentDrawer = props => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const { data, isLoading } = useSelector(state => state.Sentiment);
+  const { data, isSentimentDrawerOpen } = useSelector(state => state.Sentiment);
   const displayData = [];
   function visitOutlineObj(acc, obj, lvl, path) {
     if (lvl > 4) return;
@@ -66,47 +26,10 @@ const SentimentDrawer = props => {
     const headings = get(data, 'data_json', []);
     visitOutlineObj(displayData, headings, 0, '');
   }
-
-  const clickHandle = path => {
-    props.onSelection(createHash(path));
-    dispatch(setSelectedHeadingId(createHash(path)));
-  };
-
   return (
     <React.Fragment>
-      <Drawer anchor={'right'} open={props.isOpen} onClose={props.onClose}>
-        <div className={classes.list}>
-          <div className={classes.header}>
-            <div></div>
-            <div>
-              <Typography variant={'h4'}>Table of contents</Typography>
-            </div>
-            <div>
-              <IconButton onClick={props.onClose}>
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </div>
-          </div>
-          {isLoading ? (
-            <div className={classes.loaderSection}>
-              <BeatLoader color={'var(--primary)'} size={15} />
-            </div>
-          ) : (
-            displayData.map((d, index) =>
-              index !== 0 ? (
-                <div
-                  key={index}
-                  style={{ paddingLeft: d.lvl * 4 + 4 }}
-                  className={clsx(classes.listItem, classes.upper)}
-                  onClick={() => {
-                    clickHandle(d.path);
-                  }}>
-                  {d.lvl === 3 ? upperCase(d.prop) : d.prop}
-                </div>
-              ) : null
-            )
-          )}
-        </div>
+      <Drawer anchor={'right'} open={isSentimentDrawerOpen}>
+        <SentimentTableOfContent onSelection={props.onSelection} />
       </Drawer>
     </React.Fragment>
   );

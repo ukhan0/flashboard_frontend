@@ -3,7 +3,10 @@ export const SET_SEARCH_ID = 'SENTIMENT/SET_SEARCH_ID';
 export const SET_CARD_GRAPH_DATA = 'SENTIMENT/SET_GRAPH_DATA';
 export const SET_IS_LOADING = 'SENTIMENT/SET_IS_LOADING';
 export const SET_SELECTED_HEADING_ID = 'SENTIMENT/SET_SELECTED_HEADING_ID';
-
+export const SET_IS_PIN = 'SENTIMENT/SET_IS_PIN';
+export const SET_SENTIMENT_DRAWER_OPEN = 'TOPIC/SET_SENTIMENT_DRAWER_OPEN ';
+export const SET_CURRENT_TOC = 'TOPIC/SET_CURRENT_TOC ';
+export const SET_SHOW_TOC_BUTTON = 'TOPIC/SET_SHOW_TOC_BUTTON  ';
 export const setSentimentResult = data => ({
   type: SET_SENTIMENT_RESULT,
   data
@@ -25,8 +28,29 @@ export const setIsLoading = isLoading => ({
 
 export const setSelectedHeadingId = selectedHeadingId => ({
   type: SET_SELECTED_HEADING_ID,
-   selectedHeadingId
-})
+  selectedHeadingId
+});
+
+export const setIsPin = isPin => ({
+  type: SET_IS_PIN,
+  isPin
+});
+
+export const setSentimentDrawerOpen = isSentimentDrawerOpen => ({
+  type: SET_SENTIMENT_DRAWER_OPEN,
+  isSentimentDrawerOpen
+});
+
+export const setShowTocButton = isTocButton => ({
+  type: SET_SHOW_TOC_BUTTON,
+  isTocButton
+});
+
+export const setCurrentToc = currentToc => ({
+  type: SET_CURRENT_TOC,
+  currentToc
+});
+
 const getDefaultState = () => {
   return {
     cardGraphData: [
@@ -35,20 +59,24 @@ const getDefaultState = () => {
         content: 'Neutral',
         num: 23,
         percent: 67,
-        data:[0,10,5,3,6,12,17]
+        data: [0, 10, 5, 3, 6, 12, 17]
       },
       {
         heading: 'MANAGEMENT & DESCUSSION',
         content: 'Extermely High',
         num: 132,
         percent: 32,
-        data:[0,10,6,3,10,12,56]
+        data: [0, 10, 6, 3, 10, 12, 56]
       },
-      { heading: 'NOTES TO  FINANCIAL STATEMENT', content: 'High', num: 93, percent: 21,data:[0,10,6,3,9,5,17] }
+      { heading: 'NOTES TO  FINANCIAL STATEMENT', content: 'High', num: 93, percent: 21, data: [0, 10, 6, 3, 9, 5, 17] }
     ],
     data: null,
     isLoading: false,
     selectedHeadingId: null,
+    isPin: false,
+    isSentimentDrawerOpen: false,
+    isTocButton: true,
+    currentToc: false
   };
 };
 
@@ -68,8 +96,16 @@ export default function reducer(
     case SET_IS_LOADING:
       return { ...state, isLoading: action.isLoading };
     case SET_SELECTED_HEADING_ID:
-      return {...state, selectedHeadingId: action.selectedHeadingId };
-  
+      return { ...state, selectedHeadingId: action.selectedHeadingId };
+    case SET_IS_PIN:
+      return { ...state, isPin: action.isPin };
+    case SET_SENTIMENT_DRAWER_OPEN:
+      return { ...state, isSentimentDrawerOpen: action.isSentimentDrawerOpen };
+    case SET_SHOW_TOC_BUTTON:
+      return { ...state, isTocButton: action.isTocButton };
+    case SET_CURRENT_TOC:
+      return { ...state, currentToc: action.currentToc };
+
     default:
       break;
   }

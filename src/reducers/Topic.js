@@ -44,6 +44,7 @@ export const SET_SELECTED_SECTION = 'TOPIC/SET_SELECTED_SECTION';
 export const SET_OPEN_TOPIC_SEARCH_DIALOG = 'TOPIC/SET_OPEN_TOPIC_SEARCH_DIALOG';
 export const SET_CURRENT_SEARCH_DETAIL = 'TOPIC/SET_CURRENT_SEARCH_DETAIL';
 
+
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
@@ -250,6 +251,8 @@ export const setCurrentSearchtDetail = currentSearchDetail => ({
   currentSearchDetail
 });
 
+
+
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -297,7 +300,8 @@ const getDefaultState = () => {
     snackBarMessage: null,
     snackBarSeverity: null,
     openTopicSearchDialog: false,
-    currentSearchDetail: {}
+    currentSearchDetail: {},
+    
   };
 };
 
