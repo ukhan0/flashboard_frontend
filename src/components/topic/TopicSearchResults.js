@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   margin: {
     marginTop: '12px',
     background: 'white'
+  },
+  documentDate: {
+    fontSize: '20px'
   }
 }));
 
@@ -138,10 +141,13 @@ const TopicSearchResults = () => {
                             <Grid item>
                               <h2>
                                 {companyResult.document_type}
-                                &nbsp; Document Date:{' '}
-                                {companyResult.document_date
-                                  ? new Date(companyResult.document_date).toLocaleDateString()
-                                  : null}
+                                &nbsp;
+                                &nbsp;
+                                {companyResult.document_date ? (
+                                  <span className={clsx(classes.documentDate, 'text-black-50')}>
+                                    {new Date(companyResult.document_date).toLocaleDateString()}
+                                  </span>
+                                ) : null}
                               </h2>
                             </Grid>
                             <Grid item>
