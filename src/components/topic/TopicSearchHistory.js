@@ -14,13 +14,10 @@ import {
   setSearchLabel,
   setOpenTopicSearchDialog,
   setSelectedIndustries,
-  resetAllSearchParams
+  resetAllSearchParams,
+  setBackDropOnCompanyClick
 } from '../../reducers/Topic';
-import {
-  performTopicSearchAggregate,
-  fetchTopicsList,
-  deleteSearch
-} from './topicActions';
+import { performTopicSearchAggregate, fetchTopicsList, deleteSearch } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
@@ -114,6 +111,7 @@ export default function TopicSearchHistory(props) {
   const handleSearch = s => {
     setSearchParams(s);
     props.handleClose();
+    dispatch(setBackDropOnCompanyClick(false));
   };
 
   return (
@@ -138,6 +136,7 @@ export default function TopicSearchHistory(props) {
                       onClick={() => {
                         dispatch(setShowUpdateButton(true));
                         dispatch(setShowComposeNew(true));
+                        dispatch(setBackDropOnCompanyClick(false));
                         setSearchParamsEdit(s);
                         props.handleClose();
                       }}>

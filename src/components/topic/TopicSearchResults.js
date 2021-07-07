@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
-import { getCompleteWatchlist } from '../../utils/helpers'
+import { getCompleteWatchlist } from '../../utils/helpers';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   margin: {
     marginTop: '12px',
-    background: 'white',
+    background: 'white'
   }
 }));
 
@@ -55,7 +55,9 @@ const TopicSearchResults = () => {
             uniq(filter(companyResults, c => c.document_date).map(cr => new Date(cr.document_date)))
           );
           const uniqTitleCodes = uniq(flatten(companyResults.map(cr => get(cr, 'results', []).map(r => r.title))));
-          const uniqTitles = uniq(flatten(companyResults.map(cr => get(cr, 'results', []).map(r => createResultTitle(r.title)))));
+          const uniqTitles = uniq(
+            flatten(companyResults.map(cr => get(cr, 'results', []).map(r => createResultTitle(r.title))))
+          );
           const resultsCount = flattenDeep(companyResults.map(cr => get(cr, 'results', []).map(r => r.content))).length;
           const latestDate = documentDates.length ? documentDates[documentDates.length - 1] : null;
           return {
@@ -101,7 +103,7 @@ const TopicSearchResults = () => {
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
 
-    const companiesList = getCompleteWatchlist() || []
+    const companiesList = getCompleteWatchlist() || [];
     let company = companiesList.find(c => toLower(c.b) === toLower(companyName));
     const recentId = fileId.toString().replace('9000', '');
 
@@ -134,7 +136,13 @@ const TopicSearchResults = () => {
                         <div className={classes.resultSection}>
                           <Grid container direction="row" justify="space-between" alignItems="flex-start">
                             <Grid item>
-                              <h3 className="font-size-lg mb-3 font-weight-bold">{companyResult.document_type}</h3>
+                              <h2>
+                                {companyResult.document_type}
+                                &nbsp; Document Date:{' '}
+                                {companyResult.document_date
+                                  ? new Date(companyResult.document_date).toLocaleDateString()
+                                  : null}
+                              </h2>
                             </Grid>
                             <Grid item>
                               <small className="text-black-50 pt-1 pr-2">
@@ -147,14 +155,6 @@ const TopicSearchResults = () => {
                               </small>
                               <small className="text-black-50 pt-1 pr-2">
                                 Document ID: <b className="text-first">{companyResult.document_id}</b>
-                              </small>
-                              <small className="text-black-50 pt-1 pr-2">
-                                Document Date:{' '}
-                                <b className="text-first">
-                                  {companyResult.document_date
-                                    ? new Date(companyResult.document_date).toLocaleDateString()
-                                    : null}
-                                </b>
                               </small>
                             </Grid>
                           </Grid>

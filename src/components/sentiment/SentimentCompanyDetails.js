@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentSectionPageTitle = props => {
+const SentimentCompanyDetails = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { data } = useSelector(state => state.Sentiment);
   const companyDetail = get(data, 'summary_json', []);
@@ -90,4 +90,4 @@ const SentimentSectionPageTitle = props => {
     </Fragment>
   );
 };
-export default SentimentSectionPageTitle;
+export default SentimentCompanyDetails;

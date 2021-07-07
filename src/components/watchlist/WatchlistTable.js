@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
@@ -356,14 +356,13 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => get(params, 'data.wordCountChangePercentWord', null)
-    },
+    }
   }
 ];
 
 const WatchlistTable = props => {
-
   const { searchText } = useSelector(state => state.Watchlist);
-
+  const [gridApi, setGridApi] = useState(null);
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
     props.storeColumnsState(columnState);
@@ -372,6 +371,7 @@ const WatchlistTable = props => {
   const cellClicked = async params => {
     if (params.data) {
       props.onColumnClick(params.data, params.column.colId);
+      gridApi.closeToolPanel();
     }
   };
 
@@ -382,6 +382,7 @@ const WatchlistTable = props => {
 
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
+    setGridApi(params.api);
   };
 
   const handleFirstDataRendered = params => {
@@ -403,6 +404,7 @@ const WatchlistTable = props => {
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact
+        sortingOrder={['asc','desc']}
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}

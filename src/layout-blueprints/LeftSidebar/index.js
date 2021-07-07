@@ -10,7 +10,7 @@ import { Sidebar, Header, Footer } from '../../layout-components';
 
 const LeftSidebar = props => {
   const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
-  const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights } = useSelector(state => state.Topic);
+  const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights, isCompanyClick } = useSelector(state => state.Topic);
   const dispatch = useDispatch()
   const classes = topicStyles();
   const closeBackdrop = () => {
@@ -51,8 +51,14 @@ const LeftSidebar = props => {
           <div className={classes.backdropContent}>
             <CircularProgress color="inherit" />
             <p className="mb-2"></p>
-            <p className="text-white mb-2">Performing Search</p>
-            <Button color="primary" className={'text-danger'} onClick={closeBackdrop}>Cancel</Button>
+            {isCompanyClick ? null : (
+              <>
+                <p className="text-white mb-2">Performing Search</p>
+                <Button color="primary" className={'text-danger'} onClick={closeBackdrop}>
+                  Cancel
+                </Button>
+              </>
+            )}
           </div>
         </Backdrop>
       </div>

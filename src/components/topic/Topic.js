@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
 import TopicDialog from './TopicDialog';
 import TopicSnackbar from './TopicSnackbar';
-import TopicCurrentDetailLabel from './TopicCurrentDetailLabel'
+import TopicCurrentSearchDetail from './TopicCurrentSearchDetail';
 import {
   setIsSearchDeleteErr,
   setIsTopicDeleteErr,
@@ -51,7 +51,7 @@ const Topic = () => {
 
   return (
     <div className={classes.root}>
-      <TopicCurrentDetailLabel/>
+      <TopicCurrentSearchDetail />
       <TopicDialog handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>

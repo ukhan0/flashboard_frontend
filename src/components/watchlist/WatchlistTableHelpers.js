@@ -1,4 +1,4 @@
-import { isNull, includes, capitalize, lowerCase, round } from 'lodash';
+import { isNull, includes, capitalize, lowerCase, round, get } from 'lodash';
 
 const changedStyles = {
   lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80 },
@@ -34,17 +34,20 @@ export const formatExportValue = params => {
     } else if (colId === 'sentiment') {
       return percentFormater(params, true);
     } else if (colId === 'sentimentWord') {
-      return changeWordFormatter(params.value.word);
+      return changeWordFormatter();
     } else if (colId === 'sentimentChange') {
       return percentFormater(params, true);
     } else if (colId === 'sentimentChangeWord') {
-      return changeWordFormatter(params.value.word);
+      const value = get(params.value, 'word', null);
+      return changeWordFormatter(value);
     } else if (colId === 'wordCountChange') {
-      return currencyFormater(params.value, 0, '');
+      const value = get(params.value, 'number', 0);
+      return currencyFormater(value);
     } else if (colId === 'wordCountChangePercent') {
       return percentFormater(params, false);
     } else if (colId === 'wordCountChangePercentWord') {
-      return changeWordFormatter(params.value.word);
+      const value = get(params.value, 'word', null);
+      return changeWordFormatter(value);
     } else {
       return value;
     }

@@ -35,12 +35,14 @@ import useStyles from './watchlistStyles';
 import WatchlistSearch from './WatchlistSearch';
 import { isObject } from 'lodash';
 import watchlistApiCalls from './watchlistApiCalls';
+import { useHistory } from 'react-router-dom';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
 };
 
 const Watchlist = props => {
+  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count } = useSelector(
@@ -119,6 +121,9 @@ const Watchlist = props => {
     } else {
       dispatch(setSelectedWatchlist(rowData));
       dispatch(setSidebarDisplay(true));
+      if (columnId === 'wordCountChange') {
+        history.push('/comparision');
+      }
     }
   };
 

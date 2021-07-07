@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
@@ -9,8 +9,9 @@ import clsx from 'clsx';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { setSelectedCompanyName } from '../../reducers/Topic';
+import { setSelectedCompanyName, setBackDropOnCompanyClick } from '../../reducers/Topic';
 import { performTopicSearchHighlights } from './topicActions';
+import './TopicTableStyles.css';
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
@@ -79,9 +80,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicCompantResultsTable() {
   const classes = useStyles();
-  const { searchResult, isSearchLoading, searchResultHighlights } = useSelector(state => state.Topic);
+  const { searchResult, isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(
+    state => state.Topic
+  );
   const dispatch = useDispatch();
-
   const companyResults = get(searchResult, 'buckets.groupByCompanyTicker', []);
 
   const finalResult = companyResults.map(v => {
@@ -97,12 +99,16 @@ export default function TopicCompantResultsTable() {
     if (companyIndex === -1) {
       // get data for this company
       dispatch(performTopicSearchHighlights(true, params.data.key));
+      dispatch(setBackDropOnCompanyClick(true));
     }
     dispatch(setSelectedCompanyName(params.data.key));
   };
 
-  const [gridApi, setGridApi] = useState(null);
+  const customComparator = (valueA, valueB) => {
+    return valueA.toLowerCase().localeCompare(valueB.toLowerCase());
+  };
 
+  const [gridApi, setGridApi] = useState(null);
   const columnDefs = [
     {
       headerName: 'COMPANY',
@@ -111,7 +117,8 @@ export default function TopicCompantResultsTable() {
       editable: false,
       sortable: true,
       flex: 2,
-      colId: 'companyName'
+      colId: 'companyName',
+      comparator: customComparator
     },
     {
       headerName: 'TICKER',
@@ -140,6 +147,18 @@ export default function TopicCompantResultsTable() {
     gridApi.setQuickFilter(e.target.value);
   };
 
+  useEffect(() => {
+    if (searchResultHighlights.length > 0) {
+      if (gridApi === null) {
+        return;
+      } else {
+        gridApi.forEachNode(function(node) {
+          node.setSelected(node.data.key === selectedCompanyName);
+        });
+      }
+    }
+  }, [searchResultHighlights, gridApi, selectedCompanyName]);
+
   return (
     <>
       <Card className="card-box mb-4">
@@ -163,10 +182,10 @@ export default function TopicCompantResultsTable() {
         <PerfectScrollbar className={clsx('mb-2', classes.contentSection)}>
           <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
             {isSearchLoading && isEmpty(searchResult) ? (
-              <AgGridReact rowData={null} columnDefs={null}></AgGridReact>
+              <AgGridReact rowData={null} columnDefs={columnDefs}></AgGridReact>
             ) : (
               <AgGridReact
-                rowSelection='single'
+                rowSelection="single"
                 onGridReady={onGridReady}
                 onCellClicked={handleCompanyClick}
                 rowData={sortedCompanyData}

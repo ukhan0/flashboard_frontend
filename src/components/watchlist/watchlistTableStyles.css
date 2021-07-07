@@ -40,3 +40,7 @@
   align-self: stretch;
   text-align: center;
 }
+
+.ag-row-hover {
+  cursor: pointer !important;
+}

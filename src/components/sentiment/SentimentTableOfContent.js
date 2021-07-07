@@ -49,6 +49,9 @@ const useStyles = makeStyles(theme => {
     },
     upper: {
       textTransform: 'capitalize'
+    },
+    crossIcon: {
+      color: 'black'
     }
   };
 });
@@ -121,11 +124,12 @@ const SentimentTableOfContent = props => {
               )}
             </Button>
             {isPin ? (
-              <IconButton onClick={handleClose}>
+              <IconButton className={classes.crossIcon} onClick={handleClose}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             ) : (
               <IconButton
+                className={classes.crossIcon}
                 onClick={() => {
                   handleCloseDrawer();
                 }}>
