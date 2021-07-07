@@ -34,7 +34,8 @@ export const formatExportValue = params => {
     } else if (colId === 'sentiment') {
       return percentFormater(params, true);
     } else if (colId === 'sentimentWord') {
-      return changeWordFormatter();
+      const value = get(params.value, 'word', null);
+      return changeWordFormatter(value);
     } else if (colId === 'sentimentChange') {
       return percentFormater(params, true);
     } else if (colId === 'sentimentChangeWord') {
