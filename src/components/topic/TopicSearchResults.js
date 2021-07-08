@@ -33,6 +33,11 @@ const useStyles = makeStyles(theme => ({
   },
   documentDate: {
     fontSize: '20px'
+  },
+  currentCompanyDetail: {
+    marginRight: '15px',
+    marginTop: '20px',
+    marginLeft: '15px'
   }
 }));
 
@@ -46,7 +51,6 @@ const TopicSearchResults = () => {
   const [companyResults, setCompanyResults] = useState([]);
   const [companyDetails, setCompanyDetails] = useState({});
   const [summaryByCompany, setSummaryByCompany] = useState([]);
-
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
     const companyNames = uniqBy(allComapnyResults, 'company_name');
@@ -105,7 +109,6 @@ const TopicSearchResults = () => {
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
-
     const companiesList = getCompleteWatchlist() || [];
     let company = companiesList.find(c => toLower(c.b) === toLower(companyName));
     const recentId = fileId.toString().replace('9000', '');
@@ -125,13 +128,13 @@ const TopicSearchResults = () => {
   return (
     <div ref={resultsSection}>
       <div>
-        <div className="bg-white p-0">
-          <PerfectScrollbar className="mb-4 p-4">
+        <PerfectScrollbar>
+          <div className={classes.currentCompanyDetail}>
             <TopicComapnyDetails companyDetail={companyDetails} />
-            {isSearchLoading && isEmpty(searchResultHighlights) ? (
-              <h4 className="font-size-lg"> </h4>
-            ) : (
-              companyResults.map((companyResult, index) => {
+          </div>
+          {isSearchLoading && isEmpty(searchResultHighlights)
+            ? null
+            : companyResults.map((companyResult, index) => {
                 return (
                   <Fragment key={`rs${index}`}>
                     <Paper elevation={6} className={classes.margin}>
@@ -141,8 +144,7 @@ const TopicSearchResults = () => {
                             <Grid item>
                               <h2>
                                 {companyResult.document_type}
-                                &nbsp;
-                                &nbsp;
+                                &nbsp; &nbsp;
                                 {companyResult.document_date ? (
                                   <span className={clsx(classes.documentDate, 'text-black-50')}>
                                     {new Date(companyResult.document_date).toLocaleDateString()}
@@ -180,13 +182,10 @@ const TopicSearchResults = () => {
                         </div>
                       </Box>
                     </Paper>
-                    <div className="mb-2"></div>
                   </Fragment>
                 );
-              })
-            )}
-          </PerfectScrollbar>
-        </div>
+              })}
+        </PerfectScrollbar>
       </div>
     </div>
   );
