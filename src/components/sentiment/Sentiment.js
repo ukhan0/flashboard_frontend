@@ -1,33 +1,15 @@
 import React, { useEffect } from 'react';
 import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { getSentimentData } from './sentimentActions';
 import { useHistory } from 'react-router-dom';
 import SentimentContentSection from './SentimentContentSection';
 import SentimentTableOfContent from './SentimentTableOfContent';
 
-const useStyles = makeStyles(theme => ({
-  drawerOpener: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    top: 170,
-    position: 'sticky'
-  },
-  goToTopContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    position: 'sticky',
-    right: 20,
-    bottom: 20
-  }
-}));
-
 const Sentiment = () => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { isPin } = useSelector(state => state.Sentiment);
   const dispatch = useDispatch();
-  const classes = useStyles();
   const history = useHistory();
   if (!selectedItem) {
     history.push('/watchlist');
@@ -46,12 +28,12 @@ const Sentiment = () => {
       {isPin ? (
         <Grid container spacing={0}>
           <Grid item xs={8}>
-            <div className={classes.companyDetail}>
+            <div>
               <SentimentContentSection />
             </div>
           </Grid>
           <Grid item xs={4}>
-            <div className={classes.companyDetail}>
+            <div>
               <SentimentTableOfContent onSelection={handleSelection} />
             </div>
           </Grid>

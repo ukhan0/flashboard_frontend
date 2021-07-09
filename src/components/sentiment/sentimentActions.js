@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setSentimentResult, setIsLoading } from '../../reducers/Sentiment';
+import { setSentimentResult, setIsLoading, setIsApiResponseReceived } from '../../reducers/Sentiment';
 import { get } from 'lodash';
 import config from '../../config/config';
 export const getSentimentData = () => {
@@ -14,6 +14,7 @@ export const getSentimentData = () => {
       const response = await axios.get(`${config.sentimentUrl}?id=${recentId}`);
       const data = get(response, 'data', []);
       if (response) {
+        dispatch(setIsApiResponseReceived(true));
         dispatch(setSentimentResult(data));
       } else {
         dispatch(setSentimentResult(null));

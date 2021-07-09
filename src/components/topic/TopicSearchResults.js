@@ -11,6 +11,8 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
 import { getCompleteWatchlist } from '../../utils/helpers';
+import { setHeadingRedirect } from '../../reducers/Topic';
+import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } from '../../reducers/Sentiment';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -104,7 +106,14 @@ const TopicSearchResults = () => {
     }
   }, [selectedCompanyName, summaryByCompany]);
 
-  const goToSentimentScreen = companyDocumentResultData => {
+  const goToSentimentScreen = (companyDocumentResultData, content) => {
+    dispatch(setIsApiResponseReceived(false));
+    dispatch(setSelectedHeadingId(null));
+    dispatch(setSentimentResult(null));
+    const getContent = content[0].content[0];
+    const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
+    const getFirstLine = cleanText.slice(0, 50);
+    dispatch(setHeadingRedirect(getFirstLine));
     const companyName = get(companyDocumentResultData, 'company_name', null);
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
@@ -157,7 +166,14 @@ const TopicSearchResults = () => {
                                 Filing ID:{' '}
                                 <b
                                   className={clsx(classes.clickable, 'text-first')}
-                                  onClick={() => goToSentimentScreen(companyResult)}>
+                                  onClick={() =>
+                                    goToSentimentScreen(
+                                      companyResult,
+                                      get(companyResult, 'results', []).map((result, index) => {
+                                        return result;
+                                      })
+                                    )
+                                  }>
                                   {companyResult.summary_id}
                                 </b>
                               </small>

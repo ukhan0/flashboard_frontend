@@ -69,9 +69,6 @@ const TopicDialog = props => {
             </Grid>
             <Grid item xs={3}>
               <span className="text-black-50 d-block">From:</span>
-              {/* <span className={clsx('font-weight-bold', classes.from)}>
-                {currentSearchDetail.selectedUniverse} &nbsp;
-              </span> */}
               <span className="font-weight-bold">
                 {documents.join(', ')} {currentSearchDetail.selectedSection}
               </span>

@@ -24,8 +24,10 @@ const useStyles = makeStyles(theme => ({
 
 const SentimentSection = props => {
   const classes = useStyles();
+  const calledOnce = React.useRef(true);
   const dispatch = useDispatch();
-  const { data, isLoading, selectedHeadingId } = useSelector(state => state.Sentiment);
+  const { data, isLoading, selectedHeadingId, isApiResponseReceived } = useSelector(state => state.Sentiment);
+  const { heading } = useSelector(state => state.Topic);
   useEffect(() => {
     if (selectedHeadingId) {
       setTimeout(() => {
@@ -55,11 +57,40 @@ const SentimentSection = props => {
       }
     }
   }
-
   if (data) {
     const content = get(data, 'data_json', []);
     visitOutlineObj(displayData, content, 0, '');
   }
+  useEffect(() => {
+    if (isApiResponseReceived) {
+      calledOnce.current = true;
+    } else {
+      calledOnce.current = false;
+    }
+  }, [isApiResponseReceived]);
+
+  useEffect(() => {
+    if (calledOnce.current) {
+      if (displayData.length > 0) {
+        let filteredData = displayData.filter(item => (item.content ? item.content.indexOf(heading) !== -1 : null));
+        if (filteredData.length > 0) {
+          const targetHeading = filteredData[0].path;
+          if (targetHeading) {
+            dispatch(setSelectedHeadingId(createHash(targetHeading)));
+            calledOnce.current = false;
+          }
+        }
+      }
+    } else {
+      return;
+    }
+  }, [displayData, dispatch, heading]);
+
+  useEffect(() => {
+    if (selectedHeadingId) {
+      props.onSelection(selectedHeadingId);
+    }
+  }, [selectedHeadingId, props]);
 
   return (
     <div>

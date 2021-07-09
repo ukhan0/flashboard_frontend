@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 const SentimentContentSection = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
-  const { isTocButton, currentToc } = useSelector(state => state.Sentiment);
+  const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
   const classes = useStyles();
   const dispatch = useDispatch();
   const contentTopRef = useRef(null);
@@ -51,9 +51,13 @@ const SentimentContentSection = props => {
     }
   };
   const handleSelection = path => {
-    setTimeout(() => {
-      document.getElementById(path).scrollIntoView();
-    }, 100);
+    if (data) {
+      setTimeout(() => {
+        if (document.getElementById(path)) {
+          document.getElementById(path).scrollIntoView();
+        }
+      }, 100);
+    }
   };
 
   const goBack = () => {
@@ -86,7 +90,7 @@ const SentimentContentSection = props => {
           </Button>
         ) : null}
       </div>
-      <SentimentSection />
+      <SentimentSection onSelection={handleSelection} />
       <SentimentDrawer onSelection={handleSelection} />
       <div className={classes.goToTopContainer}>
         <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
