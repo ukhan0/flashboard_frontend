@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
@@ -14,6 +14,7 @@ import {
   dateFormater,
   numberWordComparator
 } from './WatchlistTableHelpers';
+import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
 import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
@@ -361,6 +362,7 @@ const colDefs = [
 ];
 
 const WatchlistTable = props => {
+  const dispatch = useDispatch();
   const { searchText } = useSelector(state => state.Watchlist);
   const [gridApi, setGridApi] = useState(null);
   const storeColumnsState = params => {
@@ -370,6 +372,8 @@ const WatchlistTable = props => {
 
   const cellClicked = async params => {
     if (params.data) {
+      dispatch(setSidebarToggle(true));
+      dispatch(setSidebarToggleMobile(true));
       props.onColumnClick(params.data, params.column.colId);
       gridApi.closeToolPanel();
     }
@@ -404,7 +408,7 @@ const WatchlistTable = props => {
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact
-        sortingOrder={['asc','desc']}
+        sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
