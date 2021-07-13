@@ -50,6 +50,10 @@ const useStyles = makeStyles(theme => {
     upper: {
       textTransform: 'capitalize'
     },
+    pin: {
+      overflowY: 'auto',
+      height: `${window.innerHeight - 100}px`
+    },
     crossIcon: {
       color: 'black'
     }
@@ -109,7 +113,7 @@ const SentimentTableOfContent = props => {
   };
   return (
     <React.Fragment>
-      <div className={isPin ? null : classes.list}>
+      <div className={isPin ? classes.pin : classes.list}>
         <div className={classes.header}>
           <div></div>
           <div>
