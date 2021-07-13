@@ -130,11 +130,7 @@ export const descriptionValueStyler = params => {
     return null;
   }
   let value = params.value.word;
-  let style = null;
   if (!isNull(value)) {
-    if (includes(changeStylesValues, value)) {
-      style = changedStyles[value];
-    }
     return {
       textAlign: 'right',
     };
