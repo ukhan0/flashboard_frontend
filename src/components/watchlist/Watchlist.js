@@ -18,7 +18,8 @@ import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
   setOverwriteCheckBox,
-  setCount
+  setCount,
+  setWatchlistSearchText
 } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
@@ -45,11 +46,12 @@ const Watchlist = props => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count } = useSelector(
+  const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count,  searchText } = useSelector(
     state => state.Watchlist
   );
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
+  const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(false);
   const [isSortActive, setIsSortActive] = useState(checkIsSortActive());
   const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
@@ -135,6 +137,11 @@ const Watchlist = props => {
     firstTimeLoad.current = false;
   }, []);
 
+  useEffect(() => {
+    setIsFilterActiveOnSearch(searchText)
+  }, [searchText]);
+ 
+
   const deleteTicker = async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
@@ -206,6 +213,7 @@ const Watchlist = props => {
     WatchlistService.clearFilter();
     setIsFilterActive(false);
     setConfirmationClearFilterDialog(false);
+    dispatch(setWatchlistSearchText(''));
   };
 
   const clearSortHandler = state => {
@@ -243,14 +251,13 @@ const Watchlist = props => {
         </Grid>
         <Grid item xs={6}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            {isFilterActive ? (
+            {isFilterActive || isFilterActiveOnSearch ? (
               <Grid item>
                 <Button
                   color="primary"
                   className={classes.button}
                   size="small"
                   variant="contained"
-                  disabled={!isFilterActive}
                   onClick={() => {
                     setConfirmationClearFilterDialog(true);
                   }}>
@@ -274,7 +281,7 @@ const Watchlist = props => {
               </Grid>
             ) : null}
             <Grid item className={classes.spaceBetween} xs={4}>
-              <WatchlistSearch handleUpload={handleUpload} />
+              <WatchlistSearch />
             </Grid>
             <Grid item>
               <Button
