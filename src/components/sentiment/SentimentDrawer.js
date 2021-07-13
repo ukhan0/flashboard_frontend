@@ -1,10 +1,12 @@
 import React from 'react';
 import { Drawer } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { get } from 'lodash';
 import SentimentTableOfContent from './SentimentTableOfContent';
+import { setSentimentDrawerOpen, setShowTocButton, setCurrentToc } from '../../reducers/Sentiment';
 
 const SentimentDrawer = props => {
+  const dispatch = useDispatch();
   const { data, isSentimentDrawerOpen } = useSelector(state => state.Sentiment);
   const displayData = [];
   function visitOutlineObj(acc, obj, lvl, path) {
@@ -26,9 +28,16 @@ const SentimentDrawer = props => {
     const headings = get(data, 'data_json', []);
     visitOutlineObj(displayData, headings, 0, '');
   }
+  
+  const handleCloseDrawer = () => {
+    dispatch(setSentimentDrawerOpen(false));
+    dispatch(setCurrentToc(false));
+    dispatch(setShowTocButton(true));
+  };
+  
   return (
     <React.Fragment>
-      <Drawer anchor={'right'} open={isSentimentDrawerOpen}>
+      <Drawer anchor={'right'} open={isSentimentDrawerOpen} onClose={handleCloseDrawer}>
         <SentimentTableOfContent onSelection={props.onSelection} />
       </Drawer>
     </React.Fragment>
