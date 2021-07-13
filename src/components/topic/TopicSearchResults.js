@@ -39,7 +39,10 @@ const useStyles = makeStyles(theme => ({
   currentCompanyDetail: {
     marginRight: '15px',
     marginTop: '20px',
-    marginLeft: '15px'
+    marginLeft: '15px',
+    top: 60,
+    position: 'sticky',
+    zIndex: 1
   }
 }));
 
@@ -137,10 +140,10 @@ const TopicSearchResults = () => {
   return (
     <div ref={resultsSection}>
       <div>
+        <div className={classes.currentCompanyDetail}>
+          <TopicComapnyDetails companyDetail={companyDetails} />
+        </div>
         <PerfectScrollbar>
-          <div className={classes.currentCompanyDetail}>
-            <TopicComapnyDetails companyDetail={companyDetails} />
-          </div>
           {isSearchLoading && isEmpty(searchResultHighlights)
             ? null
             : companyResults.map((companyResult, index) => {
