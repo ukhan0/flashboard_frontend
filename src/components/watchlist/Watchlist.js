@@ -123,7 +123,7 @@ const Watchlist = props => {
     } else {
       dispatch(setSelectedWatchlist(rowData));
       dispatch(setSidebarDisplay(true));
-      if (columnId === 'wordCountChange') {
+      if (columnId === 'wordCountChange' || columnId === 'wordCountChangePercent' || columnId === 'wordCountChangePercentWord' ) {
         history.push('/comparision');
       }
     }
