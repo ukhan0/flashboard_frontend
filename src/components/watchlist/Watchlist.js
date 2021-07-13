@@ -338,7 +338,7 @@ const Watchlist = props => {
       <Snackbar
         open={removeTickersnackbar}
         onClose={() => setRemoveTickersnackbar(false)}
-        message="Tikcer removed from Watchlist"
+        message="Ticker removed from Watchlist"
         severity="info"
       />
       <Snackbar
