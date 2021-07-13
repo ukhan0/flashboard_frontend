@@ -145,7 +145,7 @@ const TopicSearchResults = () => {
         </div>
         <PerfectScrollbar>
           {isSearchLoading && isEmpty(searchResultHighlights)
-            ? null
+            ? <></>
             : companyResults.map((companyResult, index) => {
                 return (
                   <Fragment key={`rs${index}`}>
