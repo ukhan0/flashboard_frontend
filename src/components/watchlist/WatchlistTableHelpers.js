@@ -137,7 +137,6 @@ export const descriptionValueStyler = params => {
     }
     return {
       textAlign: 'right',
-      color: style.backgroundColor
     };
   }
   return null;
