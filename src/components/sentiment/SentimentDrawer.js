@@ -28,13 +28,13 @@ const SentimentDrawer = props => {
     const headings = get(data, 'data_json', []);
     visitOutlineObj(displayData, headings, 0, '');
   }
-  
+
   const handleCloseDrawer = () => {
     dispatch(setSentimentDrawerOpen(false));
     dispatch(setCurrentToc(false));
     dispatch(setShowTocButton(true));
   };
-  
+
   return (
     <React.Fragment>
       <Drawer anchor={'right'} open={isSentimentDrawerOpen} onClose={handleCloseDrawer}>

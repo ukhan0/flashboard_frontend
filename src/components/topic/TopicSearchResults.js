@@ -144,66 +144,68 @@ const TopicSearchResults = () => {
           <TopicComapnyDetails companyDetail={companyDetails} />
         </div>
         <PerfectScrollbar>
-          {isSearchLoading && isEmpty(searchResultHighlights)
-            ? <></>
-            : companyResults.map((companyResult, index) => {
-                return (
-                  <Fragment key={`rs${index}`}>
-                    <Paper elevation={6} className={classes.margin}>
-                      <Box p={4}>
-                        <div className={classes.resultSection}>
-                          <Grid container direction="row" justify="space-between" alignItems="flex-start">
-                            <Grid item>
-                              <h2>
-                                {companyResult.document_type}
-                                &nbsp; &nbsp;
-                                {companyResult.document_date ? (
-                                  <span className={clsx(classes.documentDate, 'text-black-50')}>
-                                    {new Date(companyResult.document_date).toLocaleDateString()}
-                                  </span>
-                                ) : null}
-                              </h2>
-                            </Grid>
-                            <Grid item>
-                              <small className="text-black-50 pt-1 pr-2">
-                                Filing ID:{' '}
-                                <b
-                                  className={clsx(classes.clickable, 'text-first')}
-                                  onClick={() =>
-                                    goToSentimentScreen(
-                                      companyResult,
-                                      get(companyResult, 'results', []).map((result, index) => {
-                                        return result;
-                                      })
-                                    )
-                                  }>
-                                  {companyResult.summary_id}
-                                </b>
-                              </small>
-                              <small className="text-black-50 pt-1 pr-2">
-                                Document ID: <b className="text-first">{companyResult.document_id}</b>
-                              </small>
-                            </Grid>
+          {isSearchLoading && isEmpty(searchResultHighlights) ? (
+            <></>
+          ) : (
+            companyResults.map((companyResult, index) => {
+              return (
+                <Fragment key={`rs${index}`}>
+                  <Paper elevation={6} className={classes.margin}>
+                    <Box p={4}>
+                      <div className={classes.resultSection}>
+                        <Grid container direction="row" justify="space-between" alignItems="flex-start">
+                          <Grid item>
+                            <h2>
+                              {companyResult.document_type}
+                              &nbsp; &nbsp;
+                              {companyResult.document_date ? (
+                                <span className={clsx(classes.documentDate, 'text-black-50')}>
+                                  {new Date(companyResult.document_date).toLocaleDateString()}
+                                </span>
+                              ) : null}
+                            </h2>
                           </Grid>
-                          {get(companyResult, 'results', []).map((result, index) => {
-                            return (
-                              <div key={`rst${index}`}>
-                                <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
-                                {result.content.map((content, index) => (
-                                  <p
-                                    key={`rstc${index}`}
-                                    className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')}
-                                    dangerouslySetInnerHTML={{ __html: content }}></p>
-                                ))}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </Box>
-                    </Paper>
-                  </Fragment>
-                );
-              })}
+                          <Grid item>
+                            <small className="text-black-50 pt-1 pr-2">
+                              Filing ID:{' '}
+                              <b
+                                className={clsx(classes.clickable, 'text-first')}
+                                onClick={() =>
+                                  goToSentimentScreen(
+                                    companyResult,
+                                    get(companyResult, 'results', []).map((result, index) => {
+                                      return result;
+                                    })
+                                  )
+                                }>
+                                {companyResult.summary_id}
+                              </b>
+                            </small>
+                            <small className="text-black-50 pt-1 pr-2">
+                              Document ID: <b className="text-first">{companyResult.document_id}</b>
+                            </small>
+                          </Grid>
+                        </Grid>
+                        {get(companyResult, 'results', []).map((result, index) => {
+                          return (
+                            <div key={`rst${index}`}>
+                              <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                              {result.content.map((content, index) => (
+                                <p
+                                  key={`rstc${index}`}
+                                  className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')}
+                                  dangerouslySetInnerHTML={{ __html: content }}></p>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </Box>
+                  </Paper>
+                </Fragment>
+              );
+            })
+          )}
         </PerfectScrollbar>
       </div>
     </div>

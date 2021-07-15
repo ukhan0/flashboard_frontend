@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     top: 50,
     display: 'flex',
     justifyContent: 'flex-end'
-  },
+  }
 }));
 
 const Sentiment = () => {

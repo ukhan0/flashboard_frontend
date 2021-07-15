@@ -132,7 +132,7 @@ export const descriptionValueStyler = params => {
   let value = params.value.word;
   if (!isNull(value)) {
     return {
-      textAlign: 'right',
+      textAlign: 'right'
     };
   }
   return null;
@@ -164,4 +164,4 @@ export const changeWordStyler = value => {
   return style;
 };
 
-export const lastReportedState='desc'
+export const lastReportedState = 'desc';

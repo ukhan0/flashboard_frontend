@@ -47,9 +47,15 @@ const Watchlist = props => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { selectedFileType, selectedUniverse, selectedMetric, selectedSymbols, overwriteCheckBox, count,  searchText } = useSelector(
-    state => state.Watchlist
-  );
+  const {
+    selectedFileType,
+    selectedUniverse,
+    selectedMetric,
+    selectedSymbols,
+    overwriteCheckBox,
+    count,
+    searchText
+  } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(false);
@@ -124,7 +130,11 @@ const Watchlist = props => {
     } else {
       dispatch(setSelectedWatchlist(rowData));
       dispatch(setSidebarDisplay(true));
-      if (columnId === 'wordCountChange' || columnId === 'wordCountChangePercent' || columnId === 'wordCountChangePercentWord' ) {
+      if (
+        columnId === 'wordCountChange' ||
+        columnId === 'wordCountChangePercent' ||
+        columnId === 'wordCountChangePercentWord'
+      ) {
         history.push('/comparision');
       }
     }
@@ -139,9 +149,8 @@ const Watchlist = props => {
   }, []);
 
   useEffect(() => {
-    setIsFilterActiveOnSearch(searchText)
+    setIsFilterActiveOnSearch(searchText);
   }, [searchText]);
- 
 
   const deleteTicker = async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));

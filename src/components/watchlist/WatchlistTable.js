@@ -210,7 +210,7 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => get(params, 'data.sentimentWord', null)
-    },
+    }
   },
   {
     headerName: 'Sentiment Change',
@@ -263,7 +263,7 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => get(params, 'data.sentimentChangeWord', null)
-    },
+    }
   },
   {
     headerName: 'Word Count Change',
@@ -432,4 +432,4 @@ const WatchlistTable = props => {
   );
 };
 
-export default WatchlistTable
+export default WatchlistTable;

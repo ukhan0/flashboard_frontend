@@ -10,15 +10,15 @@ export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
   const suggestionsArr = [];
   let suggestionsSingleArr = [];
   const suggestionsObj = cloneDeep(suggestionsObjOrignal);
-  const cleanSearchText = searchText.replace(/[^a-zA-Z ]/g, '')
-  
+  const cleanSearchText = searchText.replace(/[^a-zA-Z ]/g, '');
+
   forEach(suggestionsObj, values => {
     if (values.length) {
       suggestionsArr.push(uniq([...values]));
       suggestionsSingleArr = [...suggestionsSingleArr, ...values];
     }
   });
-  suggestionsSingleArr.unshift(cleanSearchText)
+  suggestionsSingleArr.unshift(cleanSearchText);
   return { suggestionsArr, suggestionsSingleArr };
 }
 

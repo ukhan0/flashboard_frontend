@@ -1,5 +1,5 @@
 import { forEach, get, isEmpty, isArray } from 'lodash';
-import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers'
+import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
 
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
@@ -152,13 +152,13 @@ export const checkIsSortActive = () => {
 };
 
 export const syncCachedData = newData => {
-  const rawCompleteData = getCompleteWatchlist()
-  if(!rawCompleteData || !isArray(rawCompleteData)) {
-    return
+  const rawCompleteData = getCompleteWatchlist();
+  if (!rawCompleteData || !isArray(rawCompleteData)) {
+    return;
   }
   newData.forEach(nd => {
     const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
     rawCompleteData[tickerIndex] = nd;
   });
-  storeCompleteWatchlist(rawCompleteData)
+  storeCompleteWatchlist(rawCompleteData);
 };

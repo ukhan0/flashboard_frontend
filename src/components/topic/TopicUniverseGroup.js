@@ -58,7 +58,8 @@ const TopicUniverseGroup = () => {
   const handleSectorSelection = sector => {
     dispatch(setSelectedIndustries([]));
     dispatch(setSelectedSector(sector));
-    setIsSectorDropdownOpen(false)};
+    setIsSectorDropdownOpen(false);
+  };
   return (
     <>
       <ButtonGroup color="primary">
