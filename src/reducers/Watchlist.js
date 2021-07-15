@@ -73,7 +73,7 @@ const getDefaultState = () => {
     selectedItem: null,
     recentDataLoaded: false,
     completeDataLoaded: false,
-    overwriteCheckBox: false
+    overwriteCheckBox: false,
   };
 };
 
