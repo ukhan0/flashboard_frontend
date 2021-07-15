@@ -37,6 +37,7 @@ import WatchlistSearch from './WatchlistSearch';
 import { isObject } from 'lodash';
 import watchlistApiCalls from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
+import { lastReportedState } from './WatchlistTableHelpers';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -221,7 +222,7 @@ const Watchlist = props => {
     let sortLast = null;
     columnState.forEach(elements => {
       if (elements.colId === 'last') {
-        sortLast = elements.sort;
+        sortLast = lastReportedState;
       }
     });
 

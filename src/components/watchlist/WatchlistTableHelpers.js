@@ -163,3 +163,5 @@ export const changeWordStyler = value => {
   }
   return style;
 };
+
+export const lastReportedState='desc'

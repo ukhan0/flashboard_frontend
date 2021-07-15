@@ -12,7 +12,8 @@ import {
   changeWordGetter,
   changeWordFormatter,
   dateFormater,
-  numberWordComparator
+  numberWordComparator,
+  lastReportedState
 } from './WatchlistTableHelpers';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
@@ -21,7 +22,6 @@ import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
 import TickerLogo from './WatchlistTableComponents/TickerLogo';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
-
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -157,7 +157,7 @@ const colDefs = [
     field: 'last',
     colId: 'last',
     width: 117,
-    sort: 'desc',
+    sort: lastReportedState,
     valueGetter: params => parseDateStr(get(params, 'data.last', null)),
     valueFormatter: params => dateFormater(params.value),
     filter: 'agDateColumnFilter',
