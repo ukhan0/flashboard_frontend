@@ -10,11 +10,12 @@ export const SET_RECENT_DATALOADED_FLAG = 'WATCHLIST/SET_RECENT_DATALOADED_FLAG'
 export const SET_COMPELTE_DATALOADED_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
 export const SET_COUNT = 'WATCHLIST/SET_COUNT';
 export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
+export const SET_SELECTED_TICKER_SYMBOL = 'WATCHLIST/SET_SELECTED_TICKER_SYMBOL';
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
   overwriteCheckBox
-})
+});
 
 export const setCount = count => ({
   type: SET_COUNT,
@@ -60,6 +61,10 @@ export const setCompleteDataLoadedFlag = completeDataLoaded => ({
 export const resetWatchlist = () => ({
   type: RESET_WATCHLIST
 });
+export const setSelectedTickerSymbol = selectedTickerSymbol => ({
+  type: SET_SELECTED_TICKER_SYMBOL,
+  selectedTickerSymbol
+});
 
 const getDefaultState = () => {
   return {
@@ -74,6 +79,7 @@ const getDefaultState = () => {
     recentDataLoaded: false,
     completeDataLoaded: false,
     overwriteCheckBox: false,
+    selectedTickerSymbol: null
   };
 };
 
@@ -109,6 +115,8 @@ export default function reducer(
       return { ...state, completeDataLoaded: action.completeDataLoaded };
     case RESET_WATCHLIST:
       return { ...state, ...getDefaultState() };
+    case SET_SELECTED_TICKER_SYMBOL:
+      return { ...state, selectedTickerSymbol: action.selectedTickerSymbol };
     default:
       break;
   }
