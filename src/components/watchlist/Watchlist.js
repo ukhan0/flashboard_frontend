@@ -304,6 +304,7 @@ const Watchlist = props => {
             {isSortActive ? (
               <Grid item>
                 <Button
+                  style={{ visibility: 'hidden' }}
                   color="primary"
                   variant="contained"
                   className={classes.button}
