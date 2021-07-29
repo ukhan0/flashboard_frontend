@@ -2,13 +2,14 @@ import React, { useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { get } from 'lodash';
 import config from './config/config';
-import { setCompleteDataLoadedFlag } from './reducers/Watchlist';
+import { setCompleteDataLoadedFlag, setIsOneHourComplete } from './reducers/Watchlist';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { storeCompleteWatchlist, getCompleteWatchlist } from './utils/helpers'
 
 const Cache = () => {
   const { user } = useSelector(state => state.User);
+  const { isOneHourComplete } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
   const isDataCachedToday = () => {
@@ -29,6 +30,7 @@ const Cache = () => {
   };
 
   const cacheData = useCallback(() => {
+    const lastTimeDataUpdate = moment().format('hh:mm:ss');
     const apiUrl = `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject`;
     axios
       .get(`${apiUrl}=all`)
@@ -36,6 +38,7 @@ const Cache = () => {
         storeCompleteWatchlist(get(response, 'data.data.content', []))
         setDataCachedDay();
         dispatch(setCompleteDataLoadedFlag(true));
+        localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);
       })
       .catch(function(error) {
         // handle error
@@ -44,19 +47,29 @@ const Cache = () => {
   }, [dispatch, user]);
 
   useEffect(() => {
+    setInterval(() => {
+      const currentTime = moment().format('hh:mm:ss');
+      const lastUpdateTime = localStorage.getItem('lastTimeCompleteDataUpdate');
+      let duration = moment(currentTime, 'hh:mm:ss').diff(moment(lastUpdateTime, 'hh:mm:ss'));
+      if (Math.abs(duration) >= config.completeDataUpdateDuration) {
+        dispatch(setIsOneHourComplete(true));
+      } else {
+        dispatch(setIsOneHourComplete(false));
+      }
+    }, [10 * 60 * 1000]); // miliseconds in a minutes (mm:ss:ms)
+  }, [dispatch]);
+
+  useEffect(() => {
     const allData = getCompleteWatchlist();
     if (allData) {
       dispatch(setCompleteDataLoadedFlag(true));
     }
 
-    if ((user && !isDataCachedToday()) || (user && !allData)) {
+    if ((user && !isDataCachedToday()) || (user && !allData) || isOneHourComplete) {
       cacheData();
-      // data should refersh after 24 hours if user does not close the app
-      setInterval(() => {
-        cacheData();
-      }, [24 * 60 * 60 * 1000]); // miliseconds in a day
+      dispatch(setCompleteDataLoadedFlag(false));
     }
-  }, [cacheData, user, dispatch]);
+  }, [cacheData, user, dispatch, isOneHourComplete]);
 
   return <></>;
 };

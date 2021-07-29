@@ -6,6 +6,7 @@ const config = {
   sentimentUrl: process.env.REACT_APP_SENTIMENT_URL,
   companyLogoPath: 'https://sma-assets.s3.us-east-2.amazonaws.com/logos/',
   hideCard:process.env.REACT_APP_HIDE_CARD,
+  completeDataUpdateDuration: 1*60*60*1000 // miliseconds in a hour
 };
 
 export default config;

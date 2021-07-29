@@ -1,6 +1,11 @@
 import React from 'react';
 import { Grid, ButtonGroup, Button } from '@material-ui/core';
-import { setWatchlistFileType, setWatchlistUniverse, setWatchlistMetric } from '../../reducers/Watchlist';
+import {
+  setWatchlistFileType,
+  setWatchlistUniverse,
+  setWatchlistMetric,
+  setIsNewWatchlistDataAvailable
+} from '../../reducers/Watchlist';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
@@ -17,6 +22,11 @@ const WatchlistFilters = props => {
       flag = true;
     }
     return flag;
+  };
+
+  const handleClickUniverse = key => {
+    dispatch(setWatchlistUniverse(key));
+    dispatch(setIsNewWatchlistDataAvailable(true));
   };
 
   return (
@@ -42,7 +52,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`uni_${i}`}
-              onClick={() => dispatch(setWatchlistUniverse(universe.key))}
+              onClick={() => handleClickUniverse(universe.key)}
               disabled={canItbeUsed(universe.key)}
               variant={selectedUniverse === universe.key ? 'contained' : 'outlined'}>
               {universe.label}

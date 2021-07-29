@@ -20,7 +20,8 @@ import {
   setOverwriteCheckBox,
   setCount,
   setWatchlistSearchText,
-  setSelectedTickerSymbol
+  setSelectedTickerSymbol,
+  setIsNewWatchlistDataAvailable
 } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
@@ -39,6 +40,7 @@ import { isObject } from 'lodash';
 import watchlistApiCalls from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
+import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -56,7 +58,8 @@ const Watchlist = props => {
     overwriteCheckBox,
     count,
     searchText,
-    selectedTickerSymbol
+    selectedTickerSymbol,
+    isNewWatchListDataAvailable
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
@@ -73,6 +76,14 @@ const Watchlist = props => {
   const [errorSnackbar, setErrorSnackbar] = React.useState(false);
   const firstTimeLoad = useRef(true);
 
+  const searchFromCompleteData = useCallback(() => {
+    const rawData = getCompleteWatchlist();
+    if (rawData) {
+      dispatch(setIsNewWatchlistDataAvailable(true));
+      setWatchlistData(formatData(rawData));
+    }
+  }, [dispatch]);
+
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
@@ -84,8 +95,11 @@ const Watchlist = props => {
       } else {
         setLoading(true);
         rawData = await watchlistApiCalls.getWatchlist(selectedUniverse, selectedFileType);
-        // update cached data of all (Complete) watchlist
         syncCachedData(rawData);
+        // update cached data of all (Complete) watchlist
+        if (!firstTimeLoad.current) {
+          dispatch(setIsNewWatchlistDataAvailable(false));
+        }
       }
 
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
@@ -121,7 +135,10 @@ const Watchlist = props => {
   const onColumnClick = (rowData, columnId) => {
     if (columnId === 'actions') {
       if (rowData.isTickerActive) {
-        // remove ticker
+        if (selectedUniverse === 'watchlist') {
+          let updatedTickerDetail = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
+          watchlistData.splice(updatedTickerDetail, 1);
+        }
         deleteTicker(rowData.ticker);
         dispatch(setSelectedWatchlist(rowData));
       } else {
@@ -143,8 +160,16 @@ const Watchlist = props => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData, dataVersion]);
+    if (searchText.length >= 2) {
+      searchFromCompleteData();
+    }
+    if (isNewWatchListDataAvailable) {
+      if (searchText.length === 0) {
+        setWatchlistData([]);
+        fetchData();
+      }
+    }
+  }, [fetchData, dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
 
   useEffect(() => {
     firstTimeLoad.current = false;
@@ -153,6 +178,13 @@ const Watchlist = props => {
   useEffect(() => {
     setIsFilterActiveOnSearch(searchText);
   }, [searchText]);
+
+  const updateChacheData = (ticker, isTicker) => {
+    const rawCompleteData = getCompleteWatchlist();
+    let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
+    rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
+    storeCompleteWatchlist(rawCompleteData);
+  };
 
   const deleteTicker = async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -165,6 +197,8 @@ const Watchlist = props => {
       });
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
+        let isTicker = false;
+        updateChacheData(ticker, isTicker);
         setTopicDialogOpen(false);
         const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
         debouncedSave();
@@ -195,9 +229,12 @@ const Watchlist = props => {
       });
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
+        let isTicker = true;
         setTopicDialogOpen(false);
+        setLoading(false);
         const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
         debouncedSave();
+        updateChacheData(ticker, isTicker);
         dispatch(setWatchlistSelectedSymbols([]));
         dispatch(setOverwriteCheckBox(false));
         setAddTickersnackbar(true);
