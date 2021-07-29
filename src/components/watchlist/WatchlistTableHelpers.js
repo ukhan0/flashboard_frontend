@@ -140,15 +140,15 @@ export const descriptionValueStyler = params => {
 
 export const changeWordGetter = value => {
   let actulaValue = null;
-  if (!isNull(value)) {
+  if (!isNull(value) && typeof value !== 'object') {
     actulaValue = lowerCase(value);
   }
   return actulaValue;
 };
 
 export const changeWordFormatter = value => {
-  let formatedValue = null;
-  if (value) {
+  let formatedValue = '';
+  if (value && typeof value !== 'object') {
     formatedValue = capitalize(value);
   }
   return formatedValue;
