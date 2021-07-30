@@ -99,7 +99,7 @@ const getDefaultState = () => {
     selectedTickerSymbol: null,
     isNewWatchListDataAvailable: true,
     isOneHourComplete: false,
-    isColorEnable: false
+    isColorEnable: localStorage.getItem('isColorEnable') === 'true' ? true : false
   };
 };
 

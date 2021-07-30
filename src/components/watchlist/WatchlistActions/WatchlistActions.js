@@ -30,8 +30,10 @@ export default function WatchListActions() {
   const handleChange = event => {
     if (event.target.checked) {
       dispatch(setIsColorEnable(true));
+      localStorage.setItem('isColorEnable', true);
     } else {
       dispatch(setIsColorEnable(false));
+      localStorage.setItem('isColorEnable', false);
     }
   };
 
