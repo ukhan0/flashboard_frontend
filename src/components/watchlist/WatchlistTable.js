@@ -190,7 +190,9 @@ const colDefs = [
         return value !== null ? parseNumber(value) : null;
       }
     },
-    cellStyle: descriptionValueStyler
+    cellStyle: params => {
+      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+    }
   },
   {
     headerName: 'Sentiment Quintile',
@@ -210,7 +212,8 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => get(params, 'data.sentimentWord', null)
-    }
+    },
+    cellRenderer: 'WordStatusRenderer'
   },
   {
     headerName: 'Sentiment Change',
@@ -238,7 +241,9 @@ const colDefs = [
         return value !== null ? parseNumber(value) : null;
       }
     },
-    cellStyle: descriptionValueStyler
+    cellStyle: params => {
+      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+    }
   },
   {
     headerName: 'Sentiment Change Quintile',
@@ -263,7 +268,8 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => get(params, 'data.sentimentChangeWord', null)
-    }
+    },
+    cellRenderer: 'WordStatusRenderer'
   },
   {
     headerName: 'Word Count Change',
@@ -290,7 +296,9 @@ const colDefs = [
       }
       return null;
     },
-    cellStyle: descriptionValueStyler,
+    cellStyle: params => {
+      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+    },
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
@@ -326,7 +334,9 @@ const colDefs = [
         return value !== null ? parseNumber(value) : null;
       }
     },
-    cellStyle: descriptionValueStyler
+    cellStyle: params => {
+      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+    }
   },
   {
     headerName: 'Word Count Change Quintile',
@@ -357,7 +367,8 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => get(params, 'data.wordCountChangePercentWord', null)
-    }
+    },
+    cellRenderer: 'WordStatusRenderer'
   }
 ];
 
@@ -365,6 +376,7 @@ const WatchlistTable = props => {
   const dispatch = useDispatch();
   const { searchText } = useSelector(state => state.Watchlist);
   const [gridApi, setGridApi] = useState(null);
+  
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
     props.storeColumnsState(columnState);

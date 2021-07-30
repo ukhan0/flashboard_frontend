@@ -1,11 +1,11 @@
 import { isNull, includes, capitalize, lowerCase, round, get } from 'lodash';
 
 const changedStyles = {
-  lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80 },
-  low: { backgroundColor: '#f50101', color: '#ffffff', width: 80 },
-  median: { backgroundColor: '#263055', color: '#ffffff', width: 80 },
-  high: { backgroundColor: '#0de63f', color: '#ffffff', width: 80 },
-  highest: { backgroundColor: '#1bc943', color: '#ffffff', width: 80 }
+  lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80, textTransform: 'capitalize' },
+  low: { backgroundColor: '#f50101', color: '#ffffff', width: 80, textTransform: 'capitalize' },
+  median: { backgroundColor: '#263055', color: '#ffffff', width: 80, textTransform: 'capitalize' },
+  high: { backgroundColor: '#0de63f', color: '#ffffff', width: 80, textTransform: 'capitalize' },
+  highest: { backgroundColor: '#1bc943', color: '#ffffff', width: 80, textTransform: 'capitalize' }
 };
 const changeStylesValues = Object.keys(changedStyles);
 
@@ -130,9 +130,14 @@ export const descriptionValueStyler = params => {
     return null;
   }
   let value = params.value.word;
+  let style = null;
   if (!isNull(value)) {
+    if (includes(changeStylesValues, value)) {
+      style = changedStyles[value];
+    }
     return {
-      textAlign: 'right'
+      textAlign: 'right',
+      color: style.backgroundColor
     };
   }
   return null;
@@ -159,6 +164,7 @@ export const changeWordStyler = value => {
   if (!isNull(value)) {
     if (includes(changeStylesValues, value)) {
       style = changedStyles[value];
+      // textTransform:'capitalize'
     }
   }
   return style;

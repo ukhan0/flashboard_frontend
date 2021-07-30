@@ -59,7 +59,8 @@ const Watchlist = props => {
     count,
     searchText,
     selectedTickerSymbol,
-    isNewWatchListDataAvailable
+    isNewWatchListDataAvailable,
+    isColorEnable
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
@@ -123,14 +124,15 @@ const Watchlist = props => {
         last: selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q,
         recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
         oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
-        documentType: selectedFileType
+        documentType: selectedFileType,
+        isColorEnable: isColorEnable
       };
       delete data['10k'];
       delete data['10q'];
       filteredData.push(data);
     });
     return filteredData;
-  }, [selectedFileType, selectedMetric, watchlistData]);
+  }, [selectedFileType, selectedMetric, watchlistData, isColorEnable]);
 
   const onColumnClick = (rowData, columnId) => {
     if (columnId === 'actions') {
@@ -174,6 +176,12 @@ const Watchlist = props => {
   useEffect(() => {
     firstTimeLoad.current = false;
   }, []);
+
+  useEffect(() => {
+    if (history.location.pathname === '/watchlist') {
+      dispatch(setIsNewWatchlistDataAvailable(true));
+    }
+  }, [dispatch, history.location.pathname]);
 
   useEffect(() => {
     setIsFilterActiveOnSearch(searchText);

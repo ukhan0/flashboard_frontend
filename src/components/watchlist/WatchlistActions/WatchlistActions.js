@@ -1,8 +1,12 @@
 import React from 'react';
-import { ListItem, List, ListItemText } from '@material-ui/core';
+import { ListItem, List, ListItemText, Switch, Grid } from '@material-ui/core';
 import WatchlistService from '../WatchlistService';
+import { useDispatch } from 'react-redux';
+import { setIsColorEnable } from '../../../reducers/Watchlist';
 
 export default function WatchListActions() {
+  const dispatch = useDispatch();
+  const [isChecked, setIsChecked] = React.useState(false);
   const actions = [
     { key: 'autoSize', label: 'Auto Size Columns' },
     // { key: 'sizeToFit', label: 'Fit Column Size' },
@@ -23,6 +27,15 @@ export default function WatchListActions() {
     }
   };
 
+  const handleChange = event => {
+    setIsChecked(event.target.checked);
+    if (event.target.checked) {
+      dispatch(setIsColorEnable(true));
+    } else {
+      dispatch(setIsColorEnable(false));
+    }
+  };
+
   return (
     <List component="nav">
       {actions.map((action, index) => {
@@ -37,6 +50,20 @@ export default function WatchListActions() {
           </ListItem>
         );
       })}
+      <Grid container direction="row" alignItems="center">
+        <Grid item>
+          <Switch
+            checked={isChecked}
+            onChange={handleChange}
+            color="primary"
+            name="checkedB"
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        </Grid>
+        <Grid item>
+          <>color Enable</>
+        </Grid>
+      </Grid>
     </List>
   );
 }

@@ -13,6 +13,7 @@ export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
 export const SET_SELECTED_TICKER_SYMBOL = 'WATCHLIST/SET_SELECTED_TICKER_SYMBOL';
 export const SET_IS_NEW_WATCHLIST_DATA_AVAILABLE = 'WATCHLIST/SET_IS_NEW_WATCHLIST_DATA_AVAILABLE ';
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
+export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
@@ -77,6 +78,11 @@ export const setIsOneHourComplete = isOneHourComplete => ({
   isOneHourComplete
 });
 
+export const setIsColorEnable = isColorEnable => ({
+  type: SET_IS_COLOR_ENABLE,
+  isColorEnable
+});
+
 const getDefaultState = () => {
   return {
     selectedFileType: '10k',
@@ -92,7 +98,8 @@ const getDefaultState = () => {
     overwriteCheckBox: false,
     selectedTickerSymbol: null,
     isNewWatchListDataAvailable: true,
-    isOneHourComplete: false
+    isOneHourComplete: false,
+    isColorEnable: false
   };
 };
 
@@ -134,6 +141,8 @@ export default function reducer(
       return { ...state, isNewWatchListDataAvailable: action.isNewWatchListDataAvailable };
     case SET_IS_ONE_HOUR_COMPLETE:
       return { ...state, isOneHourComplete: action.isOneHourComplete };
+    case SET_IS_COLOR_ENABLE:
+      return { ...state, isColorEnable: action.isColorEnable };
     default:
       break;
   }
