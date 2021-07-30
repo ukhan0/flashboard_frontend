@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, List, ListItemText, Switch, Grid } from '@material-ui/core';
+import { ListItem, List, ListItemText, Switch, Grid, Typography } from '@material-ui/core';
 import WatchlistService from '../WatchlistService';
 import { useDispatch } from 'react-redux';
 import { setIsColorEnable } from '../../../reducers/Watchlist';
@@ -61,7 +61,7 @@ export default function WatchListActions() {
           />
         </Grid>
         <Grid item>
-          <>color Enable</>
+          <Typography>Enable Colors</Typography>
         </Grid>
       </Grid>
     </List>

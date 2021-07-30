@@ -170,6 +170,7 @@ const colDefs = [
     field: 'sentiment',
     width: 112,
     colId: 'sentiment',
+    type: 'numericColumn',
     filter: 'agNumberColumnFilter',
     valueGetter: params => {
       const sentimentValue = get(params, 'data.sentiment', null);
@@ -220,6 +221,7 @@ const colDefs = [
     headerTooltip: "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
     field: 'sentimentChange',
     colId: 'sentimentChange',
+    type: 'numericColumn',
     filter: 'agNumberColumnFilter',
     width: 104,
     valueGetter: params => {
@@ -276,6 +278,7 @@ const colDefs = [
     headerTooltip: `The raw change in Word Count of the parsed text from the company's most recent filing of the same type.`,
     field: 'wordCountChange',
     colId: 'wordCountChange',
+    type: 'numericColumn',
     filter: 'agNumberColumnFilter',
     width: 93,
     valueGetter: params => {
@@ -313,6 +316,7 @@ const colDefs = [
       "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
     field: 'wordCountChangePercent',
     colId: 'wordCountChangePercent',
+    type: 'numericColumn',
     filter: 'agNumberColumnFilter',
     width: 109,
     valueGetter: params => {
