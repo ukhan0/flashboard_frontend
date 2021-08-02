@@ -187,11 +187,24 @@ const Watchlist = props => {
     setIsFilterActiveOnSearch(searchText);
   }, [searchText]);
 
-  const updateChacheData = (ticker, isTicker) => {
-    const rawCompleteData = getCompleteWatchlist();
+  const updateTickerValue = (rawCompleteData, ticker, isTicker) => {
     let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
-    rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-    storeCompleteWatchlist(rawCompleteData);
+    if (updatedTickerDetail !== -1) {
+      rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
+      storeCompleteWatchlist(rawCompleteData);
+    } else {
+      return;
+    }
+  };
+  const updateChacheData = (ticker, isTicker) => {
+    let rawCompleteData = getCompleteWatchlist();
+    if (Array.isArray(ticker)) {
+      for (let i = 0; i < ticker.length; i++) {
+        updateTickerValue(rawCompleteData, isObject(ticker[i]) ? ticker[i].ticker : ticker[i], isTicker);
+      }
+    } else {
+      updateTickerValue(rawCompleteData, ticker, isTicker);
+    }
   };
 
   const deleteTicker = async ticker => {
@@ -242,10 +255,11 @@ const Watchlist = props => {
         setLoading(false);
         const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
         debouncedSave();
-        updateChacheData(ticker, isTicker);
+        updateChacheData(ticker ? ticker : selectedSymbols, isTicker);
         dispatch(setWatchlistSelectedSymbols([]));
         dispatch(setOverwriteCheckBox(false));
         setAddTickersnackbar(true);
+        fetchData();
       } else {
         setTopicAddingError(true);
         setErrorSnackbar(true);
