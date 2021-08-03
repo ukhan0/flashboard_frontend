@@ -65,7 +65,9 @@ export default function TopicSuggestionsDialog(props) {
         content.push(
           <Fragment key={keyWord}>
             <Grid item xs={12}>
-              <h6 className="font-weight-bold font-size-lg mb-1 text-black">{keyWord}</h6>
+              {filteredData.length > 0 && keyWord ? (
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">{keyWord}</h6>
+              ) : null}
             </Grid>
 
             {filteredData.map((value, index) => (
