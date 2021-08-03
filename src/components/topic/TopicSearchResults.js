@@ -117,12 +117,12 @@ const TopicSearchResults = () => {
     const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
     const getFirstLine = cleanText.slice(0, 50);
     dispatch(setHeadingRedirect(getFirstLine));
-    const companyName = get(companyDocumentResultData, 'company_name', null);
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
+    const ticker = get(companyDocumentResultData, 'ticker', null);
     const companiesList = getCompleteWatchlist() || [];
-    let company = companiesList.find(c => toLower(c.b) === toLower(companyName));
+    let company = companiesList.find(c => toLower(c.ticker) === toLower(ticker));
     const recentId = fileId.toString().replace('9000', '');
 
     if (company) {

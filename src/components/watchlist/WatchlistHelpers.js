@@ -94,6 +94,7 @@ export const formatComapnyData = rawData => {
     recentId10q: rawData['bw'],
     oldId10k: rawData['bv'],
     oldId10q: rawData['bx'],
+    oldId: rawData['bv'],
     isTickerActive: get(rawData, 'isTickerActive', false)
   };
 };

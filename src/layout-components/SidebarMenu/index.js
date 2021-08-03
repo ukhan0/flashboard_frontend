@@ -7,14 +7,15 @@ import { List, Typography } from '@material-ui/core';
 
 import useRouter from 'utils/useRouter';
 import SidebarMenuListItem from './SidebarMenuListItem';
+import {useSelector } from 'react-redux'
 
 const SidebarMenuList = props => {
   const { pages, ...rest } = props;
-
+  const {selectedItem} = useSelector(state=>state.Watchlist)
   return (
     <List className="p-0">
       {pages.reduce(
-        (items, page) => reduceChildRoutes({ items, page, ...rest }),
+        (items, page) => reduceChildRoutes({ items, page, selectedItem, ...rest }),
         []
       )}
     </List>
@@ -27,7 +28,7 @@ SidebarMenuList.propTypes = {
 };
 
 const reduceChildRoutes = props => {
-  const { router, items, page, depth } = props;
+  const { router, items, page, depth, selectedItem } = props;
 
   if (page.content) {
     const open = matchPath(router.location.pathname, {
@@ -61,7 +62,14 @@ const reduceChildRoutes = props => {
         key={page.label}
         label={page.badge}
         title={page.label}
-        disabled={page.disabled}
+        disabled={ 
+          page.label === 'Comparison'
+          ? selectedItem
+            ? selectedItem.ticker
+             ? page.disabled
+             : true
+            : page.disabled
+          : page.disabled}
       />
     );
   }
