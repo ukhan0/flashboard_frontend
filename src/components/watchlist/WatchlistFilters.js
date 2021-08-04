@@ -29,6 +29,11 @@ const WatchlistFilters = props => {
     dispatch(setIsNewWatchlistDataAvailable(true));
   };
 
+  const handleClickFileType = key => {
+    dispatch(setWatchlistFileType(key))
+    dispatch(setIsNewWatchlistDataAvailable(true));
+  };
+
   return (
     <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
       <Grid item>
@@ -38,7 +43,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`ft_${i}`}
-              onClick={() => dispatch(setWatchlistFileType(fileType.key))}
+              onClick={() => handleClickFileType(fileType.key)}
               variant={selectedFileType === fileType.key ? 'contained' : 'outlined'}>
               {fileType.label}
             </Button>
