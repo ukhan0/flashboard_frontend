@@ -5,7 +5,7 @@ import config from './config/config';
 import { setCompleteDataLoadedFlag, setIsOneHourComplete } from './reducers/Watchlist';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
-import { storeCompleteWatchlist, getCompleteWatchlist } from './utils/helpers'
+import { storeCompleteWatchlist, getCompleteWatchlist } from './utils/helpers';
 
 const Cache = () => {
   const { user } = useSelector(state => state.User);
@@ -31,11 +31,11 @@ const Cache = () => {
 
   const cacheData = useCallback(() => {
     const lastTimeDataUpdate = moment().format('hh:mm:ss');
-    const apiUrl = `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject`;
+    const apiUrl = `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject`;
     axios
       .get(`${apiUrl}=all`)
       .then(response => {
-        storeCompleteWatchlist(get(response, 'data.data.content', []))
+        storeCompleteWatchlist(get(response, 'data.data.content', []));
         setDataCachedDay();
         dispatch(setCompleteDataLoadedFlag(true));
         localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);

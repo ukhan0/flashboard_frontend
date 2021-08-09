@@ -55,7 +55,6 @@ const Watchlist = props => {
     selectedUniverse,
     selectedMetric,
     selectedSymbols,
-    overwriteCheckBox,
     count,
     searchText,
     selectedTickerSymbol,
@@ -210,12 +209,7 @@ const Watchlist = props => {
   const deleteTicker = async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
-      const response = await axios.post(`${config.apiUrl}/api/delete_wishlist_item`, {
-        tickers: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
-        id: user.id,
-        api_key: user.api_key,
-        authentication_token: user.authentication_token
-      });
+      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}`);
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         let isTicker = false;
@@ -238,15 +232,9 @@ const Watchlist = props => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
       setLoading(true);
-      const response = await axios.post(`${config.apiUrl}/api/save_wishlist_item`, {
-        ticker_limit: 10000,
-        alerts: false,
-        delimiter: 'comma',
-        watched_tickers: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
-        id: user.id,
-        api_key: user.api_key,
-        authentication_token: user.authentication_token,
-        overWrite: overwriteCheckBox
+      const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
+        user_id: user.id,
+        ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(',')
       });
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {

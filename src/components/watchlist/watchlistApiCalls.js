@@ -8,7 +8,7 @@ export default {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.get(
-        `${config.apiUrl}/api/get_saved_wish_list_raw?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`
+        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`
       );
       rawData = get(response, 'data.data.content', []);
     } catch (e) {
