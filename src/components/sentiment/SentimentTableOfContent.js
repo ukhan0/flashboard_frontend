@@ -65,23 +65,89 @@ const SentimentTableOfContent = props => {
   const dispatch = useDispatch();
   const { data, isLoading, isPin } = useSelector(state => state.Sentiment);
   const displayData = [];
+  function sortObject(obj) {
+    let newObj = [];
+    for (let prop in obj) {
+      let objs = {};
+      if (typeof obj[prop] === 'object') {
+        objs[prop] = obj[prop];
+        newObj.push(objs);
+      } else {
+        objs[prop] = obj[prop];
+        newObj.unshift(objs);
+      }
+    }
+    let fObj = {};
+    for (let prop1 in newObj) {
+      for (let prop2 in newObj[prop1]) {
+        fObj[prop2] = newObj[prop1][prop2];
+      }
+    }
+    return fObj;
+  }
+  function detectlevelCurrentObj(obj) {
+    let stIdx = '';
+    for (let prop in obj) {
+      let regex = /^l{1}[0-9]{1}$/;
+      if (prop.includes('-st')) {
+        stIdx = prop;
+      } else if (typeof obj[prop] === 'object') {
+        stIdx = prop;
+      } else if (regex.test(prop)) {
+        stIdx = obj[prop];
+        if (prop === 'l4') {
+          stIdx = prop;
+          if (obj[stIdx] === 'data') {
+            stIdx = 'data';
+          }
+        }
+      }
+    }
+    return stIdx;
+  }
   function visitOutlineObj(acc, obj, lvl, path) {
-    if (lvl > 4) return;
+    if (lvl > 7) return;
     lvl += 1;
-    for (var prop in obj) {
-      var li = {};
-      path += `.${prop}`;
-      if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
-        li = { path, lvl, prop };
-        acc.push(li);
+    obj = sortObject(obj);
+    for (let prop in obj) {
+      let detectedLevel = detectlevelCurrentObj(obj);
+      if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
+        let virtualDiv = obj[detectedLevel];
+        let vHeadingElem = virtualDiv.includes('<heading class=');
+        if (vHeadingElem) {
+          const extractValueInsideQuote = virtualDiv.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
+          if (extractValueInsideQuote.includes('heading')) {
+            const removeClass = virtualDiv.replace(' class=', '');
+            const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
+            const removeHeading = removeDoubleQuotes.replace(extractValueInsideQuote, '');
+            let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
+              return val.replace(/<\/?heading>/g, '');
+            });
+            detectedLevel = extractValueInsideQuote;
+            obj['l4-ht'] = result;
+          }
+        }
+      }
+      let li = {};
+      if (prop.includes('-ht')) {
+        prop = obj[prop];
+        path += `.${prop}`;
+        if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
+          if (lvl === 1 && prop.includes('.htm')) {
+          } else {
+            li = { path, lvl, prop };
+            acc.push(li);
+          }
+        }
       }
       if (typeof obj[prop] === 'object') {
         visitOutlineObj(acc, obj[prop], lvl, path);
+      } else {
       }
     }
   }
   if (data) {
-    const headings = get(data, 'data_json', []);
+    const headings = get(data, 'sma_data_json', []);
     visitOutlineObj(displayData, headings, 0, '');
   }
 
@@ -157,7 +223,7 @@ const SentimentTableOfContent = props => {
                 onClick={() => {
                   clickHandle(d.path);
                 }}>
-                {d.lvl === 3 ? upperCase(d.prop) : d.prop}
+                {d.lvl === 4 ? upperCase(d.prop) : d.prop}
               </div>
             ) : null
           )

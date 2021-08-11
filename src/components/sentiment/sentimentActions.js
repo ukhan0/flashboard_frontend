@@ -11,7 +11,7 @@ export const getSentimentData = () => {
     }
     try {
       dispatch(setIsLoading(true));
-      const response = await axios.get(`${config.sentimentUrl}?id=${recentId}`);
+      const response = await axios.get(`${config.sentimentUrl}?id=${recentId}&es_index=filling_embedded_headings`);
       const data = get(response, 'data', []);
       if (response) {
         dispatch(setIsApiResponseReceived(true));

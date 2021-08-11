@@ -43,6 +43,13 @@ const useStyles = makeStyles(theme => ({
     top: 60,
     position: 'sticky',
     zIndex: 1
+  },
+  heading: {
+    fontSize: '16px',
+    marginBottom: '5px',
+    marginLeft: '10px',
+    display: 'inline-block',
+    fontWeight: 'bold'
   }
 }));
 
@@ -189,7 +196,20 @@ const TopicSearchResults = () => {
                         {get(companyResult, 'results', []).map((result, index) => {
                           return (
                             <div key={`rst${index}`}>
-                              <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                              <Grid
+                                key={`rsttt${index}`}
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center">
+                                <Grid item>
+                                  <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                                </Grid>
+                                <Grid item>
+                                  <span className={clsx(classes.heading, 'text-black-50')}>{result.sub_heading}</span>
+                                </Grid>
+                              </Grid>
+
                               {result.content.map((content, index) => (
                                 <p
                                   key={`rstc${index}`}

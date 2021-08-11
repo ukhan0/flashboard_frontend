@@ -37,28 +37,108 @@ const SentimentSection = props => {
   }, [selectedHeadingId, dispatch]);
 
   const displayData = [];
+  function titleCase(str) {
+    let splitStr = str.toLowerCase().split(' ');
+    for (let i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    // Directly return the joined string
+    return splitStr.join(' ');
+  }
+  function detectObjFromCurrentObj(obj) {
+    let ObjIdx = '';
+    for (let prop in obj) {
+      if (typeof obj[prop] === 'object') {
+        ObjIdx = prop;
+      }
+    }
+    return ObjIdx;
+  }
+  function detectSecTextFromCurrentObj(obj) {
+    let stIdx = '';
+    for (let prop in obj) {
+      let regex = /^[a-zA-Z]{1}[0-9]{1}$/;
+      if (prop.includes('-st') || regex.test(prop) || prop === 'data') {
+        stIdx = prop;
+        if (obj[prop] === 'data') {
+          stIdx = 'data';
+        }
+      }
+    }
+    return stIdx;
+  }
+  function detectlevelCurrentObj(obj) {
+    let stIdx = '';
+    for (let prop in obj) {
+      let regex = /^l{1}[0-9]{1}$/;
+      if (prop.includes('-st')) {
+        stIdx = prop;
+      } else if (typeof obj[prop] === 'object') {
+        stIdx = prop;
+      } else if (regex.test(prop)) {
+        stIdx = obj[prop];
+        if (prop === 'l4') {
+          stIdx = prop;
+          if (obj[stIdx] === 'data') {
+            stIdx = 'data';
+          }
+        }
+      }
+    }
+    return stIdx;
+  }
   function visitOutlineObj(acc, obj, lvl, path) {
     lvl += 1;
-    for (var prop in obj) {
-      var li = {};
-      path += `.${prop}`;
-      if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
-        li = { path, lvl, prop };
-        acc.push(li);
+    for (let prop in obj) {
+      let detectedLevel = detectlevelCurrentObj(obj);
+      if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
+        let virtualDiv = obj[detectedLevel];
+        let vHeadingElem = virtualDiv.includes('<heading class=');
+        if (vHeadingElem) {
+          const extractQuote = virtualDiv.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
+          if (extractQuote.includes('heading')) {
+            const removeClass = virtualDiv.replace(' class=', '');
+            const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
+            const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
+            let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
+              return val.replace(/<\/?heading>/g, '');
+            });
+            detectedLevel = extractQuote;
+            result.map(v => (obj['l4-ht'] = v));
+          }
+        }
       }
-
-      if (typeof obj[prop] === 'object') {
+      let li = {};
+      if (!isNaN(prop)) {
         visitOutlineObj(acc, obj[prop], lvl, path);
-      } else {
-        if (prop !== 'Headingtag' && prop !== 'Sectiontext') {
-          li = { path, lvl: lvl + 2, prop, content: obj[prop].replaceAll('\n', '<br/>') };
-          acc.push(li);
+      }
+      if (prop.includes('-ht')) {
+        prop = obj[prop];
+        let objIdx = detectObjFromCurrentObj(obj);
+        let stIdx = detectSecTextFromCurrentObj(obj);
+        path += `.${prop}`;
+        if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
+          if (lvl === 1 && prop.includes('.htm')) {
+          } else {
+            li = { path, lvl, prop: titleCase(prop) };
+            acc.push(li);
+          }
+        }
+        if (typeof obj[objIdx] === 'object') {
+          visitOutlineObj(acc, obj[objIdx], lvl, path);
+        } else {
+          if (prop !== 'Headingtag' && prop !== 'Sectiontext' && obj[stIdx]) {
+            li = { path, lvl: lvl + 2, prop, content: obj[stIdx].replaceAll('\n', '<br/>') };
+            acc.push(li);
+          }
         }
       }
     }
   }
   if (data) {
-    const content = get(data, 'data_json', []);
+    const content = get(data, 'sma_data_json', []);
     visitOutlineObj(displayData, content, 0, '');
   }
   useEffect(() => {
@@ -105,7 +185,7 @@ const SentimentSection = props => {
               key={index}
               style={{
                 paddingLeft: d.lvl * 4 + 4,
-                fontSize: d.lvl === 1 ? 40 : 100 / d.lvl,
+                fontSize: d.lvl === 1 ? 40 : 150 / d.lvl,
                 scrollMarginTop: '210px'
               }}
               id={createHash(d.path)}>
@@ -117,7 +197,7 @@ const SentimentSection = props => {
                     classes.upper,
                     selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
                   )}>
-                  {d.lvl === 3 ? upperCase(d.prop) : d.prop}
+                  {d.lvl === 4 ? upperCase(d.prop) : d.prop}
                 </p>
               )}
             </div>
