@@ -7,6 +7,9 @@ import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
 import { upperCase, get } from 'lodash';
 const useStyles = makeStyles(theme => ({
+  lvl: {
+    fontSize: 20
+  },
   content: {
     fontSize: 12
   },
@@ -19,6 +22,19 @@ const useStyles = makeStyles(theme => ({
   },
   upper: {
     textTransform: 'capitalize'
+  },
+  lvl2: {
+    fontSize: 28
+  },
+  lvl4: {
+    fontSize: 24
+  },
+  lvl6: {
+    fontSize: 22
+  },
+
+  lvl8: {
+    fontSize: 20
   }
 }));
 
@@ -185,7 +201,6 @@ const SentimentSection = props => {
               key={index}
               style={{
                 paddingLeft: d.lvl * 4 + 4,
-                fontSize: d.lvl === 1 ? 40 : 150 / d.lvl,
                 scrollMarginTop: '210px'
               }}
               id={createHash(d.path)}>
@@ -195,6 +210,8 @@ const SentimentSection = props => {
                 <p
                   className={clsx(
                     classes.upper,
+                    classes[`lvl${d.lvl}`],
+                    classes.lvl,
                     selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
                   )}>
                   {d.lvl === 4 ? upperCase(d.prop) : d.prop}
