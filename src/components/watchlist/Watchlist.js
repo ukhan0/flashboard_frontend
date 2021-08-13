@@ -199,11 +199,15 @@ const Watchlist = props => {
     let rawCompleteData = getCompleteWatchlist();
     if (Array.isArray(ticker)) {
       for (let i = 0; i < ticker.length; i++) {
-        updateTickerValue(rawCompleteData, isObject(ticker[i]) ? ticker[i].ticker : ticker[i], isTicker);
+        let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
+        if (updatedTickerDetail !== -1) {
+          rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
+        }
       }
     } else {
       updateTickerValue(rawCompleteData, ticker, isTicker);
     }
+    storeCompleteWatchlist(rawCompleteData);
   };
 
   const deleteTicker = async ticker => {
@@ -243,7 +247,7 @@ const Watchlist = props => {
         setLoading(false);
         const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
         debouncedSave();
-        updateChacheData(ticker ? ticker : selectedSymbols, isTicker);
+        updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
         dispatch(setWatchlistSelectedSymbols([]));
         dispatch(setOverwriteCheckBox(false));
         setAddTickersnackbar(true);

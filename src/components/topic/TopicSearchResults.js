@@ -123,7 +123,7 @@ const TopicSearchResults = () => {
     const getContent = content[0].content[0];
     const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
     const getFirstLine = cleanText.slice(0, 50);
-    dispatch(setHeadingRedirect(getFirstLine));
+    dispatch(setHeadingRedirect({ firstLine: getFirstLine, sub_heading: content[0].sub_heading }));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);

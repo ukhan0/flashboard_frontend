@@ -108,6 +108,7 @@ const SentimentSection = props => {
   function visitOutlineObj(acc, obj, lvl, path) {
     lvl += 1;
     for (let prop in obj) {
+      let removeHeadingFromContent;
       let detectedLevel = detectlevelCurrentObj(obj);
       if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
         let virtualDiv = obj[detectedLevel];
@@ -122,7 +123,10 @@ const SentimentSection = props => {
               return val.replace(/<\/?heading>/g, '');
             });
             detectedLevel = extractQuote;
-            result.map(v => (obj['l4-ht'] = v));
+            result.forEach(v => {
+              removeHeadingFromContent = v;
+              obj['l4-ht'] = v;
+            });
           }
         }
       }
@@ -146,7 +150,8 @@ const SentimentSection = props => {
           visitOutlineObj(acc, obj[objIdx], lvl, path);
         } else {
           if (prop !== 'Headingtag' && prop !== 'Sectiontext' && obj[stIdx]) {
-            li = { path, lvl: lvl + 2, prop, content: obj[stIdx].replaceAll('\n', '<br/>') };
+            let content = obj[stIdx].replaceAll('\n', '<br/>');
+            li = { path, lvl: lvl + 2, prop, content: content.replace(removeHeadingFromContent, '') };
             acc.push(li);
           }
         }
@@ -168,12 +173,25 @@ const SentimentSection = props => {
   useEffect(() => {
     if (calledOnce.current) {
       if (displayData.length > 0) {
-        let filteredData = displayData.filter(item => (item.content ? item.content.indexOf(heading) !== -1 : null));
-        if (filteredData.length > 0) {
-          const targetHeading = filteredData[0].path;
+        let filteredContentData = displayData.filter(item =>
+          item.content ? item.content.indexOf(heading.firstLine) !== -1 : null
+        );
+        if (filteredContentData.length > 0) {
+          const targetHeading = filteredContentData[0].path;
           if (targetHeading) {
             dispatch(setSelectedHeadingId(createHash(targetHeading)));
             calledOnce.current = false;
+          }
+        } else {
+          let filteredHeadingData = displayData.filter(item =>
+            item.content ? item.prop.indexOf(heading.sub_heading) !== -1 : null
+          );
+          if (filteredHeadingData.length > 0) {
+            const targetHeading = filteredHeadingData[0].path;
+            if (targetHeading) {
+              dispatch(setSelectedHeadingId(createHash(targetHeading)));
+              calledOnce.current = false;
+            }
           }
         }
       }
