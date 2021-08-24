@@ -174,7 +174,7 @@ const SentimentSection = props => {
     if (calledOnce.current) {
       if (displayData.length > 0) {
         let filteredContentData = displayData.filter(item =>
-          item.content ? item.content.indexOf(heading.firstLine) !== -1 : null
+          item.content ? item.content.indexOf(heading ? heading.firstLine : '') !== -1 : null
         );
         if (filteredContentData.length > 0) {
           const targetHeading = filteredContentData[0].path;
