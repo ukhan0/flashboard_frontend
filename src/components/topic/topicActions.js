@@ -277,6 +277,16 @@ const createSearchSaveMiniPayload = topicState => {
     topicState.selectedSuggestions,
     topicState.searchText
   );
+  const documentTypeObjects = topicState.selectedDocumentTypes.map(sdt =>
+    documentTypesData.find(dtd => dtd.value === sdt)
+  );
+  let searchFroms = [];
+  documentTypeObjects.forEach(documentType => {
+    const sections = get(documentType, `sections.${topicState.selectedSection}`, []);
+    sections.forEach(section => {
+      searchFroms.push(`sma_data_json.${section}`);
+    });
+  });
   const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText;
   return {
     selectedSuggestions: topicState.selectedSuggestions,
@@ -288,6 +298,8 @@ const createSearchSaveMiniPayload = topicState => {
     searchTerm: fullSearchText,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     universe: topicState.selectedUniverse,
+    section: topicState.selectedSection,
+    searchFrom: searchFroms,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     company_arr:
       topicState.selectedWatchlistCompanyNames.length !== 0 ? topicState.selectedWatchlistCompanyNames : undefined
