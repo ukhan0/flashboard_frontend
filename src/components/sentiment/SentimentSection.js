@@ -35,6 +35,14 @@ const useStyles = makeStyles(theme => ({
 
   lvl8: {
     fontSize: 20
+  },
+  searchResultText: {
+    '& .yellowColor': {
+      backgroundColor: 'orange',
+      paddingLeft: 2,
+      paddingRight: 2,
+      borderRadius: 4
+    }
   }
 }));
 
@@ -223,17 +231,19 @@ const SentimentSection = props => {
               }}
               id={createHash(d.path)}>
               {d.content ? (
-                <p className={classes.content} dangerouslySetInnerHTML={{ __html: d.content }}></p>
+                <p
+                  className={clsx(classes.content, classes.searchResultText)}
+                  dangerouslySetInnerHTML={{ __html: d.content }}></p>
               ) : (
                 <p
                   className={clsx(
                     classes.upper,
+                    classes.searchResultText,
                     classes[`lvl${d.lvl}`],
                     classes.lvl,
                     selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
-                  )}>
-                  {d.lvl === 4 ? upperCase(d.prop) : d.prop}
-                </p>
+                  )}
+                  dangerouslySetInnerHTML={{ __html: d.lvl === 4 ? upperCase(d.prop) : d.prop }}></p>
               )}
             </div>
           ) : null;

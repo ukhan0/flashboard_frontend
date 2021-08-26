@@ -117,13 +117,22 @@ const TopicSearchResults = () => {
   }, [selectedCompanyName, summaryByCompany]);
 
   const goToSentimentScreen = (companyDocumentResultData, content) => {
+    let getContent;
+    let subHeading;
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSelectedHeadingId(null));
     dispatch(setSentimentResult(null));
-    const getContent = content[0].content[0];
+    if (Array.isArray(content)) {
+      getContent = content[0].content[0];
+      subHeading = content[0].sub_heading;
+    } else {
+      getContent = content.content[0];
+      subHeading = content.sub_heading;
+    }
+
     const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
     const getFirstLine = cleanText.slice(0, 50);
-    dispatch(setHeadingRedirect({ firstLine: getFirstLine, sub_heading: content[0].sub_heading }));
+    dispatch(setHeadingRedirect({ firstLine: getFirstLine, sub_heading: subHeading }));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
@@ -198,9 +207,7 @@ const TopicSearchResults = () => {
                                 <Grid item>
                                   <b
                                     className={clsx(classes.clickable, 'text-first')}
-                                    onClick={() =>
-                                      goToSentimentScreen(companyResult, get(companyResult, 'results', []))
-                                    }>
+                                    onClick={() => goToSentimentScreen(companyResult, result)}>
                                     <p className="font-size-lg mb-2 text-black-100">
                                       {createResultTitle(result.title)}
                                     </p>

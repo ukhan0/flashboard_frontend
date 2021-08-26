@@ -5,13 +5,16 @@ import config from '../../config/config';
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
+    const { searchText } = getState().Topic;
     const recentId = get(selectedItem, 'recentId', null);
     if (!recentId) {
       return;
     }
     try {
       dispatch(setIsLoading(true));
-      const response = await axios.get(`${config.sentimentUrl}?id=${recentId}&es_index=filling_embedded_headings`);
+      const response = await axios.get(
+        `${config.sentimentUrl}?id=${recentId}&es_index=filling_embedded_headings&search_term=${searchText}`
+      );
       const data = get(response, 'data', []);
       if (response) {
         dispatch(setIsApiResponseReceived(true));
