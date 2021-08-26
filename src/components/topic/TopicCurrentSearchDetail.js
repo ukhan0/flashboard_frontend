@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import TopicDropDown from './TopicDrowpDown';
 import clsx from 'clsx';
-import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
 
 import {
   setOpenTopicSearchDialog,
@@ -47,7 +47,7 @@ const TopicDialog = props => {
   let endDate = currentSearchDetail.endDate;
   let documents = currentSearchDetail.documentType ? currentSearchDetail.documentType : [];
   const dispatch = useDispatch();
-  const displayDateFormat = 'MMMM yyyy';
+  const displayDateFormat = 'MMMM YYYY';
   const handleOpenTopicDialog = () => {
     dispatch(setOpenTopicSearchDialog(true));
     dispatch(setSelectedIndustries([]));
@@ -76,10 +76,10 @@ const TopicDialog = props => {
             <Grid item xs={2}>
               <span className="text-black-50 d-block">During:</span>
               {currentSearchDetail.startDate ? (
-                <span className="font-weight-bold">{format(startDate, displayDateFormat)}</span>
+                <span className="font-weight-bold">{moment(startDate).format(displayDateFormat)}</span>
               ) : null}
               {currentSearchDetail.startDate ? (
-                <span className="font-weight-bold">-{format(endDate, displayDateFormat)}</span>
+                <span className="font-weight-bold">-{moment(endDate).format(displayDateFormat)}</span>
               ) : null}
             </Grid>
 

@@ -45,6 +45,8 @@ export const SET_OPEN_TOPIC_SEARCH_DIALOG = 'TOPIC/SET_OPEN_TOPIC_SEARCH_DIALOG'
 export const SET_CURRENT_SEARCH_DETAIL = 'TOPIC/SET_CURRENT_SEARCH_DETAIL';
 export const SET_BACKDROP_ON_COMPANY_CLICK = 'TOPIC/SET_BACKDROP_ON_COMPANY_CLICK';
 export const SET_HEADING_REDIRECT = 'TOPIC/SET_HEADING_REDIRECT ';
+export const IS_DATE_SET = 'TOPIC/IS_DATE_SET ';
+
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
@@ -260,6 +262,12 @@ export const setHeadingRedirect = heading => ({
   type: SET_HEADING_REDIRECT,
   heading
 });
+
+export const isDateSet = isDate => ({
+  type: IS_DATE_SET,
+  isDate
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -309,7 +317,8 @@ const getDefaultState = () => {
     openTopicSearchDialog: false,
     currentSearchDetail: {},
     isCompanyClick: false,
-    heading: null
+    heading: null,
+    isDate: false
   };
 };
 
@@ -434,6 +443,8 @@ export default function reducer(
       return { ...state, isCompanyClick: action.isCompanyClick };
     case SET_HEADING_REDIRECT:
       return { ...state, heading: action.heading };
+    case IS_DATE_SET:
+      return { ...state, isDate: action.isDate };
     default:
       break;
   }

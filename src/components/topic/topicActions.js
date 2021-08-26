@@ -30,6 +30,7 @@ import { format } from 'date-fns';
 import { get, isEmpty, isArray, forEach, concat, uniqBy, orderBy } from 'lodash';
 import documentTypesData from '../../config/documentTypesData';
 import { metricsSelection } from '../../config/filterTypes';
+import moment from 'moment';
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
@@ -44,10 +45,19 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         currentSearchDetail.selectedSection = section.label;
       }
     }
+    let currentDate = new Date();
     currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
     currentSearchDetail.seachText = getState().Topic.searchText;
-    currentSearchDetail.startDate = getState().Topic.startDate ? getState().Topic.startDate : null;
-    currentSearchDetail.endDate = getState().Topic.endDate ? getState().Topic.endDate : null;
+    currentSearchDetail.startDate = getState().Topic.isDate
+      ? getState().Topic.startDate
+        ? getState().Topic.startDate
+        : null
+      : moment().subtract(12, 'months');
+    currentSearchDetail.endDate = getState().Topic.isDate
+      ? getState().Topic.endDate
+        ? getState().Topic.endDate
+        : null
+      : currentDate;
     currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
     currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
     dispatch(setCurrentSearchtDetail(currentSearchDetail));
@@ -208,8 +218,15 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
   const data = {
     searchTerm: fullSearchText,
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
-    startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
-    endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
+    startDate: topicState.isDate
+      ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
+      : moment()
+          .subtract(12, 'months')
+          .format('YYYY-MM-DD HH:mm:ss'),
+
+    endDate: topicState.isDate
+      ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
+      : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     document_types: topicState.selectedDocumentTypes,
     orderBy: topicState.orderBy,
     sortBy: topicState.sortBy,

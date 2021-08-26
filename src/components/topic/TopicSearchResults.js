@@ -177,14 +177,7 @@ const TopicSearchResults = () => {
                               Filing ID:{' '}
                               <b
                                 className={clsx(classes.clickable, 'text-first')}
-                                onClick={() =>
-                                  goToSentimentScreen(
-                                    companyResult,
-                                    get(companyResult, 'results', []).map((result, index) => {
-                                      return result;
-                                    })
-                                  )
-                                }>
+                                onClick={() => goToSentimentScreen(companyResult, get(companyResult, 'results', []))}>
                                 {companyResult.summary_id}
                               </b>
                             </small>
@@ -203,7 +196,15 @@ const TopicSearchResults = () => {
                                 justifyContent="flex-start"
                                 alignItems="center">
                                 <Grid item>
-                                  <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                                  <b
+                                    className={clsx(classes.clickable, 'text-first')}
+                                    onClick={() =>
+                                      goToSentimentScreen(companyResult, get(companyResult, 'results', []))
+                                    }>
+                                    <p className="font-size-lg mb-2 text-black-100">
+                                      {createResultTitle(result.title)}
+                                    </p>
+                                  </b>
                                 </Grid>
                                 <Grid item>
                                   <span className={clsx(classes.heading, 'text-black-50')}>{result.sub_heading}</span>

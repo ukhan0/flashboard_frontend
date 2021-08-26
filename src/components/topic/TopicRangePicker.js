@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTopicSearchDateRange } from '../../reducers/Topic';
+import { setTopicSearchDateRange, isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -57,12 +57,14 @@ const TopicRangePicker = props => {
   const handleStartDateChange = newStartDate => {
     if (isValidDate(newStartDate)) {
       dispatch(setTopicSearchDateRange({ startDate: startOfMonth(newStartDate), endDate: endDate }));
+      dispatch(isDateSet(true));
     }
   };
 
   const handleEndDateChange = newEndDate => {
     if (isValidDate(newEndDate)) {
       dispatch(setTopicSearchDateRange({ startDate: startDate, endDate: endOfMonth(newEndDate) }));
+      dispatch(isDateSet(true));
     }
   };
 
