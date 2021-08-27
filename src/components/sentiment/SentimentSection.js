@@ -43,6 +43,14 @@ const useStyles = makeStyles(theme => ({
       paddingRight: 2,
       borderRadius: 4
     }
+  },
+  searchResultTextHeading: {
+    '& .yellowcolor': {
+      backgroundColor: 'orange',
+      paddingLeft: 2,
+      paddingRight: 2,
+      borderRadius: 4
+    }
   }
 }));
 
@@ -190,17 +198,6 @@ const SentimentSection = props => {
             dispatch(setSelectedHeadingId(createHash(targetHeading)));
             calledOnce.current = false;
           }
-        } else {
-          let filteredHeadingData = displayData.filter(item =>
-            item.content ? item.prop.indexOf(heading ? heading.sub_heading : null) !== -1 : null
-          );
-          if (filteredHeadingData.length > 0) {
-            const targetHeading = filteredHeadingData[0].path;
-            if (targetHeading) {
-              dispatch(setSelectedHeadingId(createHash(targetHeading)));
-              calledOnce.current = false;
-            }
-          }
         }
       }
     } else {
@@ -238,7 +235,7 @@ const SentimentSection = props => {
                 <p
                   className={clsx(
                     classes.upper,
-                    classes.searchResultText,
+                    classes.searchResultTextHeading,
                     classes[`lvl${d.lvl}`],
                     classes.lvl,
                     selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null

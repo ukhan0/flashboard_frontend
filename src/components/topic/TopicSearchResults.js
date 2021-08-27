@@ -50,6 +50,16 @@ const useStyles = makeStyles(theme => ({
     marginLeft: '10px',
     display: 'inline-block',
     fontWeight: 'bold'
+  },
+  paragraphHeading: {
+    '& heading': {
+      color: '#898a91',
+      paddingLeft: 2,
+      paddingRight: 2,
+      borderRadius: 4,
+      fontWeight: 'bold',
+      fontSize: '16px'
+    }
   }
 }));
 
@@ -118,21 +128,25 @@ const TopicSearchResults = () => {
 
   const goToSentimentScreen = (companyDocumentResultData, content) => {
     let getContent;
-    let subHeading;
+    let filteredData;
+    let getFirstLine;
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSelectedHeadingId(null));
     dispatch(setSentimentResult(null));
     if (Array.isArray(content)) {
       getContent = content[0].content[0];
-      subHeading = content[0].sub_heading;
     } else {
-      getContent = content.content[0];
-      subHeading = content.sub_heading;
+      getContent = content;
     }
-
-    const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
-    const getFirstLine = cleanText.slice(0, 50);
-    dispatch(setHeadingRedirect({ firstLine: getFirstLine, sub_heading: subHeading }));
+    if (getContent.includes('</heading>')) {
+      filteredData = getContent.indexOf('</heading>');
+      let content = getContent.slice(filteredData + 10, filteredData + 10 + 50);
+      getFirstLine = content.replace(/<\/?[^>]+(>|$)/g, '');
+    } else {
+      const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
+      getFirstLine = cleanText.slice(0, 50);
+    }
+    dispatch(setHeadingRedirect({ firstLine: getFirstLine }));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
@@ -205,24 +219,21 @@ const TopicSearchResults = () => {
                                 justifyContent="flex-start"
                                 alignItems="center">
                                 <Grid item>
-                                  <b
-                                    className={clsx(classes.clickable, 'text-first')}
-                                    onClick={() => goToSentimentScreen(companyResult, result)}>
-                                    <p className="font-size-lg mb-2 text-black-100">
-                                      {createResultTitle(result.title)}
-                                    </p>
-                                  </b>
-                                </Grid>
-                                <Grid item>
-                                  <span className={clsx(classes.heading, 'text-black-50')}>{result.sub_heading}</span>
+                                  <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
                                 </Grid>
                               </Grid>
 
                               {result.content.map((content, index) => (
                                 <p
                                   key={`rstc${index}`}
-                                  className={clsx(classes.searchResultText, 'font-size-mg mb-2 text-black-50')}
-                                  dangerouslySetInnerHTML={{ __html: content }}></p>
+                                  className={clsx(
+                                    classes.searchResultText,
+                                    classes.paragraphHeading,
+                                    classes.clickable,
+                                    'font-size-mg mb-2 text-black-50'
+                                  )}
+                                  dangerouslySetInnerHTML={{ __html: content }}
+                                  onClick={() => goToSentimentScreen(companyResult, content)}></p>
                               ))}
                             </div>
                           );
