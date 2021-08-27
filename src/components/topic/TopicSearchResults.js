@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
       paddingRight: 2,
       borderRadius: 4,
       fontWeight: 'bold',
-      fontSize: '16px'
+      fontSize: '18px'
     }
   }
 }));

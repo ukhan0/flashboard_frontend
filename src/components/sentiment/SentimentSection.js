@@ -236,6 +236,7 @@ const SentimentSection = props => {
                   className={clsx(
                     classes.upper,
                     classes.searchResultTextHeading,
+                    classes.searchResultText,
                     classes[`lvl${d.lvl}`],
                     classes.lvl,
                     selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
