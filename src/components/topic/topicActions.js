@@ -22,7 +22,8 @@ import {
   setShowComposeNew,
   setCurrentSearchtDetail,
   setSelectedCompanyName,
-  setOpenTopicSearchDialog
+  setOpenTopicSearchDialog,
+  isDateSet
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -114,12 +115,14 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         dispatch(setSearchResults(newSearchResults));
         dispatch(setSearchBackdrop(null, false));
       } else {
+        dispatch(isDateSet(false));
         dispatch(setSearchBackdrop(null, false));
         dispatch(setSearchError(true));
         dispatch(setSearchResults({}));
         dispatch(setSearchResultHighlights([]));
       }
     } catch (error) {
+      dispatch(isDateSet(false));
       dispatch(setSearchBackdrop(null, false));
       dispatch(setSearchError(true));
       dispatch(setSearchResults({}));
@@ -176,6 +179,7 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
           let searchResults = get(response, 'data', null);
           const isError = get(searchResults, 'error', null);
           if (searchResults && !isError) {
+            dispatch(isDateSet(false));
             const { searchResultHighlights } = getState().Topic;
             const existingData = searchResultHighlights;
             const newData = get(searchResults, 'highlights', []);
@@ -184,6 +188,7 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
             dispatch(setSearchResultHighlights(newSearchResults));
             dispatch(setSearchBackdropHighlights(cancelToken));
           } else {
+            dispatch(isDateSet(false));
             dispatch(setSearchBackdropHighlights(cancelToken));
             dispatch(setSearchError(true));
           }
@@ -195,6 +200,7 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
           }
         } catch (error) {
           apiResponseCount++;
+          dispatch(isDateSet(false));
           dispatch(setSearchError(true));
           dispatch(setSearchBackdropHighlights(cancelToken));
           if (searchFromsCount === apiResponseCount) {
