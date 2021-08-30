@@ -422,6 +422,9 @@ const WatchlistTable = props => {
   };
 
   const cellMouseOverEvent = () => {
+    if (!gridApi) {
+      return;
+    }
     const isToolPanel = gridApi.isToolPanelShowing();
     if (isToolPanel) {
       gridApi.closeToolPanel();
