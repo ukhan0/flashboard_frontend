@@ -11,7 +11,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
 import { getCompleteWatchlist } from '../../utils/helpers';
-import { setHeadingRedirect } from '../../reducers/Topic';
+import { setHeadingRedirect, setIsFromSideBar } from '../../reducers/Topic';
 import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } from '../../reducers/Sentiment';
 
 const useStyles = makeStyles(theme => ({
@@ -130,6 +130,7 @@ const TopicSearchResults = () => {
     let getContent;
     let filteredData;
     let getFirstLine;
+    dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSelectedHeadingId(null));
     dispatch(setSentimentResult(null));

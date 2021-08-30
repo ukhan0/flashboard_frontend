@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import SidebarHeader from '../../layout-components/SidebarHeader';
 import SidebarUserbox from '../../layout-components/SidebarUserbox';
 import SidebarMenu from '../../layout-components/SidebarMenu';
+import { setIsFromSideBar } from '../../reducers/Topic';
+import { useDispatch } from 'react-redux';
 
 import navItems from './navItems';
 
@@ -22,6 +24,7 @@ import {
 } from '../../reducers/ThemeOptions';
 
 const Sidebar = props => {
+  const dispatch = useDispatch();
   const {
     setSidebarToggleMobile,
     sidebarToggleMobile,
@@ -40,6 +43,9 @@ const Sidebar = props => {
   const toggleHoverOff = () => setSidebarHover(false);
 
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
+  const handleSearchTerm = () => {
+    dispatch(setIsFromSideBar(true));
+  };
 
   const sidebarMenuContent = (
     <div
@@ -52,6 +58,7 @@ const Sidebar = props => {
           key={list.label}
           pages={list.content}
           title={list.label}
+          onClick={() => handleSearchTerm()}
         />
       ))}
     </div>
