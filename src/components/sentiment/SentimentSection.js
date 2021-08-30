@@ -128,21 +128,23 @@ const SentimentSection = props => {
       let detectedLevel = detectlevelCurrentObj(obj);
       if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
         let virtualDiv = obj[detectedLevel];
-        let vHeadingElem = virtualDiv.includes('<heading class=');
-        if (vHeadingElem) {
-          const extractQuote = virtualDiv.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
-          if (extractQuote.includes('heading')) {
-            const removeClass = virtualDiv.replace(' class=', '');
-            const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
-            const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
-            let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
-              return val.replace(/<\/?heading>/g, '');
-            });
-            detectedLevel = extractQuote;
-            result.forEach(v => {
-              removeHeadingFromContent = v;
-              obj['l4-ht'] = v;
-            });
+        if (virtualDiv) {
+          let vHeadingElem = virtualDiv.includes('<heading class=');
+          if (vHeadingElem) {
+            const extractQuote = virtualDiv.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
+            if (extractQuote.includes('heading')) {
+              const removeClass = virtualDiv.replace(' class=', '');
+              const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
+              const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
+              let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
+                return val.replace(/<\/?heading>/g, '');
+              });
+              detectedLevel = extractQuote;
+              result.forEach(v => {
+                removeHeadingFromContent = v;
+                obj['l4-ht'] = v;
+              });
+            }
           }
         }
       }
