@@ -22,6 +22,7 @@ import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
 import TickerLogo from './WatchlistTableComponents/TickerLogo';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
+import { useLocation } from 'react-router-dom';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -380,7 +381,7 @@ const WatchlistTable = props => {
   const dispatch = useDispatch();
   const { searchText } = useSelector(state => state.Watchlist);
   const [gridApi, setGridApi] = useState(null);
-  
+  let getQueryParams = new URLSearchParams(useLocation().search);
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
     props.storeColumnsState(columnState);
@@ -419,6 +420,14 @@ const WatchlistTable = props => {
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
+    const tickerFilterInstance = gridApi.getFilterInstance('ticker');
+    if (getQueryParams.get('ticker')) {
+      tickerFilterInstance.setModel({
+        type: 'Equals',
+        filter: getQueryParams.get('ticker')
+      });
+    }
+    gridApi.onFilterChanged();
   };
 
   const cellMouseOverEvent = () => {
