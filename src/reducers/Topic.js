@@ -47,6 +47,7 @@ export const SET_BACKDROP_ON_COMPANY_CLICK = 'TOPIC/SET_BACKDROP_ON_COMPANY_CLIC
 export const SET_HEADING_REDIRECT = 'TOPIC/SET_HEADING_REDIRECT ';
 export const IS_DATE_SET = 'TOPIC/IS_DATE_SET ';
 export const SET_IS_FROM_SIDE_BAR = 'TOPIC/SET_IS_FROM_SIDE_BAR';
+export const SET_IS_TOPIC_EMAIL_ALERT_ENABLE = 'TOPIC/SET_IS_TOPIC_EMAIL_ALERT_ENABLE';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -274,6 +275,10 @@ export const setIsFromSideBar = isFromSideBar => ({
   isFromSideBar
 });
 
+export const setIsTopicEmailAlertEnable = isTopicEmailAlertEnable => ({
+  type: SET_IS_TOPIC_EMAIL_ALERT_ENABLE,
+  isTopicEmailAlertEnable
+});
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -286,7 +291,8 @@ const searchDefaultState = () => ({
   selectedSection: 'totdoc',
   selectedSector: null,
   selectedIndustries: [],
-  selectedWatchlistCompanyNames: []
+  selectedWatchlistCompanyNames: [],
+  isTopicEmailAlertEnable: true
 });
 
 const getDefaultState = () => {
@@ -353,6 +359,7 @@ export default function reducer(
     case SET_ALL_SEARCH_PARAMS:
       return {
         ...state,
+        isTopicEmailAlertEnable:action.searchObj.send_topic_alert_email,
         searchText: action.searchObj.searchText,
         selectedDocumentTypes: action.searchObj.searchJSON.selectedDocumentTypes,
         startDate: new Date(action.searchObj.searchJSON.startDate),
@@ -454,6 +461,8 @@ export default function reducer(
       return { ...state, isDate: action.isDate };
     case SET_IS_FROM_SIDE_BAR:
       return { ...state, isFromSideBar: action.isFromSideBar };
+    case SET_IS_TOPIC_EMAIL_ALERT_ENABLE:
+      return { ...state, isTopicEmailAlertEnable: action.isTopicEmailAlertEnable };
     default:
       break;
   }

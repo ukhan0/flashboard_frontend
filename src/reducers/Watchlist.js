@@ -14,6 +14,7 @@ export const SET_SELECTED_TICKER_SYMBOL = 'WATCHLIST/SET_SELECTED_TICKER_SYMBOL'
 export const SET_IS_NEW_WATCHLIST_DATA_AVAILABLE = 'WATCHLIST/SET_IS_NEW_WATCHLIST_DATA_AVAILABLE ';
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
 export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
+export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
@@ -83,7 +84,16 @@ export const setIsColorEnable = isColorEnable => ({
   isColorEnable
 });
 
+export const setIsWatchlistEmailAlertEnable = isEmailAlertEnable => ({
+  type: SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE,
+  isEmailAlertEnable
+});
+const getUser = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user;
+};
 const getDefaultState = () => {
+  const user = getUser();
   return {
     selectedFileType: '10k',
     selectedUniverse: 'watchlist',
@@ -99,7 +109,8 @@ const getDefaultState = () => {
     selectedTickerSymbol: null,
     isNewWatchListDataAvailable: true,
     isOneHourComplete: false,
-    isColorEnable: localStorage.getItem('isColorEnable') === 'true' ? true : false
+    isColorEnable: user ? (user.enable_watchlist_color ? user.enable_watchlist_color : false) : false,
+    isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false
   };
 };
 
@@ -143,6 +154,8 @@ export default function reducer(
       return { ...state, isOneHourComplete: action.isOneHourComplete };
     case SET_IS_COLOR_ENABLE:
       return { ...state, isColorEnable: action.isColorEnable };
+    case SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE:
+      return { ...state, isEmailAlertEnable: action.isEmailAlertEnable };
     default:
       break;
   }

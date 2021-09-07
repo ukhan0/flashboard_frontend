@@ -315,11 +315,12 @@ const createSearchSaveMiniPayload = topicState => {
 export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText } = getState().Topic;
+    const { searchText, isTopicEmailAlertEnable } = getState().Topic;
     const payload = {
       userId: user.id,
       searchText: searchText,
-      searchJSON: createSearchSaveMiniPayload(getState().Topic)
+      searchJSON: createSearchSaveMiniPayload(getState().Topic),
+      send_topic_alert_email: isTopicEmailAlertEnable
     };
 
     try {
@@ -342,11 +343,12 @@ export const handleSaveSearch = () => {
 export const updateSaveSearch = searchId => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText, searchLabel } = getState().Topic;
+    const { searchText, searchLabel, isTopicEmailAlertEnable } = getState().Topic;
     const payload = {
       searchText: searchText,
       searchLabel: searchLabel,
-      searchJSON: createSearchSaveMiniPayload(getState().Topic)
+      searchJSON: createSearchSaveMiniPayload(getState().Topic),
+      send_topic_alert_email: isTopicEmailAlertEnable
     };
 
     try {

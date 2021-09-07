@@ -6,6 +6,7 @@ import { get } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { setIsColorEnable, setIsWatchlistEmailAlertEnable } from '../../../reducers/Watchlist';
 
 import {
   Grid,
@@ -118,10 +119,12 @@ const LivePreviewExample = () => {
 
   const login = async () => {
     try {
-      const response = await axios.post(`${config.apiUrl}/api/users/sign_in`, {email: email, password: password});
+      const response = await axios.post(`${config.apiUrl}/api/users/sign_in`, { email: email, password: password });
       const userData = get(response, 'data', []);
       if (!userData.error) {
         dispatch(setUser(userData.data));
+        dispatch(setIsWatchlistEmailAlertEnable(userData.data.send_watchlist_alert_email));
+        dispatch(setIsColorEnable(userData.data.enable_watchlist_color));
         localStorage.setItem('user', JSON.stringify(userData.data));
         history.push('/watchlist');
       } else {

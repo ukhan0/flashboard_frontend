@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, Typography } from '@material-ui/core';
+import { Grid, Button, Typography, Switch } from '@material-ui/core';
 import TopicSearchTextField from './TopicSearchTextField';
 import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
 import TopicUniverseGroup from './TopicUniverseGroup';
@@ -15,7 +15,12 @@ import {
   performTopicSearchAggregate,
   performTopicSearchHighlights
 } from './topicActions';
-import { setOpenTopicSearchDialog, resetResultsPage, cancelExistingHightlightsCalls } from '../../reducers/Topic';
+import {
+  setOpenTopicSearchDialog,
+  resetResultsPage,
+  cancelExistingHightlightsCalls,
+  setIsTopicEmailAlertEnable
+} from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -52,7 +57,8 @@ const TopicFilters = props => {
     selectedSuggestions,
     showUpdateButton,
     selectedSearch,
-    cancelTokenSourceHighlights
+    cancelTokenSourceHighlights,
+    isTopicEmailAlertEnable
   } = useSelector(state => state.Topic);
   const handleUpdateSaveSearch = searchId => {
     dispatch(resetResultsPage());
@@ -81,6 +87,14 @@ const TopicFilters = props => {
   forEach(selectedSuggestions, values => {
     selectedSuggestionsArr = concat(selectedSuggestionsArr, values);
   });
+
+  const handleChangeTopicAlert = event => {
+    if (event.target.checked) {
+      dispatch(setIsTopicEmailAlertEnable(true));
+    } else {
+      dispatch(setIsTopicEmailAlertEnable(false));
+    }
+  };
 
   const isButtonActive = !(searchText.length > 2);
 
@@ -144,7 +158,17 @@ const TopicFilters = props => {
         <TopicSectionGroup />
       </Grid>
       <Grid item xs={12}>
-        <Grid container spacing={1} direction="row" justify="flex-end" alignItems="flex-end">
+        <Grid container spacing={1} direction="row" justify="space-between" alignItems="flex-end">
+          <Grid item>
+            <h6>Enable Email Alert</h6>
+            <Switch
+              checked={isTopicEmailAlertEnable}
+              onChange={handleChangeTopicAlert}
+              color="primary"
+              name="checkedB"
+              inputProps={{ 'aria-label': 'primary checkbox' }}
+            />
+          </Grid>
           <Grid item>
             {showUpdateButton ? (
               <Button
@@ -170,14 +194,14 @@ const TopicFilters = props => {
               </Button>
             )}
           </Grid>
-          <Grid item>
-            {isSearchError ? (
-              <div style={{ marginBottom: '5px' }}>
-                <Typography color="error">Error Occured</Typography>
-              </div>
-            ) : null}
-          </Grid>
         </Grid>
+      </Grid>
+      <Grid item xs={12}>
+        {isSearchError ? (
+          <div style={{ marginBottom: '5px' }}>
+            <Typography color="error">Error Occured</Typography>
+          </div>
+        ) : null}
       </Grid>
     </Grid>
   );
