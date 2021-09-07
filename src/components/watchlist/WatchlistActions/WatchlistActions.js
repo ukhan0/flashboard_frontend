@@ -33,9 +33,11 @@ export default function WatchListActions() {
     if (event.target.checked) {
       dispatch(setIsColorEnable(true));
       updateUserLocalStorage(false, true);
+      dispatch(updateWatchlistEmailAlertStatus());
     } else {
       updateUserLocalStorage(false, false);
       dispatch(setIsColorEnable(false));
+      dispatch(updateWatchlistEmailAlertStatus());
     }
   };
   const handleChangeEmailAlert = event => {
