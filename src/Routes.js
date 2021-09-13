@@ -12,7 +12,8 @@ import { LeftSidebar, MinimalLayout, PresentationLayout } from './layout-bluepri
 // Example Pages
 
 import PagesLogin from './example-pages/PagesLogin';
-import PagesRegister from './example-pages/PagesRegister';
+import PagesRegister from './components/signIn/UserSignIn';
+import ImpersonateLogin from './components/signIn/ImpersonateSignIn';
 import PagesRecoverPassword from './example-pages/PagesRecoverPassword';
 import PagesError404 from './example-pages/PagesError404';
 const LandingPage = lazy(() => import('./example-pages/LandingPage'));
@@ -20,7 +21,7 @@ const DashboardReports = lazy(() => import('./example-pages/DashboardReports'));
 const WatchList = lazy(() => import('./components/watchlist'));
 const Comparision = lazy(() => import('./components/comparision'));
 const Topic = lazy(() => import('./components/topic'));
-const Sentiment = lazy(()=> import('./components/sentiment'));
+const Sentiment = lazy(() => import('./components/sentiment'));
 
 const pageVariants = {
   initial: {
@@ -58,7 +59,7 @@ const SuspenseLoading = () => {
 
 const isLoginRequired = (user, path) => {
   let loginRequired = false;
-  if (!user && path !== '/PagesRegister' && path !== '/LandingPage' && path !== '/') {
+  if (!user && path !== '/PagesRegister' && path !== '/LandingPage' && path !== '/' && path !== '/ImpersonateLogin') {
     loginRequired = true;
   }
   return loginRequired;
@@ -70,7 +71,7 @@ const Routes = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const path = location.pathname;
   let loginRequired = isLoginRequired(user, path);
-  
+
   return loginRequired ? (
     <Redirect to="/PagesRegister" />
   ) : (
@@ -96,7 +97,14 @@ const Routes = () => {
               </Route>
             ) : (
               <>
-                <Route path={['/PagesLogin', '/PagesRegister', '/PagesRecoverPassword', '/PagesError404']}>
+                <Route
+                  path={[
+                    '/PagesLogin',
+                    '/PagesRegister',
+                    '/PagesRecoverPassword',
+                    '/PagesError404',
+                    '/ImpersonateLogin'
+                  ]}>
                   <MinimalLayout>
                     <Switch location={location} key={location.pathname}>
                       <motion.div
@@ -107,6 +115,7 @@ const Routes = () => {
                         transition={pageTransition}>
                         <Route path="/PagesLogin" component={PagesLogin} />
                         <Route path="/PagesRegister" component={PagesRegister} />
+                        <Route path="/ImpersonateLogin" component={ImpersonateLogin} />
                         <Route path="/PagesRecoverPassword" component={PagesRecoverPassword} />
                         <Route path="/PagesError404" component={PagesError404} />
                       </motion.div>
