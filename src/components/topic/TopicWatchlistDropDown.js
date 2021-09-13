@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { MenuItem, Select, Checkbox, ListItemText, Input } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedWatchlistCompanyNames } from '../../reducers/Topic';
-import watchlistApiCalls from '../watchlist/watchlistApiCalls';
+import { getWatchlist } from '../watchlist/watchlistApiCalls';
 
 const useStyles = makeStyles(theme => ({
   multiSelect: {
@@ -20,7 +20,7 @@ const TopicWatchlistDropDown = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const rawData = await watchlistApiCalls.getWatchlist('watchlist', '');
+      const rawData = await dispatch(getWatchlist('watchlist', ''));
       let selectAll = rawData.map(d => d.b);
       setWatchlistCompanies(selectAll);
       dispatch(setSelectedWatchlistCompanyNames(selectAll));

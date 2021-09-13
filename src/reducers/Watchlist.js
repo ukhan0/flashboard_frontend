@@ -15,6 +15,7 @@ export const SET_IS_NEW_WATCHLIST_DATA_AVAILABLE = 'WATCHLIST/SET_IS_NEW_WATCHLI
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
 export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
+export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_DOCUMENT_TYPE_CALLS';
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
@@ -88,6 +89,12 @@ export const setIsWatchlistEmailAlertEnable = isEmailAlertEnable => ({
   type: SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE,
   isEmailAlertEnable
 });
+
+export const setCancelExistingDocumentTypeCalls = cancelExistingDocumentTypeCalls => ({
+  type: CANCELE_EXISTING_DOCUMENT_TYPE_CALLS,
+  cancelExistingDocumentTypeCalls
+});
+
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
@@ -110,7 +117,8 @@ const getDefaultState = () => {
     isNewWatchListDataAvailable: true,
     isOneHourComplete: false,
     isColorEnable: user ? (user.enable_watchlist_color ? user.enable_watchlist_color : false) : false,
-    isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false
+    isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
+    cancelExistingDocumentTypeCalls: null
   };
 };
 
@@ -156,6 +164,8 @@ export default function reducer(
       return { ...state, isColorEnable: action.isColorEnable };
     case SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE:
       return { ...state, isEmailAlertEnable: action.isEmailAlertEnable };
+    case CANCELE_EXISTING_DOCUMENT_TYPE_CALLS:
+      return { ...state, cancelExistingDocumentTypeCalls: action.cancelExistingDocumentTypeCalls };
     default:
       break;
   }

@@ -37,7 +37,7 @@ import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
 import WatchlistSearch from './WatchlistSearch';
 import { isObject } from 'lodash';
-import watchlistApiCalls from './watchlistApiCalls';
+import { getWatchlist } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
@@ -94,7 +94,7 @@ const Watchlist = props => {
         }
       } else {
         setLoading(true);
-        rawData = await watchlistApiCalls.getWatchlist(selectedUniverse, selectedFileType);
+        rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType));
         syncCachedData(rawData);
         // update cached data of all (Complete) watchlist
         if (!firstTimeLoad.current) {

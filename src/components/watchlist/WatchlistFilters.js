@@ -11,9 +11,13 @@ import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
 
 const WatchlistFilters = props => {
-  const { selectedFileType, selectedUniverse, selectedMetric, completeDataLoaded } = useSelector(
-    state => state.Watchlist
-  );
+  const {
+    selectedFileType,
+    selectedUniverse,
+    selectedMetric,
+    completeDataLoaded,
+    cancelExistingDocumentTypeCalls
+  } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
   const canItbeUsed = universeType => {
@@ -27,11 +31,17 @@ const WatchlistFilters = props => {
   const handleClickUniverse = key => {
     dispatch(setWatchlistUniverse(key));
     dispatch(setIsNewWatchlistDataAvailable(true));
+    if (cancelExistingDocumentTypeCalls) {
+      cancelExistingDocumentTypeCalls.cancel();
+    }
   };
 
   const handleClickFileType = key => {
-    dispatch(setWatchlistFileType(key))
+    dispatch(setWatchlistFileType(key));
     dispatch(setIsNewWatchlistDataAvailable(true));
+    if (cancelExistingDocumentTypeCalls) {
+      cancelExistingDocumentTypeCalls.cancel();
+    }
   };
 
   return (
