@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { BeatLoader } from 'react-spinners';
@@ -6,6 +6,8 @@ import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
 import { upperCase, get } from 'lodash';
+import Rainbow from './Rainbow';
+import convert from 'xml-js';
 const useStyles = makeStyles(theme => ({
   lvl: {
     fontSize: 20
@@ -50,6 +52,12 @@ const useStyles = makeStyles(theme => ({
       paddingLeft: 2,
       paddingRight: 2,
       borderRadius: 4
+    },
+    yellowClr: {
+      backgroundColor: 'orange',
+      paddingLeft: 2,
+      paddingRight: 2,
+      borderRadius: 4
     }
   }
 }));
@@ -58,7 +66,15 @@ const SentimentSection = props => {
   const classes = useStyles();
   const calledOnce = React.useRef(true);
   const dispatch = useDispatch();
-  const { data, isLoading, selectedHeadingId, isApiResponseReceived } = useSelector(state => state.Sentiment);
+  const [basicColor] = useState({
+    minV: -1,
+    maxV: 1,
+    n: 100
+  });
+
+  const { data, isLoading, selectedHeadingId, isApiResponseReceived, isExtremeSentiment } = useSelector(
+    state => state.Sentiment
+  );
   const { heading } = useSelector(state => state.Topic);
   useEffect(() => {
     if (selectedHeadingId) {
@@ -69,6 +85,7 @@ const SentimentSection = props => {
   }, [selectedHeadingId, dispatch]);
 
   const displayData = [];
+  // const maxValueCheckArr = [];
   function titleCase(str) {
     let splitStr = str.toLowerCase().split(' ');
     for (let i = 0; i < splitStr.length; i++) {
@@ -126,6 +143,7 @@ const SentimentSection = props => {
     for (let prop in obj) {
       let removeHeadingFromContent;
       let detectedLevel = detectlevelCurrentObj(obj);
+      let headingLevelDetected = false;
       if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
         let virtualDiv = obj[detectedLevel];
         if (virtualDiv) {
@@ -140,6 +158,7 @@ const SentimentSection = props => {
                 return val.replace(/<\/?heading>/g, '');
               });
               detectedLevel = extractQuote;
+              headingLevelDetected = true;
               result.forEach(v => {
                 removeHeadingFromContent = v;
                 obj['l4-ht'] = v;
@@ -156,7 +175,12 @@ const SentimentSection = props => {
         prop = obj[prop];
         let objIdx = detectObjFromCurrentObj(obj);
         let stIdx = detectSecTextFromCurrentObj(obj);
-        path += `.${prop}`;
+        if (headingLevelDetected) {
+          path += `.${detectedLevel}`;
+        } else {
+          path += `.${prop}`;
+        }
+
         if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
           if (lvl === 1 && prop.includes('.htm')) {
           } else {
@@ -176,6 +200,32 @@ const SentimentSection = props => {
       }
     }
   }
+  const isHTML = str =>
+    !(str || '')
+      // replace html tag with content
+      .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
+      // remove remaining self closing tags
+      .replace(/(<([^>]+)>)/gi, '')
+      // remove extra space at start and end
+      .trim();
+  let removeHeadingTags = content => {
+    let isHeadingClass = content.includes('<heading class=');
+    let isHeadingTag = content.includes('</heading>');
+    let newContent = content;
+    const test = isHTML(content);
+    if (!test) {
+      newContent = `<span>${content}</span>`;
+    }
+
+    if (isHeadingClass && isHeadingTag) {
+      let startText = content.indexOf('<heading class=');
+      let endText = content.indexOf('</heading>');
+      let removeText = content.slice(startText, endText + 10);
+      newContent = content.replace(removeText, '');
+    }
+    return newContent;
+  };
+
   if (data) {
     const content = get(data, 'sma_data_json', []);
     visitOutlineObj(displayData, content, 0, '');
@@ -212,6 +262,48 @@ const SentimentSection = props => {
       props.onSelection(selectedHeadingId);
     }
   }, [selectedHeadingId, props]);
+  const rainbowSection = new Rainbow();
+  rainbowSection.setSpectrum('red', 'white', 'white', 'white', 'green');
+
+  const rainbow = new Rainbow();
+  rainbow.setSpectrum('red', 'white', 'green');
+  const parentClr = val => {
+    var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
+    let clr = rainbowSection.colourAt(pos);
+    if (isExtremeSentiment) {
+      if (val > 0.2 || val < -0.2) {
+        return clr;
+      } else {
+        // return white
+        return 'FFFFFF';
+      }
+    }
+    return clr;
+  };
+  const childClr = val => {
+    if (val) {
+      var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
+      let clr = rainbow.colourAt(pos);
+      if (isExtremeSentiment) {
+        if (val > 0.2 || val < -0.2) {
+          return clr;
+        } else {
+          // return white
+          return 'FFFFFF';
+        }
+      }
+      return clr;
+    }
+  };
+  const newDisplayData = [];
+  displayData.forEach((d, index) => {
+    const processedData = { ...d };
+    processedData.id = createHash(d.path);
+    if (d.content) {
+      processedData.newData = convert.xml2js(removeHeadingTags(d.content));
+    }
+    newDisplayData.push(processedData);
+  });
 
   return (
     <div>
@@ -220,7 +312,7 @@ const SentimentSection = props => {
           <BeatLoader color={'var(--primary)'} size={15} />
         </div>
       ) : (
-        displayData.map((d, index) => {
+        newDisplayData.map((d, index) => {
           return index !== 0 ? (
             <div
               key={index}
@@ -228,11 +320,48 @@ const SentimentSection = props => {
                 paddingLeft: d.lvl * 4 + 4,
                 scrollMarginTop: '210px'
               }}
-              id={createHash(d.path)}>
+              id={d.id}>
               {d.content ? (
-                <p
-                  className={clsx(classes.content, classes.searchResultText)}
-                  dangerouslySetInnerHTML={{ __html: d.content }}></p>
+                <div
+                  style={{
+                    backgroundColor: '#' + parentClr(d.newData.attributes ? d.newData.attributes.v : 0)
+                  }}>
+                  {d.newData.elements
+                    ? d.newData.elements[0].elements.map((a, index) => {
+                        return (
+                          <div>
+                            {a.elements
+                              ? Array.isArray(a.elements)
+                                ? a.elements.map((c, i) => {
+                                    return (
+                                      <span
+                                        className={clsx(classes.content, classes.searchResultText)}
+                                        style={{
+                                          backgroundColor: '#' + childClr(a.attributes ? a.attributes.v : 0)
+                                        }}>
+                                        {c.type === 'element' ? (
+                                          <span
+                                            style={{
+                                              backgroundColor: 'orange',
+                                              paddingLeft: 2,
+                                              paddingRight: 2,
+                                              borderRadius: 4
+                                            }}>
+                                            {c.elements[0].text}
+                                          </span>
+                                        ) : (
+                                          c.text
+                                        )}
+                                      </span>
+                                    );
+                                  })
+                                : null
+                              : null}{' '}
+                          </div>
+                        );
+                      })
+                    : null}
+                </div>
               ) : (
                 <p
                   className={clsx(
@@ -241,7 +370,7 @@ const SentimentSection = props => {
                     classes.searchResultText,
                     classes[`lvl${d.lvl}`],
                     classes.lvl,
-                    selectedHeadingId === createHash(d.path) ? classes.highlightHeading : null
+                    selectedHeadingId === d.id ? classes.highlightHeading : null
                   )}
                   dangerouslySetInnerHTML={{ __html: d.lvl === 4 ? upperCase(d.prop) : d.prop }}></p>
               )}

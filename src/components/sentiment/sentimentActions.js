@@ -1,21 +1,29 @@
 import axios from 'axios';
 import { setSentimentResult, setIsLoading, setIsApiResponseReceived } from '../../reducers/Sentiment';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import config from '../../config/config';
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
-    const { searchText, isFromSideBar } = getState().Topic;
+    const { isFromSideBar, searchText, selectedSuggestions } = getState().Topic;
+    let selectedSug = [];
+    if (!isEmpty(selectedSuggestions)) {
+      selectedSug = Object.values(selectedSuggestions);
+    }
     const recentId = get(selectedItem, 'recentId', null);
     if (!recentId) {
       return;
     }
     try {
       dispatch(setIsLoading(true));
-      const response = await axios.get(
-        `${config.sentimentUrl}?id=${recentId}&es_index=filling_embedded_headings${
-          isFromSideBar ? '' : `&search_term=${searchText}`
-        }`
+      const formData = new FormData();
+      formData.append(
+        'search_term',
+        selectedSug.length > 0 ? searchText + ' ' + selectedSug.flat().join(' ') : searchText
+      );
+      const response = await axios.post(
+        `${config.sentimentUrl}?id=${5544903}&es_index=filling_sentiment`,
+        isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);
       if (response) {

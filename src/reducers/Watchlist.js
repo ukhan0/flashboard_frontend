@@ -95,7 +95,7 @@ const getUser = () => {
 const getDefaultState = () => {
   const user = getUser();
   return {
-    selectedFileType: '10k',
+    selectedFileType: '10q',
     selectedUniverse: 'watchlist',
     selectedMetric: 'totdoc',
     searchText: '',

@@ -39,9 +39,9 @@ const TopicDialog = props => {
   const classes = useStyles();
   const { currentSearchDetail } = useSelector(state => state.Topic);
   const isSuggestions = currentSearchDetail.selectedSuggestions;
-  let selectedSug;
+  let selectedSug = [];
   if (!isEmpty(isSuggestions)) {
-    selectedSug = isSuggestions[Object.keys(isSuggestions)[0]];
+    selectedSug = Object.values(isSuggestions);
   }
   let startDate = currentSearchDetail.startDate;
   let endDate = currentSearchDetail.endDate;
@@ -65,7 +65,7 @@ const TopicDialog = props => {
               <span className="text-black-50 d-block">Searching:</span>
               <span className="font-weight-bold">{currentSearchDetail.seachText}</span>
               <br></br>
-              <span className="text-black-50">{selectedSug ? selectedSug.join(', ') : null}</span>
+              <span className="text-black-50">{selectedSug.length > 0 ? selectedSug.flat().join(', ') : null}</span>
             </Grid>
             <Grid item xs={3}>
               <span className="text-black-50 d-block">From:</span>

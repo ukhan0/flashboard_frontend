@@ -114,7 +114,7 @@ export default function HeaderUserbox() {
             <Divider className="w-100 mt-2" />
             <ListItem button>My Account</ListItem>
             <ListItem button color="secondary" onClick={signout}>
-              SignOut
+              Sign Out
             </ListItem>
           </List>
         </div>

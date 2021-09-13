@@ -74,7 +74,8 @@
     "react-spinners": "0.8.0",
     "react-text-mask": "5.4.3",
     "react-trend": "1.2.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "xml-js": "^1.6.11"
   },
   "scripts": {
     "start": "react-scripts start",

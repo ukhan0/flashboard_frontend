@@ -133,7 +133,7 @@ const SentimentTableOfContent = props => {
       let li = {};
       if (prop.includes('-ht')) {
         prop = obj[prop];
-        path += `.${prop}`;
+        path += `.${detectedLevel}`;
         if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
           if (lvl === 1 && prop.includes('.htm')) {
           } else {
