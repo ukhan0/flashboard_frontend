@@ -20,6 +20,7 @@ import {
 import { performTopicSearchAggregate, fetchTopicsList, deleteSearch } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,6 +56,7 @@ export default function TopicSearchHistory(props) {
   const { cancelTokenSourceHighlights, savedSearches, selectedSearch } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const firstTimeLoad = useRef(false);
+  let getQueryParams = new URLSearchParams(useLocation().search);
   useEffect(() => {
     dispatch(fetchTopicsList());
   }, [dispatch]);
@@ -91,14 +93,25 @@ export default function TopicSearchHistory(props) {
 
   useEffect(() => {
     if (savedSearches.length > 0 && !firstTimeLoad.current) {
-      firstTimeLoad.current = true;
-      // set first search of first topic as default search
-      const firstSearch = get(savedSearches, '[0]', null);
-      if (!selectedSearch && firstSearch) {
-        setSearchParams(firstSearch);
+      if (!getQueryParams.get('topicId')) {
+        firstTimeLoad.current = true;
+        // set first search of first topic as default search
+        const firstSearch = get(savedSearches, '[0]', null);
+        if (!selectedSearch && firstSearch) {
+          setSearchParams(firstSearch);
+        }
+      } else {
+        firstTimeLoad.current = true;
+        let searchId = parseInt(getQueryParams.get('topicId'));
+        // set first search of from email click topic as default search
+        let searchIndex = savedSearches.findIndex(savedSearches => savedSearches.searchId === searchId);
+        const firstSearch = get(savedSearches, `[${searchIndex}]`, null);
+        if (!selectedSearch && firstSearch) {
+          setSearchParams(firstSearch);
+        }
       }
     }
-  }, [savedSearches, setSearchParams, selectedSearch]);
+  }, [savedSearches, setSearchParams, selectedSearch, getQueryParams]);
 
   const clickHereHandle = () => {
     dispatch(setOpenTopicSearchDialog(true));
