@@ -9,6 +9,7 @@ export function getSearchCombinations(suggestions) {
 export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
   const suggestionsArr = [];
   let suggestionsSingleArr = [];
+  let onlySuggestionSingleArr = [];
   const suggestionsObj = cloneDeep(suggestionsObjOrignal);
   const cleanSearchText = searchText.replace(/[^a-zA-Z ]/g, '');
 
@@ -16,10 +17,11 @@ export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
     if (values.length) {
       suggestionsArr.push(uniq([...values]));
       suggestionsSingleArr = [...suggestionsSingleArr, ...values];
+      onlySuggestionSingleArr = [...suggestionsSingleArr, ...values];
     }
   });
   suggestionsSingleArr.unshift(cleanSearchText);
-  return { suggestionsArr, suggestionsSingleArr };
+  return { suggestionsArr, suggestionsSingleArr, onlySuggestionSingleArr };
 }
 
 export const createResultTitle = rawTitle => {

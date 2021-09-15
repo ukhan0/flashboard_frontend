@@ -217,9 +217,9 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
 const createSearchPayload = (topicState, freshSearch, searchFrom = null, companyName = null) => {
   const searchId = get(topicState.selectedSearch, 'searchId', null);
-  const { suggestionsSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
-  const fullSearchText = suggestionsSingleArr.length
-    ? getSearchCombinations(suggestionsSingleArr)
+  const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
+  const fullSearchText = onlySuggestionSingleArr.length
+    ? `${topicState.searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
     : topicState.searchText;
   const data = {
     searchTerm: fullSearchText,
