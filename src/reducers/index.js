@@ -3,6 +3,7 @@ import Watchlist from './Watchlist';
 import User from './User';
 import Topic from './Topic';
 import Sentiment from './Sentiment';
+import Filings from './Filings';
 
 export default {
   ThemeOptions,
@@ -10,4 +11,5 @@ export default {
   User,
   Topic,
   Sentiment,
+  Filings,
 };

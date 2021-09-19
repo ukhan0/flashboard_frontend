@@ -43,7 +43,7 @@ const sideBarItems = [
     label: 'Filings',
     icon: 'DashboardTwoToneIcon',
     to: '/filings',
-    disabled: true
+    disabled: false
   },
   {
     label: 'Comparison',
