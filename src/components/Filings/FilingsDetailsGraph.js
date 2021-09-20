@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
-import { Button, Box, Grid, Card, LinearProgress, Divider } from '@material-ui/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Grid, Card, LinearProgress, Divider } from '@material-ui/core';
 import Chart from 'react-apexcharts';
 
 const SentimentCompanyDetails = props => {
@@ -77,14 +76,6 @@ const SentimentCompanyDetails = props => {
             <h6 className="font-weight-bold font-size-lg mb-1 text-black">Revenue progress</h6>
             <p className="text-black-50 mb-0">Our company revenues, split by progress.</p>
           </div>
-          <Box className="d-flex align-items-center">
-            <Button variant="outlined" color="secondary">
-              <span className="btn-wrapper--icon">
-                <FontAwesomeIcon icon={['fas', 'arrow-down']} />
-              </span>
-              <span className="btn-wrapper--label">Download report</span>
-            </Button>
-          </Box>
         </div>
         <div className="mx-4 divider" />
         <div className="mx-4 divider" />
@@ -148,14 +139,6 @@ const SentimentCompanyDetails = props => {
           </Grid>
           <Divider />
           <Divider />
-        </div>
-        <div className="text-center mb-4">
-          <Button color="primary" variant="contained">
-            <span className="btn-wrapper--label">View complete report</span>
-            <span className="btn-wrapper--icon">
-              <FontAwesomeIcon icon={['fas', 'arrow-right']} />
-            </span>
-          </Button>
         </div>
       </Card>
     </Fragment>

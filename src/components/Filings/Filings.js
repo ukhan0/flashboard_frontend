@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import FilingsResultsTable from './FilingsResultsTable';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
+import FilingsCards from '../sentiment/SentimentCard'
 
 const useStyles = makeStyles(theme => ({
   companyDetail: {
@@ -32,6 +33,9 @@ const Filings = () => {
         <FilingsCompanyDetails />
       </div>
       <div>
+        <FilingsCards/>
+      </div>
+      <div style={{marginTop:'10px'}}>
         <FilingsDetailsGraph />
       </div>
       <div>

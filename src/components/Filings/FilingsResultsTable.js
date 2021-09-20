@@ -39,7 +39,6 @@ export default function FilingsResultsTable() {
   const { filingsData } = useSelector(
     state => state.Filings
   );
-  console.log(filingsData)
   
   return (
       <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
