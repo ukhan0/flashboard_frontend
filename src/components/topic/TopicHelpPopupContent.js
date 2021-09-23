@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Topic = () => {
+const TopicHelpPopupContent = () => {
   return (
     <div style={{ height: '400px' }}>
       <h5>OR</h5>
@@ -174,4 +174,4 @@ const Topic = () => {
   );
 };
 
-export default Topic;
+export default TopicHelpPopupContent;
