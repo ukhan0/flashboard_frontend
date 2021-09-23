@@ -5,46 +5,45 @@ import { useHistory } from 'react-router-dom';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import FilingsResultsTable from './FilingsResultsTable';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
-import FilingsCards from '../sentiment/SentimentCard'
+import FilingsCards from '../sentiment/SentimentCard';
 
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 70,
     position: 'sticky',
     padding: 15,
-    zIndex: 1,
+    zIndex: 1
+  },
+  filingsDetailsGraph: {
+    marginTop: '10px'
   }
 }));
 
 const Filings = () => {
-  
   const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
   const history = useHistory();
-  
+
   if (!selectedItem) {
     history.push('/watchlist');
   }
-  
-  return (
-    selectedItem ?
-    <div>   
+
+  return selectedItem ? (
+    <div>
       <div className={classes.companyDetail}>
         <FilingsCompanyDetails />
       </div>
       <div>
-        <FilingsCards/>
+        <FilingsCards />
       </div>
-      <div style={{marginTop:'10px'}}>
+      <div className={classes.filingsDetailsGraph}>
         <FilingsDetailsGraph />
       </div>
       <div>
         <FilingsResultsTable />
       </div>
     </div>
-    :
-    null
-  );
+  ) : null;
 };
 
 export default Filings;
