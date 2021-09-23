@@ -9,6 +9,7 @@ import TopicUniverseSubFilters from './TopicUniverseSubFilters';
 import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 import { forEach, concat } from 'lodash';
+import TopicHelpPopup from './TopicHelpPopup';
 import {
   updateSaveSearch,
   handleSaveSearch,
@@ -112,7 +113,14 @@ const TopicFilters = props => {
           <div className={classes.searchFieldContainer}>
             <Grid container>
               <Grid item xs={8}>
-                <TopicSearchTextField />
+                <Grid container>
+                  <Grid item xs={10}>
+                    <TopicSearchTextField />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TopicHelpPopup />
+                  </Grid>
+                </Grid>
                 <div className={classes.selectedSuggestionsList}>
                   {selectedSuggestionsArr.map((v, index) => (
                     <span key={`ssa${index}`} className="text-black-50">{`${v}${
