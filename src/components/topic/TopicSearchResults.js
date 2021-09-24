@@ -220,7 +220,9 @@ const TopicSearchResults = () => {
                                 justifyContent="flex-start"
                                 alignItems="center">
                                 <Grid item>
-                                  <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                                  <p className="font-size-lg mb-2 text-black-100">
+                                    {createResultTitle(result.title, companyResult.document_type)}
+                                  </p>
                                 </Grid>
                               </Grid>
 

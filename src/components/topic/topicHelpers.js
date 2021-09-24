@@ -24,7 +24,7 @@ export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
   return { suggestionsArr, suggestionsSingleArr, onlySuggestionSingleArr };
 }
 
-export const createResultTitle = rawTitle => {
+export const createResultTitle = (rawTitle, docType) => {
   if (!rawTitle) {
     return '';
   }
@@ -36,7 +36,7 @@ export const createResultTitle = rawTitle => {
   for (let i = actualTitleArr.length; i > 0; i--) {
     const titleCode = actualTitleArr.slice(0, i).join('.');
     if (!titleText) {
-      titleText = get(searchHeadingMapping, titleCode.toLowerCase(), null);
+      titleText = get(searchHeadingMapping[docType], titleCode.toLowerCase(), null);
     }
   }
   if (!titleText) {

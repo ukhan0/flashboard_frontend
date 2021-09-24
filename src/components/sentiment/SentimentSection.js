@@ -176,11 +176,16 @@ const SentimentSection = props => {
         let objIdx = detectObjFromCurrentObj(obj);
         let stIdx = detectSecTextFromCurrentObj(obj);
         if (headingLevelDetected) {
-          path += `.${detectedLevel}`;
+          path += 'id' + detectedLevel.replaceAll(' ', '_').toLowerCase();
         } else {
-          path += `.${prop}`;
+          path +=
+            'id' +
+            detectedLevel
+              .replaceAll(' ', '_')
+              .replaceAll('.', '')
+              .toLowerCase();
         }
-
+        path = path.toLowerCase();
         if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
           if (lvl === 1 && prop.includes('.htm')) {
           } else {
@@ -300,7 +305,12 @@ const SentimentSection = props => {
     const processedData = { ...d };
     processedData.id = createHash(d.path);
     if (d.content) {
-      processedData.newData = convert.xml2js(removeHeadingTags(d.content));
+      let newContent = removeHeadingTags(d.content);
+      const test = isHTML(newContent);
+      if (!test) {
+        newContent = `<span>${newContent}</span>`;
+      }
+      processedData.newData = convert.xml2js(newContent.replaceAll('&', ''));
     }
     newDisplayData.push(processedData);
   });
@@ -340,15 +350,19 @@ const SentimentSection = props => {
                                           backgroundColor: '#' + childClr(a.attributes ? a.attributes.v : 0)
                                         }}>
                                         {c.type === 'element' ? (
-                                          <span
-                                            style={{
-                                              backgroundColor: 'orange',
-                                              paddingLeft: 2,
-                                              paddingRight: 2,
-                                              borderRadius: 4
-                                            }}>
-                                            {c.elements[0].text}
-                                          </span>
+                                          <>
+                                            {c.elements ? (
+                                              <span
+                                                style={{
+                                                  backgroundColor: 'orange',
+                                                  paddingLeft: 2,
+                                                  paddingRight: 2,
+                                                  borderRadius: 4
+                                                }}>
+                                                {c.elements[0].text}
+                                              </span>
+                                            ) : null}
+                                          </>
                                         ) : (
                                           c.text
                                         )}
