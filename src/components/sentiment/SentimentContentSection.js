@@ -39,10 +39,6 @@ const SentimentContentSection = props => {
   const contentTopRef = useRef(null);
   let hideCards = config.hideCard;
   const history = useHistory();
-  if (!selectedItem) {
-    history.push('/watchlist');
-  }
-
   const toggleDrawer = () => {
     if (currentToc) {
       dispatch(setIsPin(true));

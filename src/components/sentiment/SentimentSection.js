@@ -301,7 +301,7 @@ const SentimentSection = props => {
     }
   };
   const newDisplayData = [];
-  displayData.forEach((d, index) => {
+  displayData.forEach(d => {
     const processedData = { ...d };
     processedData.id = createHash(d.path);
     if (d.content) {
@@ -337,14 +337,15 @@ const SentimentSection = props => {
                     backgroundColor: '#' + parentClr(d.newData.attributes ? d.newData.attributes.v : 0)
                   }}>
                   {d.newData.elements
-                    ? d.newData.elements[0].elements.map((a, index) => {
+                    ? d.newData.elements[0].elements.map((a, indexx) => {
                         return (
-                          <div>
+                          <div key={indexx}>
                             {a.elements
                               ? Array.isArray(a.elements)
                                 ? a.elements.map((c, i) => {
                                     return (
                                       <span
+                                        key={i}
                                         className={clsx(classes.content, classes.searchResultText)}
                                         style={{
                                           backgroundColor: '#' + childClr(a.attributes ? a.attributes.v : 0)
