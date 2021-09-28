@@ -41,6 +41,7 @@ import { getWatchlist } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
+import { setHeadingRedirect } from '../../reducers/Topic';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -134,6 +135,7 @@ const Watchlist = props => {
   }, [selectedFileType, selectedMetric, watchlistData, isColorEnable]);
 
   const onColumnClick = (rowData, columnId) => {
+    dispatch(setHeadingRedirect(null))
     if (columnId === 'actions') {
       if (rowData.isTickerActive) {
         if (selectedUniverse === 'watchlist') {
