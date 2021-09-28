@@ -274,14 +274,12 @@ const SentimentSection = props => {
       props.onSelection(selectedHeadingId);
     }
   }, [selectedHeadingId, props]);
-  const rainbowSection = new Rainbow();
-  rainbowSection.setSpectrum('red', 'white', 'white', 'white', 'green');
 
   const rainbow = new Rainbow();
-  rainbow.setSpectrum('red', 'white', 'green');
+  rainbow.setSpectrum('red','red', 'white', 'green', 'green');
   const parentClr = val => {
     var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
-    let clr = rainbowSection.colourAt(pos);
+    let clr = rainbow.colourAt(pos);
     if (isExtremeSentiment) {
       if (val > 0.2 || val < -0.2) {
         return clr;
