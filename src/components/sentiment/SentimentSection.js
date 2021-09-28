@@ -244,14 +244,17 @@ const SentimentSection = props => {
   }, [isApiResponseReceived]);
 
   useEffect(() => {
-    let headingCheck = heading ? heading.firstLine : '';
+    let headingCheck = heading ? heading.firstLine : 'empty';
+    console.log(headingCheck, 'test');
     if (calledOnce.current) {
-      if (!headingCheck === '') {
+      if (headingCheck === 'empty') {
+        return;
+      } else {
+       
         if (displayData.length > 0) {
           let filteredContentData = displayData.filter(item =>
-            item.content ? item.content.indexOf(headingCheck) !== -1 : null
+            item.content ? item.prop.indexOf(headingCheck) !== -1 : null
           );
-
           if (filteredContentData.length > 0) {
             const targetHeading = filteredContentData[0].path;
             if (targetHeading) {
