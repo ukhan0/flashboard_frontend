@@ -135,7 +135,7 @@ const Watchlist = props => {
   }, [selectedFileType, selectedMetric, watchlistData, isColorEnable]);
 
   const onColumnClick = (rowData, columnId) => {
-    dispatch(setHeadingRedirect(null))
+    dispatch(setHeadingRedirect(null));
     if (columnId === 'actions') {
       if (rowData.isTickerActive) {
         if (selectedUniverse === 'watchlist') {
@@ -308,33 +308,33 @@ const Watchlist = props => {
         </div>
       ) : null}
       <Grid container direction="row" alignItems="flex-end" className={classes.space}>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-end">
             <Grid item>
               <WatchlistFilters />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            {isSortActive ? (
-              <Grid item>
-                <Button
-                  style={{ visibility: 'hidden' }}
-                  color="primary"
-                  variant="contained"
-                  className={classes.button}
-                  size="small"
-                  disabled={!isSortActive}
-                  onClick={() => {
-                    setConfirmationClearSortDialog(true);
-                  }}>
-                  Clear Sorting
-                </Button>
-              </Grid>
-            ) : null}
+            {/* {isSortActive ? (
+              // <Grid item xs={3}>
+              //   <Button
+              //     style={{ visibility: 'hidden' }}
+              //     color="primary"
+              //     variant="contained"
+              //     className={classes.button}
+              //     size="small"
+              //     disabled={!isSortActive}
+              //     onClick={() => {
+              //       setConfirmationClearSortDialog(true);
+              //     }}>
+              //     Clear Sorting
+              //   </Button>
+              // </Grid>
+            ) : null} */}
             {isFilterActive || isFilterActiveOnSearch ? (
-              <Grid item>
+              <Grid item xs={3}>
                 <Button
                   color="primary"
                   className={classes.button}
@@ -347,10 +347,10 @@ const Watchlist = props => {
                 </Button>
               </Grid>
             ) : null}
-            <Grid item className={classes.spaceBetween} xs={4}>
+            <Grid item className={classes.spaceBetween} xs={3}>
               <WatchlistSearch />
             </Grid>
-            <Grid item>
+            <Grid item xs={3}>
               <Button
                 color="primary"
                 variant="contained"
