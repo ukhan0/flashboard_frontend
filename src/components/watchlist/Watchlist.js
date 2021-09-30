@@ -334,7 +334,7 @@ const Watchlist = props => {
               // </Grid>
             ) : null} */}
             {isFilterActive || isFilterActiveOnSearch ? (
-              <Grid item xs={3}>
+              <Grid item >
                 <Button
                   color="primary"
                   className={classes.button}
@@ -347,10 +347,10 @@ const Watchlist = props => {
                 </Button>
               </Grid>
             ) : null}
-            <Grid item className={classes.spaceBetween} xs={3}>
+            <Grid item className={classes.spaceBetween} xs={4} >
               <WatchlistSearch />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item >
               <Button
                 color="primary"
                 variant="contained"
