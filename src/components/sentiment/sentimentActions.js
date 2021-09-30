@@ -22,7 +22,7 @@ export const getSentimentData = () => {
         selectedSug.length > 0 ? searchText + ' ' + selectedSug.flat().join(' ') : searchText
       );
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=filling_scored_json`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=filing_sentiment`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);
