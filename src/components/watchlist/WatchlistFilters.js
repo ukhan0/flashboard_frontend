@@ -1,14 +1,16 @@
 import React from 'react';
-import { Grid, ButtonGroup, Button } from '@material-ui/core';
+import { Grid, ButtonGroup, Button, Switch, Typography } from '@material-ui/core';
 import {
   setWatchlistFileType,
   setWatchlistUniverse,
   setWatchlistMetric,
-  setIsNewWatchlistDataAvailable
+  setIsNewWatchlistDataAvailable,
+  setIsWatchlistEmailAlertEnable
 } from '../../reducers/Watchlist';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
+import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
 
 const WatchlistFilters = props => {
   const {
@@ -16,7 +18,8 @@ const WatchlistFilters = props => {
     selectedUniverse,
     selectedMetric,
     completeDataLoaded,
-    cancelExistingDocumentTypeCalls
+    cancelExistingDocumentTypeCalls,
+    isEmailAlertEnable
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
@@ -42,6 +45,23 @@ const WatchlistFilters = props => {
     if (cancelExistingDocumentTypeCalls) {
       cancelExistingDocumentTypeCalls.cancel();
     }
+  };
+
+  const handleChangeEmailAlert = event => {
+    if (event.target.checked) {
+      updateUserLocalStorage(true);
+      dispatch(setIsWatchlistEmailAlertEnable(true));
+    } else {
+      updateUserLocalStorage(false);
+      dispatch(setIsWatchlistEmailAlertEnable(false));
+    }
+    dispatch(updateWatchlistEmailAlertStatus());
+  };
+
+  const updateUserLocalStorage = status => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    user.send_watchlist_alert_email = status;
+    localStorage.setItem('user', JSON.stringify(user));
   };
 
   return (
@@ -93,6 +113,26 @@ const WatchlistFilters = props => {
             </Button>
           ))}
         </ButtonGroup>
+      </Grid>
+      <Grid item>
+        <Grid container direction="row" alignItems="center">
+          <Grid item>
+            <Typography style={{ paddingTop: '20px' }} className="text-black-50 opacity-6">
+              Enable Email Alert
+            </Typography>
+          </Grid>
+          <Grid item>
+            <div style={{ paddingTop: '20px' }}>
+              <Switch
+                checked={isEmailAlertEnable}
+                onChange={handleChangeEmailAlert}
+                color="primary"
+                name="checkedB"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+              />
+            </div>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
