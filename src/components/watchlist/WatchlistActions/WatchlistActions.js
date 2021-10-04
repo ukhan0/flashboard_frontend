@@ -2,12 +2,13 @@ import React from 'react';
 import { ListItem, List, ListItemText, Switch, Grid, Typography } from '@material-ui/core';
 import WatchlistService from '../WatchlistService';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsColorEnable, setIsWatchlistEmailAlertEnable } from '../../../reducers/Watchlist';
+import { setIsColorEnable } from '../../../reducers/Watchlist';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActionApiCalls';
+import { getUser, saveUser } from '../WatchlistHelpers';
 
 export default function WatchListActions() {
   const dispatch = useDispatch();
-  const { isColorEnable, isEmailAlertEnable } = useSelector(state => state.Watchlist);
+  const { isColorEnable } = useSelector(state => state.Watchlist);
 
   const actions = [
     { key: 'autoSize', label: 'Auto Size Columns' },
@@ -32,32 +33,18 @@ export default function WatchListActions() {
   const handleChange = event => {
     if (event.target.checked) {
       dispatch(setIsColorEnable(true));
-      updateUserLocalStorage(false, true);
+      updateUserLocalStorage(true);
     } else {
-      updateUserLocalStorage(false, false);
+      updateUserLocalStorage(false);
       dispatch(setIsColorEnable(false));
     }
     dispatch(updateWatchlistEmailAlertStatus());
   };
-  const handleChangeEmailAlert = event => {
-    if (event.target.checked) {
-      updateUserLocalStorage(true, true);
-      dispatch(setIsWatchlistEmailAlertEnable(true));
-    } else {
-      updateUserLocalStorage(true, false);
-      dispatch(setIsWatchlistEmailAlertEnable(false));
-    }
-    dispatch(updateWatchlistEmailAlertStatus());
-  };
 
-  const updateUserLocalStorage = (isAlert, status) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (isAlert) {
-      user.send_watchlist_alert_email = status;
-    } else {
-      user.enable_watchlist_color = status;
-    }
-    localStorage.setItem('user', JSON.stringify(user));
+  const updateUserLocalStorage = status => {
+    const user = getUser();
+    user.enable_watchlist_color = status;
+    saveUser(user);
   };
   return (
     <List component="nav">
@@ -85,20 +72,6 @@ export default function WatchListActions() {
         </Grid>
         <Grid item>
           <Typography>Enable Colors</Typography>
-        </Grid>
-      </Grid>
-      <Grid container direction="row" alignItems="center">
-        <Grid item>
-          <Switch
-            checked={isEmailAlertEnable}
-            onChange={handleChangeEmailAlert}
-            color="primary"
-            name="checkedB"
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-          />
-        </Grid>
-        <Grid item>
-          <Typography>Enable Email Alert</Typography>
         </Grid>
       </Grid>
     </List>

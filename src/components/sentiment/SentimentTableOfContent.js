@@ -105,10 +105,21 @@ const SentimentTableOfContent = props => {
     }
     return stIdx;
   }
+  function detectlvlHeading(obj) {
+    var stIdx = '';
+    for (var prop in obj) {
+      // var regex = /^[a-zA-Z]{1}[0-9]{1}$/;
+      if (prop === 'l2' || prop === 'l3') {
+        stIdx = prop;
+      }
+    }
+    return stIdx;
+  }
   function visitOutlineObj(acc, obj, lvl, path) {
-    if (lvl > 7) return;
+    if (lvl > 5) return;
     lvl += 1;
     obj = sortObject(obj);
+    // $i = 0;
     for (let prop in obj) {
       let detectedLevel = detectlevelCurrentObj(obj);
       if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
@@ -133,7 +144,12 @@ const SentimentTableOfContent = props => {
       let li = {};
       if (prop.includes('-ht')) {
         prop = obj[prop];
-        path += `.${detectedLevel}`;
+        path += 'id' + detectedLevel.replaceAll(' ', '_').replaceAll('.', '');
+        path = path.toLowerCase();
+        var detectlvlHdng = detectlvlHeading(obj);
+        if (detectlvlHdng) {
+          prop = obj[detectlvlHdng + '-ht'];
+        }
         if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
           if (lvl === 1 && prop.includes('.htm')) {
           } else {

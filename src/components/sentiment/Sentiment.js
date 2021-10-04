@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,7 +6,8 @@ import { getSentimentData } from './sentimentActions';
 import { useHistory } from 'react-router-dom';
 import SentimentContentSection from './SentimentContentSection';
 import SentimentTableOfContent from './SentimentTableOfContent';
-
+import { useLocation } from 'react-router-dom';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 const useStyles = makeStyles(theme => ({
   tableOfContent: {
     position: 'sticky',
@@ -22,12 +23,27 @@ const Sentiment = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const history = useHistory();
-  if (!selectedItem) {
+  const firstTimeLoad = useRef(false);
+  let getQueryParams = new URLSearchParams(useLocation().search);
+  if (!getQueryParams.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
   useEffect(() => {
-    dispatch(getSentimentData());
-  }, [dispatch]);
+    if (!firstTimeLoad.current) {
+      firstTimeLoad.current = true;
+      if (
+        getQueryParams.get('recentId') 
+      ) {
+        const sentimentData = {};
+        sentimentData.industry = getQueryParams.get('industry');
+        sentimentData.sector = getQueryParams.get('sector');
+        sentimentData.ticker = getQueryParams.get('ticker');
+        sentimentData.recentId = getQueryParams.get('recentId');
+        dispatch(setSelectedWatchlist(sentimentData));
+      }
+      dispatch(getSentimentData());
+    }
+  }, [dispatch, getQueryParams]);
 
   const handleSelection = path => {
     setTimeout(() => {

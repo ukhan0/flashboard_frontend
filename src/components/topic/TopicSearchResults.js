@@ -127,9 +127,8 @@ const TopicSearchResults = () => {
   }, [selectedCompanyName, summaryByCompany]);
 
   const goToSentimentScreen = (companyDocumentResultData, content) => {
+    let result;
     let getContent;
-    let filteredData;
-    let getFirstLine;
     dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSelectedHeadingId(null));
@@ -139,15 +138,24 @@ const TopicSearchResults = () => {
     } else {
       getContent = content;
     }
-    if (getContent.includes('</heading>')) {
-      filteredData = getContent.indexOf('</heading>');
-      let content = getContent.slice(filteredData + 10, filteredData + 10 + 50);
-      getFirstLine = content.replace(/<\/?[^>]+(>|$)/g, '');
-    } else {
-      const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
-      getFirstLine = cleanText.slice(0, 50);
+    let vHeadingElem = getContent.includes('<heading class=');
+    if (vHeadingElem) {
+      const extractQuote = getContent.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
+      if (extractQuote.includes('heading')) {
+        const removeClass = getContent.replace(' class=', '');
+        const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
+        const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
+        result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
+          return val.replace(/<\/?heading>/g, '');
+        });
+      }
+      if (Array.isArray(result) && result.length > 0) {
+        dispatch(setHeadingRedirect({ firstLine: result[0] }));
+      } else {
+        dispatch(setHeadingRedirect(null));
+      }
     }
-    dispatch(setHeadingRedirect({ firstLine: getFirstLine }));
+
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
@@ -220,7 +228,9 @@ const TopicSearchResults = () => {
                                 justifyContent="flex-start"
                                 alignItems="center">
                                 <Grid item>
-                                  <p className="font-size-lg mb-2 text-black-100">{createResultTitle(result.title)}</p>
+                                  <p className="font-size-lg mb-2 text-black-100">
+                                    {createResultTitle(result.title, companyResult.document_type)}
+                                  </p>
                                 </Grid>
                               </Grid>
 

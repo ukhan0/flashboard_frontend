@@ -429,5 +429,15 @@ export default [
       rf: [],
       notes: []
     }
+  },
+  {
+    label: 'Earning Calls',
+    value: 'FMP-transcript',
+    sections: {
+      totdoc: ['fmp-transcript.*'],
+      mda: [],
+      rf: [],
+      notes: []
+    }
   }
 ];

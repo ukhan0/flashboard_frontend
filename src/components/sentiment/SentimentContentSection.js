@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import SentimentCompanyDetails from './SentimentCompanyDetails';
 import config from '../../config/config';
 import { setSentimentDrawerOpen, setIsPin } from '../../reducers/Sentiment';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
@@ -37,12 +38,9 @@ const SentimentContentSection = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const contentTopRef = useRef(null);
+  let getQueryParams = new URLSearchParams(useLocation().search);
   let hideCards = config.hideCard;
   const history = useHistory();
-  if (!selectedItem) {
-    history.push('/watchlist');
-  }
-
   const toggleDrawer = () => {
     if (currentToc) {
       dispatch(setIsPin(true));
@@ -61,7 +59,11 @@ const SentimentContentSection = props => {
   };
 
   const goBack = () => {
-    history.goBack();
+    if (!getQueryParams.get('recentId')) {
+      history.goBack();
+    } else {
+      history.push('/watchlist');
+    }
   };
 
   return (

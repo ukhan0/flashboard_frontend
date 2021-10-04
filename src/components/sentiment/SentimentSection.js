@@ -176,11 +176,16 @@ const SentimentSection = props => {
         let objIdx = detectObjFromCurrentObj(obj);
         let stIdx = detectSecTextFromCurrentObj(obj);
         if (headingLevelDetected) {
-          path += `.${detectedLevel}`;
+          path += 'id' + detectedLevel.replaceAll(' ', '_').toLowerCase();
         } else {
-          path += `.${prop}`;
+          path +=
+            'id' +
+            detectedLevel
+              .replaceAll(' ', '_')
+              .replaceAll('.', '')
+              .toLowerCase();
         }
-
+        path = path.toLowerCase();
         if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
           if (lvl === 1 && prop.includes('.htm')) {
           } else {
@@ -200,7 +205,7 @@ const SentimentSection = props => {
       }
     }
   }
-  const isHTML = str =>
+  const isHtmlTag = str =>
     !(str || '')
       // replace html tag with content
       .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
@@ -212,8 +217,8 @@ const SentimentSection = props => {
     let isHeadingClass = content.includes('<heading class=');
     let isHeadingTag = content.includes('</heading>');
     let newContent = content;
-    const test = isHTML(content);
-    if (!test) {
+    const isHtml = isHtmlTag(content);
+    if (!isHtml) {
       newContent = `<span>${content}</span>`;
     }
 
@@ -239,16 +244,19 @@ const SentimentSection = props => {
   }, [isApiResponseReceived]);
 
   useEffect(() => {
+    let headingCheck = heading ? heading.firstLine : null;
     if (calledOnce.current) {
-      if (displayData.length > 0) {
-        let filteredContentData = displayData.filter(item =>
-          item.content ? item.content.indexOf(heading ? heading.firstLine : null) !== -1 : null
-        );
-        if (filteredContentData.length > 0) {
-          const targetHeading = filteredContentData[0].path;
-          if (targetHeading) {
-            dispatch(setSelectedHeadingId(createHash(targetHeading)));
-            calledOnce.current = false;
+      if (headingCheck) {
+        if (displayData.length > 0) {
+          let filteredContentData = displayData.filter(item =>
+            item.content ? item.prop.indexOf(headingCheck) !== -1 : null
+          );
+          if (filteredContentData.length > 0) {
+            const targetHeading = filteredContentData[0].path;
+            if (targetHeading) {
+              dispatch(setSelectedHeadingId(createHash(targetHeading)));
+              calledOnce.current = false;
+            }
           }
         }
       }
@@ -262,14 +270,12 @@ const SentimentSection = props => {
       props.onSelection(selectedHeadingId);
     }
   }, [selectedHeadingId, props]);
-  const rainbowSection = new Rainbow();
-  rainbowSection.setSpectrum('red', 'white', 'white', 'white', 'green');
 
   const rainbow = new Rainbow();
-  rainbow.setSpectrum('red', 'white', 'green');
+  rainbow.setSpectrum('red', 'red', 'white', 'green', 'green');
   const parentClr = val => {
     var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
-    let clr = rainbowSection.colourAt(pos);
+    let clr = rainbow.colourAt(pos);
     if (isExtremeSentiment) {
       if (val > 0.2 || val < -0.2) {
         return clr;
@@ -296,11 +302,16 @@ const SentimentSection = props => {
     }
   };
   const newDisplayData = [];
-  displayData.forEach((d, index) => {
+  displayData.forEach(d => {
     const processedData = { ...d };
     processedData.id = createHash(d.path);
     if (d.content) {
-      processedData.newData = convert.xml2js(removeHeadingTags(d.content));
+      let newContent = removeHeadingTags(d.content);
+      const isHtml = isHtmlTag(newContent);
+      if (!isHtml) {
+        newContent = `<span>${newContent}</span>`;
+      }
+      processedData.newData = convert.xml2js(newContent.replaceAll('&', ''));
     }
     newDisplayData.push(processedData);
   });
@@ -327,28 +338,25 @@ const SentimentSection = props => {
                     backgroundColor: '#' + parentClr(d.newData.attributes ? d.newData.attributes.v : 0)
                   }}>
                   {d.newData.elements
-                    ? d.newData.elements[0].elements.map((a, index) => {
+                    ? d.newData.elements[0].elements.map((a, indexx) => {
                         return (
-                          <div>
+                          <div key={indexx}>
                             {a.elements
                               ? Array.isArray(a.elements)
                                 ? a.elements.map((c, i) => {
                                     return (
                                       <span
+                                        key={i}
                                         className={clsx(classes.content, classes.searchResultText)}
                                         style={{
                                           backgroundColor: '#' + childClr(a.attributes ? a.attributes.v : 0)
                                         }}>
                                         {c.type === 'element' ? (
-                                          <span
-                                            style={{
-                                              backgroundColor: 'orange',
-                                              paddingLeft: 2,
-                                              paddingRight: 2,
-                                              borderRadius: 4
-                                            }}>
-                                            {c.elements[0].text}
-                                          </span>
+                                          <>
+                                            {c.elements ? (
+                                              <span className={classes.yellowClr}>{c.elements[0].text}</span>
+                                            ) : null}
+                                          </>
                                         ) : (
                                           c.text
                                         )}

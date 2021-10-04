@@ -69,7 +69,7 @@ function Rainbow() {
 
 function ColourGradient() {
   var startColour = 'ff0000';
-  var endColour = '0000ff';
+  var endColour = '0de640';
   var minNum = 0;
   var maxNum = 100;
 

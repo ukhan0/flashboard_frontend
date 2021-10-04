@@ -163,3 +163,11 @@ export const syncCachedData = newData => {
   });
   storeCompleteWatchlist(rawCompleteData);
 };
+
+export const getUser = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user;
+};
+export const saveUser = user => {
+  localStorage.setItem('user', JSON.stringify(user));
+};
