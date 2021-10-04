@@ -168,6 +168,6 @@ export const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
 };
-export const setUser = user => {
+export const saveUser = user => {
   localStorage.setItem('user', JSON.stringify(user));
 };

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
-import { getUser, setUser } from './WatchlistHelpers';
+import { getUser, saveUser } from './WatchlistHelpers';
 
 const WatchlistFilters = props => {
   const {
@@ -62,7 +62,7 @@ const WatchlistFilters = props => {
   const updateUserLocalStorage = status => {
     const user = getUser();
     user.send_watchlist_alert_email = status;
-    setUser(user);
+    saveUser(user);
   };
 
   return (
