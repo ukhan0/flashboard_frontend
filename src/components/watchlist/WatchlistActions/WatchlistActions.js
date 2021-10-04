@@ -4,6 +4,7 @@ import WatchlistService from '../WatchlistService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsColorEnable } from '../../../reducers/Watchlist';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActionApiCalls';
+import { getUser, setUser } from '../WatchlistHelpers';
 
 export default function WatchListActions() {
   const dispatch = useDispatch();
@@ -41,9 +42,9 @@ export default function WatchListActions() {
   };
 
   const updateUserLocalStorage = status => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = getUser();
     user.enable_watchlist_color = status;
-    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
   };
   return (
     <List component="nav">

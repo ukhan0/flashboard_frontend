@@ -205,7 +205,7 @@ const SentimentSection = props => {
       }
     }
   }
-  const isHTML = str =>
+  const isHtmlTag = str =>
     !(str || '')
       // replace html tag with content
       .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
@@ -217,8 +217,8 @@ const SentimentSection = props => {
     let isHeadingClass = content.includes('<heading class=');
     let isHeadingTag = content.includes('</heading>');
     let newContent = content;
-    const test = isHTML(content);
-    if (!test) {
+    const isHtml = isHtmlTag(content);
+    if (!isHtml) {
       newContent = `<span>${content}</span>`;
     }
 
@@ -244,12 +244,9 @@ const SentimentSection = props => {
   }, [isApiResponseReceived]);
 
   useEffect(() => {
-    let headingCheck = heading ? heading.firstLine : 'empty';
+    let headingCheck = heading ? heading.firstLine : null;
     if (calledOnce.current) {
-      if (headingCheck === 'empty') {
-        return;
-      } else {
-       
+      if (headingCheck) {
         if (displayData.length > 0) {
           let filteredContentData = displayData.filter(item =>
             item.content ? item.prop.indexOf(headingCheck) !== -1 : null
@@ -275,7 +272,7 @@ const SentimentSection = props => {
   }, [selectedHeadingId, props]);
 
   const rainbow = new Rainbow();
-  rainbow.setSpectrum('red','red', 'white', 'green', 'green');
+  rainbow.setSpectrum('red', 'red', 'white', 'green', 'green');
   const parentClr = val => {
     var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
     let clr = rainbow.colourAt(pos);
@@ -310,8 +307,8 @@ const SentimentSection = props => {
     processedData.id = createHash(d.path);
     if (d.content) {
       let newContent = removeHeadingTags(d.content);
-      const test = isHTML(newContent);
-      if (!test) {
+      const isHtml = isHtmlTag(newContent);
+      if (!isHtml) {
         newContent = `<span>${newContent}</span>`;
       }
       processedData.newData = convert.xml2js(newContent.replaceAll('&', ''));
@@ -357,15 +354,7 @@ const SentimentSection = props => {
                                         {c.type === 'element' ? (
                                           <>
                                             {c.elements ? (
-                                              <span
-                                                style={{
-                                                  backgroundColor: 'orange',
-                                                  paddingLeft: 2,
-                                                  paddingRight: 2,
-                                                  borderRadius: 4
-                                                }}>
-                                                {c.elements[0].text}
-                                              </span>
+                                              <span className={classes.yellowClr}>{c.elements[0].text}</span>
                                             ) : null}
                                           </>
                                         ) : (

@@ -127,10 +127,8 @@ const TopicSearchResults = () => {
   }, [selectedCompanyName, summaryByCompany]);
 
   const goToSentimentScreen = (companyDocumentResultData, content) => {
-    let headingArray;
+    let result;
     let getContent;
-    // let filteredData;
-    // let getFirstLine;
     dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSelectedHeadingId(null));
@@ -147,30 +145,16 @@ const TopicSearchResults = () => {
         const removeClass = getContent.replace(' class=', '');
         const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
         const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
-        let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
+        result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
           return val.replace(/<\/?heading>/g, '');
         });
-
-        headingArray = result.map(v => {
-          return v;
-        });
       }
-      if (Array.isArray(headingArray) && headingArray.length > 0) {
-        dispatch(setHeadingRedirect({ firstLine: headingArray[0] }));
+      if (Array.isArray(result) && result.length > 0) {
+        dispatch(setHeadingRedirect({ firstLine: result[0] }));
       } else {
         dispatch(setHeadingRedirect(null));
       }
     }
-
-    // console.log(getContent,"content")
-    // if (getContent.includes('</heading>')) {
-    //   filteredData = getContent.indexOf('</heading>');
-    //   let content = getContent.slice(filteredData + 10, filteredData + 10 + 50);
-    //   getFirstLine = content.replace(/<\/?[^>]+(>|$)/g, '');
-    // } else {
-    //   const cleanText = getContent.replace(/<\/?[^>]+(>|$)/g, '');
-    //   getFirstLine = cleanText.slice(0, 100);
-    // }
 
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
+import { getUser, setUser } from './WatchlistHelpers';
 
 const WatchlistFilters = props => {
   const {
@@ -59,9 +60,9 @@ const WatchlistFilters = props => {
   };
 
   const updateUserLocalStorage = status => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = getUser();
     user.send_watchlist_alert_email = status;
-    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
   };
 
   return (
