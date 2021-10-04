@@ -11,7 +11,6 @@ import {
   getColumnState,
   getFilteringState,
   checkIsFilterActive,
-  checkIsSortActive,
   syncCachedData
 } from './WatchlistHelpers';
 import {
@@ -65,7 +64,6 @@ const Watchlist = props => {
   const [watchlistData, setWatchlistData] = useState([]);
   const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
-  const [isSortActive, setIsSortActive] = useState(checkIsSortActive());
   const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
@@ -266,7 +264,6 @@ const Watchlist = props => {
 
   const onStoreColumnsState = state => {
     storeColumnsState(state);
-    setIsSortActive(checkIsSortActive());
   };
 
   const onStoreFilteringState = state => {
@@ -292,7 +289,6 @@ const Watchlist = props => {
     });
 
     WatchlistService.clearSort(sortLast);
-    setIsSortActive(false);
     setConfirmationClearSortDialog(false);
   };
 
@@ -317,22 +313,6 @@ const Watchlist = props => {
         </Grid>
         <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            {/* {isSortActive ? (
-              // <Grid item xs={3}>
-              //   <Button
-              //     style={{ visibility: 'hidden' }}
-              //     color="primary"
-              //     variant="contained"
-              //     className={classes.button}
-              //     size="small"
-              //     disabled={!isSortActive}
-              //     onClick={() => {
-              //       setConfirmationClearSortDialog(true);
-              //     }}>
-              //     Clear Sorting
-              //   </Button>
-              // </Grid>
-            ) : null} */}
             {isFilterActive || isFilterActiveOnSearch ? (
               <Grid item >
                 <Button

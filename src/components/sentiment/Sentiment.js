@@ -32,10 +32,11 @@ const Sentiment = () => {
     if (!firstTimeLoad.current) {
       firstTimeLoad.current = true;
       if (
-        getQueryParams.get('recentId') &&
-        getQueryParams.get('ticker') &&
-        getQueryParams.get('industry') &&
-        getQueryParams.get('sector')
+        getQueryParams.get('recentId') 
+        // &&
+        // getQueryParams.get('ticker') &&
+        // getQueryParams.get('industry') &&
+        // getQueryParams.get('sector')
       ) {
         const sentimentData = {};
         sentimentData.industry = getQueryParams.get('industry');
