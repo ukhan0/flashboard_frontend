@@ -245,7 +245,6 @@ const SentimentSection = props => {
 
   useEffect(() => {
     let headingCheck = heading ? heading.firstLine : 'empty';
-    console.log(headingCheck, 'test');
     if (calledOnce.current) {
       if (headingCheck === 'empty') {
         return;

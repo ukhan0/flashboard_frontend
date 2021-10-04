@@ -33,10 +33,6 @@ const Sentiment = () => {
       firstTimeLoad.current = true;
       if (
         getQueryParams.get('recentId') 
-        // &&
-        // getQueryParams.get('ticker') &&
-        // getQueryParams.get('industry') &&
-        // getQueryParams.get('sector')
       ) {
         const sentimentData = {};
         sentimentData.industry = getQueryParams.get('industry');
