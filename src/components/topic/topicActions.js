@@ -425,9 +425,18 @@ export const findSuggestions = () => {
 
       let newSelectedSuggestions = {};
       if (isEmpty(selectedSuggestions)) {
-        forEach(newSuggestions, (_values, keyWord) => {
+        let oneValueArray = [];
+        forEach(newSuggestions, (values, keyWord) => {
           newSelectedSuggestions[keyWord] = [];
+          if (values.length === 1) {
+            oneValueArray.push(values[0]);
+            delete newSuggestions[keyWord];
+          }
         });
+        if (oneValueArray.length > 0) {
+          newSuggestions['May be of interest'] = oneValueArray;
+          newSelectedSuggestions['May be of interest'] = [];
+        }
         dispatch(setSuggestionsWithSelections(newSuggestions, newSelectedSuggestions));
       } else {
         dispatch(setSuggestions(newSuggestions));
