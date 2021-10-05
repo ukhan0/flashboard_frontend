@@ -63,7 +63,7 @@ const TopicDialog = props => {
           <Grid container spacing={2}>
             <Grid item xs={3}>
               <span className="text-black-50 d-block">Searching:</span>
-              <span className="font-weight-bold">{currentSearchDetail.seachText}</span>
+              <span className="font-weight-bold">{currentSearchDetail.searchLabel}</span>
               <br></br>
               <span className="text-black-50">{selectedSug.length > 0 ? selectedSug.flat().join(', ') : null}</span>
             </Grid>

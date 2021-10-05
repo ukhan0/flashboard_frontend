@@ -48,7 +48,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     }
     let currentDate = new Date();
     currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
-    currentSearchDetail.seachText = getState().Topic.searchText;
+    currentSearchDetail.searchLabel = getState().Topic.searchLabel;
     currentSearchDetail.startDate = getState().Topic.isDate
       ? getState().Topic.startDate
         ? getState().Topic.startDate
@@ -315,12 +315,13 @@ const createSearchSaveMiniPayload = topicState => {
 export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText, isTopicEmailAlertEnable } = getState().Topic;
+    const { searchText, isTopicEmailAlertEnable, searchLabel } = getState().Topic;
     const payload = {
       userId: user.id,
       searchText: searchText,
       searchJSON: createSearchSaveMiniPayload(getState().Topic),
-      send_topic_alert_email: isTopicEmailAlertEnable
+      send_topic_alert_email: isTopicEmailAlertEnable,
+      searchLabel: searchLabel
     };
 
     try {

@@ -60,6 +60,11 @@ const useStyles = makeStyles(theme => ({
       fontWeight: 'bold',
       fontSize: '18px'
     }
+  },
+  line: {
+    '& sssss': {
+      display: 'block'
+    }
   }
 }));
 
@@ -213,13 +218,15 @@ const TopicSearchResults = () => {
                               </Grid>
 
                               {result.content.map((content, index) => (
-                                <p
+                                <p 
                                   key={`rstc${index}`}
                                   className={clsx(
                                     classes.searchResultText,
                                     classes.paragraphHeading,
                                     classes.clickable,
-                                    'font-size-mg mb-2 text-black-50'
+                                    classes.line,
+                                    'font-size-mg mb-2 text-black-50',
+                                    
                                   )}
                                   dangerouslySetInnerHTML={{ __html: content }}
                                   onClick={() => goToSentimentScreen(companyResult, content, result.title)}></p>

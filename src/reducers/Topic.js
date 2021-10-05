@@ -292,7 +292,8 @@ const searchDefaultState = () => ({
   selectedSector: null,
   selectedIndustries: [],
   selectedWatchlistCompanyNames: [],
-  isTopicEmailAlertEnable: true
+  isTopicEmailAlertEnable: true,
+  searchLabel: '',
 });
 
 const getDefaultState = () => {
@@ -322,7 +323,6 @@ const getDefaultState = () => {
     showUpdateButton: false,
     selectedCompanyName: null,
     savedSearches: [],
-    searchLabel: null,
     isSnackBarActive: false,
     snackBarMessage: null,
     snackBarSeverity: null,
@@ -359,8 +359,9 @@ export default function reducer(
     case SET_ALL_SEARCH_PARAMS:
       return {
         ...state,
-        isTopicEmailAlertEnable:action.searchObj.send_topic_alert_email,
+        isTopicEmailAlertEnable: action.searchObj.send_topic_alert_email,
         searchText: action.searchObj.searchText,
+        searchLabel: action.searchObj.searchLabel,
         selectedDocumentTypes: action.searchObj.searchJSON.selectedDocumentTypes,
         startDate: new Date(action.searchObj.searchJSON.startDate),
         endDate: new Date(action.searchObj.searchJSON.endDate),

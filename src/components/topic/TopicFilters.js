@@ -22,6 +22,7 @@ import {
   cancelExistingHightlightsCalls,
   setIsTopicEmailAlertEnable
 } from '../../reducers/Topic';
+import TopicSeachLabelTextField from './TopicSearchLabelTextField';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -108,6 +109,18 @@ const TopicFilters = props => {
       alignItems="flex-start"
       className={classes.topsection}>
       <Grid item xs={12}>
+        <Grid container>
+          <Grid item xs={8}>
+            <Grid container>
+              <Grid item xs={10}>
+                <h6>Search Label:</h6>
+                <div style={{ marginBottom: '15px' }}>
+                  <TopicSeachLabelTextField />
+                </div>
+              </Grid>
+            </Grid>{' '}
+          </Grid>
+        </Grid>
         <h6>Search</h6>
         <div className={classes.searchContainer}>
           <div className={classes.searchFieldContainer}>
