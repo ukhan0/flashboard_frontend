@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { get } from 'lodash';
 import config from '../../config/config';
 import { setIsExtermeSentiment } from '../../reducers/Sentiment';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
@@ -19,11 +20,17 @@ const useStyles = makeStyles(theme => ({
   },
   upperCase: {
     textTransform: 'uppercase'
+  },
+  industry:{
+    overflow:"hidden",
+    textOverflow:"ellipsis",
+    whiteSpace:"nowrap",
+    width:"200px"
+
   }
 }));
 
 const SentimentCompanyDetails = props => {
-  const { selectedItem } = useSelector(state => state.Watchlist);
   const { data, isExtremeSentiment } = useSelector(state => state.Sentiment);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -39,7 +46,7 @@ const SentimentCompanyDetails = props => {
     <Fragment>
       <Paper className={clsx('app-page-title')}>
         <Box className={classes.tickerLogo} mr={2}>
-          <Avatar alt="-" src={`${config.companyLogoPath}${selectedItem.ticker}.png`} className={classes.logo} />
+          <Avatar alt="-" src={`${config.companyLogoPath}${get(data, 'ticker', null)}.png`} className={classes.logo} />
         </Box>
         <Grid container spacing={2}>
           <Grid item xs={4}>
@@ -63,7 +70,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Sector:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'sector', null)}</h6>
+                <h6>{get(data, 'gics_sector', null)}</h6>
               </Grid>
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">
@@ -71,7 +78,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Period Date:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{data ? new Date(get(data, 'completed_ts', null)).toLocaleDateString() : null}</h6>
+                <h6>{data ? moment.unix(get(data, 'completed_ts', null)).format('MM/DD/YYYY') : null}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -81,7 +88,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Industry:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'industry', null)}</h6>
+                <h6 className={classes.industry}>{get(data, 'gics_industry', null)}</h6>
               </Grid>
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">

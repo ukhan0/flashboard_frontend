@@ -68,13 +68,13 @@ const TopicDialog = props => {
               <span className="text-black-50">{selectedSug.length > 0 ? selectedSug.flat().join(', ') : null}</span>
             </Grid>
             <Grid item xs={3}>
-              <span className="text-black-50 d-block">From:</span>
+              <span className="text-black-50 d-block">File Types</span>
               <span className="font-weight-bold">
                 {documents.join(', ')} {currentSearchDetail.selectedSection}
               </span>
             </Grid>
             <Grid item xs={2}>
-              <span className="text-black-50 d-block">During:</span>
+              <span className="text-black-50 d-block">From-To</span>
               {currentSearchDetail.startDate ? (
                 <span className="font-weight-bold">{moment(startDate).format(displayDateFormat)}</span>
               ) : null}

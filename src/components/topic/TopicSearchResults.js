@@ -11,9 +11,9 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
 import { getCompleteWatchlist } from '../../utils/helpers';
-import { setHeadingRedirect, setIsFromSideBar } from '../../reducers/Topic';
+import { setIsFromSideBar } from '../../reducers/Topic';
 import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } from '../../reducers/Sentiment';
-
+import { createHash } from '../../utils/helpers';
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -126,36 +126,14 @@ const TopicSearchResults = () => {
     }
   }, [selectedCompanyName, summaryByCompany]);
 
-  const goToSentimentScreen = (companyDocumentResultData, content) => {
-    let result;
-    let getContent;
+  const goToSentimentScreen = (companyDocumentResultData, content, t) => {
+    const actualTitle = t.replace('sma_data_json.', '');
+    const removel4 = actualTitle.replace('.l4', '');
+    const replaceDots = removel4.replaceAll('.', 'id');
+    dispatch(setSelectedHeadingId(createHash(`id${replaceDots}`)));
     dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
-    dispatch(setSelectedHeadingId(null));
     dispatch(setSentimentResult(null));
-    if (Array.isArray(content)) {
-      getContent = content[0].content[0];
-    } else {
-      getContent = content;
-    }
-    let vHeadingElem = getContent.includes('<heading class=');
-    if (vHeadingElem) {
-      const extractQuote = getContent.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
-      if (extractQuote.includes('heading')) {
-        const removeClass = getContent.replace(' class=', '');
-        const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
-        const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
-        result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
-          return val.replace(/<\/?heading>/g, '');
-        });
-      }
-      if (Array.isArray(result) && result.length > 0) {
-        dispatch(setHeadingRedirect({ firstLine: result[0] }));
-      } else {
-        dispatch(setHeadingRedirect(null));
-      }
-    }
-
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
@@ -225,7 +203,7 @@ const TopicSearchResults = () => {
                                 key={`rsttt${index}`}
                                 container
                                 direction="row"
-                                justifyContent="flex-start"
+                                justify="flex-start"
                                 alignItems="center">
                                 <Grid item>
                                   <p className="font-size-lg mb-2 text-black-100">
@@ -244,7 +222,7 @@ const TopicSearchResults = () => {
                                     'font-size-mg mb-2 text-black-50'
                                   )}
                                   dangerouslySetInnerHTML={{ __html: content }}
-                                  onClick={() => goToSentimentScreen(companyResult, content)}></p>
+                                  onClick={() => goToSentimentScreen(companyResult, content, result.title)}></p>
                               ))}
                             </div>
                           );

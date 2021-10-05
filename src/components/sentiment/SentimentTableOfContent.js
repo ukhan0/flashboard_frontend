@@ -136,7 +136,7 @@ const SentimentTableOfContent = props => {
                 return val.replace(/<\/?heading>/g, '');
               });
               detectedLevel = extractValueInsideQuote;
-              obj['l4-ht'] = result;
+              obj['l4-ht'] = result[0];
             }
           }
         }
@@ -241,7 +241,7 @@ const SentimentTableOfContent = props => {
                 onClick={() => {
                   clickHandle(d.path);
                 }}>
-                {d.lvl === 4 ? upperCase(d.prop) : d.prop}
+                {d.lvl === 4 ? upperCase(d.prop) : d.prop.replace('data', '')}
               </div>
             ) : null
           )

@@ -14,6 +14,12 @@ const useStyles = makeStyles(theme => ({
   logo: {
     height: 70,
     width: 70
+  },
+  industry: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    width: '200px'
   }
 }));
 
@@ -55,7 +61,7 @@ const ComparisionCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Industry:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'industry', null)}</h6>
+                <h6 className={classes.industry}>{get(selectedItem, 'industry', null)}</h6>
               </Grid>
             </Grid>
           </Grid>

@@ -75,14 +75,13 @@ const SentimentSection = props => {
   const { data, isLoading, selectedHeadingId, isApiResponseReceived, isExtremeSentiment } = useSelector(
     state => state.Sentiment
   );
-  const { heading } = useSelector(state => state.Topic);
   useEffect(() => {
-    if (selectedHeadingId) {
+    if (selectedHeadingId && data) {
       setTimeout(() => {
         dispatch(setSelectedHeadingId(null));
       }, 2000);
     }
-  }, [selectedHeadingId, dispatch]);
+  }, [selectedHeadingId, dispatch, data]);
 
   const displayData = [];
   // const maxValueCheckArr = [];
@@ -244,28 +243,6 @@ const SentimentSection = props => {
   }, [isApiResponseReceived]);
 
   useEffect(() => {
-    let headingCheck = heading ? heading.firstLine : null;
-    if (calledOnce.current) {
-      if (headingCheck) {
-        if (displayData.length > 0) {
-          let filteredContentData = displayData.filter(item =>
-            item.content ? item.prop.indexOf(headingCheck) !== -1 : null
-          );
-          if (filteredContentData.length > 0) {
-            const targetHeading = filteredContentData[0].path;
-            if (targetHeading) {
-              dispatch(setSelectedHeadingId(createHash(targetHeading)));
-              calledOnce.current = false;
-            }
-          }
-        }
-      }
-    } else {
-      return;
-    }
-  }, [displayData, dispatch, heading]);
-
-  useEffect(() => {
     if (selectedHeadingId) {
       props.onSelection(selectedHeadingId);
     }
@@ -380,7 +357,9 @@ const SentimentSection = props => {
                     classes.lvl,
                     selectedHeadingId === d.id ? classes.highlightHeading : null
                   )}
-                  dangerouslySetInnerHTML={{ __html: d.lvl === 4 ? upperCase(d.prop) : d.prop }}></p>
+                  dangerouslySetInnerHTML={{
+                    __html: d.lvl === 4 ? upperCase(d.prop) : d.prop.replace('Data', '')
+                  }}></p>
               )}
             </div>
           ) : null;
