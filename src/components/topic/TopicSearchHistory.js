@@ -141,7 +141,7 @@ export default function TopicSearchHistory(props) {
                   onClick={() => {
                     handleSearch(s);
                   }}>
-                  <ListItemText primary={s.searchText} />
+                  <ListItemText primary={s.searchLabel} />
                   <ListItemSecondaryAction>
                     <IconButton
                       aria-label="comments"

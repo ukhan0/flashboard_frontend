@@ -48,7 +48,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     }
     let currentDate = new Date();
     currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
-    currentSearchDetail.seachText = getState().Topic.searchText;
+    currentSearchDetail.searchLabel = getState().Topic.searchLabel;
     currentSearchDetail.startDate = getState().Topic.isDate
       ? getState().Topic.startDate
         ? getState().Topic.startDate
@@ -315,12 +315,13 @@ const createSearchSaveMiniPayload = topicState => {
 export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText, isTopicEmailAlertEnable } = getState().Topic;
+    const { searchText, isTopicEmailAlertEnable, searchLabel } = getState().Topic;
     const payload = {
       userId: user.id,
       searchText: searchText,
       searchJSON: createSearchSaveMiniPayload(getState().Topic),
-      send_topic_alert_email: isTopicEmailAlertEnable
+      send_topic_alert_email: isTopicEmailAlertEnable,
+      searchLabel: searchLabel
     };
 
     try {
@@ -425,9 +426,18 @@ export const findSuggestions = () => {
 
       let newSelectedSuggestions = {};
       if (isEmpty(selectedSuggestions)) {
-        forEach(newSuggestions, (_values, keyWord) => {
+        let oneValueArray = [];
+        forEach(newSuggestions, (values, keyWord) => {
           newSelectedSuggestions[keyWord] = [];
+          if (values.length === 1) {
+            oneValueArray.push(values[0]);
+            delete newSuggestions[keyWord];
+          }
         });
+        if (oneValueArray.length > 0) {
+          newSuggestions['May be of interest'] = oneValueArray;
+          newSelectedSuggestions['May be of interest'] = [];
+        }
         dispatch(setSuggestionsWithSelections(newSuggestions, newSelectedSuggestions));
       } else {
         dispatch(setSuggestions(newSuggestions));
