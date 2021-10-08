@@ -39,6 +39,7 @@ const Sentiment = () => {
         sentimentData.sector = getQueryParams.get('sector');
         sentimentData.ticker = getQueryParams.get('ticker');
         sentimentData.recentId = getQueryParams.get('recentId');
+        sentimentData.oldId = getQueryParams.get('oldId');
         dispatch(setSelectedWatchlist(sentimentData));
       }
       dispatch(getSentimentData());
