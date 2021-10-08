@@ -60,7 +60,8 @@ const TopicFilters = props => {
     showUpdateButton,
     selectedSearch,
     cancelTokenSourceHighlights,
-    isTopicEmailAlertEnable
+    isTopicEmailAlertEnable,
+    searchLabel
   } = useSelector(state => state.Topic);
   const handleUpdateSaveSearch = searchId => {
     dispatch(resetResultsPage());
@@ -98,7 +99,7 @@ const TopicFilters = props => {
     }
   };
 
-  const isButtonActive = !(searchText.length > 2);
+  const isButtonActive = !(searchText.length > 2 && searchLabel.length > 2);
 
   return (
     <Grid

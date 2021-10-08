@@ -18,6 +18,12 @@ const useStyles = makeStyles(_theme => ({
   },
   suggestionSelection: {
     padding: '0 !important'
+  },
+  suggestionStyle: {
+    overflowWrap: 'break-word',
+    wordBreak: 'break-all',
+    Width: '200px',
+    overflow: 'hidden'
   }
 }));
 
@@ -64,8 +70,8 @@ export default function TopicSuggestionsDialog(props) {
             item.indexOf('https') === -1 &&
             item.indexOf(')') === -1 &&
             item.indexOf('#') === -1 &&
-            item.indexOf('OR') === -1 &&
-            item.indexOf('AND') === -1
+            item.toLowerCase().indexOf('or') === -1 &&
+            item.toLowerCase().indexOf('and') === -1
         );
         content.push(
           <Fragment key={keyWord}>
@@ -79,6 +85,7 @@ export default function TopicSuggestionsDialog(props) {
               <Grid item xs={3} key={index} className={classes.suggestionSelection}>
                 <FormControlLabel
                   key={index}
+                  className={classes.suggestionStyle}
                   control={
                     <Checkbox
                       checked={isSuggestionChecked(value)}

@@ -118,7 +118,7 @@ const WatchlistFilters = props => {
       <Grid item>
         <Grid container direction="row" alignItems="center">
           <Grid item>
-            <Typography style={{ paddingTop: '20px' }} className="text-black-50 opacity-6">
+            <Typography style={{ paddingTop: '20px' }} color="primary">
               Enable Email Alert
             </Typography>
           </Grid>

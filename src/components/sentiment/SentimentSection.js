@@ -358,7 +358,14 @@ const SentimentSection = props => {
                     selectedHeadingId === d.id ? classes.highlightHeading : null
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: d.lvl === 4 ? upperCase(d.prop) : d.prop.replace('Data', '')
+                    __html:
+                      d.lvl === 4
+                        ? upperCase(d.prop)
+                        : d.prop
+                            .toLowerCase()
+                            .replace('data', '')
+                            .replace('ex.data', '')
+                            .replace('*.data', '')
                   }}></p>
               )}
             </div>

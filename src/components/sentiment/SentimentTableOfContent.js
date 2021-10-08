@@ -241,7 +241,13 @@ const SentimentTableOfContent = props => {
                 onClick={() => {
                   clickHandle(d.path);
                 }}>
-                {d.lvl === 4 ? upperCase(d.prop) : d.prop.replace('data', '')}
+                {d.lvl === 4
+                  ? upperCase(d.prop)
+                  : d.prop
+                      .toLowerCase()
+                      .replace('data', '')
+                      .replace('ex.data', '')
+                      .replace('*.data', '')}
               </div>
             ) : null
           )
