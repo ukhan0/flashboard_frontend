@@ -114,7 +114,7 @@ const TopicFilters = props => {
           <Grid item xs={8}>
             <Grid container>
               <Grid item xs={10}>
-                <h6>Search Label:</h6>
+                <h6>Label:</h6>
                 <div style={{ marginBottom: '15px' }}>
                   <TopicSeachLabelTextField />
                 </div>

@@ -46,15 +46,34 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         currentSearchDetail.selectedSection = section.label;
       }
     }
+    const startDate = new URLSearchParams(window.location.search).get('startDate');
+    const endDate = new URLSearchParams(window.location.search).get('endDate');
     let currentDate = new Date();
     currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
     currentSearchDetail.searchLabel = getState().Topic.searchLabel;
-    currentSearchDetail.startDate = getState().Topic.isDate
+    currentSearchDetail.startDate = startDate
+      ? startDate && getState().Topic.isDate
+        ? getState().Topic.isDate
+          ? getState().Topic.startDate
+            ? getState().Topic.startDate
+            : null
+          : moment().subtract(12, 'months')
+        : startDate
+      : getState().Topic.isDate
       ? getState().Topic.startDate
         ? getState().Topic.startDate
         : null
       : moment().subtract(12, 'months');
-    currentSearchDetail.endDate = getState().Topic.isDate
+
+    currentSearchDetail.endDate = endDate
+      ? endDate && getState().Topic.isDate
+        ? getState().Topic.isDate
+          ? getState().Topic.endDate
+            ? getState().Topic.endDate
+            : null
+          : currentDate
+        : endDate
+      : getState().Topic.isDate
       ? getState().Topic.endDate
         ? getState().Topic.endDate
         : null
@@ -217,6 +236,8 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
 const createSearchPayload = (topicState, freshSearch, searchFrom = null, companyName = null) => {
   const searchId = get(topicState.selectedSearch, 'searchId', null);
+  const startDate = new URLSearchParams(window.location.search).get('startDate');
+  const endDate = new URLSearchParams(window.location.search).get('endDate');
   const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
   const fullSearchText = onlySuggestionSingleArr.length
     ? `${topicState.searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
@@ -224,13 +245,27 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
   const data = {
     searchTerm: fullSearchText,
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
-    startDate: topicState.isDate
+    startDate: startDate
+      ? startDate && topicState.isDate
+        ? topicState.isDate
+          ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
+          : moment()
+              .subtract(12, 'months')
+              .format('YYYY-MM-DD HH:mm:ss')
+        : startDate
+      : topicState.isDate
       ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
       : moment()
           .subtract(12, 'months')
           .format('YYYY-MM-DD HH:mm:ss'),
 
-    endDate: topicState.isDate
+    endDate: endDate
+      ? endDate && topicState.isDate
+        ? topicState.isDate
+          ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
+          : moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+        : endDate
+      : topicState.isDate
       ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
       : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     document_types: topicState.selectedDocumentTypes,

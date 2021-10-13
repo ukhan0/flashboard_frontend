@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setIsColorEnable, setIsWatchlistEmailAlertEnable } from '../../reducers/Watchlist';
+import SmaDescription from './SmaDescription';
 
 import {
   Grid,
@@ -15,7 +16,6 @@ import {
   InputLabel,
   InputAdornment,
   FormControlLabel,
-  IconButton,
   Box,
   Typography,
   Checkbox,
@@ -24,7 +24,6 @@ import {
   Card,
   CardContent,
   Button,
-  Tooltip,
   TextField,
   FormControl
 } from '@material-ui/core';
@@ -32,13 +31,9 @@ import {
 import MailOutlineTwoToneIcon from '@material-ui/icons/MailOutlineTwoTone';
 import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
 
-import hero9 from '../../assets/images/hero-bg/hero-9.jpg';
-
-import { NavLink as RouterLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../reducers/User';
-import smaLogo from '../../assets/images/logos/sma-logo-white.svg';
 
 const StyledTabs = withStyles({
   indicator: {
@@ -156,63 +151,7 @@ const LivePreviewExample = () => {
                 <div className="bg-composed-wrapper--content">
                   <Grid container spacing={0} className="min-vh-100">
                     <Grid item xs={12} md={4} lg={5} className="d-flex align-items-center">
-                      <div className="hero-wrapper w-100 bg-composed-wrapper bg-plum-plate min-vh-100">
-                        <div className="flex-grow-1 w-100 d-flex align-items-center">
-                          <div
-                            className="bg-composed-wrapper--image"
-                            style={{ backgroundImage: 'url(' + hero9 + ')' }}
-                          />
-                          <div className="bg-composed-wrapper--bg bg-premium-dark opacity-5" />
-                          <div className="bg-composed-wrapper--content p-5">
-                            <div className="mt-3 mb-5 d-flex align-items-center justify-content-center">
-                              <img alt={'SMA'} src={smaLogo} width={150} />
-                            </div>
-                            <div className="text-white mt-3">
-                              <h1 className="display-4 my-3 font-weight-bold">Why should you create an account?</h1>
-                              <p className="font-size-md mb-0 text-white-50">
-                                A free hour, when our power of choice is untrammelled and when nothing prevents.
-                              </p>
-                              <div className="divider border-2 my-5 border-light opacity-2 rounded w-25" />
-                              <div>
-                                <Button
-                                  size="large"
-                                  className="text-white"
-                                  variant="contained"
-                                  color="primary"
-                                  component={RouterLink}
-                                  to="/LandingPage">
-                                  <span className="btn-wrapper--icon">
-                                    <FontAwesomeIcon icon={['fas', 'arrow-left']} />
-                                  </span>
-                                  <span className="btn-wrapper--label">Back to dashboard</span>
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="hero-footer pb-4">
-                          <Tooltip arrow title="Facebook">
-                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
-                              <FontAwesomeIcon icon={['fab', 'facebook']} className="font-size-md" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Twitter">
-                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
-                              <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Google">
-                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
-                              <FontAwesomeIcon icon={['fab', 'google']} className="font-size-md" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Instagram">
-                            <IconButton color="inherit" size="medium" variant="outlined" className="text-white-50">
-                              <FontAwesomeIcon icon={['fab', 'instagram']} className="font-size-md" />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      </div>
+                      <SmaDescription />
                     </Grid>
                     <Grid item xs={12} md={8} lg={7} className="d-flex align-items-center">
                       <Container maxWidth="sm">
