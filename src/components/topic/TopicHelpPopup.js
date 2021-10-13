@@ -23,8 +23,14 @@ export default function TopicHelpPopup() {
         }}>
         <ContactSupportIcon variant="outlined" color="primary" />
       </Button>
-      <Dialog isOpen={open} onClose={handleClose} title={<h5>Filings Flash Smart Search Operators</h5>} size={'lg'}>
-        <TopicHelpPopupContent />
+      <Dialog
+        titleVariant={'h4'}
+        titleColor={'black'}
+        isOpen={open}
+        onClose={handleClose}
+        title={'Filings Flash Smart Search Operators'}
+        size={'lg'}>
+        <TopicHelpPopupContent onClose={handleClose} />
       </Dialog>
     </div>
   );

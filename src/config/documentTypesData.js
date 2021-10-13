@@ -1,5 +1,15 @@
 export default [
   {
+    label: 'Earning Calls',
+    value: 'FMP-transcript',
+    sections: {
+      totdoc: ['fmp-transcript.*'],
+      mda: [],
+      rf: [],
+      notes: []
+    }
+  },
+  {
     label: '10-K',
     value: '10-K',
     sections: {
@@ -425,16 +435,6 @@ export default [
     value: 'Tanshin',
     sections: {
       totdoc: ['tanshin.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
-  {
-    label: 'Earning Calls',
-    value: 'FMP-transcript',
-    sections: {
-      totdoc: ['fmp-transcript.*'],
       mda: [],
       rf: [],
       notes: []
