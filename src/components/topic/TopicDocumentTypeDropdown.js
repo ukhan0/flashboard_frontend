@@ -3,6 +3,7 @@ import { MenuItem, Select, Checkbox, ListItemText, Input } from '@material-ui/co
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedDocumentTypes } from '../../reducers/Topic';
+import { renameDocumentTypes } from './topicHelpers';
 
 const useStyles = makeStyles(theme => ({
   multiSelect: {
@@ -28,7 +29,7 @@ const TopicDocumentTypeDropdown = props => {
       value={selectedDocumentTypes}
       onChange={handleSelectionChange}
       input={<Input />}
-      renderValue={selectedValues => selectedValues.join(', ')}
+      renderValue={selectedValues => renameDocumentTypes(selectedValues)}
       className={classes.multiSelect}
       // MenuProps={MenuProps}
     >

@@ -7,6 +7,7 @@ import { get } from 'lodash';
 import config from '../../config/config';
 import { setIsExtermeSentiment } from '../../reducers/Sentiment';
 import moment from 'moment';
+import { renameDocumentTypes } from '../topic/topicHelpers';
 
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
@@ -21,12 +22,11 @@ const useStyles = makeStyles(theme => ({
   upperCase: {
     textTransform: 'uppercase'
   },
-  industry:{
-    overflow:"hidden",
-    textOverflow:"ellipsis",
-    whiteSpace:"nowrap",
-    width:"200px"
-
+  industry: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    width: '200px'
   }
 }));
 
@@ -60,7 +60,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{`DocumentType:`}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6 className={classes.upperCase}>{get(data, 'document_type', null)}</h6>
+                <h6 className={classes.upperCase}>{renameDocumentTypes(get(data, 'document_type', null))}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -101,7 +101,7 @@ const SentimentCompanyDetails = props => {
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <h6>{` Show Extreme Sentiments:`}&nbsp;</h6>
+                <h6>{` Extreme Sentiments Only:`}&nbsp;</h6>
               </Grid>
               <Grid item>
                 <Switch

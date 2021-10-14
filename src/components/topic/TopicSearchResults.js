@@ -14,6 +14,7 @@ import { getCompleteWatchlist } from '../../utils/helpers';
 import { setIsFromSideBar } from '../../reducers/Topic';
 import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
+import { renameDocumentTypes } from './topicHelpers';
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -178,7 +179,7 @@ const TopicSearchResults = () => {
                         <Grid container direction="row" justify="space-between" alignItems="flex-start">
                           <Grid item>
                             <h2>
-                              {companyResult.document_type}
+                              {renameDocumentTypes(companyResult.document_type)}
                               &nbsp; &nbsp;
                               {companyResult.document_date ? (
                                 <span className={clsx(classes.documentDate, 'text-black-50')}>
@@ -218,15 +219,14 @@ const TopicSearchResults = () => {
                               </Grid>
 
                               {result.content.map((content, index) => (
-                                <p 
+                                <p
                                   key={`rstc${index}`}
                                   className={clsx(
                                     classes.searchResultText,
                                     classes.paragraphHeading,
                                     classes.clickable,
                                     classes.line,
-                                    'font-size-mg mb-2 text-black-50',
-                                    
+                                    'font-size-mg mb-2 text-black-50'
                                   )}
                                   dangerouslySetInnerHTML={{ __html: content }}
                                   onClick={() => goToSentimentScreen(companyResult, content, result.title)}></p>

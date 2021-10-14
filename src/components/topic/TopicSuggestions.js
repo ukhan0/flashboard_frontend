@@ -66,18 +66,15 @@ export default function TopicSuggestionsDialog(props) {
     } else {
       forEach(suggestionsObj, (values, keyWord) => {
         let filteredData = values.filter(
-          item =>
-            item.indexOf('https') === -1 &&
-            item.indexOf(')') === -1 &&
-            item.indexOf('#') === -1 &&
-            item.toLowerCase().indexOf('or') === -1 &&
-            item.toLowerCase().indexOf('and') === -1
+          item => item.indexOf('https') === -1 && item.indexOf(')') === -1 && item.indexOf('#') === -1
         );
         content.push(
           <Fragment key={keyWord}>
             <Grid item xs={12}>
               {filteredData.length > 0 && keyWord ? (
-                <h6 className="font-weight-bold font-size-lg mb-1 text-black">{keyWord}</h6>
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">
+                  {keyWord.toLowerCase() === 'or' || keyWord.toLowerCase() === 'and' ? null : keyWord}
+                </h6>
               ) : null}
             </Grid>
 

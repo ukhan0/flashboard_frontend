@@ -62,3 +62,20 @@ export const removeDuplicateSuggestions = suggestionsObj => {
   });
   return cleanSuggestionsObj;
 };
+export const renameDocumentTypes = type => {
+  if (Array.isArray(type)) {
+    const selected = type.map(v => {
+      if (v === 'FMP-transcript') {
+        v = 'Earning Calls';
+      }
+      return v;
+    });
+
+    return selected.join(', ');
+  }
+
+  if (type === 'FMP-transcript') {
+    type = 'Earning Calls';
+  }
+  return type;
+};

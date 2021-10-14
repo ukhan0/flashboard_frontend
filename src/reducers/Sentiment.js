@@ -91,7 +91,7 @@ const getDefaultState = () => {
     isTocButton: true,
     currentToc: false,
     isApiResponseReceived: false,
-    isExtremeSentiment: true
+    isExtremeSentiment: false
   };
 };
 

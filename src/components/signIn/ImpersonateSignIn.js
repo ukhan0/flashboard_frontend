@@ -5,7 +5,7 @@ import config from '../../config/config';
 import { get } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setIsColorEnable, setIsWatchlistEmailAlertEnable } from '../../reducers/Watchlist';
 import SmaDescription from './SmaDescription';
 
@@ -240,7 +240,7 @@ const LivePreviewExample = () => {
                             You already have an account? Fill in the fields below to login into your existing dashboard.
                           </p>
                           <Card className="mx-0 bg-secondary mt-0 w-100 p-0 mb-4 border-0">
-                            <div className="card-header d-block p-3 mx-2 mb-0 mt-2 rounded border-0">
+                            {/* <div className="card-header d-block p-3 mx-2 mb-0 mt-2 rounded border-0">
                               <div className="text-muted text-center mb-3">
                                 <span>Sign in with</span>
                               </div>
@@ -258,10 +258,10 @@ const LivePreviewExample = () => {
                                   <span className="btn-wrapper--label">Twitter</span>
                                 </Button>
                               </div>
-                            </div>
+                            </div> */}
                             <CardContent className="p-3">
                               <div className="text-center text-black-50 mb-3">
-                                <span>Or sign in with credentials</span>
+                                <span> Sign in with credentials</span>
                               </div>
                               <form className="px-5">
                                 <div className="mb-3">

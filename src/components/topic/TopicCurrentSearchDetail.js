@@ -7,6 +7,7 @@ import TopicDropDown from './TopicDrowpDown';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
+import { renameDocumentTypes } from './topicHelpers';
 
 import {
   setOpenTopicSearchDialog,
@@ -56,6 +57,7 @@ const TopicDialog = props => {
     dispatch(resetAllSearchParams());
     dispatch(setBackDropOnCompanyClick(false));
   };
+
   return (
     <Fragment>
       <div className={classes.label}>
@@ -70,7 +72,7 @@ const TopicDialog = props => {
             <Grid item xs={3}>
               <span className="text-black-50 d-block">File Types</span>
               <span className="font-weight-bold">
-                {documents.join(', ')} {currentSearchDetail.selectedSection}
+                {renameDocumentTypes(documents)} {currentSearchDetail.selectedSection}
               </span>
             </Grid>
             <Grid item xs={2}>
