@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     maxWidth: 'auto'
+    // backgroundColor: theme.palette.background.paper
   },
   nested: {
     paddingLeft: theme.spacing(4)
@@ -48,6 +49,13 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     marginLeft: 5
+  },
+  label: {
+    width: '150px',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    cursor: 'pointer'
   }
 }));
 
@@ -133,38 +141,34 @@ export default function TopicSearchHistory(props) {
         {savedSearches.length > 0 ? (
           savedSearches.map((s, index) => {
             return (
-              <List component="div" disablePadding key={`lil${index}`}>
-                <ListItem
-                  button
-                  className={classes.nested}
-                  selected={selectedSearch && selectedSearch.searchId === s.searchId}
-                  onClick={() => {
-                    handleSearch(s);
-                  }}>
-                  <ListItemText primary={s.searchLabel} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      aria-label="comments"
-                      size="small"
-                      onClick={() => {
-                        dispatch(setShowUpdateButton(true));
-                        dispatch(setShowComposeNew(true));
-                        dispatch(setBackDropOnCompanyClick(false));
-                        setSearchParamsEdit(s);
-                        props.handleClose();
-                      }}>
-                      <EditIcon className={classes.editIcon} />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="comments"
-                      size="small"
-                      onClick={() => dispatch(deleteSearch(s.searchId))}>
-                      <DeleteForeverIcon className={classes.deleteIcon} />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
+              <ListItem
+                button
+                className={classes.nested}
+                key={index}
+                selected={selectedSearch && selectedSearch.searchId === s.searchId}
+                onClick={() => {
+                  handleSearch(s);
+                }}>
+                <ListItemText primary={<p className={classes.label}>{s.searchLabel}</p>} />
+
+                <ListItemSecondaryAction>
+                  <IconButton
+                    aria-label="comments"
+                    size="small"
+                    onClick={() => {
+                      dispatch(setShowUpdateButton(true));
+                      dispatch(setShowComposeNew(true));
+                      dispatch(setBackDropOnCompanyClick(false));
+                      setSearchParamsEdit(s);
+                      props.handleClose();
+                    }}>
+                    <EditIcon className={classes.editIcon} />
+                  </IconButton>
+                  <IconButton aria-label="comments" size="small" onClick={() => dispatch(deleteSearch(s.searchId))}>
+                    <DeleteForeverIcon className={classes.deleteIcon} />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
             );
           })
         ) : (

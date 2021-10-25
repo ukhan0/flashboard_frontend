@@ -112,21 +112,27 @@ const TopicFilters = props => {
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={8}>
-            <Grid container>
-              <Grid item xs={10}>
-                <h6>Label:</h6>
+                <h6>Theme Name</h6>
                 <div style={{ marginBottom: '15px' }}>
                   <TopicSeachLabelTextField />
                 </div>
-              </Grid>
-            </Grid>{' '}
           </Grid>
+
+        <Grid item xs={4}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div>
+              <h6 className={classes.dateRange}>Date Range</h6>
+              <TopicRangePicker />
+              </div>
+          </div>
         </Grid>
-        <h6>Search</h6>
+      
+        </Grid>
+        <h6>Search Terms</h6>
         <div className={classes.searchContainer}>
           <div className={classes.searchFieldContainer}>
             <Grid container>
-              <Grid item xs={8}>
+              <Grid item xs={12}>
                 <Grid container>
                   <Grid item xs={10}>
                     <TopicSearchTextField />
@@ -157,26 +163,19 @@ const TopicFilters = props => {
         </div>
       </Grid>
       <Grid item xs={6}>
-        <h6>Document Types:</h6>
+        <h6>Document Types</h6>
         <TopicDocumentTypeDropdown />
       </Grid>
-      <Grid item xs={6}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div>
-            <h6 className={classes.dateRange}>Date Range</h6>
-            <TopicRangePicker />
-          </div>
-        </div>
-      </Grid>
+      
       <Grid item xs={12}>
-        <h6>Search Universe:</h6>
+        <h6>Search Universe</h6>
         <TopicUniverseGroup />
       </Grid>
       <Grid item xs={6}>
         <TopicUniverseSubFilters />
       </Grid>
       <Grid item xs={12}>
-        <h6 className={'text-black-50'}>Section:</h6>
+        <h6 >Section</h6>
         <TopicSectionGroup />
       </Grid>
       <Grid item xs={12}>

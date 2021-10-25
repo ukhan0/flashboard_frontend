@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
-import { useSelector, useDispatch } from 'react-redux';
-import { Paper, Box, Grid, Avatar, Switch } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { Paper, Box, Grid, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { get } from 'lodash';
 import config from '../../config/config';
-import { setIsExtermeSentiment } from '../../reducers/Sentiment';
+
 import moment from 'moment';
 import { renameDocumentTypes } from '../topic/topicHelpers';
+import SentimentFilters from './SentimentFiltres';
 
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
@@ -31,17 +32,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentCompanyDetails = props => {
-  const { data, isExtremeSentiment } = useSelector(state => state.Sentiment);
+  const { data } = useSelector(state => state.Sentiment);
   const classes = useStyles();
-  const dispatch = useDispatch();
 
-  const handleChangeExtremeSentiment = event => {
-    if (event.target.checked) {
-      dispatch(setIsExtermeSentiment(true));
-    } else {
-      dispatch(setIsExtermeSentiment(false));
-    }
-  };
   return (
     <Fragment>
       <Paper className={clsx('app-page-title')}>
@@ -101,16 +94,12 @@ const SentimentCompanyDetails = props => {
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <h6>{` Extreme Sentiments Only:`}&nbsp;</h6>
+                <label style={{ marginTop: '6px' }} className="text-black-50 d-block">
+                  {'Sentiment:'}&nbsp;
+                </label>
               </Grid>
               <Grid item>
-                <Switch
-                  color="primary"
-                  checked={isExtremeSentiment}
-                  onChange={handleChangeExtremeSentiment}
-                  name="checkedB"
-                  inputProps={{ 'aria-label': 'primary checkbox' }}
-                />
+                <SentimentFilters />
               </Grid>
             </Grid>
           </Grid>

@@ -8,7 +8,7 @@ export const SET_SENTIMENT_DRAWER_OPEN = 'TOPIC/SET_SENTIMENT_DRAWER_OPEN ';
 export const SET_CURRENT_TOC = 'TOPIC/SET_CURRENT_TOC ';
 export const SET_SHOW_TOC_BUTTON = 'TOPIC/SET_SHOW_TOC_BUTTON  ';
 export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED ';
-export const SET_IS_EXTREME_SENTIMENT = 'TOPIC/SET_IS_EXTREME_SENTIMENT ';
+export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
 
 export const setSentimentResult = data => ({
   type: SET_SENTIMENT_RESULT,
@@ -59,9 +59,9 @@ export const setIsApiResponseReceived = isApiResponseReceived => ({
   isApiResponseReceived
 });
 
-export const setIsExtermeSentiment = isExtremeSentiment => ({
-  type: SET_IS_EXTREME_SENTIMENT,
-  isExtremeSentiment
+export const setSentimentFilters = sentiment => ({
+  type: SET_SENTIMENT,
+  sentiment
 });
 
 const getDefaultState = () => {
@@ -91,7 +91,7 @@ const getDefaultState = () => {
     isTocButton: true,
     currentToc: false,
     isApiResponseReceived: false,
-    isExtremeSentiment: false
+    sentiment: 'visible'
   };
 };
 
@@ -122,8 +122,8 @@ export default function reducer(
       return { ...state, currentToc: action.currentToc };
     case SET_IS_API_RESPONSE_RECEIVED:
       return { ...state, isApiResponseReceived: action.isApiResponseReceived };
-    case SET_IS_EXTREME_SENTIMENT:
-      return { ...state, isExtremeSentiment: action.isExtremeSentiment };
+    case SET_SENTIMENT:
+      return { ...state, sentiment: action.sentiment };
 
     default:
       break;

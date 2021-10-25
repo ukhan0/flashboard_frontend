@@ -73,7 +73,7 @@ export default function TopicSuggestionsDialog(props) {
             <Grid item xs={12}>
               {filteredData.length > 0 && keyWord ? (
                 <h6 className="font-weight-bold font-size-lg mb-1 text-black">
-                  {keyWord.toLowerCase() === 'or' || keyWord.toLowerCase() === 'and' ? null : keyWord}
+                  {keyWord}
                 </h6>
               ) : null}
             </Grid>

@@ -37,7 +37,22 @@ const defaultColDef = {
   floatingFilter: true,
   suppressMenu: true,
   filterParams: { newRowsAction: 'keep' },
-  headerClass: ['allColumnHeader']
+  headerClass: ['allColumnHeader'],
+  wrapText: true,
+  headerComponentParams: {
+    template:
+      '<div class="ag-cell-label-container" role="presentation">' +
+      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+      '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
+      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+      '  </div>' +
+      '</div>'
+  }
 };
 
 const gridOptions = {
@@ -385,6 +400,10 @@ const WatchlistTable = props => {
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
     props.storeColumnsState(columnState);
+    var padding = 40;
+    var height = headerHeightGetter() + padding;
+    params.api.setHeaderHeight(height);
+    params.api.resetRowHeights();
   };
 
   const cellClicked = async params => {
@@ -405,10 +424,21 @@ const WatchlistTable = props => {
     WatchlistService.init(params.api, params.columnApi); // global service
     setGridApi(params.api);
   };
+  function headerHeightGetter() {
+    var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
+    var clientHeights = columnHeaderTexts.map(headerText => headerText.clientHeight);
+    var tallestHeaderTextHeight = Math.max(...clientHeights);
+
+    return tallestHeaderTextHeight;
+  }
 
   const handleFirstDataRendered = params => {
     const columnsState = props.columnsState;
     const filteringState = props.filteringState;
+    var padding = 40;
+    var height = headerHeightGetter() + padding;
+    params.api.setHeaderHeight(height);
+    params.api.resetRowHeights();
 
     if (columnsState && columnsState.length) {
       params.columnApi.applyColumnState({

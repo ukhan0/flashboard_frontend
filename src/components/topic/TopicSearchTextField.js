@@ -7,7 +7,10 @@ const TopicSearchTextField = props => {
   const { searchText } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const handleSearch = event => {
-    const value = event.target.value.replaceAll(' or ', ' OR ').replaceAll(' and ', ' AND ');
+    const regex = / or | and |/gi;
+    const value = event.target.value.replaceAll(regex, function(v) {
+      return v.toUpperCase();
+    });
 
     dispatch(setTopicSearchText(value));
     if (value === null || value === '' || searchText !== value) {

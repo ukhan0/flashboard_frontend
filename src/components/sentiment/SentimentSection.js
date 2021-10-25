@@ -72,7 +72,7 @@ const SentimentSection = props => {
     n: 100
   });
 
-  const { data, isLoading, selectedHeadingId, isApiResponseReceived, isExtremeSentiment } = useSelector(
+  const { data, isLoading, selectedHeadingId, isApiResponseReceived, sentiment } = useSelector(
     state => state.Sentiment
   );
   useEffect(() => {
@@ -253,7 +253,7 @@ const SentimentSection = props => {
   const parentClr = val => {
     var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
     let clr = rainbow.colourAt(pos);
-    if (isExtremeSentiment) {
+    if (sentiment === 'extremeSentiment') {
       if (val > 0.2 || val < -0.2) {
         return clr;
       } else {
@@ -261,19 +261,26 @@ const SentimentSection = props => {
         return 'FFFFFF';
       }
     }
+    if (sentiment === 'hide') {
+      return 'FFFFFF';
+    }
+
     return clr;
   };
   const childClr = val => {
     if (val) {
       var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
       let clr = rainbow.colourAt(pos);
-      if (isExtremeSentiment) {
+      if (sentiment === 'extremeSentiment') {
         if (val > 0.2 || val < -0.2) {
           return clr;
         } else {
           // return white
           return 'FFFFFF';
         }
+      }
+      if (sentiment === 'hide') {
+        return 'FFFFFF';
       }
       return clr;
     }
@@ -284,6 +291,7 @@ const SentimentSection = props => {
     processedData.id = createHash(d.path);
     if (d.content) {
       let newContent = removeHeadingTags(d.content);
+      newContent = `<span>${newContent}</span>`;
       const isHtml = isHtmlTag(newContent);
       if (!isHtml) {
         newContent = `<span>${newContent}</span>`;
@@ -330,9 +338,32 @@ const SentimentSection = props => {
                                         }}>
                                         {c.type === 'element' ? (
                                           <>
-                                            {c.elements ? (
-                                              <span className={classes.yellowClr}>{c.elements[0].text}</span>
-                                            ) : null}
+                                            {c.elements
+                                              ? c.elements.map((d, _e) => {
+                                                  return (
+                                                    <>
+                                                      {d.type === 'element'
+                                                        ? Array.isArray(d.elements)
+                                                          ? d.elements.map((g, k) => {
+                                                              return (
+                                                                <span
+                                                                  key={k}
+                                                                  style={{
+                                                                    backgroundColor: 'orange',
+                                                                    paddingLeft: 2,
+                                                                    paddingRight: 2,
+                                                                    borderRadius: 4
+                                                                  }}>
+                                                                  {g.text ? g.text : null}
+                                                                </span>
+                                                              );
+                                                            })
+                                                          : null
+                                                        : d.text}
+                                                    </>
+                                                  );
+                                                })
+                                              : null}
                                           </>
                                         ) : (
                                           c.text

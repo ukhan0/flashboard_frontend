@@ -7,10 +7,14 @@ import { setSearchBackdrop,setSearchBackdropHighlights } from '../../reducers/To
 import topicStyles from './leftSidebarStyles';
 import { connect } from 'react-redux';
 import { Sidebar, Header, Footer } from '../../layout-components';
+import { useLocation } from 'react-router-dom';
+import { get } from 'lodash';
 
 const LeftSidebar = props => {
   const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
   const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights, isCompanyClick } = useSelector(state => state.Topic);
+  const location = useLocation();
+
   const dispatch = useDispatch()
   const classes = topicStyles();
   const closeBackdrop = () => {
@@ -44,7 +48,12 @@ const LeftSidebar = props => {
             <div className="app-content--inner">
               <div className="app-content--inner__wrapper">{children}</div>
             </div>
-            <Footer />
+            {
+              get(location, 'pathname', null) !== '/comparision' ?
+                <Footer />
+                :
+                null
+            }
           </div>
         </div>
         <Backdrop className={classes.backdrop} open={showBackdrop}>

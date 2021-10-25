@@ -458,24 +458,58 @@ export const findSuggestions = () => {
       }
       // remove duplicated from suggestions
       let newSuggestions = removeDuplicateSuggestions(rawSuggestions);
+      delete newSuggestions['or'];
+      delete newSuggestions['OR'];
+      delete newSuggestions['and'];
+      delete newSuggestions['AND'];
+      delete newSuggestions['and/or'];
+
+      let filterNewSuggestions = {};
+
+      forEach(newSuggestions, (v, k) => {
+        let filteredData = v.filter(
+          item => item.indexOf('https') === -1 && item.indexOf(')') === -1 && item.indexOf('#') === -1
+        );
+
+        filterNewSuggestions[k] = filteredData.length > 0 ? filteredData : [];
+      });
 
       let newSelectedSuggestions = {};
       if (isEmpty(selectedSuggestions)) {
         let oneValueArray = [];
-        forEach(newSuggestions, (values, keyWord) => {
-          newSelectedSuggestions[keyWord] = [];
+        forEach(filterNewSuggestions, (values, keyWord) => {
+          if (values.length > 0) {
+            newSelectedSuggestions[keyWord] = [];
+          } else {
+            delete filterNewSuggestions[keyWord];
+          }
           if (values.length === 1) {
             oneValueArray.push(values[0]);
-            delete newSuggestions[keyWord];
+            delete filterNewSuggestions[keyWord];
           }
         });
         if (oneValueArray.length > 0) {
-          newSuggestions['May be of interest'] = oneValueArray;
+          filterNewSuggestions['May be of interest'] = oneValueArray;
           newSelectedSuggestions['May be of interest'] = [];
         }
-        dispatch(setSuggestionsWithSelections(newSuggestions, newSelectedSuggestions));
+
+        dispatch(setSuggestionsWithSelections(filterNewSuggestions, newSelectedSuggestions));
       } else {
-        dispatch(setSuggestions(newSuggestions));
+        let oneValueArray = [];
+        forEach(filterNewSuggestions, (values, keyWord) => {
+          if (values.length === 0) {
+            delete filterNewSuggestions[keyWord];
+          }
+          if (values.length === 1) {
+            oneValueArray.push(values[0]);
+            delete filterNewSuggestions[keyWord];
+          }
+        });
+        if (oneValueArray.length > 0) {
+          filterNewSuggestions['May be of interest'] = oneValueArray;
+        }
+
+        dispatch(setSuggestions(filterNewSuggestions));
       }
       dispatch(setSuggestionsIsLoading(false));
     } catch (error) {

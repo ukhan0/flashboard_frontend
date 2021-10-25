@@ -79,6 +79,7 @@ const TopicSearchResults = () => {
   const [companyResults, setCompanyResults] = useState([]);
   const [companyDetails, setCompanyDetails] = useState({});
   const [summaryByCompany, setSummaryByCompany] = useState([]);
+  const searchRegex = / data/gi;
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
     const companyNames = uniqBy(allComapnyResults, 'company_name');
@@ -228,7 +229,7 @@ const TopicSearchResults = () => {
                                     classes.line,
                                     'font-size-mg mb-2 text-black-50'
                                   )}
-                                  dangerouslySetInnerHTML={{ __html: content }}
+                                  dangerouslySetInnerHTML={{ __html: content.replaceAll(searchRegex, '') }}
                                   onClick={() => goToSentimentScreen(companyResult, content, result.title)}></p>
                               ))}
                             </div>

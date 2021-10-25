@@ -13,3 +13,23 @@ export const metricsSelection = [
   { label: 'Risk', key: 'rf' },
   { label: 'Notes', key: 'notes' }
 ];
+export const sentimentTypes = [
+  { label: 'Hide', key: 'hide' },
+  { label: 'Visible', key: 'visible' },
+  { label: 'Extreme Only', key: 'extremeSentiment' }
+];
+
+export const comparisionDifferenceTypes = [
+  { label: 'All', key: 0 },
+  { label: 'Significant', key: 15 },
+  { label: 'New Sections Only', key: 100 }
+];
+
+export const comparisionMethodTypes = [
+  { label: 'Textual', key: 'text' },
+  { label: 'Word Count', key: 'wordcount' }
+];
+export const comparisionViewTypes = [
+  { label: 'All', key: 'all' },
+  { label: 'New Sections Only', key: 'New Section ' }
+];

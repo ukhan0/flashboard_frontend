@@ -39,7 +39,7 @@ export default function TopicSavedSearchesDropDown() {
               horizontal: 'right'
             }}>
             <div className="overflow-hidden dropdown-menu-xl">
-              <PerfectScrollbar className="scroll-area shadow-overflow">
+              <PerfectScrollbar className="scroll-area">
                 <List className="nav-danger nav-pills flex-column p-3">
                   <TopicSearchHistory handleClose={handleClose} />
                 </List>

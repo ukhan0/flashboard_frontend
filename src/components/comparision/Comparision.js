@@ -1,33 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
-import ComparisionCompanyDetail from './ComparisionCompanyDetails';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles(theme => ({
-  companyDetail: {
-    position: 'sticky',
-
-    marginLeft: '14px',
-    marginRight: '14px',
-    top: 50
-  },
-  backButton: {
-    marginBottom: '15px',
-    marginLeft: '5px'
-  }
-}));
+import SideSetting from './ComparisionSideBar';
 
 const Comparision = props => {
-  const classes = useStyles();
+  const [comparisionDifference, setComparisionDifference] = useState(0);
+  const [comparisionMethod, setComparisionMethod] = useState('text');
   const { selectedItem, selectedMetric, selectedFileType } = props;
+
   let metricQueryParam = '';
   const history = useHistory();
   if (!selectedItem) {
     history.push('/watchlist');
   }
+  const handleComparisionMethod = method => {
+    setComparisionMethod(method);
+  };
+  const handleComparisionDifference = diff => {
+    setComparisionDifference(diff);
+  };
   switch (selectedMetric) {
     case 'mda':
       metricQueryParam =
@@ -49,30 +42,21 @@ const Comparision = props => {
       break;
   }
 
-  // const goBack = () => {
-  //   history.goBack();
-  // };
-
   return (
     <>
-      {/* <Button
-        className={classes.backButton}
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          goBack();
-        }}>
-        Back
-      </Button> */}
-      <div className={classes.companyDetail}>
-        <ComparisionCompanyDetail selectedItem={selectedItem} />
-      </div>
+      <SideSetting
+        handleComparisionDifference={handleComparisionDifference}
+        handleComparisionMethod={handleComparisionMethod}
+        comparisionDifference={comparisionDifference}
+        comparisionMethod={comparisionMethod}
+      />
+
       {selectedItem ? (
         <iframe
-          src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}`}
+          src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
           title="Comparision"
           width="100%"
-          height={`${window.innerHeight - 270}px`}
+          height={`${window.innerHeight - 90}px`}
           samesite="None"
           frameBorder="0"
           id="comparisionResult"
