@@ -142,21 +142,23 @@ const TopicSearchResults = () => {
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSentimentResult(null));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
+    const companyId = get(companyDocumentResultData, 'company_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
     const ticker = get(companyDocumentResultData, 'ticker', null);
     const companiesList = getCompleteWatchlist() || [];
     let company = companiesList.find(c => toLower(c.ticker) === toLower(ticker));
     const recentId = fileId.toString().replace('9000', '');
-
     if (company) {
       company = formatComapnyData(company);
       company.recentId = recentId;
+      company.ticker = ticker;
       company.documentType = documentType;
       company.last = documentDate;
+      company.companyId = companyId;
       dispatch(setSelectedWatchlist(company));
     } else {
-      dispatch(setSelectedWatchlist({ recentId: recentId }));
+      dispatch(setSelectedWatchlist({ recentId: recentId, companyId: companyId, ticker: ticker }));
     }
     history.push('/sentiment');
   };

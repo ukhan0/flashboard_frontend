@@ -1,8 +1,16 @@
 import { filingsData } from './filingsMockData';
 
+export const SET_COMPANY_FILLING_DATA = 'FILLING/SET_COMPANY_FILLING_DATE ';
+
+export const setCompanyFillingData = companyFillingData => ({
+  type: SET_COMPANY_FILLING_DATA,
+  companyFillingData
+});
+
 const getDefaultState = () => {
   return {
-    filingsData: filingsData
+    filingsData: filingsData,
+    fillingsData: []
   };
 };
 
@@ -13,6 +21,8 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
+    case SET_COMPANY_FILLING_DATA:
+      return { ...state, fillingsData: action.companyFillingData };
     default:
       break;
   }

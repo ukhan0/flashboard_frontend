@@ -3,7 +3,6 @@ import { Grid, Card, LinearProgress, Divider } from '@material-ui/core';
 import Chart from 'react-apexcharts';
 
 const SentimentCompanyDetails = props => {
-
   const chart5Options = {
     chart: {
       toolbar: {
@@ -36,17 +35,7 @@ const SentimentCompanyDetails = props => {
     legend: {
       show: false
     },
-    labels: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-      'Last week',
-      'Last month'
-    ]
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Last week', 'Last month']
   };
 
   const chart5Data = [

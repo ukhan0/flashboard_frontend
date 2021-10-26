@@ -1,54 +1,97 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { useHistory } from 'react-router-dom';
+
+import moment from 'moment';
 
 const columnDefs = [
   {
     headerName: 'Document Type',
-    field: 'documentType',
+    field: 'document_type',
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 2,
-    colId: 'companyType',
+    flex: 1,
+    colId: 'documentType'
+  },
+
+  {
+    headerName: 'Document Id',
+    field: 'document_id',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'documentId'
+  },
+
+  {
+    headerName: 'Document Date',
+    field: 'document_date',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'documentDate',
+    valueFormatter: params => moment(params.data.period_date).format('DD MMMM, YYYY')
   },
   {
     headerName: 'Period Date',
-    field: 'periodDate',
+    field: 'period_date',
     menuTabs: false,
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'periodDate'
+    colId: 'periodDate',
+    valueFormatter: params => moment(params.data.period_date).format('DD MMMM, YYYY')
+  },
+
+  {
+    headerName: 'Industry',
+    field: 'industry',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'industry'
   },
   {
-    headerName: 'Posted Date',
-    field: 'postedDate',
+    headerName: 'Sector',
+    field: 'sector',
     menuTabs: false,
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'postedDate'
+    colId: 'sector'
   }
 ];
 
 export default function FilingsResultsTable() {
-  const { filingsData } = useSelector(
-    state => state.Filings
-  );
-  
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { fillingsData } = useSelector(state => state.Filings);
+  const cellClicked = async params => {
+    if (params.data) {
+      dispatch(setSelectedWatchlist({ recentId: params.data.document_id }));
+      history.push('/sentiment');
+    }
+  };
+
   return (
-      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-          <AgGridReact
-            rowSelection="single"
-            domLayout='autoHeight'
-            rowData={filingsData}
-            columnDefs={columnDefs}
-            suppressCellSelection={true}
-            multiSortKey={'ctrl'}></AgGridReact>
-      </div>
+    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+      <AgGridReact
+        rowSelection="single"
+        domLayout="autoHeight"
+        rowData={fillingsData}
+        columnDefs={columnDefs}
+        suppressCellSelection={true}
+        onCellClicked={cellClicked}
+        multiSortKey={'ctrl'}></AgGridReact>
+    </div>
   );
 }

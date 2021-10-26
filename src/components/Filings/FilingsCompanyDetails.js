@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'uppercase'
   },
   paper: {
-    padding: 10,
+    padding: 10
   }
 }));
 

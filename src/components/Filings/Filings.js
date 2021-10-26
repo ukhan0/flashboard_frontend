@@ -1,12 +1,11 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import FilingsCompanyDetails from './FilingsCompanyDetails';
 import FilingsResultsTable from './FilingsResultsTable';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
 import FilingsCards from '../sentiment/SentimentCard';
-
+import { getCompanyFilingListing } from './FillingAction';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 70,
@@ -20,9 +19,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Filings = () => {
+  const dispatch = useDispatch();
   const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
   const history = useHistory();
+
+  useEffect(() => {
+    dispatch(getCompanyFilingListing());
+  }, [dispatch]);
 
   if (!selectedItem) {
     history.push('/watchlist');
@@ -30,9 +34,6 @@ const Filings = () => {
 
   return selectedItem ? (
     <div>
-      <div className={classes.companyDetail}>
-        <FilingsCompanyDetails />
-      </div>
       <div>
         <FilingsCards />
       </div>
