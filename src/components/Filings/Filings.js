@@ -6,6 +6,7 @@ import FilingsResultsTable from './FilingsResultsTable';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
 import FilingsCards from '../sentiment/SentimentCard';
 import { getCompanyFilingListing } from './FillingAction';
+import FilingsCompanyDetails from './FilingsCompanyDetails';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 70,
@@ -34,6 +35,9 @@ const Filings = () => {
 
   return selectedItem ? (
     <div>
+      <div className={classes.companyDetail}>
+        <FilingsCompanyDetails />
+      </div>
       <div>
         <FilingsCards />
       </div>

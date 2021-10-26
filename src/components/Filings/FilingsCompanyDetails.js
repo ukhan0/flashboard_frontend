@@ -25,29 +25,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentCompanyDetails = props => {
-  const { selectedItem } = useSelector(state => state.Watchlist);
-  const { data } = useSelector(state => state.Sentiment);
+  const { fillingsData } = useSelector(state => state.Filings);
   const classes = useStyles();
+  const companyDetail = get(fillingsData, '[0]', []);
 
   return (
     <Fragment>
       <Paper className={clsx('app-page-title')}>
         <Box className={classes.tickerLogo} mr={2}>
-          <Avatar alt="-" src={`${config.companyLogoPath}${selectedItem.ticker}.png`} className={classes.logo} />
+          <Avatar
+            alt="-"
+            src={`${config.companyLogoPath}${get(companyDetail, 'ticker', null)}.png`}
+            className={classes.logo}
+          />
         </Box>
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <h5>{get(data, 'company_name', null)}</h5>
-              </Grid>
-            </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
-                <label className="text-black-50 d-block">{`DocumentType:`}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <h6 className={classes.upperCase}>{get(data, 'document_type', null)}</h6>
+                <h5>{get(companyDetail, 'company_name', null)}</h5>
               </Grid>
             </Grid>
           </Grid>
@@ -57,15 +53,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Sector:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'sector', null)}</h6>
-              </Grid>
-            </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
-                <label className="text-black-50 d-block">{'Period Date:'}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <h6>{data ? new Date(get(data, 'completed_ts', null)).toLocaleDateString() : null}</h6>
+                <h6>{get(companyDetail, 'sector', null)}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -75,15 +63,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Industry:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(selectedItem, 'industry', null)}</h6>
-              </Grid>
-            </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
-                <label className="text-black-50 d-block">{'Publish Date:'}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <h6>{data ? new Date(get(data, 'document_date', null)).toLocaleDateString() : null}</h6>
+                <h6>{get(companyDetail, 'industry', null)}</h6>
               </Grid>
             </Grid>
           </Grid>
