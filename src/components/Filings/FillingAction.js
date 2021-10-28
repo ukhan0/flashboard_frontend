@@ -13,7 +13,7 @@ export const getCompanyFilingListing = () => {
     }
     try {
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_listing/?${companyId ? `company_id=${companyId}` : `ticker=${ticker}`}`
+        `${config.apiUrl}/api/get_company_filing_listing?${companyId ? `company_id=${companyId}` : `ticker=${ticker}`}`
       );
 
       const data = get(response, 'data', []);

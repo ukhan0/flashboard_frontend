@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 export const SET_FILE_TYPE = 'WATCHLIST/SET_FILE_TYPE';
 export const SET_UNIVERSE = 'WATCHLIST/SET_UNIVERSE';
 export const SET_METRIC = 'WATCHLIST/SET_METRIC';
@@ -99,12 +100,18 @@ const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
 };
+const getWatchlistSettings = () => {
+  const watchlistSettings = JSON.parse(localStorage.getItem('watchlistSetting'));
+  return watchlistSettings;
+};
 const getDefaultState = () => {
   const user = getUser();
+  const watchlistSetting = getWatchlistSettings();
+
   return {
-    selectedFileType: '10q',
-    selectedUniverse: 'watchlist',
-    selectedMetric: 'totdoc',
+    selectedFileType: !isEmpty(watchlistSetting) ? watchlistSetting.selectedFileType : '10q',
+    selectedUniverse: !isEmpty(watchlistSetting) ? watchlistSetting.selectedUniverse : 'watchlist',
+    selectedMetric: !isEmpty(watchlistSetting) ? watchlistSetting.selectedMetric : 'totdoc',
     searchText: '',
     selectedTab: 0,
     count: 0,

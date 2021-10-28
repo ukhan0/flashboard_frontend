@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, ButtonGroup, Button, Switch, Typography } from '@material-ui/core';
 import {
   setWatchlistFileType,
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
-import { getUser, saveUser } from './WatchlistHelpers';
+import { getUser, saveUser, saveWatchlistSettings } from './WatchlistHelpers';
 
 const WatchlistFilters = props => {
   const {
@@ -64,6 +64,14 @@ const WatchlistFilters = props => {
     user.send_watchlist_alert_email = status;
     saveUser(user);
   };
+  useEffect(() => {
+    const setting = {
+      selectedFileType: selectedFileType,
+      selectedUniverse: selectedUniverse,
+      selectedMetric: selectedMetric
+    };
+    saveWatchlistSettings(setting);
+  }, [selectedMetric, selectedUniverse, selectedFileType]);
 
   return (
     <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>

@@ -23,6 +23,7 @@ import TickerLogo from './WatchlistTableComponents/TickerLogo';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
+import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -394,7 +395,7 @@ const colDefs = [
 
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const { searchText } = useSelector(state => state.Watchlist);
+  const { searchText, selectedMetric } = useSelector(state => state.Watchlist);
   const [gridApi, setGridApi] = useState(null);
   let getQueryParams = new URLSearchParams(useLocation().search);
   const storeColumnsState = params => {
@@ -408,6 +409,14 @@ const WatchlistTable = props => {
 
   const cellClicked = async params => {
     if (params.data) {
+      let comparisionSection = getComparisionSettings();
+
+      if (comparisionSection) {
+        comparisionSection.comparisionSection = selectedMetric;
+      }
+
+      saveComparisionSettings(comparisionSection);
+
       dispatch(setSidebarToggle(true));
       dispatch(setSidebarToggleMobile(true));
       props.onColumnClick(params.data, params.column.colId);

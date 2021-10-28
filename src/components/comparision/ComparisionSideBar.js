@@ -51,8 +51,10 @@ const ComparisionSideBar = props => {
         <ComparisionFilters
           handleComparisionMethod={props.handleComparisionMethod}
           handleComparisionDifference={props.handleComparisionDifference}
+          handleComparisionSection={props.handleComparisionSection}
           comparisionDifference={props.comparisionDifference}
           comparisionMethod={props.comparisionMethod}
+          comparisionSection={props.comparisionSection}
         />
       </Drawer>
     </Box>

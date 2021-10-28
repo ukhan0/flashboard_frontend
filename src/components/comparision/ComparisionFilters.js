@@ -5,15 +5,10 @@ import { Grid, Switch, Typography } from '@material-ui/core';
 import { Box, ButtonGroup, Button } from '@material-ui/core';
 
 import { metricsSelection, comparisionMethodTypes, comparisionDifferenceTypes } from '../../config/filterTypes';
-import { setWatchlistMetric } from '../../reducers/Watchlist';
-import { useDispatch, useSelector } from 'react-redux';
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const ComparisionFilters = props => {
-  const dispatch = useDispatch();
-
-  const { selectedMetric } = useSelector(state => state.Watchlist);
   return (
     <Box p={0} className="theme-config-content">
       <PerfectScrollbar>
@@ -21,7 +16,7 @@ const ComparisionFilters = props => {
           Comparison Preference
         </Typography>
 
-        <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
+        <Grid container direction="column" justify="flex-start" alignItems="flex-start">
           <Grid item>
             <div className="text-black-50 opacity-6" style={{ paddingTop: '10px' }}>
               Section
@@ -33,8 +28,8 @@ const ComparisionFilters = props => {
                 <Button
                   size="small"
                   key={`met_${i}`}
-                  onClick={() => dispatch(setWatchlistMetric(metric.key))}
-                  variant={selectedMetric === metric.key ? 'contained' : 'outlined'}>
+                  onClick={() => props.handleComparisionSection(metric.key)}
+                  variant={props.comparisionSection === metric.key ? 'contained' : 'outlined'}>
                   {metric.label}
                 </Button>
               ))}
@@ -79,7 +74,7 @@ const ComparisionFilters = props => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+        <Grid container direction="row" justify="flex-start" alignItems="center">
           <Grid item>
             <Typography color="primary">Enable Email Alert</Typography>
           </Grid>

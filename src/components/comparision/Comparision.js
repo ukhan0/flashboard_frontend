@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
-import SideSetting from './ComparisionSideBar';
+import SideBarSetting from './ComparisionSideBar';
+import { getComparisionSettings, saveComparisionSettings } from './ComparisionHelper';
 
 const Comparision = props => {
-  const [comparisionDifference, setComparisionDifference] = useState(0);
-  const [comparisionMethod, setComparisionMethod] = useState('text');
-  const { selectedItem, selectedMetric, selectedFileType } = props;
+  const [comparisionDifference, setComparisionDifference] = useState(
+    getComparisionSettings() ? getComparisionSettings().comparisionDifference : 0
+  );
+
+  const [comparisionMethod, setComparisionMethod] = useState(
+    getComparisionSettings() ? getComparisionSettings().comparisionMethod : 'text'
+  );
+  const [comparisionSection, setComparisionSection] = useState(
+    getComparisionSettings() ? getComparisionSettings().comparisionSection : 'totdoc'
+  );
+  const { selectedItem, selectedFileType } = props;
 
   let metricQueryParam = '';
   const history = useHistory();
@@ -21,7 +30,19 @@ const Comparision = props => {
   const handleComparisionDifference = diff => {
     setComparisionDifference(diff);
   };
-  switch (selectedMetric) {
+  const handleComparisionSection = section => {
+    setComparisionSection(section);
+  };
+  useEffect(() => {
+    const comparisonSetting = {
+      comparisionSection: comparisionSection,
+      comparisionDifference: comparisionDifference,
+      comparisionMethod: comparisionMethod
+    };
+
+    saveComparisionSettings(comparisonSetting);
+  }, [comparisionDifference, comparisionMethod, comparisionSection]);
+  switch (comparisionSection) {
     case 'mda':
       metricQueryParam =
         selectedFileType === '10k' ? 'partHeadingTag=P2&itemHeadingTag=I7' : 'partHeadingTag=P1&itemHeadingTag=I2';
@@ -44,11 +65,13 @@ const Comparision = props => {
 
   return (
     <>
-      <SideSetting
+      <SideBarSetting
         handleComparisionDifference={handleComparisionDifference}
         handleComparisionMethod={handleComparisionMethod}
+        handleComparisionSection={handleComparisionSection}
         comparisionDifference={comparisionDifference}
         comparisionMethod={comparisionMethod}
+        comparisionSection={comparisionSection}
       />
 
       {selectedItem ? (
