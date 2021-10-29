@@ -318,53 +318,59 @@ const SentimentSection = props => {
               }}
               id={d.id}>
               {d.content ? (
-                <div
-                  style={{
-                    backgroundColor: '#' + parentClr(d.newData.attributes ? d.newData.attributes.v : 0)
-                  }}>
+                <div>
                   {d.newData.elements
                     ? d.newData.elements[0].elements.map((a, indexx) => {
                         return (
-                          <div key={indexx}>
+                          <div
+                            key={indexx}
+                            style={{
+                              backgroundColor: '#' + parentClr(0)
+                              // backgroundColor: '#' + parentClr(a.attributes ? (a.attributes.v ? a.attributes.v : 0) : 0)
+                            }}>
                             {a.elements
                               ? Array.isArray(a.elements)
                                 ? a.elements.map((c, i) => {
                                     return (
-                                      <span
-                                        key={i}
-                                        className={clsx(classes.content, classes.searchResultText)}
-                                        style={{
-                                          backgroundColor: '#' + childClr(a.attributes ? a.attributes.v : 0)
-                                        }}>
+                                      <span key={i}>
                                         {c.type === 'element' ? (
-                                          <>
+                                          <span
+                                            className={clsx(classes.content, classes.searchResultText)}
+                                            style={{
+                                              backgroundColor: '#' + childClr(c.attributes ? c.attributes.v : 0)
+                                            }}>
                                             {c.elements
-                                              ? c.elements.map((d, _e) => {
+                                              ? c.elements.map((d, e) => {
                                                   return (
                                                     <>
-                                                      {d.type === 'element'
-                                                        ? Array.isArray(d.elements)
-                                                          ? d.elements.map((g, k) => {
-                                                              return (
-                                                                <span
-                                                                  key={k}
-                                                                  style={{
-                                                                    backgroundColor: 'orange',
-                                                                    paddingLeft: 2,
-                                                                    paddingRight: 2,
-                                                                    borderRadius: 4
-                                                                  }}>
-                                                                  {g.text ? g.text : null}
-                                                                </span>
-                                                              );
-                                                            })
-                                                          : null
-                                                        : d.text}
+                                                      {d.type === 'element' ? (
+                                                        Array.isArray(d.elements) ? (
+                                                          d.elements.map((g, k) => {
+                                                            return (
+                                                              <span
+                                                                key={k}
+                                                                style={{
+                                                                  backgroundColor: 'orange',
+                                                                  paddingLeft: 2,
+                                                                  paddingRight: 2,
+                                                                  borderRadius: 4
+                                                                }}>
+                                                                {g.text ? g.text : null}
+                                                              </span>
+                                                            );
+                                                          })
+                                                        ) : null
+                                                      ) : (
+                                                        <>
+                                                          {d.text}
+                                                          <br />
+                                                        </>
+                                                      )}
                                                     </>
                                                   );
                                                 })
                                               : null}
-                                          </>
+                                          </span>
                                         ) : (
                                           c.text
                                         )}
