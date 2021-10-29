@@ -5,17 +5,18 @@ import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import SideBarSetting from './ComparisionSideBar';
 import { getComparisionSettings, saveComparisionSettings } from './ComparisionHelper';
+import { get } from 'lodash';
 
 const Comparision = props => {
   const [comparisionDifference, setComparisionDifference] = useState(
-    getComparisionSettings() ? getComparisionSettings().comparisionDifference : 0
+    get(getComparisionSettings(), 'comparisionDifference', 0)
   );
 
   const [comparisionMethod, setComparisionMethod] = useState(
-    getComparisionSettings() ? getComparisionSettings().comparisionMethod : 'text'
+    get(getComparisionSettings(), 'comparisionMethod', 'text')
   );
   const [comparisionSection, setComparisionSection] = useState(
-    getComparisionSettings() ? getComparisionSettings().comparisionSection : 'totdoc'
+    get(getComparisionSettings(), 'comparisionSection', 'totdoc')
   );
   const { selectedItem, selectedFileType } = props;
 

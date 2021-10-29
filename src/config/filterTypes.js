@@ -21,7 +21,7 @@ export const sentimentTypes = [
 
 export const comparisionDifferenceTypes = [
   { label: 'All', key: 0 },
-  { label: 'Significant', key: 15 },
+  { label: 'Significant', key: 25 },
   { label: 'New Sections Only', key: 100 }
 ];
 

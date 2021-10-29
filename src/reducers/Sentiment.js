@@ -1,3 +1,4 @@
+import { getSentimentSettings } from '../components/sentiment/SentimentHelper';
 export const SET_SENTIMENT_RESULT = 'SENTIMENT/SET_SENTIMENT_RESPONSE_DATA';
 export const SET_SEARCH_ID = 'SENTIMENT/SET_SEARCH_ID';
 export const SET_CARD_GRAPH_DATA = 'SENTIMENT/SET_GRAPH_DATA';
@@ -91,7 +92,7 @@ const getDefaultState = () => {
     isTocButton: true,
     currentToc: false,
     isApiResponseReceived: false,
-    sentiment: 'visible'
+    sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible'
   };
 };
 

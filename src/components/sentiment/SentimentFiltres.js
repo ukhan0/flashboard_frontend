@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ButtonGroup, Button } from '@material-ui/core';
 import { sentimentTypes } from '../../config/filterTypes';
 import { useSelector, useDispatch } from 'react-redux';
-
+import {  saveSentimentSettings } from './SentimentHelper';
 import { setSentimentFilters } from '../../reducers/Sentiment';
 
 const SentimentFilters = () => {
@@ -13,6 +13,10 @@ const SentimentFilters = () => {
   const handleClickSentimentType = s => {
     dispatch(setSentimentFilters(s));
   };
+  useEffect(() => {
+    saveSentimentSettings(sentiment);
+  }, [sentiment]);
+
   return (
     <>
       <ButtonGroup color="primary">

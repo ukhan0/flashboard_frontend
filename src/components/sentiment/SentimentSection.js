@@ -249,7 +249,7 @@ const SentimentSection = props => {
   }, [selectedHeadingId, props]);
 
   const rainbow = new Rainbow();
-  rainbow.setSpectrum('red', 'red', 'white', 'green', 'green');
+  rainbow.setSpectrum('#ff2a2a', '#ff2a2a', 'white', '#89ff89', '#89ff89');
   const parentClr = val => {
     var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
     let clr = rainbow.colourAt(pos);

@@ -12,6 +12,7 @@ import { ClipLoader } from 'react-spinners';
 import { fileTypesSelection, universeSelection, metricsSelection } from '../../config/filterTypes';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
 import { getUser, saveUser, saveWatchlistSettings } from './WatchlistHelpers';
+import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 
 const WatchlistFilters = props => {
   const {
@@ -20,7 +21,8 @@ const WatchlistFilters = props => {
     selectedMetric,
     completeDataLoaded,
     cancelExistingDocumentTypeCalls,
-    isEmailAlertEnable
+    isEmailAlertEnable,
+    selectedItem
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
@@ -57,6 +59,14 @@ const WatchlistFilters = props => {
       dispatch(setIsWatchlistEmailAlertEnable(false));
     }
     dispatch(updateWatchlistEmailAlertStatus());
+  };
+  const handleClickWatchlistMetric = metric => {
+    dispatch(setWatchlistMetric(metric));
+    if (selectedItem) {
+      let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
+      comparisionSection.comparisionSection = metric;
+      saveComparisionSettings(comparisionSection);
+    }
   };
 
   const updateUserLocalStorage = status => {
@@ -116,7 +126,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`met_${i}`}
-              onClick={() => dispatch(setWatchlistMetric(metric.key))}
+              onClick={() => handleClickWatchlistMetric(metric.key)}
               variant={selectedMetric === metric.key ? 'contained' : 'outlined'}>
               {metric.label}
             </Button>

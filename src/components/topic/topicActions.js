@@ -328,6 +328,7 @@ const createSearchSaveMiniPayload = topicState => {
       searchFroms.push(`sma_data_json.${section}`);
     });
   });
+
   const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText;
   return {
     selectedSuggestions: topicState.selectedSuggestions,
@@ -341,6 +342,8 @@ const createSearchSaveMiniPayload = topicState => {
     universe: topicState.selectedUniverse,
     section: topicState.selectedSection,
     searchFrom: searchFroms,
+    simpleSearchTextArray: !topicState.isSimpleSearch ? [] : topicState.simpleSearchTextArray,
+    isSimpleSearch: topicState.isSimpleSearch,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     company_arr:
       topicState.selectedWatchlistCompanyNames.length !== 0 ? topicState.selectedWatchlistCompanyNames : undefined

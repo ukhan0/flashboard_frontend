@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import Dialog from '../shared/dialog';
 import TopicHelpPopupContent from './TopicHelpPopupContent';
@@ -17,12 +16,15 @@ export default function TopicHelpPopup() {
 
   return (
     <div>
-      <Button
+      <ContactSupportIcon
+        style={{ cursor: 'pointer' }}
         onClick={() => {
           handleClickOpen();
-        }}>
-        <ContactSupportIcon variant="outlined" color="primary" />
-      </Button>
+        }}
+        variant="outlined"
+        color="primary"
+      />
+
       <Dialog
         titleVariant={'h4'}
         titleColor={'black'}

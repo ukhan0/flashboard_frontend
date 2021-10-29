@@ -409,14 +409,9 @@ const WatchlistTable = props => {
 
   const cellClicked = async params => {
     if (params.data) {
-      let comparisionSection = getComparisionSettings();
-
-      if (comparisionSection) {
-        comparisionSection.comparisionSection = selectedMetric;
-      }
-
+      let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
+      comparisionSection.comparisionSection = selectedMetric;
       saveComparisionSettings(comparisionSection);
-
       dispatch(setSidebarToggle(true));
       dispatch(setSidebarToggleMobile(true));
       props.onColumnClick(params.data, params.column.colId);

@@ -2,7 +2,8 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchText, resetSuggestions } from '../../reducers/Topic';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TopicHelpPopup from './TopicHelpPopup';
 const TopicSearchTextField = props => {
   const { searchText } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
@@ -28,6 +29,13 @@ const TopicSearchTextField = props => {
         handleSearch(e);
       }}
       variant="outlined"
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <TopicHelpPopup />
+          </InputAdornment>
+        )
+      }}
     />
   );
 };

@@ -15,21 +15,10 @@ const columnDefs = [
     field: 'document_type',
     menuTabs: false,
     editable: false,
-    sortable: true,
+    sortable: false,
     flex: 1,
     colId: 'documentType'
   },
-
-  {
-    headerName: 'Document Id',
-    field: 'document_id',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'documentId'
-  },
-
   {
     headerName: 'Document Date',
     field: 'document_date',
@@ -45,29 +34,10 @@ const columnDefs = [
     field: 'period_date',
     menuTabs: false,
     editable: false,
-    sortable: true,
+    sortable: false,
     flex: 1,
     colId: 'periodDate',
     valueFormatter: params => moment(params.data.period_date).format('DD MMMM, YYYY')
-  },
-
-  {
-    headerName: 'Industry',
-    field: 'industry',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'industry'
-  },
-  {
-    headerName: 'Sector',
-    field: 'sector',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'sector'
   }
 ];
 

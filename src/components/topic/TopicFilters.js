@@ -9,7 +9,7 @@ import TopicUniverseSubFilters from './TopicUniverseSubFilters';
 import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 import { forEach, concat } from 'lodash';
-import TopicHelpPopup from './TopicHelpPopup';
+import TopicSearchTextTags from './TopicSearchTextInputTags';
 import {
   updateSaveSearch,
   handleSaveSearch,
@@ -20,7 +20,9 @@ import {
   setOpenTopicSearchDialog,
   resetResultsPage,
   cancelExistingHightlightsCalls,
-  setIsTopicEmailAlertEnable
+  setIsTopicEmailAlertEnable,
+  setTopicSearchText,
+  setIsSimpleSearch
 } from '../../reducers/Topic';
 import TopicSeachLabelTextField from './TopicSearchLabelTextField';
 
@@ -61,8 +63,10 @@ const TopicFilters = props => {
     selectedSearch,
     cancelTokenSourceHighlights,
     isTopicEmailAlertEnable,
-    searchLabel
+    searchLabel,
+    isSimpleSearch
   } = useSelector(state => state.Topic);
+  
   const handleUpdateSaveSearch = searchId => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
@@ -99,6 +103,14 @@ const TopicFilters = props => {
     }
   };
 
+  const handleSearchFieldType = () => {
+    dispatch(setTopicSearchText(''));
+    if (!isSimpleSearch) {
+      dispatch(setIsSimpleSearch(true));
+    } else {
+      dispatch(setIsSimpleSearch(false));
+    }
+  };
   const isButtonActive = !(searchText.length > 2 && searchLabel.length > 2);
 
   return (
@@ -112,21 +124,20 @@ const TopicFilters = props => {
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={8}>
-                <h6>Theme Name</h6>
-                <div style={{ marginBottom: '15px' }}>
-                  <TopicSeachLabelTextField />
-                </div>
+            <h6>Theme Name</h6>
+            <div style={{ marginBottom: '15px' }}>
+              <TopicSeachLabelTextField />
+            </div>
           </Grid>
 
-        <Grid item xs={4}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <div>
-              <h6 className={classes.dateRange}>Date Range</h6>
-              <TopicRangePicker />
+          <Grid item xs={4}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <div>
+                <h6 className={classes.dateRange}>Date Range</h6>
+                <TopicRangePicker />
               </div>
-          </div>
-        </Grid>
-      
+            </div>
+          </Grid>
         </Grid>
         <h6>Search Terms</h6>
         <div className={classes.searchContainer}>
@@ -135,10 +146,20 @@ const TopicFilters = props => {
               <Grid item xs={12}>
                 <Grid container>
                   <Grid item xs={10}>
-                    <TopicSearchTextField />
+                    <div style={{ marginRight: '20px' }}>
+                      {isSimpleSearch ? <TopicSearchTextTags /> : <TopicSearchTextField />}
+                    </div>
                   </Grid>
                   <Grid item xs={2}>
-                    <TopicHelpPopup />
+                    {/* <TopicHelpPopup /> */}
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        handleSearchFieldType();
+                      }}>
+                      {isSimpleSearch ? 'Advanced' : 'Simple'}
+                    </Button>
                   </Grid>
                 </Grid>
                 <div className={classes.selectedSuggestionsList}>
@@ -166,7 +187,7 @@ const TopicFilters = props => {
         <h6>Document Types</h6>
         <TopicDocumentTypeDropdown />
       </Grid>
-      
+
       <Grid item xs={12}>
         <h6>Search Universe</h6>
         <TopicUniverseGroup />
@@ -175,7 +196,7 @@ const TopicFilters = props => {
         <TopicUniverseSubFilters />
       </Grid>
       <Grid item xs={12}>
-        <h6 >Section</h6>
+        <h6>Section</h6>
         <TopicSectionGroup />
       </Grid>
       <Grid item xs={12}>

@@ -48,6 +48,8 @@ export const SET_HEADING_REDIRECT = 'TOPIC/SET_HEADING_REDIRECT ';
 export const IS_DATE_SET = 'TOPIC/IS_DATE_SET ';
 export const SET_IS_FROM_SIDE_BAR = 'TOPIC/SET_IS_FROM_SIDE_BAR';
 export const SET_IS_TOPIC_EMAIL_ALERT_ENABLE = 'TOPIC/SET_IS_TOPIC_EMAIL_ALERT_ENABLE';
+export const SET_IS_SIMPLE_SEARCH = 'TOPIC/SET_IS_SIMPLE_SEARCH';
+export const SET_SIMPLE_SEARCH_TEXT_ARRAY = 'TOPIC/SET_SIMPLE_SEARCH_TEXT_ARRAY';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -279,6 +281,15 @@ export const setIsTopicEmailAlertEnable = isTopicEmailAlertEnable => ({
   type: SET_IS_TOPIC_EMAIL_ALERT_ENABLE,
   isTopicEmailAlertEnable
 });
+export const setIsSimpleSearch = isSimpleSearch => ({
+  type: SET_IS_SIMPLE_SEARCH,
+  isSimpleSearch
+});
+
+export const setSimpleSearchTextArray = simpleSearchTextArray => ({
+  type: SET_SIMPLE_SEARCH_TEXT_ARRAY,
+  simpleSearchTextArray
+});
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -294,6 +305,8 @@ const searchDefaultState = () => ({
   selectedWatchlistCompanyNames: [],
   isTopicEmailAlertEnable: true,
   searchLabel: '',
+  isSimpleSearch: false,
+  simpleSearchTextArray: []
 });
 
 const getDefaultState = () => {
@@ -371,6 +384,12 @@ export default function reducer(
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
         selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
         selectedIndustries: get(action.searchObj, 'searchJSON.industry_arr', searchDefaultState().selectedIndustries),
+        isSimpleSearch: get(action.searchObj, 'searchJSON.isSimpleSearch', searchDefaultState().isSimpleSearch),
+        simpleSearchTextArray: get(
+          action.searchObj,
+          'searchJSON.simpleSearchTextArray',
+          searchDefaultState().simpleSearchTextArray
+        ),
         selectedWatchlistCompanyNames: get(
           action.searchObj,
           'searchJSON.company_arr',
@@ -464,6 +483,10 @@ export default function reducer(
       return { ...state, isFromSideBar: action.isFromSideBar };
     case SET_IS_TOPIC_EMAIL_ALERT_ENABLE:
       return { ...state, isTopicEmailAlertEnable: action.isTopicEmailAlertEnable };
+    case SET_IS_SIMPLE_SEARCH:
+      return { ...state, isSimpleSearch: action.isSimpleSearch };
+    case SET_SIMPLE_SEARCH_TEXT_ARRAY:
+      return { ...state, simpleSearchTextArray: action.simpleSearchTextArray };
     default:
       break;
   }
