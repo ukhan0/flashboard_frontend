@@ -33,3 +33,8 @@ export const comparisionViewTypes = [
   { label: 'All', key: 'all' },
   { label: 'New Sections Only', key: 'New Section ' }
 ];
+
+export const searchVersionTypes = [
+  { label: 'Simple', key: true },
+  { label: 'Advanced', key: false }
+];

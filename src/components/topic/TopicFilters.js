@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, Typography, Switch } from '@material-ui/core';
+import { Grid, Button, Typography, Switch, ButtonGroup } from '@material-ui/core';
 import TopicSearchTextField from './TopicSearchTextField';
 import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
 import TopicUniverseGroup from './TopicUniverseGroup';
@@ -25,6 +25,7 @@ import {
   setIsSimpleSearch
 } from '../../reducers/Topic';
 import TopicSeachLabelTextField from './TopicSearchLabelTextField';
+import { searchVersionTypes } from '../../config/filterTypes';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -66,7 +67,6 @@ const TopicFilters = props => {
     searchLabel,
     isSimpleSearch
   } = useSelector(state => state.Topic);
-  
   const handleUpdateSaveSearch = searchId => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
@@ -103,13 +103,10 @@ const TopicFilters = props => {
     }
   };
 
-  const handleSearchFieldType = () => {
+  const handleSearchFieldType = v => {
     dispatch(setTopicSearchText(''));
-    if (!isSimpleSearch) {
-      dispatch(setIsSimpleSearch(true));
-    } else {
-      dispatch(setIsSimpleSearch(false));
-    }
+
+    dispatch(setIsSimpleSearch(v));
   };
   const isButtonActive = !(searchText.length > 2 && searchLabel.length > 2);
 
@@ -145,30 +142,34 @@ const TopicFilters = props => {
             <Grid container>
               <Grid item xs={12}>
                 <Grid container>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <div style={{ marginRight: '20px' }}>
                       {isSimpleSearch ? <TopicSearchTextTags /> : <TopicSearchTextField />}
                     </div>
                   </Grid>
-                  <Grid item xs={2}>
-                    {/* <TopicHelpPopup /> */}
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        handleSearchFieldType();
-                      }}>
-                      {isSimpleSearch ? 'Advanced' : 'Simple'}
-                    </Button>
+                  <Grid item xs={3}>
+                    <ButtonGroup color="primary">
+                      {searchVersionTypes.map((searchVersion, i) => (
+                        <Button
+                          size="small"
+                          key={`sent_${i}`}
+                          onClick={() => handleSearchFieldType(searchVersion.key)}
+                          variant={isSimpleSearch === searchVersion.key ? 'contained' : 'outlined'}>
+                          {searchVersion.label}
+                        </Button>
+                      ))}
+                    </ButtonGroup>
                   </Grid>
                 </Grid>
-                <div className={classes.selectedSuggestionsList}>
-                  {selectedSuggestionsArr.map((v, index) => (
-                    <span key={`ssa${index}`} className="text-black-50">{`${v}${
-                      index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
-                    }`}</span>
-                  ))}
-                </div>
+                {!isSimpleSearch ? (
+                  <div className={classes.selectedSuggestionsList}>
+                    {selectedSuggestionsArr.map((v, index) => (
+                      <span key={`ssa${index}`} className="text-black-50">{`${v}${
+                        index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
+                      }`}</span>
+                    ))}
+                  </div>
+                ) : null}
               </Grid>
               <Grid item xs={4}>
                 <div className={classes.suggestionsBtnSection}>

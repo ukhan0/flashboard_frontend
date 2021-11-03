@@ -17,7 +17,9 @@ const columnDefs = [
     editable: false,
     sortable: false,
     flex: 1,
-    colId: 'documentType'
+    colId: 'documentType',
+    valueFormatter: params =>
+      params.data.document_type === 'FMP-transcript' ? 'Earning Calls' : params.data.document_type
   },
   {
     headerName: 'Document Date',
@@ -27,7 +29,7 @@ const columnDefs = [
     sortable: true,
     flex: 1,
     colId: 'documentDate',
-    valueFormatter: params => moment(params.data.period_date).format('DD MMMM, YYYY')
+    valueFormatter: params => moment(params.data.document_date).format('DD MMMM, YYYY')
   },
   {
     headerName: 'Period Date',

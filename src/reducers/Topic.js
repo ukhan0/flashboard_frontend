@@ -305,7 +305,7 @@ const searchDefaultState = () => ({
   selectedWatchlistCompanyNames: [],
   isTopicEmailAlertEnable: true,
   searchLabel: '',
-  isSimpleSearch: false,
+  isSimpleSearch: true,
   simpleSearchTextArray: []
 });
 
@@ -384,7 +384,7 @@ export default function reducer(
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
         selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
         selectedIndustries: get(action.searchObj, 'searchJSON.industry_arr', searchDefaultState().selectedIndustries),
-        isSimpleSearch: get(action.searchObj, 'searchJSON.isSimpleSearch', searchDefaultState().isSimpleSearch),
+        isSimpleSearch: get(action.searchObj, 'searchJSON.isSimpleSearch', false),
         simpleSearchTextArray: get(
           action.searchObj,
           'searchJSON.simpleSearchTextArray',

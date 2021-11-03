@@ -496,6 +496,7 @@ const WatchlistTable = props => {
         onColumnVisible={storeColumnsState}
         onSortChanged={storeColumnsState}
         onCellMouseOver={cellMouseOverEvent}
+        suppressScrollOnNewData={true}
         onFilterChanged={storeFilteringState}></AgGridReact>
     </div>
   );

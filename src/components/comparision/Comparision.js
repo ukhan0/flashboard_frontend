@@ -6,8 +6,9 @@ import { Typography } from '@material-ui/core';
 import SideBarSetting from './ComparisionSideBar';
 import { getComparisionSettings, saveComparisionSettings } from './ComparisionHelper';
 import { get } from 'lodash';
-
+import { BeatLoader } from 'react-spinners';
 const Comparision = props => {
+  const [isLoading, setIsloading] = useState(true);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
   );
@@ -74,7 +75,10 @@ const Comparision = props => {
         comparisionMethod={comparisionMethod}
         comparisionSection={comparisionSection}
       />
-
+      {isLoading ? (
+        <div style={{textAlign:'center'}}> <BeatLoader  color={'var(--primary)'} loading={true} size={10} /></div>
+       
+      ) : null}
       {selectedItem ? (
         <iframe
           src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
@@ -84,6 +88,9 @@ const Comparision = props => {
           samesite="None"
           frameBorder="0"
           id="comparisionResult"
+          onLoad={() => {
+            setIsloading(false);
+          }}
         />
       ) : (
         <Typography variant="h3">No row selected</Typography>

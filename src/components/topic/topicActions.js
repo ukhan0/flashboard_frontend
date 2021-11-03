@@ -239,11 +239,12 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
   const startDate = new URLSearchParams(window.location.search).get('startDate');
   const endDate = new URLSearchParams(window.location.search).get('endDate');
   const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
+  const searchText = topicState.simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
   const fullSearchText = onlySuggestionSingleArr.length
     ? `${topicState.searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
     : topicState.searchText;
   const data = {
-    searchTerm: fullSearchText,
+    searchTerm: topicState.isSimpleSearch ? searchText : fullSearchText,
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
     startDate: startDate
       ? startDate && topicState.isDate

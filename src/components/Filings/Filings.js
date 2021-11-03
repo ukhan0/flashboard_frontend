@@ -9,7 +9,7 @@ import { getCompanyFilingListing } from './FillingAction';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
-    top: 70,
+    top: 60,
     position: 'sticky',
     padding: 15,
     zIndex: 1

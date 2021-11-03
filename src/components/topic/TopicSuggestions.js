@@ -2,7 +2,7 @@ import React, { useEffect, Fragment } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { forEach, isEmpty, remove, cloneDeep } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedSuggestions } from '../../reducers/Topic';
+import { setSelectedSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
 import { findSuggestions } from './topicActions';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -28,7 +28,10 @@ const useStyles = makeStyles(_theme => ({
 }));
 
 export default function TopicSuggestionsDialog(props) {
-  const { suggestions, selectedSuggestions, suggestionsIsLoading } = useSelector(state => state.Topic);
+  const { suggestions, selectedSuggestions, suggestionsIsLoading, simpleSearchTextArray } = useSelector(
+    state => state.Topic
+  );
+
   const classes = useStyles();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -43,15 +46,21 @@ export default function TopicSuggestionsDialog(props) {
   };
 
   const handlSuggestionSelection = (value, keyWord) => {
+    let simpleSearchTextArrayCopy = simpleSearchTextArray;
     const newSelectedSuggestions = cloneDeep(selectedSuggestions);
     if (!isSuggestionChecked(value)) {
       newSelectedSuggestions[keyWord] = [...newSelectedSuggestions[keyWord], value];
       dispatch(setSelectedSuggestions(newSelectedSuggestions));
+      simpleSearchTextArrayCopy.push(value);
+      dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
     } else {
       const newKeyWordSelectedSuggestions = [...selectedSuggestions[keyWord]];
       remove(newKeyWordSelectedSuggestions, v => v === value); // it mutatues array
       selectedSuggestions[keyWord] = newKeyWordSelectedSuggestions;
       dispatch(setSelectedSuggestions(selectedSuggestions));
+      const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
+      simpleSearchTextArray.splice(index, 1);
+      dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
     }
   };
 
@@ -72,9 +81,7 @@ export default function TopicSuggestionsDialog(props) {
           <Fragment key={keyWord}>
             <Grid item xs={12}>
               {filteredData.length > 0 && keyWord ? (
-                <h6 className="font-weight-bold font-size-lg mb-1 text-black">
-                  {keyWord}
-                </h6>
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">{keyWord}</h6>
               ) : null}
             </Grid>
 

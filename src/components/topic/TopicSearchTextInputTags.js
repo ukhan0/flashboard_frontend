@@ -26,18 +26,15 @@ export default function Tags() {
   const dispatch = useDispatch();
   const handleSearch = (event, values) => {
     const value = values.map(value => `"${value}"`).join(' OR ');
-
     dispatch(setSimpleSearchTextArray(values));
     dispatch(setTopicSearchText(value));
     if (value === null || value === '' || searchText !== value) {
       dispatch(resetSuggestions());
     }
   };
-
   return (
     <div className={classes.root}>
       <Autocomplete
-        style={{ maxHeight: '80px', overflowY: 'auto' }}
         multiple
         size="small"
         id="tags-outlined"
@@ -46,12 +43,13 @@ export default function Tags() {
           handleSearch(event, value);
         }}
         options={[]}
-        value={simpleSearchTextArray.length > 0 ? simpleSearchTextArray : []}
+        value={simpleSearchTextArray.length > 0 ? [...new Set(simpleSearchTextArray)] : []}
         freeSolo
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip
-              style={{ borderRadius: 0, backgroundColor: '#cde69c', maxHeight: '22px' }}
+              color="primary"
+              style={{ maxHeight: '22px' }}
               variant="outlined"
               label={option}
               {...getTagProps({ index })}
