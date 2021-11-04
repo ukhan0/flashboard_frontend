@@ -63,7 +63,7 @@ const reduceChildRoutes = props => {
         label={page.badge}
         title={page.label}
         disabled={ 
-          page.label === 'Comparison'
+          page.label === 'Comparison'||  page.label === 'Social Sentiment'
           ? selectedItem
             ? selectedItem.ticker
              ? page.disabled

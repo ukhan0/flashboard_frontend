@@ -22,6 +22,7 @@ const Comparision = lazy(() => import('./components/comparision'));
 const Topic = lazy(() => import('./components/topic'));
 const Sentiment = lazy(() => import('./components/sentiment'));
 const Filings = lazy(() => import('./components/Filings'));
+const SocialSentiment = lazy(() => import('./components/socialSentiment'));
 
 const pageVariants = {
   initial: {
@@ -122,7 +123,7 @@ const Routes = () => {
                     </Switch>
                   </MinimalLayout>
                 </Route>
-                <Route path={['/watchlist', '/filings', '/comparision', '/sentiment', '/topic']}>
+                <Route path={['/watchlist', '/filings', '/comparision', '/sentiment', '/topic','/socialSentiment']}>
                   <LeftSidebar>
                     <Switch location={location} key={location.pathname}>
                       <motion.div
@@ -136,6 +137,7 @@ const Routes = () => {
                         <Route path="/comparision" component={Comparision} />
                         <Route path="/sentiment" component={Sentiment} />
                         <Route path="/topic" component={Topic} />
+                        <Route path="/socialSentiment" component={SocialSentiment} />
                       </motion.div>
                     </Switch>
                   </LeftSidebar>

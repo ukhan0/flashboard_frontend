@@ -56,6 +56,12 @@ const sideBarItems = [
     icon: 'SettingsIcon',
     to: '/sentiment',
     disabled: false
+  },
+  {
+    label: 'Social Sentiment',
+    icon: 'SettingsIcon',
+    to: '/socialSentiment',
+    disabled: false
   }
 ];
 

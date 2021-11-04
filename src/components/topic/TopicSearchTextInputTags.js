@@ -43,7 +43,7 @@ export default function Tags() {
           handleSearch(event, value);
         }}
         options={[]}
-        value={simpleSearchTextArray.length > 0 ? [...new Set(simpleSearchTextArray)] : []}
+        value={simpleSearchTextArray.length > 0 ? simpleSearchTextArray : []}
         freeSolo
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
