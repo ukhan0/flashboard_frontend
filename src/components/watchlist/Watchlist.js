@@ -73,6 +73,7 @@ const Watchlist = props => {
   const [addTickersnackbar, setAddTickersnackbar] = React.useState(false);
   const [removeTickersnackbar, setRemoveTickersnackbar] = React.useState(false);
   const [errorSnackbar, setErrorSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('Unable to Add/Remove Ticker To/From Watchlist');
   const firstTimeLoad = useRef(true);
 
   const searchFromCompleteData = useCallback(() => {
@@ -255,6 +256,7 @@ const Watchlist = props => {
       } else {
         setTopicAddingError(true);
         setErrorSnackbar(true);
+        setSnackbarMessage(responsePayload.message);
       }
     } catch (error) {
       setTopicAddingError(true);
@@ -314,7 +316,7 @@ const Watchlist = props => {
         <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             {isFilterActive || isFilterActiveOnSearch ? (
-              <Grid item >
+              <Grid item>
                 <Button
                   color="primary"
                   className={classes.button}
@@ -327,10 +329,10 @@ const Watchlist = props => {
                 </Button>
               </Grid>
             ) : null}
-            <Grid item className={classes.spaceBetween} xs={4} >
+            <Grid item className={classes.spaceBetween} xs={4}>
               <WatchlistSearch />
             </Grid>
-            <Grid item >
+            <Grid item>
               <Button
                 color="primary"
                 variant="contained"
@@ -393,7 +395,7 @@ const Watchlist = props => {
       <Snackbar
         open={errorSnackbar}
         onClose={() => setErrorSnackbar(false)}
-        message="Unable to Add/Remove Ticker To/From Watchlist"
+        message={snackbarMessage}
         severity="error"
       />
     </>

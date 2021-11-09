@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
-import SideBarSetting from './ComparisionSideBar';
+import ComparisionFilters from './ComparisionFilters';
 import { getComparisionSettings, saveComparisionSettings } from './ComparisionHelper';
 import { get } from 'lodash';
 import { BeatLoader } from 'react-spinners';
@@ -28,12 +28,15 @@ const Comparision = props => {
   }
   const handleComparisionMethod = method => {
     setComparisionMethod(method);
+    setIsloading(true);
   };
   const handleComparisionDifference = diff => {
     setComparisionDifference(diff);
+    setIsloading(true);
   };
   const handleComparisionSection = section => {
     setComparisionSection(section);
+    setIsloading(true);
   };
   useEffect(() => {
     const comparisonSetting = {
@@ -67,7 +70,7 @@ const Comparision = props => {
 
   return (
     <>
-      <SideBarSetting
+      <ComparisionFilters
         handleComparisionDifference={handleComparisionDifference}
         handleComparisionMethod={handleComparisionMethod}
         handleComparisionSection={handleComparisionSection}
@@ -76,25 +79,29 @@ const Comparision = props => {
         comparisionSection={comparisionSection}
       />
       {isLoading ? (
-        <div style={{textAlign:'center'}}> <BeatLoader  color={'var(--primary)'} loading={true} size={10} /></div>
-       
+        <div style={{ textAlign: 'center' }}>
+          {' '}
+          <BeatLoader color={'var(--primary)'} loading={true} size={10} />
+        </div>
       ) : null}
-      {selectedItem ? (
-        <iframe
-          src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
-          title="Comparision"
-          width="100%"
-          height={`${window.innerHeight - 90}px`}
-          samesite="None"
-          frameBorder="0"
-          id="comparisionResult"
-          onLoad={() => {
-            setIsloading(false);
-          }}
-        />
-      ) : (
-        <Typography variant="h3">No row selected</Typography>
-      )}
+      <div style={{marginTop:'10px'}}>
+        {selectedItem ? (
+          <iframe
+            src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
+            title="Comparision"
+            width="100%"
+            height={`${window.innerHeight - 90}px`}
+            samesite="None"
+            frameBorder="0"
+            id="comparisionResult"
+            onLoad={() => {
+              setIsloading(false);
+            }}
+          />
+        ) : (
+          <Typography variant="h3">No row selected</Typography>
+        )}
+      </div>
     </>
   );
 };

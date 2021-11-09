@@ -1,8 +1,22 @@
 import React, { Fragment } from 'react';
 import { Grid, Card, LinearProgress, Divider } from '@material-ui/core';
 import Chart from 'react-apexcharts';
+import { useSelector } from 'react-redux';
+import { isEmpty, get } from 'lodash';
+import moment from 'moment';
 
-const SentimentCompanyDetails = props => {
+const FilingsDetailsGraph = props => {
+  const { fillingsGraphData } = useSelector(state => state.Filings);
+  let mdas = [];
+  let risks = [];
+  let notes = [];
+  let dates = [];
+  if (!isEmpty(fillingsGraphData)) {
+    dates = fillingsGraphData.map(s => moment(s.document_date).format('DD MMMM, YYYY'))
+    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', ''))
+    risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''))
+    notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''))
+  }
   const chart5Options = {
     chart: {
       toolbar: {
@@ -23,7 +37,7 @@ const SentimentCompanyDetails = props => {
         columnWidth: '80%'
       }
     },
-    colors: ['#7fe4a6', '#7fe2ec', '#7fc8fd', '#ff98a4'],
+    colors: ['#7fc8fd', '#7fe4a6', '#ff98a4'],
     fill: {
       opacity: 1
     },
@@ -35,25 +49,22 @@ const SentimentCompanyDetails = props => {
     legend: {
       show: false
     },
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Last week', 'Last month']
+    labels: dates
   };
 
   const chart5Data = [
     {
-      name: 'Net Profit',
-      data: [2.3, 3.1, 4.0, 3.8, 5.1, 3.6, 4.0, 3.8, 5.1]
+      name: 'NOTES',
+      data: notes
     },
     {
-      name: 'Weekly Stats',
-      data: [2.3, 3.1, 5.1, 3.6, 4.0, 4.0, 3.8, 3.6, 3.8]
+      name: 'MDA',
+      data: mdas
     },
+
     {
-      name: 'Sales reports',
-      data: [2.3, 3.1, 5.1, 3.6, 4.0, 4.0, 3.8, 3.6, 3.8]
-    },
-    {
-      name: 'Net Loss',
-      data: [2.1, 2.1, 3.0, 2.8, 4.0, 3.8, 5.1, 3.6, 4.1]
+      name: 'RISK',
+      data: risks
     }
   ];
 
@@ -123,7 +134,11 @@ const SentimentCompanyDetails = props => {
               </div>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Chart options={chart5Options} series={chart5Data} type="bar" height={330} />
+              {!isEmpty(fillingsGraphData) ? (
+                <Chart options={chart5Options} series={chart5Data} type="bar" height={400} />
+              ) : (
+                'No Data Available'
+              )}
             </Grid>
           </Grid>
           <Divider />
@@ -133,4 +148,4 @@ const SentimentCompanyDetails = props => {
     </Fragment>
   );
 };
-export default SentimentCompanyDetails;
+export default FilingsDetailsGraph;

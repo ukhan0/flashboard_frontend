@@ -4,9 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import FilingsResultsTable from './FilingsResultsTable';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
-import FilingsCards from '../sentiment/SentimentCard';
-import { getCompanyFilingListing } from './FillingAction';
+import { getCompanyFilingListing, getCompanyFilingGraphData } from './FillingAction';
+import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
+import { setCompanyFillingGraphData } from '../../reducers/Filings';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -22,11 +23,14 @@ const useStyles = makeStyles(theme => ({
 const Filings = () => {
   const dispatch = useDispatch();
   const { selectedItem } = useSelector(state => state.Watchlist);
+  const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const classes = useStyles();
   const history = useHistory();
 
   useEffect(() => {
+    dispatch(setCompanyFillingGraphData([]));
     dispatch(getCompanyFilingListing());
+    dispatch(getCompanyFilingGraphData());
   }, [dispatch]);
 
   if (!selectedItem) {
@@ -35,9 +39,7 @@ const Filings = () => {
 
   return selectedItem ? (
     <div>
-      <div className={classes.companyDetail}>
-        <FilingsCompanyDetails />
-      </div>
+      <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
       <div>
         <FilingsCards />
       </div>
