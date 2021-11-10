@@ -12,10 +12,10 @@ const FilingsDetailsGraph = props => {
   let notes = [];
   let dates = [];
   if (!isEmpty(fillingsGraphData)) {
-    dates = fillingsGraphData.map(s => moment(s.document_date).format('DD MMMM, YYYY'))
-    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', ''))
-    risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''))
-    notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''))
+    dates = fillingsGraphData.map(s => moment(s.document_date).format('DD MMMM, YYYY'));
+    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', ''));
+    risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''));
+    notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''));
   }
   const chart5Options = {
     chart: {
@@ -55,16 +55,16 @@ const FilingsDetailsGraph = props => {
   const chart5Data = [
     {
       name: 'NOTES',
-      data: notes
+      data: notes.filter(e => e)
     },
     {
       name: 'MDA',
-      data: mdas
+      data: mdas.filter(e => e)
     },
 
     {
       name: 'RISK',
-      data: risks
+      data: risks.filter(e => e)
     }
   ];
 

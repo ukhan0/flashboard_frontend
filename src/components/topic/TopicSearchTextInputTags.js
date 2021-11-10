@@ -21,8 +21,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function Tags() {
   const classes = useStyles();
-
+  const inputRef = React.useRef();
+  const [v, setV] = React.useState('');
   const { searchText, simpleSearchTextArray } = useSelector(state => state.Topic);
+
   const dispatch = useDispatch();
   const handleSearch = (event, values) => {
     const value = values.map(value => `"${value}"`).join(' OR ');
@@ -32,9 +34,34 @@ export default function Tags() {
       dispatch(resetSuggestions());
     }
   };
+
+  const handleKeyDown = (event, v) => {
+    switch (event.key) {
+      case 'Tab': {
+        event.preventDefault();
+        event.stopPropagation();
+        let values = simpleSearchTextArray;
+        if (event.target.value.length > 0) {
+          values.push(event.target.value);
+          const value = values.map(value => `"${value}"`).join(' OR ');
+          dispatch(setSimpleSearchTextArray(values));
+          dispatch(setTopicSearchText(value));
+          setV(searchText);
+          if (inputRef.current && inputRef.current.value) {
+            inputRef.current.value = '';
+          }
+        }
+        break;
+      }
+
+      default:
+    }
+  };
+
   return (
     <div className={classes.root}>
       <Autocomplete
+        key={v}
         multiple
         size="small"
         id="tags-outlined"
@@ -56,7 +83,10 @@ export default function Tags() {
             />
           ))
         }
-        renderInput={params => <TextField size="small" {...params} variant="outlined" fullWidth />}
+        renderInput={params => {
+          params.inputProps.onKeyDown = handleKeyDown;
+          return <TextField inputRef={inputRef} size="small" {...params} variant="outlined" fullWidth />;
+        }}
       />
     </div>
   );

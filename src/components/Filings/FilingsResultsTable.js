@@ -49,7 +49,14 @@ export default function FilingsResultsTable() {
   const { fillingsData } = useSelector(state => state.Filings);
   const cellClicked = async params => {
     if (params.data) {
-      dispatch(setSelectedWatchlist({ recentId: params.data.document_id }));
+      let selectedItem = {
+        recentId: params.data.document_id,
+        companyName: params.data.company_name,
+        industry: params.data.industry,
+        sector: params.data.sector,
+        ticker: params.data.ticker
+      };
+      dispatch(setSelectedWatchlist(selectedItem));
       history.push('/sentiment');
     }
   };

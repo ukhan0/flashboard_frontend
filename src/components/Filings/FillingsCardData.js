@@ -46,7 +46,7 @@ const FilingsCards = () => {
     {
       heading: 'RISK & FACTORS',
       content: 'Neutral',
-      num: 23,
+      num: risk,
       percent: 67,
       options: {
         chart: {
@@ -126,9 +126,9 @@ const FilingsCards = () => {
       }
     },
     {
-      heading: 'MANAGEMENT & DESCUSSION',
+      heading: 'MANAGEMENT & DISCUSSION',
       content: 'Extermely High',
-      num: 132,
+      num: mda,
       percent: 32,
       options: {
         chart: {
@@ -210,7 +210,7 @@ const FilingsCards = () => {
     {
       heading: 'NOTES TO  FINANCIAL STATEMENT',
       content: 'High',
-      num: 93,
+      num: notes,
       percent: 21,
       options: {
         chart: {
@@ -291,6 +291,29 @@ const FilingsCards = () => {
     }
   ];
 
+  const getCount = data => {
+    let count = '';
+    if (data.length >= 2) {
+      count = (data[0] - data[1]).toFixed(2);
+    }
+    if (data.length === 1) {
+      count = data[0].toFixed(2);
+    }
+    return count;
+  };
+  const getPercentageValue = data => {
+    let count = '';
+
+    if (data.length >= 2) {
+      count = (data[0] - (data[1] / data[1]) * 100).toFixed(2);
+    }
+    if (data.length === 1) {
+      count = data[0].toFixed(2);
+    }
+
+    return count;
+  };
+
   const classes = useStyles();
   return (
     <Grid container spacing={2}>
@@ -301,15 +324,15 @@ const FilingsCards = () => {
               <Grid item xs={6}>
                 <CardContent>
                   <p>{data.heading}</p>
-                  <h3>{`${data.content} (${data.num})`}</h3>
-                  {data.percent > 35 ? (
+                  <h3>{`${data.content} (${getCount(data.num.filter(e => e))})`}</h3>
+                  {getPercentageValue(data.num.filter(e => e)) > 35 ? (
                     <p style={{ color: 'green' }}>
-                      {data.percent + '%'}
+                      {getPercentageValue(data.num.filter(e => e)) + '%'}
                       <ExpandMoreIcon></ExpandMoreIcon>
                     </p>
                   ) : (
                     <p style={{ color: 'red' }}>
-                      {data.percent + '%'}
+                      {getPercentageValue(data.num.filter(e => e)) + '%'}
                       <ExpandMoreIcon></ExpandMoreIcon>
                     </p>
                   )}
