@@ -17,8 +17,19 @@ const TopicDocumentTypeDropdown = props => {
   const { documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
 
+  let documentTypeValue = documentTypes.map(e => e.value);
+  const isAllSelected = documentTypeValue.length > 0 && selectedDocumentTypes.length === documentTypeValue.length;
+
   const handleSelectionChange = e => {
-    dispatch(setSelectedDocumentTypes(e.target.value));
+    const value = e.target.value;
+    if (value[value.length - 1] === 'All') {
+      dispatch(
+        setSelectedDocumentTypes(selectedDocumentTypes.length === documentTypeValue.length ? [] : documentTypeValue)
+      );
+      return;
+    }
+
+    dispatch(setSelectedDocumentTypes(value));
   };
 
   return (
@@ -30,9 +41,20 @@ const TopicDocumentTypeDropdown = props => {
       onChange={handleSelectionChange}
       input={<Input />}
       renderValue={selectedValues => renameDocumentTypes(selectedValues)}
-      className={classes.multiSelect}
-      // MenuProps={MenuProps}
-    >
+      className={classes.multiSelect}>
+      <MenuItem
+        value="All"
+        classes={{
+          root: isAllSelected ? classes.selectedAll : ''
+        }}>
+        <Checkbox
+          classes={{ indeterminate: classes.indeterminateColor }}
+          checked={isAllSelected}
+          indeterminate={selectedDocumentTypes.length > 0 && selectedDocumentTypes.length < documentTypeValue.length}
+        />
+
+        <ListItemText classes={{ primary: classes.selectAllText }} primary="Select All" />
+      </MenuItem>
       {documentTypes.map(documentType => (
         <MenuItem key={documentType.value} value={documentType.value}>
           <Checkbox checked={selectedDocumentTypes.indexOf(documentType.value) > -1} />

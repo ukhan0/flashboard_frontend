@@ -194,11 +194,7 @@ const TopicSearchResults = () => {
                           <Grid item>
                             <small className="text-black-50 pt-1 pr-2">
                               Filing ID:{' '}
-                              <b
-                                className={clsx(classes.clickable, 'text-first')}
-                                onClick={() => goToSentimentScreen(companyResult, get(companyResult, 'results', []))}>
-                                {companyResult.summary_id}
-                              </b>
+                              <b className={clsx(classes.clickable, 'text-first')}>{companyResult.summary_id}</b>
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document ID: <b className="text-first">{companyResult.document_id}</b>

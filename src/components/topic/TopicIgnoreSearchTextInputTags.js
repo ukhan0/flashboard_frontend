@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTopicSearchText, resetSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
+import { setTopicSearchText,  setIgnoreSearchTextArray } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   root: {
     '& > * + *': {
@@ -23,15 +23,12 @@ export default function Tags() {
   const classes = useStyles();
   const inputRef = React.useRef();
   const [v, setV] = React.useState('');
+
   const { searchText, simpleSearchTextArray, ignoreSearchTextArray } = useSelector(state => state.Topic);
 
   const dispatch = useDispatch();
   const handleSearch = (event, values) => {
-    const value = values.map(value => `"${value}"`).join(' OR ');
-    handleSearchTags(values);
-    if (value === null || value === '' || searchText !== value) {
-      dispatch(resetSuggestions());
-    }
+    handleIgnoreSearch(values);
   };
 
   const handleKeyDown = event => {
@@ -39,10 +36,11 @@ export default function Tags() {
       case 'Tab': {
         event.preventDefault();
         event.stopPropagation();
-        let values = simpleSearchTextArray;
+        let values = ignoreSearchTextArray;
         if (event.target.value.length > 0) {
           values.push(event.target.value);
-          handleSearchTags(values);
+          handleIgnoreSearch(values);
+
           if (inputRef.current && inputRef.current.value) {
             inputRef.current.value = '';
           }
@@ -53,11 +51,11 @@ export default function Tags() {
       default:
     }
   };
-  const handleSearchTags = values => {
-    const value1 = ignoreSearchTextArray.map(value => `"-${value}"`).join(' AND ');
-    const value = values.map(value => `"${value}"`).join(' OR ');
-    dispatch(setSimpleSearchTextArray(values));
-    dispatch(setTopicSearchText(`${value} ${ignoreSearchTextArray.length > 0 ? `AND ${value1}` : ''} `));
+  const handleIgnoreSearch = values => {
+    const value1 = simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
+    const value = values.map(value => `-"${value}"`).join(' AND ');
+    dispatch(setIgnoreSearchTextArray(values));
+    dispatch(setTopicSearchText(`${value1} AND ${value}`));
     setV(searchText);
   };
   return (
@@ -72,7 +70,7 @@ export default function Tags() {
           handleSearch(event, value);
         }}
         options={[]}
-        value={simpleSearchTextArray.length > 0 ? simpleSearchTextArray : []}
+        value={ignoreSearchTextArray.length > 0 ? ignoreSearchTextArray : []}
         freeSolo
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (

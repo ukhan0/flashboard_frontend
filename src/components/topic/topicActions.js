@@ -240,11 +240,17 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
   const endDate = new URLSearchParams(window.location.search).get('endDate');
   const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
   const searchText = topicState.simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
+  const ignoreSearchText = topicState.ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
+  let ignoreSearchTextPlusFullSearchText = searchText;
+  if (ignoreSearchText.length > 0) {
+    ignoreSearchTextPlusFullSearchText = `${searchText} AND (${ignoreSearchText})`;
+  }
+
   const fullSearchText = onlySuggestionSingleArr.length
-    ? `${topicState.searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
-    : topicState.searchText;
+    ? `${topicState.ignoreSearchTextPlusFullSearchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
+    : topicState.ignoreSearchTextPlusFullSearchText;
   const data = {
-    searchTerm: topicState.isSimpleSearch ? searchText : fullSearchText,
+    searchTerm: topicState.isSimpleSearch ? ignoreSearchTextPlusFullSearchText : fullSearchText,
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
     startDate: startDate
       ? startDate && topicState.isDate
@@ -344,6 +350,7 @@ const createSearchSaveMiniPayload = topicState => {
     section: topicState.selectedSection,
     searchFrom: searchFroms,
     simpleSearchTextArray: !topicState.isSimpleSearch ? [] : topicState.simpleSearchTextArray,
+    ignoreSearchTextArray: !topicState.isSimpleSearch ? [] : topicState.ignoreSearchTextArray,
     isSimpleSearch: topicState.isSimpleSearch,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     company_arr:

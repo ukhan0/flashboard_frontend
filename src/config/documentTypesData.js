@@ -69,16 +69,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: '10-K/A',
-    value: '10-K/A',
-    sections: {
-      totdoc: ['10-k/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '10-K/A',
+  //   value: '10-K/A',
+  //   sections: {
+  //     totdoc: ['10-k/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '10-K405',
     value: '10-K405',
@@ -89,16 +89,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: '10-K405/A',
-    value: '10-K405/A',
-    sections: {
-      totdoc: ['10-k405/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '10-K405/A',
+  //   value: '10-K405/A',
+  //   sections: {
+  //     totdoc: ['10-k405/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '10-KT',
     value: '10-KT',
@@ -109,26 +109,26 @@ export default [
       notes: []
     }
   },
-  {
-    label: '10-KT/A',
-    value: '10-KT/A',
-    sections: {
-      totdoc: ['10-kt/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
-  {
-    label: '10-Q/A',
-    value: '10-Q/A',
-    sections: {
-      totdoc: ['10-q/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '10-KT/A',
+  //   value: '10-KT/A',
+  //   sections: {
+  //     totdoc: ['10-kt/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
+  // {
+  //   label: '10-Q/A',
+  //   value: '10-Q/A',
+  //   sections: {
+  //     totdoc: ['10-q/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '10-QT',
     value: '10-QT',
@@ -139,16 +139,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: '10-QT/A',
-    value: '10-QT/A',
-    sections: {
-      totdoc: ['10-qt/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '10-QT/A',
+  //   value: '10-QT/A',
+  //   sections: {
+  //     totdoc: ['10-qt/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '10QSB',
     value: '10QSB',
@@ -159,47 +159,47 @@ export default [
       notes: []
     }
   },
-  {
-    label: '20-F/A',
-    value: '20-F/A',
-    searchFroms: ['20-f/a.*'],
-    sections: {
-      totdoc: ['20-f/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
-  {
-    label: '40-F/A',
-    value: '40-F/A',
-    sections: {
-      totdoc: ['40-f/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
-  {
-    label: '6-K/A',
-    value: '6-K/A',
-    sections: {
-      totdoc: ['6-k/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
-  {
-    label: '8-K/A',
-    value: '8-K/A',
-    sections: {
-      totdoc: ['8-k/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '20-F/A',
+  //   value: '20-F/A',
+  //   searchFroms: ['20-f/a.*'],
+  //   sections: {
+  //     totdoc: ['20-f/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
+  // {
+  //   label: '40-F/A',
+  //   value: '40-F/A',
+  //   sections: {
+  //     totdoc: ['40-f/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
+  // {
+  //   label: '6-K/A',
+  //   value: '6-K/A',
+  //   sections: {
+  //     totdoc: ['6-k/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
+  // {
+  //   label: '8-K/A',
+  //   value: '8-K/A',
+  //   sections: {
+  //     totdoc: ['8-k/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '8-K12B',
     value: '8-K12B',
@@ -210,16 +210,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: '8-K12B/A',
-    value: '8-K12B/A',
-    sections: {
-      totdoc: ['8-k12b/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '8-K12B/A',
+  //   value: '8-K12B/A',
+  //   sections: {
+  //     totdoc: ['8-k12b/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '8-K12G3',
     value: '8-K12G3',
@@ -230,16 +230,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: '8-K12G3/A',
-    value: '8-K12G3/A',
-    sections: {
-      totdoc: ['8-k12g3/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: '8-K12G3/A',
+  //   value: '8-K12G3/A',
+  //   sections: {
+  //     totdoc: ['8-k12g3/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: '8-K15D5',
     value: '8-K15D5',
@@ -260,16 +260,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: 'ARS/A',
-    value: 'ARS/A',
-    sections: {
-      totdoc: ['ars/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: 'ARS/A',
+  //   value: 'ARS/A',
+  //   sections: {
+  //     totdoc: ['ars/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: 'CORR',
     value: 'CORR',
@@ -410,16 +410,16 @@ export default [
       notes: []
     }
   },
-  {
-    label: 'QR/A',
-    value: 'QR/A',
-    sections: {
-      totdoc: ['qr/a.*'],
-      mda: [],
-      rf: [],
-      notes: []
-    }
-  },
+  // {
+  //   label: 'QR/A',
+  //   value: 'QR/A',
+  //   sections: {
+  //     totdoc: ['qr/a.*'],
+  //     mda: [],
+  //     rf: [],
+  //     notes: []
+  //   }
+  // },
   {
     label: 'SR',
     value: 'SR',

@@ -50,7 +50,7 @@ export const SET_IS_FROM_SIDE_BAR = 'TOPIC/SET_IS_FROM_SIDE_BAR';
 export const SET_IS_TOPIC_EMAIL_ALERT_ENABLE = 'TOPIC/SET_IS_TOPIC_EMAIL_ALERT_ENABLE';
 export const SET_IS_SIMPLE_SEARCH = 'TOPIC/SET_IS_SIMPLE_SEARCH';
 export const SET_SIMPLE_SEARCH_TEXT_ARRAY = 'TOPIC/SET_SIMPLE_SEARCH_TEXT_ARRAY';
-
+export const SET_IGNORE_SEARCH_TEXT_ARRAY = 'TOPIC/SET_IGNORE_SEARCH_TEXT_ARRAY';
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
@@ -290,6 +290,11 @@ export const setSimpleSearchTextArray = simpleSearchTextArray => ({
   type: SET_SIMPLE_SEARCH_TEXT_ARRAY,
   simpleSearchTextArray
 });
+
+export const setIgnoreSearchTextArray = ignoreSearchTextArray => ({
+  type: SET_IGNORE_SEARCH_TEXT_ARRAY,
+  ignoreSearchTextArray
+});
 const searchDefaultState = () => ({
   searchText: '',
   startDate: subMonths(startOfMonth(new Date()), 12),
@@ -297,7 +302,39 @@ const searchDefaultState = () => ({
   orderBy: 'desc',
   sortBy: 'document_date',
   selectedSuggestions: {},
-  selectedDocumentTypes: ['10-K'],
+  selectedDocumentTypes: [
+    'FMP-transcript',
+    '10-K',
+    '10-Q',
+    '8-K',
+    '40-F',
+    '20-F',
+    '6-K',
+    '10-K405',
+    '10-KT',
+    '10-QT',
+    '10QSB',
+    '8-K12B',
+    '8-K12G3',
+    '8-K15D5',
+    'AR',
+    'CORR',
+    'DEF 14A',
+    'EP',
+    'ER',
+    'FIN SUPP',
+    'Intierra SR',
+    'Intl Offer',
+    'MEG - AR',
+    'NT 10-Q',
+    'OC',
+    'Other Financials',
+    'pdf',
+    'PR',
+    'QR',
+    'SR',
+    'Tanshin'
+  ],
   selectedUniverse: 'all',
   selectedSection: 'totdoc',
   selectedSector: null,
@@ -306,7 +343,8 @@ const searchDefaultState = () => ({
   isTopicEmailAlertEnable: true,
   searchLabel: '',
   isSimpleSearch: true,
-  simpleSearchTextArray: []
+  simpleSearchTextArray: [],
+  ignoreSearchTextArray: []
 });
 
 const getDefaultState = () => {
@@ -389,6 +427,11 @@ export default function reducer(
           action.searchObj,
           'searchJSON.simpleSearchTextArray',
           searchDefaultState().simpleSearchTextArray
+        ),
+        ignoreSearchTextArray: get(
+          action.searchObj,
+          'searchJSON.ignoreSearchTextArray',
+          searchDefaultState().ignoreSearchTextArray
         ),
         selectedWatchlistCompanyNames: get(
           action.searchObj,
@@ -487,6 +530,8 @@ export default function reducer(
       return { ...state, isSimpleSearch: action.isSimpleSearch };
     case SET_SIMPLE_SEARCH_TEXT_ARRAY:
       return { ...state, simpleSearchTextArray: action.simpleSearchTextArray };
+    case SET_IGNORE_SEARCH_TEXT_ARRAY:
+      return { ...state, ignoreSearchTextArray: action.ignoreSearchTextArray };
     default:
       break;
   }
