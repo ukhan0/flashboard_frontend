@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTopicSearchText,  setIgnoreSearchTextArray } from '../../reducers/Topic';
+import { setTopicSearchText, setIgnoreSearchTextArray } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   root: {
     '& > * + *': {
@@ -55,7 +55,7 @@ export default function Tags() {
     const value1 = simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
     const value = values.map(value => `-"${value}"`).join(' AND ');
     dispatch(setIgnoreSearchTextArray(values));
-    dispatch(setTopicSearchText(`${value1} AND ${value}`));
+    dispatch(setTopicSearchText(`${value1} ${value.length > 0 ? `AND ${value}` : ''} `));
     setV(searchText);
   };
   return (
