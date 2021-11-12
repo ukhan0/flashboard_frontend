@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 const TopicDialog = props => {
   const classes = useStyles();
-  const { currentSearchDetail } = useSelector(state => state.Topic);
+  const { currentSearchDetail, documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
   const isSuggestions = currentSearchDetail.selectedSuggestions;
   let selectedSug = [];
   if (!isEmpty(isSuggestions)) {
@@ -70,10 +70,14 @@ const TopicDialog = props => {
             </Grid>
             <Grid item xs={3}>
               <span className="text-black-50 d-block">File Types</span>
-              <span className="font-weight-bold">
-                {renameDocumentTypes(documents)}
-                {documents.length > 5 ? ' ...' : null} {currentSearchDetail.selectedSection}
-              </span>
+              {selectedDocumentTypes.length === documentTypes.length ? (
+                <span className="font-weight-bold">All</span>
+              ) : (
+                <span className="font-weight-bold">
+                  {`${renameDocumentTypes(documents)}${documents.length > 5 ? ' ...' : ''}`}
+                  {currentSearchDetail.selectedSection}
+                </span>
+              )}
             </Grid>
             <Grid item xs={2}>
               <span className="text-black-50 d-block">From-To</span>
