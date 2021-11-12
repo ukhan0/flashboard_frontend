@@ -57,7 +57,6 @@ const TopicDialog = props => {
     dispatch(resetAllSearchParams());
     dispatch(setBackDropOnCompanyClick(false));
   };
-
   return (
     <Fragment>
       <div className={classes.label}>
@@ -72,7 +71,8 @@ const TopicDialog = props => {
             <Grid item xs={3}>
               <span className="text-black-50 d-block">File Types</span>
               <span className="font-weight-bold">
-                {renameDocumentTypes(documents)} {currentSearchDetail.selectedSection}
+                {renameDocumentTypes(documents)}
+                {documents.length > 5 ? ' ...' : null} {currentSearchDetail.selectedSection}
               </span>
             </Grid>
             <Grid item xs={2}>
