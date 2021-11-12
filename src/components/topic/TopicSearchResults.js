@@ -81,6 +81,7 @@ const TopicSearchResults = () => {
   const [summaryByCompany, setSummaryByCompany] = useState([]);
   const [x, setX] = useState('');
   const [y, setY] = useState('');
+  const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
@@ -162,6 +163,9 @@ const TopicSearchResults = () => {
     } else {
       dispatch(setSelectedWatchlist({ recentId: recentId, companyId: companyId, ticker: ticker }));
     }
+    if (isGoToSentiment) {
+      history.push('/sentiment');
+    }
   };
 
   const handleMouseDown = e => {
@@ -173,7 +177,7 @@ const TopicSearchResults = () => {
     const diffX = Math.abs(e.pageX - x);
     const diffY = Math.abs(e.pageY - y);
     if (diffX < delta && diffY < delta) {
-      history.push('/sentiment');
+      setIsGotoSentiment(true);
     }
   };
   return (
