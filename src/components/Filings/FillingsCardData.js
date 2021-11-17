@@ -7,6 +7,7 @@ import HighchartsReact from 'highcharts-react-official';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
+import moment from 'moment';
 const useStyles = makeStyles(theme => ({
   card: {
     height: 180
@@ -22,11 +23,16 @@ const useStyles = makeStyles(theme => ({
 const FilingsCards = () => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
   let mda = [];
+  let mdaDates = [];
   let risk = [];
+  let riskDates = [];
   let notes = [];
+  let notesDates = [];
   if (!isEmpty(fillingsGraphData)) {
     mda = fillingsGraphData.map(s => {
       let wordCount = get(s, 'mda.ssssss', '');
+      if (wordCount) {
+      }
 
       return wordCount;
     });
@@ -40,6 +46,9 @@ const FilingsCards = () => {
 
       return wordCount;
     });
+    mdaDates = fillingsGraphData.filter(s => get(s, 'mda.ssssss', null));
+    riskDates = fillingsGraphData.filter(s => get(s, 'risk_factors.ssssss', null));
+    notesDates = fillingsGraphData.filter(s => get(s, 'notes.ssssss', null));
   }
 
   let cardArray = [
@@ -67,8 +76,9 @@ const FilingsCards = () => {
           enabled: false
         },
         tooltip: {
-          enabled: false,
-          shared: false
+          enabled: true,
+          shared: false,
+          valueDecimals: 4
         },
         yAxis: {
           visible: false,
@@ -80,10 +90,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
+          categories: riskDates.map(v => moment(v.document_date).format('DD MMMM, YYYY')).reverse(),
           title: {
             text: null
           }
@@ -119,7 +126,8 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
-            data: risk,
+            name: 'sentiment',
+            data: [...risk.reverse()],
             color: '#ff98a4'
           }
         ]
@@ -149,8 +157,9 @@ const FilingsCards = () => {
           enabled: false
         },
         tooltip: {
-          enabled: false,
-          shared: false
+          enabled: true,
+          shared: false,
+          valueDecimals: 4
         },
         yAxis: {
           visible: false,
@@ -162,10 +171,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
+          categories: mdaDates.map(v => moment(v.document_date).format('DD MMMM, YYYY')).reverse(),
           title: {
             text: null
           }
@@ -201,7 +207,8 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
-            data: mda,
+            name: 'sentiment',
+            data: [...mda.reverse()],
             color: '#7fe4a6'
           }
         ]
@@ -231,8 +238,9 @@ const FilingsCards = () => {
           enabled: false
         },
         tooltip: {
-          enabled: false,
-          shared: false
+          enabled: true,
+          shared: false,
+          valueDecimals: 4
         },
         yAxis: {
           visible: false,
@@ -244,13 +252,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
-          title: {
-            text: null
-          }
+          categories: notesDates.map(v => moment(v.document_date).format('DD MMMM, YYYY')).reverse()
         },
         plotOptions: {
           series: {
@@ -283,7 +285,8 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
-            data: notes,
+            name: 'sentiment',
+            data: [...notes.reverse()],
             color: '#7fc8fd'
           }
         ]

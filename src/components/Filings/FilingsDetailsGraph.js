@@ -1,10 +1,15 @@
 import React, { Fragment } from 'react';
 import { Grid, Card, LinearProgress, Divider } from '@material-ui/core';
-import Chart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import moment from 'moment';
-
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+Highcharts.setOptions({
+  lang: {
+    thousandsSep: ','
+  }
+});
 const FilingsDetailsGraph = props => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
   let mdas = [];
@@ -17,65 +22,90 @@ const FilingsDetailsGraph = props => {
     risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''));
     notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''));
   }
-  const chart5Options = {
+
+  const options = {
     chart: {
-      toolbar: {
-        show: false
-      },
-      sparkline: {
-        enabled: true
-      },
-      stacked: true
+      type: 'column'
+      // height: 500,
     },
-    dataLabels: {
-      enabled: true
+    title: {
+      text: null
     },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        endingShape: 'rounded',
-        columnWidth: '80%'
+    xAxis: {
+      categories: dates
+    },
+    yAxis: {
+      visible: false,
+      labels: {
+        enabled: false
+      },
+      title: {
+        text: null
       }
     },
-    colors: ['#7fc8fd', '#7fe4a6', '#ff98a4'],
-    fill: {
-      opacity: 1
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
     legend: {
-      show: false
+      align: 'right',
+      x: -30,
+      verticalAlign: 'top',
+      y: 25,
+      floating: true,
+      backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
     },
-    labels: dates
+    credits: {
+      enabled: false
+    },
+    tooltip: {
+      headerFormat: '<b>{point.x}</b><br/>',
+      pointFormat: '{series.name} WORD COUNT: {point.y}<br/>'
+    },
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+
+    series: [
+      {
+        name: 'RISK',
+        data: risks.filter(e => e),
+        color: '#ff98a4'
+      },
+      {
+        name: 'NOTES',
+        data: notes.filter(e => e),
+        color: '#7fc8fd'
+      },
+      {
+        name: 'MDA',
+        data: mdas.filter(e => e),
+        color: '#7fe4a6'
+      }
+    ]
   };
-
-  const chart5Data = [
-    {
-      name: 'NOTES',
-      data: notes.filter(e => e)
-    },
-    {
-      name: 'MDA',
-      data: mdas.filter(e => e)
-    },
-
-    {
-      name: 'RISK',
-      data: risks.filter(e => e)
-    }
-  ];
 
   return (
     <Fragment>
       <Card className="mb-4">
         <div className="card-header-alt d-flex justify-content-between p-4">
-          <div>
-            <h6 className="font-weight-bold font-size-lg mb-1 text-black">Revenue progress</h6>
-            <p className="text-black-50 mb-0">Our company revenues, split by progress.</p>
-          </div>
+          <Grid container spacing={3}>
+            <Grid item xs={7}>
+              <div>
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">Revenue progress</h6>
+                <p className="text-black-50 mb-0">Our company revenues, split by progress.</p>
+              </div>
+            </Grid>
+            <Grid item xs={5}>
+              <div>
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">Word count changes</h6>
+              </div>
+            </Grid>
+          </Grid>
         </div>
         <div className="mx-4 divider" />
         <div className="mx-4 divider" />
@@ -135,7 +165,7 @@ const FilingsDetailsGraph = props => {
             </Grid>
             <Grid item xs={12} md={6}>
               {!isEmpty(fillingsGraphData) ? (
-                <Chart options={chart5Options} series={chart5Data} type="bar" height={400} />
+                <HighchartsReact highcharts={Highcharts} options={options} />
               ) : (
                 'No Data Available'
               )}

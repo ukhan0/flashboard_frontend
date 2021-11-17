@@ -5,8 +5,6 @@ import { Paper, Box, Grid, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { get } from 'lodash';
 import config from '../../config/config';
-
-import moment from 'moment';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import SentimentFilters from './SentimentFiltres';
 
@@ -71,7 +69,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Period Date:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{data ? moment.unix(get(data, 'completed_ts', null)).format('MM/DD/YYYY') : null}</h6>
+                <h6>{data ? new Date(get(data, 'period_date', null)).toLocaleDateString() : null}</h6>
               </Grid>
             </Grid>
           </Grid>

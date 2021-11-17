@@ -6,9 +6,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
-
+import cjson from 'compressed-json';
 import moment from 'moment';
-
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 const columnDefs = [
   {
     headerName: 'Document Type',
@@ -29,7 +29,8 @@ const columnDefs = [
     sortable: true,
     flex: 1,
     colId: 'documentDate',
-    valueFormatter: params => moment(params.data.document_date).format('DD MMMM, YYYY')
+    valueFormatter: params =>
+      params.data.document_date ? moment(params.data.document_date).format('DD MMMM, YYYY') : ''
   },
   {
     headerName: 'Period Date',
@@ -39,7 +40,7 @@ const columnDefs = [
     sortable: false,
     flex: 1,
     colId: 'periodDate',
-    valueFormatter: params => moment(params.data.period_date).format('DD MMMM, YYYY')
+    valueFormatter: params => (params.data.period_date ? moment(params.data.period_date).format('DD MMMM, YYYY') : '')
   }
 ];
 
@@ -49,16 +50,22 @@ export default function FilingsResultsTable() {
   const { fillingsData } = useSelector(state => state.Filings);
   const cellClicked = async params => {
     if (params.data) {
-      let selectedItem = {
-        recentId: params.data.document_id,
-        companyName: params.data.company_name,
-        industry: params.data.industry,
-        sector: params.data.sector,
-        ticker: params.data.ticker
-      };
-      dispatch(setSelectedWatchlist(selectedItem));
+      let selectedItem = getCompanyByTicker(params.data.ticker);
+      let company = formatComapnyData(selectedItem);
+
+      company.recentId = params.data.document_id;
+      dispatch(setSelectedWatchlist(company));
       history.push('/sentiment');
     }
+  };
+  const getCompanyByTicker = ticker => {
+    let rawData = localStorage.getItem(`watchlist-data-all`);
+    if (rawData) {
+      rawData = cjson.decompress.fromString(rawData);
+    }
+    let company = rawData.find(sd => sd.ticker === ticker);
+
+    return company;
   };
 
   return (
