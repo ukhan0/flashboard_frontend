@@ -118,9 +118,7 @@ const TopicFilters = props => {
   const handleAdvancedSearchText = v => {
     if (v) {
       dispatch(setIsSimpleSearch(v));
-
       dispatch(setSelectedIndustries([]));
-
       dispatch(setSelectedSearch(null, null));
       dispatch(resetAllSearchParams());
     }

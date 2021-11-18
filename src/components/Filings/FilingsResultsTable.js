@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
@@ -9,55 +8,27 @@ import { useHistory } from 'react-router-dom';
 import cjson from 'compressed-json';
 import moment from 'moment';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
-const columnDefs = [
-  {
-    headerName: 'Document Type',
-    field: 'document_type',
-    menuTabs: false,
-    editable: false,
-    sortable: false,
-    flex: 1,
-    colId: 'documentType',
-    valueFormatter: params =>
-      params.data.document_type === 'FMP-transcript' ? 'Earning Calls' : params.data.document_type
-  },
-  {
-    headerName: 'Document Date',
-    field: 'document_date',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'documentDate',
-    valueFormatter: params =>
-      params.data.document_date ? moment(params.data.document_date).format('DD MMMM, YYYY') : ''
-  },
-  {
-    headerName: 'Period Date',
-    field: 'period_date',
-    menuTabs: false,
-    editable: false,
-    sortable: false,
-    flex: 1,
-    colId: 'periodDate',
-    valueFormatter: params => (params.data.period_date ? moment(params.data.period_date).format('DD MMMM, YYYY') : '')
-  }
-];
-
+import HighchartsReact from 'highcharts-react-official';
+import Highcharts from 'highcharts';
+import highchartsGantt from 'highcharts/modules/timeline';
+import { renameDocumentTypes } from './../topic/topicHelpers';
 export default function FilingsResultsTable() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
-  const cellClicked = async params => {
-    if (params.data) {
-      let selectedItem = getCompanyByTicker(params.data.ticker);
-      let company = formatComapnyData(selectedItem);
 
-      company.recentId = params.data.document_id;
-      dispatch(setSelectedWatchlist(company));
-      history.push('/sentiment');
-    }
-  };
+  const graphData = fillingsData.map(v => {
+    return {
+      ticker: v.ticker,
+      document_id: v.document_id,
+      document_type: renameDocumentTypes(v.document_type),
+      name: `<strong >${renameDocumentTypes(v.document_type)}</strong>`,
+
+      description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${moment(
+        v.period_date
+      ).format('DD MMMM, YYYY')}`
+    };
+  });
   const getCompanyByTicker = ticker => {
     let rawData = localStorage.getItem(`watchlist-data-all`);
     if (rawData) {
@@ -67,17 +38,70 @@ export default function FilingsResultsTable() {
 
     return company;
   };
-
+  const options = {
+    chart: {
+      zoomType: 'x',
+      type: 'timeline'
+    },
+    xAxis: {
+      type: 'datetime',
+      visible: false
+    },
+    yAxis: {
+      gridLineWidth: 1,
+      title: null,
+      labels: {
+        enabled: false
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    title: {
+      text: 'Timeline of Document Filings'
+    },
+    subtitle: {
+      text: null
+    },
+    tooltip: {
+      style: {
+        width: 300
+      }
+    },
+    plotOptions: {
+      series: {
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function() {
+              if (this) {
+                let selectedItem = getCompanyByTicker(this.ticker);
+                let company = formatComapnyData(selectedItem);
+                company.recentId = this.document_id;
+                dispatch(setSelectedWatchlist(company));
+                history.push('/sentiment');
+              }
+            }
+          }
+        }
+      }
+    },
+    series: [
+      {
+        dataLabels: {
+          allowOverlap: false,
+          format: '<strong >{point.document_type}</strong>'
+        },
+        marker: {
+          symbol: 'circle'
+        },
+        data: graphData.reverse()
+      }
+    ]
+  };
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-      <AgGridReact
-        rowSelection="single"
-        domLayout="autoHeight"
-        rowData={fillingsData}
-        columnDefs={columnDefs}
-        suppressCellSelection={true}
-        onCellClicked={cellClicked}
-        multiSortKey={'ctrl'}></AgGridReact>
+      <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
     </div>
   );
 }

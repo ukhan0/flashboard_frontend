@@ -21,6 +21,7 @@ import { performTopicSearchAggregate, fetchTopicsList, deleteSearch } from './to
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
+import TopicDeleteSearchConfirmDialog from './TopicDeleteSearchConfirmDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -61,6 +62,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
+  const [modal2, setModal2] = React.useState(false);
+  const [deleteSearchId, setDeleteSearchId] = React.useState(null);
   const { cancelTokenSourceHighlights, savedSearches, selectedSearch } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const firstTimeLoad = useRef(false);
@@ -134,9 +137,24 @@ export default function TopicSearchHistory(props) {
     props.handleClose();
     dispatch(setBackDropOnCompanyClick(false));
   };
+  const handleDeleteSearch = searchId => {
+    setModal2(!modal2);
+    if (searchId) {
+      setDeleteSearchId(searchId);
+    }
+  };
+  const confirmDeleteSearch = () => {
+    setModal2(!modal2);
+    dispatch(deleteSearch(deleteSearchId));
+  };
 
   return (
     <div className={classes.savedSearchesSection}>
+      <TopicDeleteSearchConfirmDialog
+        open={modal2}
+        handleDeleteSearch={handleDeleteSearch}
+        confirmDeleteSearch={confirmDeleteSearch}
+      />
       <List component="nav" className={classes.root}>
         {savedSearches.length > 0 ? (
           savedSearches.map((s, index) => {
@@ -164,7 +182,7 @@ export default function TopicSearchHistory(props) {
                     }}>
                     <EditIcon className={classes.editIcon} />
                   </IconButton>
-                  <IconButton aria-label="comments" size="small" onClick={() => dispatch(deleteSearch(s.searchId))}>
+                  <IconButton aria-label="comments" size="small" onClick={() => handleDeleteSearch(s.searchId)}>
                     <DeleteForeverIcon className={classes.deleteIcon} />
                   </IconButton>
                 </ListItemSecondaryAction>

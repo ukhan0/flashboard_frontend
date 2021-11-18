@@ -54,7 +54,7 @@ const FilingsCards = () => {
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
-      content: 'Neutral',
+      content: 'Sentiment',
       num: risk,
       percent: 67,
       options: {
@@ -126,7 +126,7 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
-            name: 'sentiment',
+            name: 'Sentiment',
             data: [...risk.reverse()],
             color: '#ff98a4'
           }
@@ -135,7 +135,7 @@ const FilingsCards = () => {
     },
     {
       heading: 'MANAGEMENT & DISCUSSION',
-      content: 'Extermely High',
+      content: 'Sentiment',
       num: mda,
       percent: 32,
       options: {
@@ -207,7 +207,7 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
-            name: 'sentiment',
+            name: 'Sentiment',
             data: [...mda.reverse()],
             color: '#7fe4a6'
           }
@@ -216,7 +216,7 @@ const FilingsCards = () => {
     },
     {
       heading: 'NOTES TO  FINANCIAL STATEMENT',
-      content: 'High',
+      content: 'Sentiment',
       num: notes,
       percent: 21,
       options: {
@@ -285,7 +285,7 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
-            name: 'sentiment',
+            name: 'Sentiment',
             data: [...notes.reverse()],
             color: '#7fc8fd'
           }
