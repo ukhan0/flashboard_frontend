@@ -50,7 +50,7 @@ const FilingsCards = () => {
     riskDates = fillingsGraphData.filter(s => get(s, 'risk_factors.ssssss', null));
     notesDates = fillingsGraphData.filter(s => get(s, 'notes.ssssss', null));
   }
-
+console.log(riskDates,"riskDates")
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
@@ -90,7 +90,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          categories: riskDates.map(v => moment(v.document_date).format('DD MMMM, YYYY')).reverse(),
+          categories: riskDates.map(v => v.document_date),
           title: {
             text: null
           }
@@ -127,7 +127,7 @@ const FilingsCards = () => {
           {
             showInLegend: false,
             name: 'Sentiment',
-            data: [...risk.reverse()],
+            data: risk,
             color: '#ff98a4'
           }
         ]
@@ -171,7 +171,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          categories: mdaDates.map(v => moment(v.document_date).format('DD MMMM, YYYY')).reverse(),
+          categories: mdaDates.map(v => v.document_date),
           title: {
             text: null
           }
@@ -208,7 +208,7 @@ const FilingsCards = () => {
           {
             showInLegend: false,
             name: 'Sentiment',
-            data: [...mda.reverse()],
+            data: mda,
             color: '#7fe4a6'
           }
         ]
@@ -252,7 +252,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          categories: notesDates.map(v => moment(v.document_date).format('DD MMMM, YYYY')).reverse()
+          categories: notesDates.map(v => v.document_date),
         },
         plotOptions: {
           series: {
@@ -286,7 +286,7 @@ const FilingsCards = () => {
           {
             showInLegend: false,
             name: 'Sentiment',
-            data: [...notes.reverse()],
+            data: notes,
             color: '#7fc8fd'
           }
         ]
@@ -296,19 +296,21 @@ const FilingsCards = () => {
 
   const getCount = data => {
     let count = '';
-    if (data.length >= 2) {
-      count = (data[0] - data[1]).toFixed(2);
-    }
-    if (data.length === 1) {
-      count = data[0].toFixed(2);
+    if (data.length >= 1) {
+      count = data[data.length-1].toFixed(2);
     }
     return count;
   };
   const getPercentageValue = data => {
     let count = '';
-
+    console.log(data)
     if (data.length >= 2) {
-      count = (data[0] - (data[1] / data[1]) * 100).toFixed(2);
+      const current_val = data[data.length - 1]
+      const last_val = data[data.length - 2]
+      console.log("current_val=>", current_val, "last_val ",last_val)
+      //let increase = current_val - last_val
+      //count = increase/current_val * 100
+      count = (((current_val - last_val) / last_val) * 100).toFixed(2);
     }
     if (data.length === 1) {
       count = data[0].toFixed(2);
