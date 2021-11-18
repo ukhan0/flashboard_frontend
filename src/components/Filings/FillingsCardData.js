@@ -327,7 +327,7 @@ const FilingsCards = () => {
               <Grid item xs={6}>
                 <CardContent>
                   <p>{data.heading}</p>
-                  <h3>{`${data.content} (${getCount(data.num.filter(e => e))})`}</h3>
+                  <h5>{`${data.content} (${getCount(data.num.filter(e => e))})`}</h5>
                   {getPercentageValue(data.num.filter(e => e)) > 35 ? (
                     <p style={{ color: 'green' }}>
                       {getPercentageValue(data.num.filter(e => e)) + '%'}
