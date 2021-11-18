@@ -20,12 +20,16 @@ export default function FilingsTimelineChart() {
   const { fillingsData } = useSelector(state => state.Filings);
 
   const graphData = fillingsData.map(v => {
+    let y = moment(v.document_date).format('YYYY');
+    let m = moment(v.document_date).format('M');
+    let d = moment(v.document_date).format('D');
+    let date = Date.UTC(parseInt(y), parseInt(m), parseInt(d));
     return {
       ticker: v.ticker,
       document_id: v.document_id,
       document_type: renameDocumentTypes(v.document_type),
       name: `<strong >${renameDocumentTypes(v.document_type)}</strong>`,
-
+      x: date,
       description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${moment(
         v.period_date
       ).format('DD MMMM, YYYY')}`

@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 const useStyles = makeStyles(theme => ({
@@ -320,10 +321,10 @@ const FilingsCards = () => {
                 <CardContent>
                   <p>{data.heading}</p>
                   <h5>{`${data.content} (${getCount(data.num.filter(e => e))})`}</h5>
-                  {getPercentageValue(data.num.filter(e => e)) > 35 ? (
+                  {getPercentageValue(data.num.filter(e => e)) >= 0 ? (
                     <p style={{ color: 'green' }}>
                       {getPercentageValue(data.num.filter(e => e)) + '%'}
-                      <ExpandMoreIcon></ExpandMoreIcon>
+                      <ExpandLessIcon></ExpandLessIcon>
                     </p>
                   ) : (
                     <p style={{ color: 'red' }}>

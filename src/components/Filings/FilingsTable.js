@@ -29,7 +29,8 @@ const columnDefs = [
     sortable: true,
     flex: 1,
     colId: 'documentDate',
-    valueFormatter: params => (params.data.document_date ? params.data.document_date : '')
+    valueFormatter: params =>
+      params.data.document_date ? moment(params.data.document_date).format('DD MMMM, YYYY') : ''
   },
   {
     headerName: 'Period Date',
