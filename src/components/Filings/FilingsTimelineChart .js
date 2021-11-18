@@ -11,8 +11,10 @@ import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/modules/timeline';
-import { renameDocumentTypes } from './../topic/topicHelpers';
-export default function FilingsResultsTable() {
+import { renameDocumentTypes } from '../topic/topicHelpers';
+import { Paper } from '@material-ui/core';
+import clsx from 'clsx';
+export default function FilingsTimelineChart() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
@@ -68,6 +70,9 @@ export default function FilingsResultsTable() {
         width: 300
       }
     },
+    credits: {
+      enabled: false
+    },
     plotOptions: {
       series: {
         cursor: 'pointer',
@@ -95,13 +100,15 @@ export default function FilingsResultsTable() {
         marker: {
           symbol: 'circle'
         },
-        data: graphData.reverse()
+        data: graphData
       }
     ]
   };
   return (
-    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-      <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
-    </div>
+    <Paper className={clsx('app-page-title')}>
+      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+        <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
+      </div>
+    </Paper>
   );
 }

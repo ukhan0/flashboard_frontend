@@ -7,7 +7,6 @@ import HighchartsReact from 'highcharts-react-official';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
-import moment from 'moment';
 const useStyles = makeStyles(theme => ({
   card: {
     height: 180
@@ -31,26 +30,20 @@ const FilingsCards = () => {
   if (!isEmpty(fillingsGraphData)) {
     mda = fillingsGraphData.map(s => {
       let wordCount = get(s, 'mda.ssssss', '');
-      if (wordCount) {
-      }
-
       return wordCount;
     });
     risk = fillingsGraphData.map(s => {
       let wordCount = get(s, 'risk_factors.ssssss', '');
-
       return wordCount;
     });
     notes = fillingsGraphData.map(s => {
       let wordCount = get(s, 'notes.ssssss', '');
-
       return wordCount;
     });
     mdaDates = fillingsGraphData.filter(s => get(s, 'mda.ssssss', null));
     riskDates = fillingsGraphData.filter(s => get(s, 'risk_factors.ssssss', null));
     notesDates = fillingsGraphData.filter(s => get(s, 'notes.ssssss', null));
   }
-console.log(riskDates,"riskDates")
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
@@ -252,7 +245,7 @@ console.log(riskDates,"riskDates")
           }
         },
         xAxis: {
-          categories: notesDates.map(v => v.document_date),
+          categories: notesDates.map(v => v.document_date)
         },
         plotOptions: {
           series: {
@@ -297,19 +290,16 @@ console.log(riskDates,"riskDates")
   const getCount = data => {
     let count = '';
     if (data.length >= 1) {
-      count = data[data.length-1].toFixed(2);
+      count = data[data.length - 1].toFixed(2);
     }
     return count;
   };
   const getPercentageValue = data => {
     let count = '';
-    console.log(data)
+
     if (data.length >= 2) {
-      const current_val = data[data.length - 1]
-      const last_val = data[data.length - 2]
-      console.log("current_val=>", current_val, "last_val ",last_val)
-      //let increase = current_val - last_val
-      //count = increase/current_val * 100
+      const current_val = data[data.length - 1];
+      const last_val = data[data.length - 2];
       count = (((current_val - last_val) / last_val) * 100).toFixed(2);
     }
     if (data.length === 1) {
