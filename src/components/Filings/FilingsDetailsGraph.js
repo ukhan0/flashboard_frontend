@@ -94,13 +94,13 @@ const FilingsDetailsGraph = props => {
       <Card className="mb-4">
         <div className="card-header-alt d-flex justify-content-between p-4">
           <Grid container spacing={3}>
-            <Grid item xs={7}>
+            <Grid item xs={6}>
               <div>
                 <h6 className="font-weight-bold font-size-lg mb-1 text-black">Revenue progress</h6>
                 <p className="text-black-50 mb-0">Our company revenues, split by progress.</p>
               </div>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
               <div>
                 <h6 className="font-weight-bold font-size-lg mb-1 text-black">Word count changes</h6>
               </div>

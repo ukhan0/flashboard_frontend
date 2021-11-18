@@ -70,7 +70,7 @@ export default function FilingsResultsTable() {
       <AgGridReact
         rowSelection="single"
         domLayout="autoHeight"
-        rowData={fillingsData}
+        rowData={fillingsData.reverse()}
         columnDefs={columnDefs}
         suppressCellSelection={true}
         onCellClicked={cellClicked}

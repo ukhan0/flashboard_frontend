@@ -60,7 +60,7 @@ export default function FilingsTimelineChart() {
       enabled: false
     },
     title: {
-      text: 'Timeline of Document Filings'
+      text: null
     },
     subtitle: {
       text: null
