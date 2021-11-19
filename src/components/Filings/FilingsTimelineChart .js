@@ -5,7 +5,6 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
-import cjson from 'compressed-json';
 import moment from 'moment';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import HighchartsReact from 'highcharts-react-official';
@@ -14,6 +13,7 @@ import highchartsGantt from 'highcharts/modules/timeline';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
+import { getCompanyByTickerUniverse } from './FillingsHelper';
 export default function FilingsTimelineChart() {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -35,15 +35,7 @@ export default function FilingsTimelineChart() {
       ).format('DD MMMM, YYYY')}`
     };
   });
-  const getCompanyByTicker = ticker => {
-    let rawData = localStorage.getItem(`watchlist-data-all`);
-    if (rawData) {
-      rawData = cjson.decompress.fromString(rawData);
-    }
-    let company = rawData.find(sd => sd.ticker === ticker);
 
-    return company;
-  };
   const options = {
     chart: {
       zoomType: 'x',
@@ -84,7 +76,7 @@ export default function FilingsTimelineChart() {
           events: {
             click: function() {
               if (this) {
-                let selectedItem = getCompanyByTicker(this.ticker);
+                let selectedItem = getCompanyByTickerUniverse(this.ticker, 'all');
                 let company = formatComapnyData(selectedItem);
                 company.recentId = this.document_id;
                 dispatch(setSelectedWatchlist(company));

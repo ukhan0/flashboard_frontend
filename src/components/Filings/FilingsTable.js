@@ -5,11 +5,11 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
 import { useHistory } from 'react-router-dom';
-import cjson from 'compressed-json';
 import moment from 'moment';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { getCompanyByTickerUniverse } from './FillingsHelper';
 const columnDefs = [
   {
     headerName: 'Document Type',
@@ -49,7 +49,7 @@ export default function FilingsResultsTable() {
   const { fillingsData } = useSelector(state => state.Filings);
   const cellClicked = async params => {
     if (params.data) {
-      let selectedItem = getCompanyByTicker(params.data.ticker);
+      let selectedItem = getCompanyByTickerUniverse(params.data.ticker, 'all');
       let company = formatComapnyData(selectedItem);
 
       company.recentId = params.data.document_id;
@@ -57,15 +57,7 @@ export default function FilingsResultsTable() {
       history.push('/sentiment');
     }
   };
-  const getCompanyByTicker = ticker => {
-    let rawData = localStorage.getItem(`watchlist-data-all`);
-    if (rawData) {
-      rawData = cjson.decompress.fromString(rawData);
-    }
-    let company = rawData.find(sd => sd.ticker === ticker);
 
-    return company;
-  };
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact

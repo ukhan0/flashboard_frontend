@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
+import { getCompanyByTickerUniverse } from './FillingsHelper';
 const useStyles = makeStyles(theme => ({
   card: {
     height: 180
@@ -22,6 +23,11 @@ const useStyles = makeStyles(theme => ({
 
 const FilingsCards = () => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
+  const { selectedItem, selectedFileType } = useSelector(state => state.Watchlist);
+  const data = getCompanyByTickerUniverse(selectedItem.ticker, 'all');
+  const riskSentiment = selectedFileType === '10q' ? data.as : data.al;
+  const noteSentiment = selectedFileType === '10q' ? data.bi : data.az;
+  const mdaSentiment = selectedFileType === '10q' ? data.ae : data.x;
   let mda = [];
   let mdaDates = [];
   let risk = [];
@@ -48,7 +54,7 @@ const FilingsCards = () => {
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
-      content: 'Sentiment',
+      content: riskSentiment,
       num: risk,
       percent: 67,
       options: {
@@ -129,7 +135,7 @@ const FilingsCards = () => {
     },
     {
       heading: 'MANAGEMENT & DISCUSSION',
-      content: 'Sentiment',
+      content: mdaSentiment,
       num: mda,
       percent: 32,
       options: {
@@ -210,7 +216,7 @@ const FilingsCards = () => {
     },
     {
       heading: 'NOTES TO  FINANCIAL STATEMENT',
-      content: 'Sentiment',
+      content: noteSentiment,
       num: notes,
       percent: 21,
       options: {
