@@ -30,7 +30,7 @@ export default function TopicHelpPopup() {
         titleColor={'black'}
         isOpen={open}
         onClose={handleClose}
-        title={'Filings Flash Smart Search Operators'}
+        title={'Unstructured Data Terminal Smart Search Operators'}
         size={'lg'}>
         <TopicHelpPopupContent onClose={handleClose} />
       </Dialog>

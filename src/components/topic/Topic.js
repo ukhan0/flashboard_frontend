@@ -17,6 +17,7 @@ import {
   setSnackBarActive
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate } from './topicActions';
+import TopicFilters from './TopicFilters';
 
 const Topic = () => {
   const classes = topicStyles();
@@ -52,6 +53,7 @@ const Topic = () => {
   return (
     <div className={classes.root}>
       <TopicCurrentSearchDetail />
+      <TopicFilters />
       <TopicDialog handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>

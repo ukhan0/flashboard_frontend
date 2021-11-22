@@ -11,9 +11,9 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/modules/timeline';
 import { renameDocumentTypes } from '../topic/topicHelpers';
-import { Paper } from '@material-ui/core';
+import { Paper, rgbToHex } from '@material-ui/core';
 import clsx from 'clsx';
-import { getCompanyByTickerUniverse } from './FillingsHelper';
+import { getCompanyByTickerUniverse, getColorByDocType } from './FillingsHelper';
 export default function FilingsTimelineChart() {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -32,18 +32,20 @@ export default function FilingsTimelineChart() {
       x: date,
       description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${moment(
         v.period_date
-      ).format('DD MMMM, YYYY')}`
+      ).format('DD MMMM, YYYY')}`,
+      color: getColorByDocType(v.document_type)
     };
   });
 
   const options = {
     chart: {
       zoomType: 'x',
-      type: 'timeline'
+      type: 'timeline',
+      height: '150px'
     },
     xAxis: {
       type: 'datetime',
-      visible: false
+      visible: true
     },
     yAxis: {
       gridLineWidth: 1,

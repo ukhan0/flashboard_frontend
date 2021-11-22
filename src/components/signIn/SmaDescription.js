@@ -25,7 +25,7 @@ const SmaDescription = () => {
               <p className="font-size-md mb-0 text-white-100">
                 SMA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF has
                 turned SEC Edgar Filings into Textual Data at the Item, Section, Sub-Section, and Note level with
-                Historical Baselines going back to 2006. FlilingsFlash is the first product using MRF to allow for quick
+                Historical Baselines going back to 2006. Unstructured Data Terminal is the first product using MRF to allow for quick
                 sorting by Sentiment, Change in Sentiment, and Change in Word Count. UDT also provides
                 filtering by Tabs for Recent Filings over the Last Week or at the Total Doc or the Item Level including
                 MD&A, Risk, Notes, and FSS.

@@ -54,7 +54,7 @@ const FilingsCards = () => {
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
-      content: riskSentiment,
+      content: riskSentiment ? riskSentiment : '',
       num: risk,
       percent: 67,
       options: {
@@ -135,7 +135,7 @@ const FilingsCards = () => {
     },
     {
       heading: 'MANAGEMENT & DISCUSSION',
-      content: mdaSentiment,
+      content: mdaSentiment ? mdaSentiment : '',
       num: mda,
       percent: 32,
       options: {
@@ -216,7 +216,7 @@ const FilingsCards = () => {
     },
     {
       heading: 'NOTES TO  FINANCIAL STATEMENT',
-      content: noteSentiment,
+      content: noteSentiment ? noteSentiment : '',
       num: notes,
       percent: 21,
       options: {
