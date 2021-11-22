@@ -25,9 +25,18 @@ const FilingsCards = () => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
   const { selectedItem, selectedFileType } = useSelector(state => state.Watchlist);
   const data = getCompanyByTickerUniverse(selectedItem.ticker, 'all');
-  const riskSentiment = selectedFileType === '10q' ? data.as : data.al;
-  const noteSentiment = selectedFileType === '10q' ? data.bi : data.az;
-  const mdaSentiment = selectedFileType === '10q' ? data.ae : data.x;
+  const riskSentiment =
+    selectedFileType === '10q'
+      ? { sentimentQuintile: data.as, sentimentChangeQuintile: data.au }
+      : { sentimentQuintile: data.al, sentimentChangeQuintile: data.an };
+  const noteSentiment =
+    selectedFileType === '10q'
+      ? { sentimentQuintile: data.bi, sentimentChangeQuintile: data.bk }
+      : { sentimentQuintile: data.az, sentimentChangeQuintile: data.bb };
+  const mdaSentiment =
+    selectedFileType === '10q'
+      ? { sentimentQuintile: data.ae, sentimentChangeQuintile: data.ag }
+      : { sentimentQuintile: data.x, sentimentChangeQuintile: data.z };
   let mda = [];
   let mdaDates = [];
   let risk = [];
@@ -322,22 +331,26 @@ const FilingsCards = () => {
       {cardArray.map((data, index) => (
         <Grid item xs={4} key={index}>
           <Card className={classes.card}>
+            <p style={{ textAlign: 'center', marginTop: '5px' }}>{data.heading}</p>
             <Grid container>
               <Grid item xs={6}>
                 <CardContent>
-                  <p>{data.heading}</p>
-                  <h5>{`${data.content} (${getCount(data.num.filter(e => e))})`}</h5>
-                  {getPercentageValue(data.num.filter(e => e)) >= 0 ? (
-                    <p style={{ color: 'green' }}>
-                      {getPercentageValue(data.num.filter(e => e)) + '%'}
-                      <ExpandLessIcon></ExpandLessIcon>
-                    </p>
-                  ) : (
-                    <p style={{ color: 'red' }}>
-                      {getPercentageValue(data.num.filter(e => e)) + '%'}
-                      <ExpandMoreIcon></ExpandMoreIcon>
-                    </p>
+                  <h5>{`${data.content ? data.content.sentimentQuintile : ''} (${getCount(
+                    data.num.filter(e => e)
+                  )})`}</h5>
+                  <label className="text-black-50 d-block">Filing Sentiment</label>
+                  <h5>{`${data.content ? data.content.sentimentChangeQuintile : ''} (${getPercentageValue(
+                    data.num.filter(e => e)
                   )}
+                  )`}</h5>
+                  <label className="text-black-50 d-block">Change</label>
+                  {/* <span style={{ display: 'inline' }}>
+                    {getPercentageValue(data.num.filter(e => e)) >= 0 ? (
+                      <ExpandLessIcon></ExpandLessIcon>
+                    ) : (
+                      <ExpandMoreIcon></ExpandMoreIcon>
+                    )}
+                  </span> */}
                 </CardContent>
               </Grid>
               <Grid item xs={6} className={classes.chart}>

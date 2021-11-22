@@ -5,13 +5,15 @@ import { isEmpty, get } from 'lodash';
 import moment from 'moment';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { filingsData } from 'reducers/filingsMockData';
 Highcharts.setOptions({
   lang: {
     thousandsSep: ','
   }
 });
 const FilingsDetailsGraph = props => {
-  const { fillingsGraphData } = useSelector(state => state.Filings);
+  const { fillingsGraphData, filingsRevenueData } = useSelector(state => state.Filings);
+  let filingRevenue = Object.keys(filingsRevenueData);
   let mdas = [];
   let risks = [];
   let notes = [];
@@ -112,56 +114,34 @@ const FilingsDetailsGraph = props => {
         <div className="p-4">
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <div className="p-5 mb-4 rounded bg-secondary">
-                <div className="mb-4">
-                  <div className="line-height-1">
-                    <span className="font-size-lg font-weight-bold pr-3">54,126</span>
-                    <span className="text-muted">dribbble.com</span>
-                  </div>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <div className="flex-grow-1">
-                      <LinearProgress value={50} color="primary" variant="determinate" />
-                    </div>
-                    <div className="text-dark font-weight-bold pl-3">50%</div>
-                  </div>
+              <>
+                <div className="p-5 mb-4 rounded bg-secondary" style={{ height: 400, overflow: 'scroll' }}>
+                  {filingRevenue.map(v => {
+                    return (
+                      <div>
+                        <div className="mb-4">
+                          <div className="line-height-1">
+                            <span className="font-size-lg font-weight-bold pr-3">
+                              {filingsRevenueData[v].wordDifference}
+                            </span>
+                            <span className="text-muted">{v}</span>
+                          </div>
+                          <div className="d-flex justify-content-center align-items-center">
+                            <div className="flex-grow-1">
+                              <LinearProgress
+                                value={filingsRevenueData[v].wordDifference}
+                                color="primary"
+                                variant="determinate"
+                              />
+                            </div>
+                            <div className="text-dark font-weight-bold pl-3">{`${filingsRevenueData[v].percentage}%`}</div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="mb-4">
-                  <div className="line-height-1">
-                    <span className="font-size-lg font-weight-bold pr-3">12,345</span>
-                    <span className="text-muted">amazon.com</span>
-                  </div>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <div className="flex-grow-1">
-                      <LinearProgress value={76} color="primary" variant="determinate" />
-                    </div>
-                    <div className="text-dark font-weight-bold pl-3">76%</div>
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <div className="line-height-1">
-                    <span className="font-size-lg font-weight-bold pr-3">34,985</span>
-                    <span className="text-muted">facebook.com</span>
-                  </div>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <div className="flex-grow-1">
-                      <LinearProgress value={87} color="primary" variant="determinate" />
-                    </div>
-                    <div className="text-dark font-weight-bold pl-3">87%</div>
-                  </div>
-                </div>
-                <div>
-                  <div className="line-height-1">
-                    <span className="font-size-lg font-weight-bold pr-3">76,381</span>
-                    <span className="text-muted">youtube.com</span>
-                  </div>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <div className="flex-grow-1">
-                      <LinearProgress value={59} color="primary" variant="determinate" />
-                    </div>
-                    <div className="text-dark font-weight-bold pl-3">59%</div>
-                  </div>
-                </div>
-              </div>
+              </>
             </Grid>
             <Grid item xs={12} md={6}>
               {!isEmpty(fillingsGraphData) ? (

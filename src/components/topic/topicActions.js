@@ -14,7 +14,7 @@ import {
   setIsSaveSearchError,
   setSearchResultHighlights,
   setSearchBackdropHighlights,
-  setIsSearchHighlightLoading,
+  // setIsSearchHighlightLoading,
   setIsSearchLoading,
   setSavedSearches,
   setSnackBarActive,

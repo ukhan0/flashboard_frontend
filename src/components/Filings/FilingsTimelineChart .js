@@ -11,7 +11,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/modules/timeline';
 import { renameDocumentTypes } from '../topic/topicHelpers';
-import { Paper, rgbToHex } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
 import { getCompanyByTickerUniverse, getColorByDocType } from './FillingsHelper';
 export default function FilingsTimelineChart() {

@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import FilingsTimelineChart from './FilingsTimelineChart ';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
-import { getCompanyFilingListing, getCompanyFilingGraphData } from './FillingAction';
+import { getCompanyFilingListing, getCompanyFilingGraphData, getCompanyFilingRevenueData } from './FillingAction';
 import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import { setCompanyFillingGraphData } from '../../reducers/Filings';
@@ -37,6 +37,7 @@ const Filings = () => {
     dispatch(setCompanyFillingGraphData([]));
     dispatch(getCompanyFilingListing());
     dispatch(getCompanyFilingGraphData());
+    // dispatch(getCompanyFilingRevenueData());
   }, [dispatch]);
 
   if (!selectedItem) {

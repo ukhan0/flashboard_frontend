@@ -130,83 +130,16 @@ const TopicFilters = props => {
     <Grid
       spacing={2}
       container
-      // direction="row"
-      // justify="space-between"
-      // alignItems="flex-start"
-      // className={classes.topsection}
-    >
+      direction="row"
+      justify="space-between"
+      alignItems="flex-start"
+      className={classes.topsection}>
       <TopicClearAdvanceSearch
         open={modal4}
         handleToggle={handleToggle}
         handleAdvancedSearchText={handleAdvancedSearchText}
       />
       <Grid item xs={12}>
-        <Grid container spacing={1}>
-          <Grid item xs={4}>
-            <div style={{ marginRight: '20px' }}>
-              {isSimpleSearch ? (
-                <>
-                  <h6>All of these phrase</h6>
-                  <TopicSearchTextTags />
-                  <br />
-                  <h6>None of these phrase</h6>
-                  <TopicIgnoreSearchText />
-                </>
-              ) : (
-                <>
-                  <h6>All of these phrase</h6>
-                  <TopicSearchTextField />
-                </>
-              )}
-              <h6>Document Types</h6>
-              <TopicDocumentTypeDropdown />
-            </div>
-          </Grid>
-          <Grid item xs={1}>
-            <h6>Search</h6>
-            <ButtonGroup color="primary">
-              {searchVersionTypes.map((searchVersion, i) => (
-                <Button
-                  size="small"
-                  key={`sent_${i}`}
-                  onClick={() => handleSearchFieldType(searchVersion.key)}
-                  variant={isSimpleSearch === searchVersion.key ? 'contained' : 'outlined'}>
-                  {searchVersion.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-            <h6 className={classes.dateRange}>Date Range</h6>
-            <TopicRangePicker />
-          </Grid>
-          <Grid item xs={4}>
-            <h6>Section</h6>
-            <TopicSectionGroup />
-            <h6>Search Universe</h6>
-            <TopicUniverseGroup />
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Grid container spacing={1} direction="row" justify="space-between" alignItems="flex-end">
-              <Grid item>
-                <h6>Enable Email Alert</h6>
-                <Switch
-                  checked={isTopicEmailAlertEnable}
-                  onChange={handleChangeTopicAlert}
-                  color="primary"
-                  name="checkedB"
-                  inputProps={{ 'aria-label': 'primary checkbox' }}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}></Grid>
-        </Grid>
-      </Grid>
-
-      {/* <Grid item xs={12}>
         <Grid container>
           <Grid item xs={8}>
             <h6>Theme Name</h6>
@@ -342,7 +275,7 @@ const TopicFilters = props => {
             <Typography color="error">Error Occured</Typography>
           </div>
         ) : null}
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 };

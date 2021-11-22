@@ -1,7 +1,12 @@
 import axios from 'axios';
-import { setCompanyFillingData, setCompanyFillingGraphData } from '../../reducers/Filings';
+import {
+  setCompanyFillingData,
+  setCompanyFillingGraphData,
+  setCompanyFillingRevenueData
+} from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
+
 
 export const getCompanyFilingListing = () => {
   return async (dispatch, getState) => {
@@ -51,6 +56,32 @@ export const getCompanyFilingGraphData = () => {
       }
     } catch (error) {
       dispatch(setCompanyFillingGraphData([]));
+    }
+  };
+};
+
+export const getCompanyFilingRevenueData = () => {
+  return async (dispatch, getState) => {
+    const { selectedItem } = getState().Watchlist;
+
+    if (!selectedItem) {
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `https://api-fillings.socialmarketanalytics.com/comparener?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
+      );
+
+      const data = get(response, 'data', []);
+      if (response) {
+        let parseData = JSON.parse(data.data);
+        console.log(parseData, 'deeta');
+        dispatch(setCompanyFillingRevenueData(parseData));
+      } else {
+        dispatch(setCompanyFillingRevenueData([]));
+      }
+    } catch (error) {
+      dispatch(setCompanyFillingRevenueData([]));
     }
   };
 };
