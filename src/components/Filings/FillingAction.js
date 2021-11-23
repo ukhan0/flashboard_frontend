@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { setCompanyFillingData, setCompanyFillingGraphData } from '../../reducers/Filings';
+import {
+  setCompanyFillingData,
+  setCompanyFillingGraphData,
+  setCompanyFillingRevenueData
+} from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
 
@@ -39,9 +43,8 @@ export const getCompanyFilingGraphData = () => {
     }
     try {
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_graph_detail?${
-          companyId ? `company_id=${companyId}` : `company_name=${companyName}`
-        }`
+        `${config.apiUrl}/api/get_company_filing_graph_detail?
+        ${companyId ? `company_id=${companyId}` : `company_name=${escape(companyName)}`}`
       );
 
       const data = get(response, 'data', []);
@@ -52,6 +55,32 @@ export const getCompanyFilingGraphData = () => {
       }
     } catch (error) {
       dispatch(setCompanyFillingGraphData([]));
+    }
+  };
+};
+
+export const getCompanyFilingRevenueData = () => {
+  return async (dispatch, getState) => {
+    const { selectedItem } = getState().Watchlist;
+
+    if (!selectedItem) {
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
+      );
+
+      const data = get(response, 'data', []);
+      if (response) {
+        let parseData = JSON.parse(data.data);
+
+        dispatch(setCompanyFillingRevenueData(parseData));
+      } else {
+        dispatch(setCompanyFillingRevenueData([]));
+      }
+    } catch (error) {
+      dispatch(setCompanyFillingRevenueData([]));
     }
   };
 };

@@ -10,6 +10,7 @@ import TopicRangePicker from './TopicRangePicker';
 import { useSelector, useDispatch } from 'react-redux';
 import { forEach, concat } from 'lodash';
 import TopicSearchTextTags from './TopicSearchTextInputTags';
+import TopicIgnoreSearchText from './TopicIgnoreSearchTextInputTags';
 import {
   updateSaveSearch,
   handleSaveSearch,
@@ -21,11 +22,14 @@ import {
   resetResultsPage,
   cancelExistingHightlightsCalls,
   setIsTopicEmailAlertEnable,
-  setTopicSearchText,
-  setIsSimpleSearch
+  setIsSimpleSearch,
+  setSelectedIndustries,
+  setSelectedSearch,
+  resetAllSearchParams
 } from '../../reducers/Topic';
 import TopicSeachLabelTextField from './TopicSearchLabelTextField';
 import { searchVersionTypes } from '../../config/filterTypes';
+import TopicClearAdvanceSearch from './TopicClearAdvanceSearch';
 
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -55,6 +59,7 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = props => {
   const classes = useStyles();
+  const [isModal, setModal] = React.useState(false);
   const dispatch = useDispatch();
   const {
     searchText,
@@ -104,10 +109,21 @@ const TopicFilters = props => {
   };
 
   const handleSearchFieldType = v => {
-    dispatch(setTopicSearchText(''));
-
-    dispatch(setIsSimpleSearch(v));
+    if (!v) {
+      dispatch(setIsSimpleSearch(v));
+    }
+    setModal(v);
   };
+  const handleToggle = () => setModal(!isModal);
+  const handleAdvancedSearchText = v => {
+    if (v) {
+      dispatch(setIsSimpleSearch(v));
+      dispatch(setSelectedIndustries([]));
+      dispatch(setSelectedSearch(null, null));
+      dispatch(resetAllSearchParams());
+    }
+  };
+
   const isButtonActive = !(searchText.length > 2 && searchLabel.length > 2);
 
   return (
@@ -118,6 +134,11 @@ const TopicFilters = props => {
       justify="space-between"
       alignItems="flex-start"
       className={classes.topsection}>
+      <TopicClearAdvanceSearch
+        open={isModal}
+        handleToggle={handleToggle}
+        handleAdvancedSearchText={handleAdvancedSearchText}
+      />
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={8}>
@@ -136,7 +157,7 @@ const TopicFilters = props => {
             </div>
           </Grid>
         </Grid>
-        <h6>Search Terms</h6>
+        <h6>All of these phrase</h6>
         <div className={classes.searchContainer}>
           <div className={classes.searchFieldContainer}>
             <Grid container>
@@ -144,7 +165,16 @@ const TopicFilters = props => {
                 <Grid container>
                   <Grid item xs={9}>
                     <div style={{ marginRight: '20px' }}>
-                      {isSimpleSearch ? <TopicSearchTextTags /> : <TopicSearchTextField />}
+                      {isSimpleSearch ? (
+                        <>
+                          <TopicSearchTextTags />
+                          <br />
+                          <h6>None of these phrase</h6>
+                          <TopicIgnoreSearchText />
+                        </>
+                      ) : (
+                        <TopicSearchTextField />
+                      )}
                     </div>
                   </Grid>
                   <Grid item xs={3}>

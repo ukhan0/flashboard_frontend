@@ -79,6 +79,9 @@ const TopicSearchResults = () => {
   const [companyResults, setCompanyResults] = useState([]);
   const [companyDetails, setCompanyDetails] = useState({});
   const [summaryByCompany, setSummaryByCompany] = useState([]);
+  const [x, setX] = useState('');
+  const [y, setY] = useState('');
+  const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
@@ -160,9 +163,23 @@ const TopicSearchResults = () => {
     } else {
       dispatch(setSelectedWatchlist({ recentId: recentId, companyId: companyId, ticker: ticker }));
     }
-    history.push('/sentiment');
+    if (isGoToSentiment) {
+      history.push('/sentiment');
+    }
   };
 
+  const handleMouseDown = e => {
+    setX(e.pageX);
+    setY(e.pageY);
+  };
+  const handleMouseUp = e => {
+    const delta = 6;
+    const diffX = Math.abs(e.pageX - x);
+    const diffY = Math.abs(e.pageY - y);
+    if (diffX < delta && diffY < delta) {
+      setIsGotoSentiment(true);
+    }
+  };
   return (
     <div ref={resultsSection}>
       <div>
@@ -194,11 +211,7 @@ const TopicSearchResults = () => {
                           <Grid item>
                             <small className="text-black-50 pt-1 pr-2">
                               Filing ID:{' '}
-                              <b
-                                className={clsx(classes.clickable, 'text-first')}
-                                onClick={() => goToSentimentScreen(companyResult, get(companyResult, 'results', []))}>
-                                {companyResult.summary_id}
-                              </b>
+                              <b className={clsx(classes.clickable, 'text-first')}>{companyResult.summary_id}</b>
                             </small>
                             <small className="text-black-50 pt-1 pr-2">
                               Document ID: <b className="text-first">{companyResult.document_id}</b>
@@ -232,7 +245,9 @@ const TopicSearchResults = () => {
                                     'font-size-mg mb-2 text-black-50'
                                   )}
                                   dangerouslySetInnerHTML={{ __html: content.replaceAll(searchRegex, '') }}
-                                  onClick={() => goToSentimentScreen(companyResult, content, result.title)}></p>
+                                  onClick={e => goToSentimentScreen(companyResult, content, result.title, e)}
+                                  onMouseUp={e => handleMouseUp(e)}
+                                  onMouseDown={e => handleMouseDown(e)}></p>
                               ))}
                             </div>
                           );

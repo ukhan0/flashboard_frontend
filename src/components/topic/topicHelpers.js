@@ -64,13 +64,16 @@ export const removeDuplicateSuggestions = suggestionsObj => {
 };
 export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
-    const selected = type.map(v => {
+    let selected = type.map(v => {
       if (v === 'FMP-transcript') {
         v = 'Earning Calls';
       }
       return v;
     });
 
+    if (selected.length > 5) {
+      selected = selected.slice(0, 5);
+    }
     return selected.join(', ');
   }
 

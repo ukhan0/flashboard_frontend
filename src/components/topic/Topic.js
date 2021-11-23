@@ -52,6 +52,7 @@ const Topic = () => {
   return (
     <div className={classes.root}>
       <TopicCurrentSearchDetail />
+
       <TopicDialog handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>

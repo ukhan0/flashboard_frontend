@@ -18,7 +18,7 @@ export default function TopicSavedSearchesDropDown() {
       <Grid container spacing={4}>
         <Grid item>
           <ButtonGroup variant="outlined" color="primary" aria-label="split button" onClick={handleClick}>
-            <Button>My Topics</Button>
+            <Button>My Themes</Button>
             <Button color="primary" size="small" aria-haspopup="true" onClick={handleClick}>
               <ArrowDropDownIcon />
             </Button>

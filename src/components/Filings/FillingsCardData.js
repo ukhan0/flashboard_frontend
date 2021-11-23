@@ -4,9 +4,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useSelector } from 'react-redux';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, round } from 'lodash';
+import { getCompanyByTickerUniverse } from './FillingsHelper';
 const useStyles = makeStyles(theme => ({
   card: {
     height: 180
@@ -21,32 +23,48 @@ const useStyles = makeStyles(theme => ({
 
 const FilingsCards = () => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
+  const { selectedItem, selectedFileType } = useSelector(state => state.Watchlist);
+  const data = getCompanyByTickerUniverse(selectedItem.ticker, 'all');
+  const riskSentiment =
+    selectedFileType === '10q'
+      ? { sentimentQuintile: data.as, sentimentChangeQuintile: data.au }
+      : { sentimentQuintile: data.al, sentimentChangeQuintile: data.an };
+  const noteSentiment =
+    selectedFileType === '10q'
+      ? { sentimentQuintile: data.bi, sentimentChangeQuintile: data.bk }
+      : { sentimentQuintile: data.az, sentimentChangeQuintile: data.bb };
+  const mdaSentiment =
+    selectedFileType === '10q'
+      ? { sentimentQuintile: data.ae, sentimentChangeQuintile: data.ag }
+      : { sentimentQuintile: data.x, sentimentChangeQuintile: data.z };
   let mda = [];
+  let mdaDates = [];
   let risk = [];
+  let riskDates = [];
   let notes = [];
+  let notesDates = [];
   if (!isEmpty(fillingsGraphData)) {
     mda = fillingsGraphData.map(s => {
       let wordCount = get(s, 'mda.ssssss', '');
-
       return wordCount;
     });
     risk = fillingsGraphData.map(s => {
       let wordCount = get(s, 'risk_factors.ssssss', '');
-
       return wordCount;
     });
     notes = fillingsGraphData.map(s => {
       let wordCount = get(s, 'notes.ssssss', '');
-
       return wordCount;
     });
+    mdaDates = fillingsGraphData.filter(s => get(s, 'mda.ssssss', null));
+    riskDates = fillingsGraphData.filter(s => get(s, 'risk_factors.ssssss', null));
+    notesDates = fillingsGraphData.filter(s => get(s, 'notes.ssssss', null));
   }
-
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
-      content: 'Neutral',
-      num: 23,
+      content: riskSentiment ? riskSentiment : '',
+      num: risk,
       percent: 67,
       options: {
         chart: {
@@ -67,8 +85,9 @@ const FilingsCards = () => {
           enabled: false
         },
         tooltip: {
-          enabled: false,
-          shared: false
+          enabled: true,
+          shared: false,
+          valueDecimals: 4
         },
         yAxis: {
           visible: false,
@@ -80,10 +99,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
+          categories: riskDates.map(v => v.document_date),
           title: {
             text: null
           }
@@ -119,6 +135,7 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
+            name: 'Sentiment',
             data: risk,
             color: '#ff98a4'
           }
@@ -126,9 +143,9 @@ const FilingsCards = () => {
       }
     },
     {
-      heading: 'MANAGEMENT & DESCUSSION',
-      content: 'Extermely High',
-      num: 132,
+      heading: 'MANAGEMENT & DISCUSSION',
+      content: mdaSentiment ? mdaSentiment : '',
+      num: mda,
       percent: 32,
       options: {
         chart: {
@@ -149,8 +166,9 @@ const FilingsCards = () => {
           enabled: false
         },
         tooltip: {
-          enabled: false,
-          shared: false
+          enabled: true,
+          shared: false,
+          valueDecimals: 4
         },
         yAxis: {
           visible: false,
@@ -162,10 +180,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
+          categories: mdaDates.map(v => v.document_date),
           title: {
             text: null
           }
@@ -201,6 +216,7 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
+            name: 'Sentiment',
             data: mda,
             color: '#7fe4a6'
           }
@@ -209,8 +225,8 @@ const FilingsCards = () => {
     },
     {
       heading: 'NOTES TO  FINANCIAL STATEMENT',
-      content: 'High',
-      num: 93,
+      content: noteSentiment ? noteSentiment : '',
+      num: notes,
       percent: 21,
       options: {
         chart: {
@@ -231,8 +247,9 @@ const FilingsCards = () => {
           enabled: false
         },
         tooltip: {
-          enabled: false,
-          shared: false
+          enabled: true,
+          shared: false,
+          valueDecimals: 4
         },
         yAxis: {
           visible: false,
@@ -244,13 +261,7 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
-          title: {
-            text: null
-          }
+          categories: notesDates.map(v => v.document_date)
         },
         plotOptions: {
           series: {
@@ -283,6 +294,7 @@ const FilingsCards = () => {
         series: [
           {
             showInLegend: false,
+            name: 'Sentiment',
             data: notes,
             color: '#7fc8fd'
           }
@@ -291,37 +303,66 @@ const FilingsCards = () => {
     }
   ];
 
+  const getCount = data => {
+    let count = null;
+    if (data.length >= 1) {
+      count = data[data.length - 1];
+    }
+    return round(count, 2);
+  };
+  const getPercentageValue = data => {
+    let count = null;
+
+    if (data.length >= 2) {
+      const current_val = data[data.length - 1];
+      const last_val = data[data.length - 2];
+      count = ((current_val - last_val) / last_val) * 100;
+    }
+    if (data.length === 1) {
+      count = data[0];
+    }
+
+    return round(count, 2);
+  };
+
   const classes = useStyles();
   return (
     <Grid container spacing={2}>
-      {cardArray.map((data, index) => (
-        <Grid item xs={4} key={index}>
-          <Card className={classes.card}>
-            <Grid container>
-              <Grid item xs={6}>
-                <CardContent>
-                  <p>{data.heading}</p>
-                  <h3>{`${data.content} (${data.num})`}</h3>
-                  {data.percent > 35 ? (
-                    <p style={{ color: 'green' }}>
-                      {data.percent + '%'}
+      {cardArray.map((data, index) => {
+        let quintileChange = data.num;
+        return (
+          <Grid item xs={4} key={index}>
+            <Card className={classes.card}>
+              <p style={{ textAlign: 'center', marginTop: '5px' }}>{data.heading}</p>
+              <Grid container>
+                <Grid item xs={6}>
+                  <CardContent>
+                    <h5>{`${data.content ? data.content.sentimentQuintile : ''} (${
+                      quintileChange.length > 0 ? getCount(quintileChange.filter(e => e)) : ''
+                    })`}</h5>
+                    <label className="text-black-50 d-block">Filing Sentiment</label>
+                    <h5>{`${data.content ? data.content.sentimentChangeQuintile : ''} (${
+                      quintileChange.length > 0 ? getPercentageValue(quintileChange.filter(e => e)) : ''
+                    }
+                  )`}</h5>
+                    <label className="text-black-50 d-block">Sentiment Change</label>
+                    {/* <span style={{ display: 'inline' }}>
+                    {getPercentageValue(data.num.filter(e => e)) >= 0 ? (
+                      <ExpandLessIcon></ExpandLessIcon>
+                    ) : (
                       <ExpandMoreIcon></ExpandMoreIcon>
-                    </p>
-                  ) : (
-                    <p style={{ color: 'red' }}>
-                      {data.percent + '%'}
-                      <ExpandMoreIcon></ExpandMoreIcon>
-                    </p>
-                  )}
-                </CardContent>
+                    )}
+                  </span> */}
+                  </CardContent>
+                </Grid>
+                <Grid item xs={6} className={classes.chart}>
+                  <HighchartsReact highcharts={Highcharts} options={data.options} />
+                </Grid>
               </Grid>
-              <Grid item xs={6} className={classes.chart}>
-                <HighchartsReact highcharts={Highcharts} options={data.options} />
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      ))}
+            </Card>
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };

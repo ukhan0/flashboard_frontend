@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import ComparisionFilters from './ComparisionFilters';
 import { getComparisionSettings, saveComparisionSettings } from './ComparisionHelper';
 import { get } from 'lodash';
+import cjson from 'compressed-json';
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { BeatLoader } from 'react-spinners';
+import { useLocation } from 'react-router-dom';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+
 const Comparision = props => {
+  const dispatch = useDispatch();
   const [isLoading, setIsloading] = useState(true);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
@@ -23,9 +29,7 @@ const Comparision = props => {
 
   let metricQueryParam = '';
   const history = useHistory();
-  if (!selectedItem) {
-    history.push('/watchlist');
-  }
+
   const handleComparisionMethod = method => {
     setComparisionMethod(method);
     setIsloading(true);
@@ -38,6 +42,23 @@ const Comparision = props => {
     setComparisionSection(section);
     setIsloading(true);
   };
+  const firstTimeLoad = useRef(false);
+  let getQueryParams = new URLSearchParams(useLocation().search);
+  if (!getQueryParams.get('recentId') && !selectedItem) {
+    history.push('/watchlist');
+  }
+  useEffect(() => {
+    if (!firstTimeLoad.current) {
+      firstTimeLoad.current = true;
+      if (getQueryParams.get('recentId')) {
+        let ticker = getQueryParams.get('ticker');
+        let selectedItem = getCompanyByTicker(ticker);
+        let company = formatComapnyData(selectedItem);
+        company.recentId = getQueryParams.get('recentId');
+        dispatch(setSelectedWatchlist(company));
+      }
+    }
+  }, [dispatch, getQueryParams]);
   useEffect(() => {
     const comparisonSetting = {
       comparisionSection: comparisionSection,
@@ -47,6 +68,15 @@ const Comparision = props => {
 
     saveComparisionSettings(comparisonSetting);
   }, [comparisionDifference, comparisionMethod, comparisionSection]);
+
+  const getCompanyByTicker = ticker => {
+    let rawData = localStorage.getItem(`watchlist-data-all`);
+    if (rawData) {
+      rawData = cjson.decompress.fromString(rawData);
+    }
+    let company = rawData.find(sd => sd.ticker === ticker);
+    return company;
+  };
   switch (comparisionSection) {
     case 'mda':
       metricQueryParam =
@@ -84,7 +114,7 @@ const Comparision = props => {
           <BeatLoader color={'var(--primary)'} loading={true} size={10} />
         </div>
       ) : null}
-      <div style={{marginTop:'10px'}}>
+      <div style={{ marginTop: '10px' }}>
         {selectedItem ? (
           <iframe
             src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}

@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import FilingsResultsTable from './FilingsResultsTable';
+import FilingsTimelineChart from './FilingsTimelineChart ';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
-import { getCompanyFilingListing, getCompanyFilingGraphData } from './FillingAction';
+import { getCompanyFilingListing, getCompanyFilingGraphData, getCompanyFilingRevenueData } from './FillingAction';
 import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import { setCompanyFillingGraphData } from '../../reducers/Filings';
+import FillingTable from './FilingsTable';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -17,6 +18,10 @@ const useStyles = makeStyles(theme => ({
   },
   filingsDetailsGraph: {
     marginTop: '10px'
+  },
+  companyTimelineChart: {
+    top: 60,
+    padding: 15
   }
 }));
 
@@ -31,6 +36,7 @@ const Filings = () => {
     dispatch(setCompanyFillingGraphData([]));
     dispatch(getCompanyFilingListing());
     dispatch(getCompanyFilingGraphData());
+    // dispatch(getCompanyFilingRevenueData());
   }, [dispatch]);
 
   if (!selectedItem) {
@@ -40,6 +46,9 @@ const Filings = () => {
   return selectedItem ? (
     <div>
       <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
+      <div className={classes.companyTimelineChart}>
+        <FilingsTimelineChart />
+      </div>
       <div>
         <FilingsCards />
       </div>
@@ -47,7 +56,7 @@ const Filings = () => {
         <FilingsDetailsGraph />
       </div>
       <div>
-        <FilingsResultsTable />
+        <FillingTable />
       </div>
     </div>
   ) : null;

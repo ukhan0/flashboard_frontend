@@ -20,13 +20,13 @@ const SmaDescription = () => {
               <img alt={'SMA'} src={smaLogo} width={150} />
             </div>
             <div className="text-white mt-3">
-              <h1 className="display-2 mb-3 font-weight-bold">FilingsFlash© using Machine Readable Filings (MRF)</h1>
-              <p className="font-size-lg text-white-100">FilingsFlash by Social Market Analytics, Inc. (SMA)</p>
+              <h1 className="display-2 mb-3 font-weight-bold">UDT© using Machine Readable Filings (MRF)</h1>
+              <p className="font-size-lg text-white-100">by Social Market Analytics, Inc. (SMA)</p>
               <p className="font-size-md mb-0 text-white-100">
                 SMA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF has
                 turned SEC Edgar Filings into Textual Data at the Item, Section, Sub-Section, and Note level with
-                Historical Baselines going back to 2006. FlilingsFlash is the first product using MRF to allow for quick
-                sorting by Sentiment, Change in Sentiment, and Change in Word Count. FilingsFlash also provides
+                Historical Baselines going back to 2006. Unstructured Data Terminal is the first product using MRF to allow for quick
+                sorting by Sentiment, Change in Sentiment, and Change in Word Count. UDT also provides
                 filtering by Tabs for Recent Filings over the Last Week or at the Total Doc or the Item Level including
                 MD&A, Risk, Notes, and FSS.
               </p>

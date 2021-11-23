@@ -8,6 +8,8 @@ import SentimentContentSection from './SentimentContentSection';
 import SentimentTableOfContent from './SentimentTableOfContent';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import cjson from 'compressed-json';
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 const useStyles = makeStyles(theme => ({
   tableOfContent: {
     position: 'sticky',
@@ -31,16 +33,12 @@ const Sentiment = () => {
   useEffect(() => {
     if (!firstTimeLoad.current) {
       firstTimeLoad.current = true;
-      if (
-        getQueryParams.get('recentId') 
-      ) {
-        const sentimentData = {};
-        sentimentData.industry = getQueryParams.get('industry');
-        sentimentData.sector = getQueryParams.get('sector');
-        sentimentData.ticker = getQueryParams.get('ticker');
-        sentimentData.recentId = getQueryParams.get('recentId');
-        sentimentData.oldId = getQueryParams.get('oldId');
-        dispatch(setSelectedWatchlist(sentimentData));
+      if (getQueryParams.get('recentId')) {
+        let ticker = getQueryParams.get('ticker');
+        let selectedItem = getCompanyByTicker(ticker);
+        let company = formatComapnyData(selectedItem);
+        company.recentId = getQueryParams.get('recentId');
+        dispatch(setSelectedWatchlist(company));
       }
       dispatch(getSentimentData());
     }
@@ -50,6 +48,14 @@ const Sentiment = () => {
     setTimeout(() => {
       document.getElementById(path).scrollIntoView();
     }, 100);
+  };
+  const getCompanyByTicker = ticker => {
+    let rawData = localStorage.getItem(`watchlist-data-all`);
+    if (rawData) {
+      rawData = cjson.decompress.fromString(rawData);
+    }
+    let company = rawData.find(sd => sd.ticker === ticker);
+    return company;
   };
   return (
     <>
