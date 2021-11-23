@@ -21,7 +21,6 @@ const useStyles = makeStyles(theme => ({
   },
   companyTimelineChart: {
     top: 60,
-
     padding: 15
   }
 }));

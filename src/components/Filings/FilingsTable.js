@@ -51,7 +51,6 @@ export default function FilingsResultsTable() {
     if (params.data) {
       let selectedItem = getCompanyByTickerUniverse(params.data.ticker, 'all');
       let company = formatComapnyData(selectedItem);
-
       company.recentId = params.data.document_id;
       dispatch(setSelectedWatchlist(company));
       history.push('/sentiment');
