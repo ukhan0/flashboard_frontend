@@ -58,7 +58,7 @@ export default function FilingsTimelineChart() {
       enabled: false
     },
     title: {
-      text: 'Time Series'
+      text: 'Timeline'
     },
     subtitle: {
       text: null
