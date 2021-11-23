@@ -37,7 +37,6 @@ const FilingsCards = () => {
     selectedFileType === '10q'
       ? { sentimentQuintile: data.ae, sentimentChangeQuintile: data.ag }
       : { sentimentQuintile: data.x, sentimentChangeQuintile: data.z };
-  console.log(riskSentiment, noteSentiment, mdaSentiment, 'ff');
   let mda = [];
   let mdaDates = [];
   let risk = [];

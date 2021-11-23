@@ -92,7 +92,7 @@ export default function FilingsTimelineChart() {
     series: [
       {
         dataLabels: {
-          allowOverlap: false,
+          allowOverlap: true,
           format: '<strong >{point.document_type}</strong>'
         },
         marker: {
