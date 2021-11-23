@@ -41,7 +41,7 @@ export default function FilingsTimelineChart() {
     chart: {
       zoomType: 'x',
       type: 'timeline',
-      height: '150px'
+      height: '200px'
     },
     xAxis: {
       type: 'datetime',
