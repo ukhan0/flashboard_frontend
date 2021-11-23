@@ -13,7 +13,7 @@ export const setCompanyFillingGraphData = fillingsGraphData => ({
   fillingsGraphData
 });
 export const setCompanyFillingRevenueData = filingsRevenueData => ({
-  type: SET_COMPANY_FILLING_DATA,
+  type: SET_COMPANY_FILLING_REVENUE_DATA,
   filingsRevenueData
 });
 
@@ -37,7 +37,6 @@ export default function reducer(
       return { ...state, fillingsData: action.companyFillingData };
     case SET_COMPANY_FILLING_REVENUE_DATA:
       return { ...state, filingsRevenueData: action.filingsRevenueData };
-
     case SET_COMPANY_FILLING_GRAPH_DATA:
       return { ...state, fillingsGraphData: action.fillingsGraphData };
     default:
