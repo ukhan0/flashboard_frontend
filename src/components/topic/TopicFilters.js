@@ -59,7 +59,7 @@ const isSearchAllowed = searchText => {
 
 const TopicFilters = props => {
   const classes = useStyles();
-  const [modal4, setModal4] = React.useState(false);
+  const [isModal, setModal] = React.useState(false);
   const dispatch = useDispatch();
   const {
     searchText,
@@ -112,9 +112,9 @@ const TopicFilters = props => {
     if (!v) {
       dispatch(setIsSimpleSearch(v));
     }
-    setModal4(v);
+    setModal(v);
   };
-  const handleToggle = () => setModal4(!modal4);
+  const handleToggle = () => setModal(!isModal);
   const handleAdvancedSearchText = v => {
     if (v) {
       dispatch(setIsSimpleSearch(v));
@@ -135,7 +135,7 @@ const TopicFilters = props => {
       alignItems="flex-start"
       className={classes.topsection}>
       <TopicClearAdvanceSearch
-        open={modal4}
+        open={isModal}
         handleToggle={handleToggle}
         handleAdvancedSearchText={handleAdvancedSearchText}
       />

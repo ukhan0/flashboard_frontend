@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
-  const [modal2, setModal2] = React.useState(false);
+  const [isModal, setModal] = React.useState(false);
   const [deleteSearchId, setDeleteSearchId] = React.useState(null);
   const { cancelTokenSourceHighlights, savedSearches, selectedSearch } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
@@ -138,20 +138,20 @@ export default function TopicSearchHistory(props) {
     dispatch(setBackDropOnCompanyClick(false));
   };
   const handleDeleteSearch = searchId => {
-    setModal2(!modal2);
+    setModal(!isModal);
     if (searchId) {
       setDeleteSearchId(searchId);
     }
   };
   const confirmDeleteSearch = () => {
-    setModal2(!modal2);
+    setModal(!isModal);
     dispatch(deleteSearch(deleteSearchId));
   };
 
   return (
     <div className={classes.savedSearchesSection}>
       <TopicDeleteSearchConfirmDialog
-        open={modal2}
+        open={isModal}
         handleDeleteSearch={handleDeleteSearch}
         confirmDeleteSearch={confirmDeleteSearch}
       />

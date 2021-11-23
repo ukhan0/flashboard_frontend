@@ -14,7 +14,6 @@ import {
   setIsSaveSearchError,
   setSearchResultHighlights,
   setSearchBackdropHighlights,
-  // setIsSearchHighlightLoading,
   setIsSearchLoading,
   setSavedSearches,
   setSnackBarActive,
@@ -153,7 +152,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
 export const performTopicSearchHighlights = (freshSearch = false, companyName = null) => {
   return async (dispatch, getState) => {
     const cancelToken = axios.CancelToken.source();
-    // const { selectedDocumentTypes, selectedSection } = getState().Topic;
+
     const topicState = { ...getState().Topic };
     dispatch(setSearchStart());
     if (freshSearch) {
@@ -164,28 +163,6 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
       }
     }
 
-    // const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt));
-
-    // let searchFromsCount = 0;
-    // documentTypeObjects.forEach(documentType => {
-    //   const searchFroms = get(documentType, `sections.${selectedSection}`, []);
-    //   searchFroms.forEach(() => {
-    //     searchFromsCount += 1;
-    //   });
-    // });
-
-    // let apiResponseCount = 0;
-    // for (const documentType of documentTypeObjects) {
-    //   const searchFroms = get(documentType, `sections.${selectedSection}`, []);
-    //   if (getState().Topic.cancelExistingHighlightCalls) {
-    //     // break the loop
-    //     break;
-    //   }
-    // for (const searchFrom of searchFroms) {
-    //   if (getState().Topic.cancelExistingHighlightCalls) {
-    //     // break the loop
-    //     break;
-    //   }
     try {
       const response = await axios.post(
         `${config.apiUrl}/api/dictionary/search_highlights_by_index`,
@@ -194,7 +171,7 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
           cancelToken: cancelToken.token
         }
       );
-      // apiResponseCount++;
+
       let searchResults = get(response, 'data', null);
       const isError = get(searchResults, 'error', null);
       if (searchResults && !isError) {
@@ -214,23 +191,15 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
       if (freshSearch && companyName) {
         dispatch(setSearchBackdrop(null, false));
       }
-      // if (searchFromsCount === apiResponseCount) {
-      //   dispatch(setIsSearchHighlightLoading(false, null));
-      // }
     } catch (error) {
-      // apiResponseCount++;
       dispatch(isDateSet(false));
       dispatch(setSearchError(true));
       dispatch(setSearchBackdropHighlights(cancelToken));
-      // if (searchFromsCount === apiResponseCount) {
-      //   dispatch(setIsSearchHighlightLoading(false));
-      // }
+
       if (freshSearch && companyName) {
         dispatch(setSearchBackdrop(null, false));
       }
     }
-    // }
-    // }
   };
 };
 

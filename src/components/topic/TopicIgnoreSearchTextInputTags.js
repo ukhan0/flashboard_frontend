@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 export default function Tags() {
   const classes = useStyles();
   const inputRef = React.useRef();
-  const [v, setV] = React.useState('');
+  const [key, setKey] = React.useState('');
 
   const { searchText, simpleSearchTextArray, ignoreSearchTextArray } = useSelector(state => state.Topic);
 
@@ -33,7 +33,7 @@ export default function Tags() {
 
   const handleKeyDown = event => {
     switch (event.key) {
-      case 'Tab': {
+      case 'Tab':
         event.preventDefault();
         event.stopPropagation();
         let values = ignoreSearchTextArray;
@@ -46,9 +46,8 @@ export default function Tags() {
           }
         }
         break;
-      }
-
       default:
+        break;
     }
   };
   const handleIgnoreSearch = values => {
@@ -56,12 +55,12 @@ export default function Tags() {
     const value = values.map(value => `-"${value}"`).join(' AND ');
     dispatch(setIgnoreSearchTextArray(values));
     dispatch(setTopicSearchText(`${value1} ${value.length > 0 ? `AND ${value}` : ''} `));
-    setV(searchText);
+    setKey(searchText);
   };
   return (
     <div className={classes.root}>
       <Autocomplete
-        key={v}
+        key={key}
         multiple
         size="small"
         id="tags-outlined"
@@ -84,8 +83,8 @@ export default function Tags() {
           ))
         }
         renderInput={params => {
-          params.inputProps.onKeyDown = handleKeyDown;
-          return <TextField inputRef={inputRef} size="small" {...params} variant="outlined" fullWidth />;
+          const newParams = { ...params, inputProps: { ...params.inputProps, onKeyDown: handleKeyDown } };
+          return <TextField inputRef={inputRef} size="small" {...newParams} variant="outlined" fullWidth />;
         }}
       />
     </div>

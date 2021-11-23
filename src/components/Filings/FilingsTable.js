@@ -10,6 +10,8 @@ import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { getCompanyByTickerUniverse } from './FillingsHelper';
+import { cloneDeep } from 'lodash';
+import { filingsData } from 'reducers/filingsMockData';
 const columnDefs = [
   {
     headerName: 'Document Type',
@@ -47,6 +49,7 @@ export default function FilingsResultsTable() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
+  const fillingsDataCopy = cloneDeep(fillingsData);
   const cellClicked = async params => {
     if (params.data) {
       let selectedItem = getCompanyByTickerUniverse(params.data.ticker, 'all');
@@ -62,7 +65,7 @@ export default function FilingsResultsTable() {
       <AgGridReact
         rowSelection="single"
         domLayout="autoHeight"
-        rowData={fillingsData.reverse()}
+        rowData={fillingsDataCopy.reverse()}
         columnDefs={columnDefs}
         suppressCellSelection={true}
         onCellClicked={cellClicked}

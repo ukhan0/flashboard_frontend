@@ -7,7 +7,7 @@ import HighchartsReact from 'highcharts-react-official';
 // import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useSelector } from 'react-redux';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, round } from 'lodash';
 import { getCompanyByTickerUniverse } from './FillingsHelper';
 const useStyles = makeStyles(theme => ({
   card: {
@@ -304,62 +304,65 @@ const FilingsCards = () => {
   ];
 
   const getCount = data => {
-    let count = '';
+    let count = null;
     if (data.length >= 1) {
-      count = data[data.length - 1].toFixed(2);
+      count = data[data.length - 1];
     }
-    return count;
+    return round(count, 2);
   };
   const getPercentageValue = data => {
-    let count = '';
+    let count = null;
 
     if (data.length >= 2) {
       const current_val = data[data.length - 1];
       const last_val = data[data.length - 2];
-      count = (((current_val - last_val) / last_val) * 100).toFixed(2);
+      count = ((current_val - last_val) / last_val) * 100;
     }
     if (data.length === 1) {
-      count = data[0].toFixed(2);
+      count = data[0];
     }
 
-    return count;
+    return round(count, 2);
   };
 
   const classes = useStyles();
   return (
     <Grid container spacing={2}>
-      {cardArray.map((data, index) => (
-        <Grid item xs={4} key={index}>
-          <Card className={classes.card}>
-            <p style={{ textAlign: 'center', marginTop: '5px' }}>{data.heading}</p>
-            <Grid container>
-              <Grid item xs={6}>
-                <CardContent>
-                  <h5>{`${data.content ? data.content.sentimentQuintile : ''} (${getCount(
-                    data.num.filter(e => e)
-                  )})`}</h5>
-                  <label className="text-black-50 d-block">Filing Sentiment</label>
-                  <h5>{`${data.content ? data.content.sentimentChangeQuintile : ''} (${getPercentageValue(
-                    data.num.filter(e => e)
-                  )}
+      {cardArray.map((data, index) => {
+        let quintileChange = data.num;
+        return (
+          <Grid item xs={4} key={index}>
+            <Card className={classes.card}>
+              <p style={{ textAlign: 'center', marginTop: '5px' }}>{data.heading}</p>
+              <Grid container>
+                <Grid item xs={6}>
+                  <CardContent>
+                    <h5>{`${data.content ? data.content.sentimentQuintile : ''} (${
+                      quintileChange.length > 0 ? getCount(quintileChange.filter(e => e)) : ''
+                    })`}</h5>
+                    <label className="text-black-50 d-block">Filing Sentiment</label>
+                    <h5>{`${data.content ? data.content.sentimentChangeQuintile : ''} (${
+                      quintileChange.length > 0 ? getPercentageValue(quintileChange.filter(e => e)) : ''
+                    }
                   )`}</h5>
-                  <label className="text-black-50 d-block">Sentiment Change</label>
-                  {/* <span style={{ display: 'inline' }}>
+                    <label className="text-black-50 d-block">Sentiment Change</label>
+                    {/* <span style={{ display: 'inline' }}>
                     {getPercentageValue(data.num.filter(e => e)) >= 0 ? (
                       <ExpandLessIcon></ExpandLessIcon>
                     ) : (
                       <ExpandMoreIcon></ExpandMoreIcon>
                     )}
                   </span> */}
-                </CardContent>
+                  </CardContent>
+                </Grid>
+                <Grid item xs={6} className={classes.chart}>
+                  <HighchartsReact highcharts={Highcharts} options={data.options} />
+                </Grid>
               </Grid>
-              <Grid item xs={6} className={classes.chart}>
-                <HighchartsReact highcharts={Highcharts} options={data.options} />
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      ))}
+            </Card>
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };

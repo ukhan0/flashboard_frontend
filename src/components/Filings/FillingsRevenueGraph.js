@@ -31,34 +31,30 @@ const FilingsDetailsGraph = props => {
         <div className="p-4">
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <>
-                <div className="p-5 mb-4 rounded bg-secondary" style={{ height: 400, overflow: 'scroll' }}>
-                  {filingRevenue.map(v => {
-                    return (
-                      <div>
-                        <div className="mb-4">
-                          <div className="line-height-1">
-                            <span className="font-size-lg font-weight-bold pr-3">
-                              {filingsRevenueData[v].wordDifference}
-                            </span>
-                            <span className="text-muted">{v}</span>
-                          </div>
-                          <div className="d-flex justify-content-center align-items-center">
-                            <div className="flex-grow-1">
-                              <LinearProgress
-                                value={filingsRevenueData[v].wordDifference}
-                                color="primary"
-                                variant="determinate"
-                              />
-                            </div>
-                            <div className="text-dark font-weight-bold pl-3">{`${filingsRevenueData[v].percentage}%`}</div>
-                          </div>
-                        </div>
+              <div className="p-5 mb-4 rounded bg-secondary" style={{ height: 400, overflow: 'scroll' }}>
+                {filingRevenue.map(v => {
+                  return (
+                    <div className="mb-4">
+                      <div className="line-height-1">
+                        <span className="font-size-lg font-weight-bold pr-3">
+                          {filingsRevenueData[v].wordDifference}
+                        </span>
+                        <span className="text-muted">{v}</span>
                       </div>
-                    );
-                  })}
-                </div>
-              </>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <div className="flex-grow-1">
+                          <LinearProgress
+                            value={filingsRevenueData[v].wordDifference}
+                            color="primary"
+                            variant="determinate"
+                          />
+                        </div>
+                        <div className="text-dark font-weight-bold pl-3">{`${filingsRevenueData[v].percentage}%`}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </Grid>
           </Grid>
           <Divider />

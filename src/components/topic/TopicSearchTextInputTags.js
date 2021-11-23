@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 export default function Tags() {
   const classes = useStyles();
   const inputRef = React.useRef();
-  const [v, setV] = React.useState('');
+  const [key, setKey] = React.useState('');
   const { searchText, simpleSearchTextArray, ignoreSearchTextArray } = useSelector(state => state.Topic);
 
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ export default function Tags() {
 
   const handleKeyDown = event => {
     switch (event.key) {
-      case 'Tab': {
+      case 'Tab':
         event.preventDefault();
         event.stopPropagation();
         let values = simpleSearchTextArray;
@@ -48,9 +48,9 @@ export default function Tags() {
           }
         }
         break;
-      }
 
       default:
+        break;
     }
   };
   const handleSearchTags = values => {
@@ -58,12 +58,12 @@ export default function Tags() {
     const value = values.map(value => `"${value}"`).join(' OR ');
     dispatch(setSimpleSearchTextArray(values));
     dispatch(setTopicSearchText(`${value} ${ignoreSearchTextArray.length > 0 ? `AND ${value1}` : ''} `));
-    setV(searchText);
+    setKey(searchText);
   };
   return (
     <div className={classes.root}>
       <Autocomplete
-        key={v}
+        key={key}
         multiple
         size="small"
         id="tags-outlined"

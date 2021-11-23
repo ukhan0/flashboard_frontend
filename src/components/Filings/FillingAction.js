@@ -68,7 +68,7 @@ export const getCompanyFilingRevenueData = () => {
     }
     try {
       const response = await axios.get(
-        `https://api-fillings.socialmarketanalytics.com/comparener?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
+        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
       );
 
       const data = get(response, 'data', []);

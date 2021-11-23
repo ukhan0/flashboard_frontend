@@ -16,13 +16,13 @@ const FilingsDetailsGraph = props => {
   let risks = [];
   let notes = [];
   let dates = [];
-  let total = [];
+  let totals = [];
   if (!isEmpty(fillingsGraphData)) {
     dates = fillingsGraphData.map(s => moment(s.document_date).format('DD MMMM, YYYY'));
     mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', ''));
     risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''));
     notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''));
-    total = fillingsGraphData.map(s => {
+    totals = fillingsGraphData.map(s => {
       let totalWc = get(s, 'total.wwwccc', 0);
       let mdaWc = get(s, 'mda.wwwccc', 0);
       let noteWc = get(s, 'notes.wwwccc', 0);
@@ -97,7 +97,7 @@ const FilingsDetailsGraph = props => {
       }
       // {
       //   name: 'total',
-      //   data: total.filter(e => e),
+      //   data: totals.filter(e => e),
       //   color: '#7fe4a6'
       // }
     ]

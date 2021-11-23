@@ -104,7 +104,7 @@ export default function FilingsTimelineChart() {
   };
   return (
     <Paper className={clsx('app-page-title')}>
-      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+      <div style={{ height: '100%', width: '100%' }}>
         <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
       </div>
     </Paper>
