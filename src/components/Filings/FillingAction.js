@@ -7,7 +7,6 @@ import {
 import { get } from 'lodash';
 import config from '../../config/config';
 
-
 export const getCompanyFilingListing = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
@@ -75,7 +74,7 @@ export const getCompanyFilingRevenueData = () => {
       const data = get(response, 'data', []);
       if (response) {
         let parseData = JSON.parse(data.data);
-        console.log(parseData, 'deeta');
+
         dispatch(setCompanyFillingRevenueData(parseData));
       } else {
         dispatch(setCompanyFillingRevenueData([]));
