@@ -343,7 +343,7 @@ const FilingsCards = () => {
                     data.num.filter(e => e)
                   )}
                   )`}</h5>
-                  <label className="text-black-50 d-block">Change</label>
+                  <label className="text-black-50 d-block">Sentiment Change</label>
                   {/* <span style={{ display: 'inline' }}>
                     {getPercentageValue(data.num.filter(e => e)) >= 0 ? (
                       <ExpandLessIcon></ExpandLessIcon>
