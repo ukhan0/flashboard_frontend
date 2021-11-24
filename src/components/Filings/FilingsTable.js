@@ -11,7 +11,6 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { getCompanyByTickerUniverse } from './FillingsHelper';
 import { cloneDeep } from 'lodash';
-import { filingsData } from 'reducers/filingsMockData';
 const columnDefs = [
   {
     headerName: 'Document Type',
