@@ -43,7 +43,9 @@ export const getCompanyFilingGraphData = () => {
     }
     try {
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_graph_detail?${companyId?`company_id=${companyId}`:`ticker=${escape(ticker)}`}`
+        `${config.apiUrl}/api/get_company_filing_graph_detail?${
+          companyId ? `company_id=${companyId}` : `ticker=${escape(ticker)}`
+        }`
       );
 
       const data = get(response, 'data', []);

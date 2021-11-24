@@ -13,6 +13,12 @@ import clsx from 'clsx';
 
 export default function FilingsCompanyRevenueGraph() {
   const { filingsRevenueData } = useSelector(state => state.Filings);
+  let filingsRevenue1 = filingsRevenueData.map(v => {
+    return { name: v.name, low: v.oldCount, high: 0 };
+  });
+  let filingsRevenue2 = filingsRevenueData.map(v => {
+    return { name: v.name, low: 0, high: v.newCount };
+  });
 
   const options = {
     chart: {
@@ -90,7 +96,7 @@ export default function FilingsCompanyRevenueGraph() {
     series: [
       {
         name: 'Mentions',
-        data: filingsRevenueData,
+        data: filingsRevenue1.concat(filingsRevenue2),
         dataLabels: {
           enabled: true
         }
