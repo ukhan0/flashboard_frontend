@@ -9,6 +9,7 @@ import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import { setCompanyFillingGraphData } from '../../reducers/Filings';
 import FillingTable from './FilingsTable';
+import FilingsCompanyRevenueGraph from './FilingsCompanyRevenueGraph';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -54,6 +55,9 @@ const Filings = () => {
       </div>
       <div className={classes.filingsDetailsGraph}>
         <FilingsDetailsGraph />
+      </div>
+      <div className={classes.companyTimelineChart}>
+        <FilingsCompanyRevenueGraph />
       </div>
       <div>
         <FillingTable />
