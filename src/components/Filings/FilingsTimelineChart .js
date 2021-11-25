@@ -30,9 +30,9 @@ export default function FilingsTimelineChart() {
       document_type: renameDocumentTypes(v.document_type),
       name: `<strong >${renameDocumentTypes(v.document_type)}</strong>`,
       x: date,
-      description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${moment(
+      description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${
         v.period_date
-      ).format('DD MMMM, YYYY')}`,
+      }`,
       color: getColorByDocType(v.document_type)
     };
   });
@@ -50,7 +50,7 @@ export default function FilingsTimelineChart() {
         }
       }
     },
-    
+
     xAxis: {
       type: 'datetime',
       visible: true

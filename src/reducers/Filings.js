@@ -1,5 +1,3 @@
-import { filingsData, revenueMockData } from './filingsMockData';
-
 export const SET_COMPANY_FILLING_DATA = 'FILLING/SET_COMPANY_FILLING_DATA ';
 export const SET_COMPANY_FILLING_GRAPH_DATA = 'FILLING/SET_COMPANY_FILLING_GRAPH_DATA ';
 export const SET_COMPANY_FILLING_REVENUE_DATA = 'FILLING/SET_COMPANY_FILLING_REVENUE_DATA ';
@@ -19,10 +17,9 @@ export const setCompanyFillingRevenueData = filingsRevenueData => ({
 
 const getDefaultState = () => {
   return {
-    filingsData: filingsData,
     fillingsData: [],
     fillingsGraphData: [],
-    filingsRevenueData: revenueMockData
+    filingsRevenueData: []
   };
 };
 

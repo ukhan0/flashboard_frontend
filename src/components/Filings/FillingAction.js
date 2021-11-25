@@ -49,6 +49,7 @@ export const getCompanyFilingGraphData = () => {
       );
 
       const data = get(response, 'data', []);
+
       if (response) {
         dispatch(setCompanyFillingGraphData(data.data));
       } else {
@@ -68,15 +69,12 @@ export const getCompanyFilingRevenueData = () => {
       return;
     }
     try {
-      const response = await axios.get(
-        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
-      );
+      const response = await axios.get(`${config.fillingApiUrl}?f1=${4460725}&f2=${6588021}&output=json`);
 
       const data = get(response, 'data', []);
-      if (response) {
-        let parseData = JSON.parse(data.data);
 
-        dispatch(setCompanyFillingRevenueData(parseData));
+      if (response) {
+        dispatch(setCompanyFillingRevenueData(data));
       } else {
         dispatch(setCompanyFillingRevenueData([]));
       }

@@ -8,15 +8,27 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/highcharts-more';
 
-import { Paper } from '@material-ui/core';
-import clsx from 'clsx';
-
+import {  Grid, Card, Divider } from '@material-ui/core';
+import { orderBy } from 'lodash';
 export default function FilingsCompanyRevenueGraph() {
   const { filingsRevenueData } = useSelector(state => state.Filings);
-  let filingsRevenue1 = filingsRevenueData.map(v => {
-    return { name: v.name, low: v.oldCount, high: 0 };
+  const caculateStrength = filingsRevenueData.map(v => {
+    return { ...v, strength: v.newCount - v.oldCount };
   });
-  let filingsRevenue2 = filingsRevenueData.map(v => {
+
+  const zeroValue = caculateStrength.filter(v => v.oldCount === 0);
+  const nonZeroValue = caculateStrength.filter(v => v.oldCount > 0);
+
+  let zeroValuesDesc = orderBy(zeroValue, ['strength'], ['desc']);
+
+  let nonZeroValuesDesc = orderBy(nonZeroValue, ['strength'], ['desc']);
+
+  let finalResult = zeroValuesDesc.concat(nonZeroValuesDesc);
+
+  let filingsRevenue1 = finalResult.map(v => {
+    return { name: v.name, low: -v.oldCount, high: 0 };
+  });
+  let filingsRevenue2 = finalResult.map(v => {
     return { name: v.name, low: 0, high: v.newCount };
   });
 
@@ -33,7 +45,7 @@ export default function FilingsCompanyRevenueGraph() {
     },
 
     title: {
-      text: 'Old vs New Entities Mentioned'
+      text: null
     },
 
     tooltip: {
@@ -104,10 +116,32 @@ export default function FilingsCompanyRevenueGraph() {
     ]
   };
   return (
-    <Paper className={clsx('app-page-title')}>
-      <div style={{ height: '100%', width: '100%' }}>
-        <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
-      </div>
-    </Paper>
+    <>
+      <Card className="mb-4">
+        <div className="card-header-alt d-flex justify-content-between p-4">
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <div>
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
+                <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
+              </div>
+            </Grid>
+          </Grid>
+        </div>
+        <div className="mx-4 divider" />
+        <div className="mx-4 divider" />
+        <div className="p-4">
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={12}>
+              <div style={{ height: '100%', width: '100%' }}>
+                <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
+              </div>
+            </Grid>
+          </Grid>
+          <Divider />
+          <Divider />
+        </div>
+      </Card>
+    </>
   );
 }
