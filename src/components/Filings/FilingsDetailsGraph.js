@@ -2,9 +2,9 @@ import React, { Fragment } from 'react';
 import { Grid, Card, Divider } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { isEmpty, get } from 'lodash';
-import moment from 'moment';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import FillingRevenueGraph from './FilingsCompanyRevenueGraph';
 Highcharts.setOptions({
   lang: {
     thousandsSep: ','
@@ -18,7 +18,7 @@ const FilingsDetailsGraph = props => {
   let dates = [];
   let totals = [];
   if (!isEmpty(fillingsGraphData)) {
-    dates = fillingsGraphData.map(s => moment(s.document_date).format('DD MMMM, YYYY'));
+    dates = fillingsGraphData.map(s => s.document_date);
     mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', ''));
     risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''));
     notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''));
@@ -105,33 +105,41 @@ const FilingsDetailsGraph = props => {
 
   return (
     <Fragment>
-      <Card className="mb-4">
-        <div className="card-header-alt d-flex justify-content-between p-4">
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <div>
-                <h6 className="font-weight-bold font-size-lg mb-1 text-black">Word Count</h6>
-                <p className="text-black-50 mb-0">Changes in Major items over time</p>
-              </div>
-            </Grid>
-          </Grid>
-        </div>
-        <div className="mx-4 divider" />
-        <div className="mx-4 divider" />
-        <div className="p-4">
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={12}>
-              {!isEmpty(fillingsGraphData) ? (
-                <HighchartsReact highcharts={Highcharts} options={options} />
-              ) : (
-                'No Data Available'
-              )}
-            </Grid>
-          </Grid>
-          <Divider />
-          <Divider />
-        </div>
-      </Card>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6} lg={6}>
+          <FillingRevenueGraph />
+        </Grid>
+
+        <Grid item xs={12} md={6} lg={6}>
+          <Card className="mb-4">
+            <div className="card-header-alt d-flex justify-content-between p-4">
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <div>
+                    <h6 className="font-weight-bold font-size-lg mb-1 text-black">Word Count</h6>
+                    <p className="text-black-50 mb-0">Changes in Major items over time</p>
+                  </div>
+                </Grid>
+              </Grid>
+            </div>
+            <div className="mx-4 divider" />
+            <div className="mx-4 divider" />
+            <div className="p-4">
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={12}>
+                  {!isEmpty(fillingsGraphData) ? (
+                    <HighchartsReact highcharts={Highcharts} options={options} />
+                  ) : (
+                    'No Data Available'
+                  )}
+                </Grid>
+              </Grid>
+              <Divider />
+              <Divider />
+            </div>
+          </Card>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

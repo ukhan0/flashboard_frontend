@@ -1,11 +1,12 @@
-import React, { Fragment, useState } from 'react';
-import { Grid, Dialog, IconButton } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { useState } from 'react';
+import { Paper } from '@material-ui/core';
 import TopicFilters from './TopicFilters';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import { setOpenTopicSearchDialog } from '../../reducers/Topic';
+import Slide from '@material-ui/core/Slide';
+import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
   dialog: {
     marginLeft: '20px',
@@ -17,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   label: {
     marginLeft: '16px',
     marginRight: '16px',
-    marginTop: '5px'
+    marginTop: '20px'
   },
   fontSize: {
     fontSize: '0.75rem'
@@ -33,23 +34,16 @@ const TopicDialog = props => {
     dispatch(setOpenTopicSearchDialog(false));
   };
   return (
-    <Fragment>
-      <Dialog scroll="body" open={false} onClose={handleCloseTopicDialog} aria-labelledby="form-dialog-title2">
-        <Grid container direction="row" justify="flex-end" alignItems="flex-start">
-          <Grid item>
-            <IconButton
-              onClick={() => {
-                handleCloseTopicDialog();
-              }}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <div className={classes.dialog}>
+    <div className={classes.label}>
+      {/* {openTopicSearchDialog ? ( */}
+
+      <Slide direction="down" in={openTopicSearchDialog} mountOnEnter unmountOnExit>
+        <Paper className={clsx('app-page-title')}>
           <TopicFilters
             onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
             // onSaveSearch={() => dispatch(setIsSaveDlgOpen(true))}
             onSearch={props.handleSearch}
+            handleCloseTopicDialog={handleCloseTopicDialog}
           />
           {isSuggestionsDlgOpen ? (
             <TopicSuggestionsDialog
@@ -58,9 +52,10 @@ const TopicDialog = props => {
               handleClose={() => setIsSuggestionsDlgOpen(false)}
             />
           ) : null}
-        </div>
-      </Dialog>
-    </Fragment>
+        </Paper>
+      </Slide>
+      {/* ) : null} */}
+    </div>
   );
 };
 

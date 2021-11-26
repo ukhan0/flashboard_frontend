@@ -36,7 +36,7 @@ const Filings = () => {
     dispatch(setCompanyFillingGraphData([]));
     dispatch(getCompanyFilingListing());
     dispatch(getCompanyFilingGraphData());
-    // dispatch(getCompanyFilingRevenueData());
+    dispatch(getCompanyFilingRevenueData());
   }, [dispatch]);
 
   if (!selectedItem) {

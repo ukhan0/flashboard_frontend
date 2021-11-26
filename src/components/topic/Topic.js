@@ -6,7 +6,6 @@ import TopicSearchResults from './TopicSearchResults';
 import TopicHistoryChart from './TopicHistoryChart';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
-import TopicDialog from './TopicDialog';
 import TopicSnackbar from './TopicSnackbar';
 import TopicCurrentSearchDetail from './TopicCurrentSearchDetail';
 import {
@@ -17,7 +16,7 @@ import {
   setSnackBarActive
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate } from './topicActions';
-
+import TopicCompose from './TopicCompose';
 const Topic = () => {
   const classes = topicStyles();
   const {
@@ -52,8 +51,7 @@ const Topic = () => {
   return (
     <div className={classes.root}>
       <TopicCurrentSearchDetail />
-
-      <TopicDialog handleSearch={handleSearch} />
+      <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Grid container spacing={1}>

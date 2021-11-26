@@ -36,18 +36,20 @@ export const getCompanyFilingGraphData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
     const companyId = get(selectedItem, 'companyId', null);
-    const companyName = get(selectedItem, 'companyName', null);
+    const ticker = get(selectedItem, 'ticker', null);
 
-    if (!companyName && !companyId) {
+    if (!ticker && !companyId) {
       return;
     }
     try {
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_graph_detail?
-        ${companyId ? `company_id=${companyId}` : `company_name=${escape(companyName)}`}`
+        `${config.apiUrl}/api/get_company_filing_graph_detail?${
+          companyId ? `company_id=${companyId}` : `ticker=${escape(ticker)}`
+        }`
       );
 
       const data = get(response, 'data', []);
+
       if (response) {
         dispatch(setCompanyFillingGraphData(data.data));
       } else {
@@ -67,15 +69,12 @@ export const getCompanyFilingRevenueData = () => {
       return;
     }
     try {
-      const response = await axios.get(
-        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
-      );
+      const response = await axios.get(`${config.fillingApiUrl}?f1=${4460725}&f2=${6588021}&output=json`);
 
       const data = get(response, 'data', []);
-      if (response) {
-        let parseData = JSON.parse(data.data);
 
-        dispatch(setCompanyFillingRevenueData(parseData));
+      if (response) {
+        dispatch(setCompanyFillingRevenueData(data));
       } else {
         dispatch(setCompanyFillingRevenueData([]));
       }

@@ -30,9 +30,9 @@ export default function FilingsTimelineChart() {
       document_type: renameDocumentTypes(v.document_type),
       name: `<strong >${renameDocumentTypes(v.document_type)}</strong>`,
       x: date,
-      description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${moment(
+      description: `Document Date: ${moment(v.document_date).format('DD MMMM, YYYY')}<br/>Period Date: ${
         v.period_date
-      ).format('DD MMMM, YYYY')}`,
+      }`,
       color: getColorByDocType(v.document_type)
     };
   });
@@ -41,8 +41,16 @@ export default function FilingsTimelineChart() {
     chart: {
       zoomType: 'x',
       type: 'timeline',
-      height: '200px'
+      height: '200px',
+      resetZoomButton: {
+        position: {
+          verticalAlign: 'top',
+          x: -10,
+          y: -40
+        }
+      }
     },
+
     xAxis: {
       type: 'datetime',
       visible: true
@@ -58,7 +66,7 @@ export default function FilingsTimelineChart() {
       enabled: false
     },
     title: {
-      text: 'Time Series'
+      text: 'Timeline'
     },
     subtitle: {
       text: null
@@ -92,7 +100,7 @@ export default function FilingsTimelineChart() {
     series: [
       {
         dataLabels: {
-          allowOverlap: false,
+          allowOverlap: true,
           format: '<strong >{point.document_type}</strong>'
         },
         marker: {

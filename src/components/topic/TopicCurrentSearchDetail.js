@@ -38,7 +38,9 @@ const useStyles = makeStyles(theme => ({
 
 const TopicDialog = props => {
   const classes = useStyles();
-  const { currentSearchDetail, documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
+  const { currentSearchDetail, documentTypes, selectedDocumentTypes, openTopicSearchDialog } = useSelector(
+    state => state.Topic
+  );
   const isSuggestions = currentSearchDetail.selectedSuggestions;
   let selectedSug = [];
   if (!isEmpty(isSuggestions)) {
@@ -50,7 +52,7 @@ const TopicDialog = props => {
   const dispatch = useDispatch();
   const displayDateFormat = 'MMMM YYYY';
   const handleOpenTopicDialog = () => {
-    dispatch(setOpenTopicSearchDialog(true));
+    dispatch(setOpenTopicSearchDialog(!openTopicSearchDialog));
     dispatch(setSelectedIndustries([]));
     dispatch(setShowUpdateButton(false));
     dispatch(setSelectedSearch(null, null));
@@ -97,7 +99,11 @@ const TopicDialog = props => {
                 <Grid item>
                   <Button onClick={handleOpenTopicDialog} variant="contained" color="primary" className="m-2">
                     <span className="btn-wrapper--icon">
-                      <FontAwesomeIcon icon={['fas', 'upload']} />
+                      {openTopicSearchDialog ? (
+                        <FontAwesomeIcon icon={['fas', 'upload']} />
+                      ) : (
+                        <FontAwesomeIcon icon={['fas', 'download']} />
+                      )}
                     </span>
                     <span className="btn-wrapper--label">Compose new</span>
                   </Button>

@@ -11,7 +11,6 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { getCompanyByTickerUniverse } from './FillingsHelper';
 import { cloneDeep } from 'lodash';
-import { filingsData } from 'reducers/filingsMockData';
 const columnDefs = [
   {
     headerName: 'Document Type',
@@ -42,7 +41,7 @@ const columnDefs = [
     sortable: false,
     flex: 1,
     colId: 'periodDate',
-    valueFormatter: params => (params.data.period_date ? moment(params.data.period_date).format('DD MMMM, YYYY') : '')
+    valueFormatter: params => (params.data.period_date ? params.data.period_date : '')
   }
 ];
 export default function FilingsResultsTable() {

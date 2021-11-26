@@ -8,9 +8,10 @@ import { setTopicSearchDateRange, isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
+    // display: 'flex',
+    // flexDirection: 'column',
     backgroundColor: 'white'
+    // width:'30px'
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -18,12 +19,13 @@ const useStyles = makeStyles(theme => ({
     width: 200
   },
   dateSelection: {
-    textAlign: 'right',
+    textAlign: 'center',
     padding: 10,
     backgroundColor: '#7092e6',
     color: 'white',
     borderRadius: 12,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    width: '200px'
   },
   dateRangeSelector: {
     backgroundColor: 'white',

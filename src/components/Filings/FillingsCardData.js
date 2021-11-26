@@ -337,11 +337,11 @@ const FilingsCards = () => {
               <Grid container>
                 <Grid item xs={6}>
                   <CardContent>
-                    <h5>{`${data.content ? data.content.sentimentQuintile : ''} (${
+                    <h5>{`${data.content.sentimentQuintile ? data.content.sentimentQuintile : ''} (${
                       quintileChange.length > 0 ? getCount(quintileChange.filter(e => e)) : ''
                     })`}</h5>
                     <label className="text-black-50 d-block">Filing Sentiment</label>
-                    <h5>{`${data.content ? data.content.sentimentChangeQuintile : ''} (${
+                    <h5>{`${data.content.sentimentChangeQuintile ? data.content.sentimentChangeQuintile : ''} (${
                       quintileChange.length > 0 ? getPercentageValue(quintileChange.filter(e => e)) : ''
                     }
                   )`}</h5>
