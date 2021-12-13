@@ -19,7 +19,7 @@ const useStyles = makeStyles(_theme => ({
 
 export default function TopicPieChart(props) {
   const classes = useStyles();
-  const { searchResult, selectedSector } = useSelector(state => state.Topic);
+  const { searchResult, selectedSector, searchIndex } = useSelector(state => state.Topic);
   const [sectorData, setSectorData] = useState([]);
   const dispatch = useDispatch();
 
@@ -59,7 +59,7 @@ export default function TopicPieChart(props) {
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
-            <span className={'font-weight-bold'}>{selectedSector ? selectedSector : 'Sector'}</span>
+            <span className={'font-weight-bold'}>{searchIndex === 'filling_int_sentiment4' ? 'Country' : selectedSector ? selectedSector : 'Sector'}</span>
           </div>
           {selectedSector ? (
             <div>

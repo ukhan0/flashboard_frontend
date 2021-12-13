@@ -15,6 +15,7 @@ import { setIsFromSideBar } from '../../reducers/Topic';
 import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
+import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -73,7 +74,9 @@ const TopicSearchResults = () => {
   const classes = useStyles();
   const resultsSection = useRef(null);
   const history = useHistory();
-  const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
+  const { isSearchLoading, searchResultHighlights, selectedCompanyName, searchIndex } = useSelector(
+    state => state.Topic
+  );
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -137,6 +140,9 @@ const TopicSearchResults = () => {
   }, [selectedCompanyName, summaryByCompany]);
 
   const goToSentimentScreen = (companyDocumentResultData, content, t) => {
+    if (searchIndex === 'filling_int_sentiment4') {
+      return;
+    }
     const actualTitle = t.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
     const replaceDots = removel4.replaceAll('.', 'id');
@@ -144,6 +150,8 @@ const TopicSearchResults = () => {
     dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSentimentResult(null));
+    dispatch(setSelectedTickerSymbol(null));
+    dispatch(setWatchlistSearchText(''));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const companyId = get(companyDocumentResultData, 'company_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
@@ -161,7 +169,9 @@ const TopicSearchResults = () => {
       company.companyId = companyId;
       dispatch(setSelectedWatchlist(company));
     } else {
-      dispatch(setSelectedWatchlist({ recentId: recentId, companyId: companyId, ticker: ticker }));
+      dispatch(
+        setSelectedWatchlist({ recentId: recentId, companyId: companyId, ticker: ticker, documentType: documentType })
+      );
     }
     if (isGoToSentiment) {
       history.push('/sentiment');

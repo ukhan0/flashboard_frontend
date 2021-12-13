@@ -11,26 +11,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { forEach, concat } from 'lodash';
 import TopicSearchTextTags from './TopicSearchTextInputTags';
 import TopicIgnoreSearchText from './TopicIgnoreSearchTextInputTags';
-
+import TopicSearchTextTags2 from './TopicSearchTextInputTags2';
 import {
   updateSaveSearch,
   handleSaveSearch,
   performTopicSearchAggregate,
-  performTopicSearchHighlights
+  performTopicSearchHighlights,
+  perfomeSearchPayloadTweets
 } from './topicActions';
 import {
   setOpenTopicSearchDialog,
   resetResultsPage,
   cancelExistingHightlightsCalls,
   setIsTopicEmailAlertEnable,
-  setIsSimpleSearch,
-  setSelectedIndustries,
-  setSelectedSearch,
-  resetAllSearchParams
+  setIsSimpleSearch
 } from '../../reducers/Topic';
 import { searchVersionTypes } from '../../config/filterTypes';
-import TopicClearAdvanceSearch from './TopicClearAdvanceSearch';
+
 import TopicThemeLabelDialog from './TopicThemeLabelDialog';
+import { resetSuggestions } from '../../reducers/Topic';
+import TopicIndexDropDown from './TopicIndexDropDown';
 const useStyles = makeStyles(theme => ({
   topsection: {
     marginBottom: 15,
@@ -53,13 +53,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const isSearchAllowed = searchText => {
-  return searchText && searchText.length > 2;
+const isSearchAllowed = (searchText, simpleSearchTextArray) => {
+  if ((searchText && searchText.length > 2) || simpleSearchTextArray.length > 0) {
+    return true;
+  }
 };
 
 const TopicFilters = props => {
   const classes = useStyles();
-  const [isModal, setModal] = React.useState(false);
+
   const [isOpenThemelabelDialog, setOpenThemeDialog] = React.useState(false);
   const dispatch = useDispatch();
   const {
@@ -70,12 +72,14 @@ const TopicFilters = props => {
     selectedSearch,
     cancelTokenSourceHighlights,
     isTopicEmailAlertEnable,
-
+    simpleSearchTextArray,
+    ignoreSearchTextArray,
     isSimpleSearch
   } = useSelector(state => state.Topic);
   const handleUpdateSaveSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
+    dispatch(perfomeSearchPayloadTweets(true, true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
@@ -95,6 +99,7 @@ const TopicFilters = props => {
   };
   const handleClickSaveSearch = () => {
     dispatch(handleSaveSearch());
+    dispatch(setOpenTopicSearchDialog(false));
     // dispatch(setOpenTopicSearchDialog(false));
     setOpenThemeDialog(false);
   };
@@ -115,33 +120,20 @@ const TopicFilters = props => {
   };
 
   const handleSearchFieldType = v => {
-    if (!v) {
-      dispatch(setIsSimpleSearch(v));
-    }
-    setModal(v);
-  };
-  const handleToggle = () => setModal(!isModal);
-  const handleAdvancedSearchText = v => {
-    if (v) {
-      dispatch(setIsSimpleSearch(v));
-      dispatch(setSelectedIndustries([]));
-      dispatch(setSelectedSearch(null, null));
-      dispatch(resetAllSearchParams());
-    }
+    dispatch(setIsSimpleSearch(v));
+    dispatch(resetSuggestions());
   };
 
   const handleClose = () => {
     setOpenThemeDialog(false);
   };
-  const isButtonActive = !(searchText.length > 2);
+  let isButtonActive = true;
+  if (searchText.length > 2 || simpleSearchTextArray.length > 0 || ignoreSearchTextArray.length > 0) {
+    isButtonActive = false;
+  }
 
   return (
     <Grid spacing={0} container className={classes.topsection}>
-      <TopicClearAdvanceSearch
-        open={isModal}
-        handleToggle={handleToggle}
-        handleAdvancedSearchText={handleAdvancedSearchText}
-      />
       <TopicThemeLabelDialog
         open={isOpenThemelabelDialog}
         handleClose={handleClose}
@@ -154,20 +146,32 @@ const TopicFilters = props => {
             {isSimpleSearch ? (
               <>
                 {' '}
-                <h6>All of these phrase</h6>
+                <h6>Any of these phrases</h6>
                 <TopicSearchTextTags />
+                <br />
+                <h6>All of these phrases</h6>
+                <TopicSearchTextTags2 />
                 <br />
                 <h6>None of these phrase</h6>
                 <TopicIgnoreSearchText />
               </>
             ) : (
               <>
-                <h6>All of these phrase</h6>
+                <h6>Search Query</h6>
                 <TopicSearchTextField />
               </>
             )}
             <div className={classes.suggestionsBtnSection}>
-              {isSearchAllowed(searchText) ? (
+              {!isSimpleSearch ? (
+                <div className={classes.selectedSuggestionsList}>
+                  {selectedSuggestionsArr.map((v, index) => (
+                    <span key={`ssa${index}`} className="text-black-50">{`${v}${
+                      index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
+                    }`}</span>
+                  ))}
+                </div>
+              ) : null}
+              {isSearchAllowed(searchText, simpleSearchTextArray) ? (
                 <Button color="primary" onClick={props.onShowSuggestions}>
                   Show Suggestions
                 </Button>
@@ -194,6 +198,8 @@ const TopicFilters = props => {
             {/* <div style={{ marginTop: '22px' }}> */}
             <h6 className={classes.dateRange}>Date Range</h6>
             <TopicRangePicker />
+            <h6 className={classes.dateRange}>Search From</h6>
+            <TopicIndexDropDown />
             {/* </div> */}
           </>
         </Grid>
@@ -286,155 +292,6 @@ const TopicFilters = props => {
           </Grid>
         </Grid>
       </Grid>
-      {/* <Grid item xs={12}>
-        <Grid container>
-          <Grid item xs={8}>
-            <h6>Theme Name</h6>
-            <div style={{ marginBottom: '15px' }}>
-              <TopicSeachLabelTextField />
-            </div>
-          </Grid>
-
-          <Grid item xs={4}>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <div>
-                <h6 className={classes.dateRange}>Date Range</h6>
-                <TopicRangePicker />
-              </div>
-            </div>
-          </Grid>
-        </Grid>
-        <h6>All of these phrase</h6>
-        <div className={classes.searchContainer}>
-          <div className={classes.searchFieldContainer}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Grid container>
-                  <Grid item xs={9}>
-                    <div style={{ marginRight: '20px' }}>
-                      {isSimpleSearch ? (
-                        <>
-                          <TopicSearchTextTags />
-                          <br />
-                          <h6>None of these phrase</h6>
-                          <TopicIgnoreSearchText />
-                        </>
-                      ) : (
-                        <TopicSearchTextField />
-                      )}
-                    </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <ButtonGroup color="primary">
-                      {searchVersionTypes.map((searchVersion, i) => (
-                        <Button
-                          size="small"
-                          key={`sent_${i}`}
-                          onClick={() => handleSearchFieldType(searchVersion.key)}
-                          variant={isSimpleSearch === searchVersion.key ? 'contained' : 'outlined'}>
-                          {searchVersion.label}
-                        </Button>
-                      ))}
-                    </ButtonGroup>
-                  </Grid>
-                </Grid>
-                {!isSimpleSearch ? (
-                  <div className={classes.selectedSuggestionsList}>
-                    {selectedSuggestionsArr.map((v, index) => (
-                      <span key={`ssa${index}`} className="text-black-50">{`${v}${
-                        index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
-                      }`}</span>
-                    ))}
-                  </div>
-                ) : null}
-              </Grid>
-              <Grid item xs={4}>
-                <div className={classes.suggestionsBtnSection}>
-                  {isSearchAllowed(searchText) ? (
-                    <Button color="primary" onClick={props.onShowSuggestions}>
-                      Show Suggestions
-                    </Button>
-                  ) : null}
-                </div>
-              </Grid>
-            </Grid>
-          </div>
-        </div>
-      </Grid>
-      <Grid item xs={6}>
-        <h6>Document Types</h6>
-        <TopicDocumentTypeDropdown />
-      </Grid>
-
-      <Grid item xs={12}>
-        <h6>Search Universe</h6>
-        <TopicUniverseGroup />
-      </Grid>
-      <Grid item xs={6}>
-        <TopicUniverseSubFilters />
-      </Grid>
-      <Grid item xs={12}>
-        <h6>Section</h6>
-        <TopicSectionGroup />
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container spacing={1} direction="row" justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <h6>Enable Email Alert</h6>
-            <Switch
-              checked={isTopicEmailAlertEnable}
-              onChange={handleChangeTopicAlert}
-              color="primary"
-              name="checkedB"
-              inputProps={{ 'aria-label': 'primary checkbox' }}
-            />
-          </Grid>
-          <Grid item>
-            <Button style={{ width: '100px' }} variant="contained" color="primary" onClick={() => props.onSearch()}>
-              Search
-            </Button>
-            {showUpdateButton ? (
-              <Button
-                style={{ width: '100px' }}
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  handleUpdateSaveSearch(selectedSearch.searchId);
-                }}>
-                Update
-              </Button>
-            ) : (
-              <Button
-                style={{ width: '100px' }}
-                variant="contained"
-                color="primary"
-                disabled={isButtonActive}
-                onClick={() => {
-                  // props.onSearch();
-                  handleClickSaveSearch();
-                }}>
-                Save
-              </Button>
-            )}
-            <Button
-              style={{ width: '100px' }}
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                props.handleCloseTopicDialog();
-              }}>
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        {isSearchError ? (
-          <div style={{ marginBottom: '5px' }}>
-            <Typography color="error">Error Occured</Typography>
-          </div>
-        ) : null}
-      </Grid> */}
     </Grid>
   );
 };

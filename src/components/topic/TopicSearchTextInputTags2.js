@@ -2,7 +2,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIgnoreSearchTextArray } from '../../reducers/Topic';
+import { setSearchTextWithAnd } from '../../reducers/Topic';
 import TopicSearchTextTags from './TopicSearchTextTags';
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,12 +21,10 @@ export default function Tags() {
   const classes = useStyles();
   const inputRef = React.useRef();
   const [key, setKey] = React.useState('');
-
-  const { ignoreSearchTextArray } = useSelector(state => state.Topic);
-
+  const { searchTextWithAnd } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const handleSearch = (event, values) => {
-    handleIgnoreSearch(values);
+    handleSearchTags(values);
   };
 
   const handleKeyDown = event => {
@@ -34,33 +32,32 @@ export default function Tags() {
       case 'Tab':
         event.preventDefault();
         event.stopPropagation();
-        let values = ignoreSearchTextArray;
+        let values = searchTextWithAnd;
         if (event.target.value.length > 0) {
           values.push(event.target.value);
-          handleIgnoreSearch(values);
-
+          handleSearchTags(values);
           if (inputRef.current && inputRef.current.value) {
             inputRef.current.value = '';
           }
         }
         break;
+
       default:
         break;
     }
   };
-  const handleIgnoreSearch = values => {
-    const value = values.map(value => `-"${value}"`).join(' AND ');
-    dispatch(setIgnoreSearchTextArray(values));
+  const handleSearchTags = values => {
+    const value = values.map(value => `"${value}"`).join(' OR ');
+    dispatch(setSearchTextWithAnd(values));
     setKey(value);
   };
   const handleSeachTagOnFocusOut = value => {
-    let values = ignoreSearchTextArray;
+    let values = searchTextWithAnd;
     if (value.length > 0) {
       values.push(value);
-      handleIgnoreSearch(values);
+      handleSearchTags(values);
     }
   };
-
   return (
     <div className={classes.root}>
       <TopicSearchTextTags
@@ -68,7 +65,7 @@ export default function Tags() {
         handleSearch={handleSearch}
         handleKeyDown={handleKeyDown}
         key={key}
-        values={ignoreSearchTextArray}
+        values={searchTextWithAnd}
         inputRef={inputRef}
       />
     </div>

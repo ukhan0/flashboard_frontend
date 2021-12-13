@@ -10,6 +10,8 @@ import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyFilingGraphData } from '../Filings/FillingAction';
+import config from '../../config/config';
 const useStyles = makeStyles(theme => ({
   tableOfContent: {
     position: 'sticky',
@@ -26,29 +28,43 @@ const Sentiment = () => {
   const classes = useStyles();
   const history = useHistory();
   const firstTimeLoad = useRef(false);
+  let hideCards = config.hideCard;
   let getQueryParams = new URLSearchParams(useLocation().search);
   if (!getQueryParams.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
+  
   useEffect(() => {
     if (!firstTimeLoad.current) {
       firstTimeLoad.current = true;
       if (getQueryParams.get('recentId')) {
         let ticker = getQueryParams.get('ticker');
-        let selectedItem = getCompanyByTicker(ticker);
-        let company = formatComapnyData(selectedItem);
-        company.recentId = getQueryParams.get('recentId');
-        dispatch(setSelectedWatchlist(company));
-      }
-      dispatch(getSentimentData());
+        const localSelectedItem = getCompanyByTicker(ticker);
+        if(localSelectedItem) {
+          let company = formatComapnyData(localSelectedItem);
+          company.recentId = getQueryParams.get('recentId');
+          dispatch(setSelectedWatchlist(company));
+        }
+      }   
     }
   }, [dispatch, getQueryParams]);
+
+
+  useEffect(() => {
+    if(selectedItem) {
+      dispatch(getSentimentData());
+      if (hideCards === 'true') {
+        dispatch(getCompanyFilingGraphData());
+      }
+    }
+  }, [dispatch, selectedItem, hideCards]);
 
   const handleSelection = path => {
     setTimeout(() => {
       document.getElementById(path).scrollIntoView();
     }, 100);
   };
+
   const getCompanyByTicker = ticker => {
     let rawData = localStorage.getItem(`watchlist-data-all`);
     if (rawData) {
@@ -57,6 +73,7 @@ const Sentiment = () => {
     let company = rawData.find(sd => sd.ticker === ticker);
     return company;
   };
+
   return (
     <>
       {isPin ? (

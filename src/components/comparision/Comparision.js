@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
@@ -15,6 +15,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 const Comparision = props => {
   const dispatch = useDispatch();
   const [isLoading, setIsloading] = useState(true);
+  const { selectedItem, selectedFileType } = useSelector(state => state.Watchlist);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
   );
@@ -24,8 +25,7 @@ const Comparision = props => {
   );
   const [comparisionSection, setComparisionSection] = useState(
     get(getComparisionSettings(), 'comparisionSection', 'totdoc')
-  );
-  const { selectedItem, selectedFileType } = props;
+  )
 
   let metricQueryParam = '';
   const history = useHistory();
@@ -43,22 +43,23 @@ const Comparision = props => {
     setIsloading(true);
   };
   const firstTimeLoad = useRef(false);
-  let getQueryParams = new URLSearchParams(useLocation().search);
-  if (!getQueryParams.get('recentId') && !selectedItem) {
+  const getQueryParams = useRef(new URLSearchParams(useLocation().search));
+  if (!getQueryParams.current.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
   useEffect(() => {
     if (!firstTimeLoad.current) {
       firstTimeLoad.current = true;
-      if (getQueryParams.get('recentId')) {
-        let ticker = getQueryParams.get('ticker');
+      if (getQueryParams.current.get('recentId')) {
+        let ticker = getQueryParams.current.get('ticker');
         let selectedItem = getCompanyByTicker(ticker);
         let company = formatComapnyData(selectedItem);
-        company.recentId = getQueryParams.get('recentId');
+        company.recentId = getQueryParams.current.get('recentId');
+        company.oldId=getQueryParams.current.get('oldId');
         dispatch(setSelectedWatchlist(company));
       }
     }
-  }, [dispatch, getQueryParams]);
+  }, [dispatch]);
   useEffect(() => {
     const comparisonSetting = {
       comparisionSection: comparisionSection,
@@ -98,6 +99,9 @@ const Comparision = props => {
       break;
   }
 
+   const oldId =  selectedFileType === '10k' ? get(selectedItem, 'oldId10k', null) : get(selectedItem, 'oldId10q', null)
+   const recentId = selectedFileType === '10k' ? get(selectedItem, 'recentId10k', null) : get(selectedItem, 'recentId10q', null)
+
   return (
     <>
       <ComparisionFilters
@@ -117,7 +121,7 @@ const Comparision = props => {
       <div style={{ marginTop: '10px' }}>
         {selectedItem ? (
           <iframe
-            src={`${config.comparisionSite}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
+            src={`${config.comparisionSite}?f1=${oldId}&f2=${recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
             title="Comparision"
             width="100%"
             height={`${window.innerHeight - 90}px`}
@@ -136,10 +140,4 @@ const Comparision = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  selectedItem: state.Watchlist.selectedItem,
-  selectedMetric: state.Watchlist.selectedMetric,
-  selectedFileType: state.Watchlist.selectedFileType
-});
-
-export default connect(mapStateToProps)(Comparision);
+export default Comparision;

@@ -4,7 +4,7 @@ import TopicFilters from './TopicFilters';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
-import { setOpenTopicSearchDialog } from '../../reducers/Topic';
+import { setOpenTopicSearchDialog, resetSuggestions } from '../../reducers/Topic';
 import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
@@ -28,10 +28,16 @@ const useStyles = makeStyles(theme => ({
 const TopicDialog = props => {
   const classes = useStyles();
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
-  const { openTopicSearchDialog } = useSelector(state => state.Topic);
+  const { openTopicSearchDialog, isSimpleSearch } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const handleCloseTopicDialog = () => {
     dispatch(setOpenTopicSearchDialog(false));
+  };
+  const handleCloseTopicSuggestionsDialog = () => {
+    setIsSuggestionsDlgOpen(false);
+    if (isSimpleSearch) {
+      dispatch(resetSuggestions());
+    }
   };
   return (
     <div className={classes.label}>
@@ -49,7 +55,7 @@ const TopicDialog = props => {
             <TopicSuggestionsDialog
               isOpen={isSuggestionsDlgOpen}
               onClose={() => null}
-              handleClose={() => setIsSuggestionsDlgOpen(false)}
+              handleClose={() => handleCloseTopicSuggestionsDialog()}
             />
           ) : null}
         </Paper>

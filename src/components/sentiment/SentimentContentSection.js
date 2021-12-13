@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, Fab, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import SentimentCard from './SentimentCard';
 import SentimentSection from './SentimentSection';
 import SentimentDrawer from './SentimentDrawer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +10,7 @@ import SentimentCompanyDetails from './SentimentCompanyDetails';
 import config from '../../config/config';
 import { setSentimentDrawerOpen, setIsPin } from '../../reducers/Sentiment';
 import { useLocation } from 'react-router-dom';
-
+import SentimentCard from '../Filings/FillingsCardData';
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',

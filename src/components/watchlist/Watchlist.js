@@ -10,7 +10,6 @@ import {
   storeFilteringState,
   getColumnState,
   getFilteringState,
-  checkIsFilterActive,
   syncCachedData
 } from './WatchlistHelpers';
 import {
@@ -34,7 +33,6 @@ import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
 // styles
 import useStyles from './watchlistStyles';
-import WatchlistSearch from './WatchlistSearch';
 import { isObject } from 'lodash';
 import { getWatchlist } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
@@ -62,8 +60,6 @@ const Watchlist = props => {
     isColorEnable
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
-  const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
-  const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
@@ -135,6 +131,7 @@ const Watchlist = props => {
 
   const onColumnClick = (rowData, columnId) => {
     dispatch(setHeadingRedirect(null));
+    rowData.documentType = selectedFileType;
     if (columnId === 'actions') {
       if (rowData.isTickerActive) {
         if (selectedUniverse === 'watchlist') {
@@ -182,10 +179,6 @@ const Watchlist = props => {
       dispatch(setIsNewWatchlistDataAvailable(true));
     }
   }, [dispatch, history.location.pathname]);
-
-  useEffect(() => {
-    setIsFilterActiveOnSearch(searchText);
-  }, [searchText]);
 
   const updateTickerValue = (rawCompleteData, ticker, isTicker) => {
     let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
@@ -270,13 +263,11 @@ const Watchlist = props => {
 
   const onStoreFilteringState = state => {
     storeFilteringState(state);
-    setIsFilterActive(checkIsFilterActive());
   };
 
   const clearFilterHandler = state => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
-    setIsFilterActive(false);
     setConfirmationClearFilterDialog(false);
     dispatch(setWatchlistSearchText(''));
   };
@@ -315,23 +306,6 @@ const Watchlist = props => {
         </Grid>
         <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            {isFilterActive || isFilterActiveOnSearch ? (
-              <Grid item>
-                <Button
-                  color="primary"
-                  className={classes.button}
-                  size="small"
-                  variant="contained"
-                  onClick={() => {
-                    setConfirmationClearFilterDialog(true);
-                  }}>
-                  Clear Filtering
-                </Button>
-              </Grid>
-            ) : null}
-            <Grid item className={classes.spaceBetween} xs={4}>
-              <WatchlistSearch />
-            </Grid>
             <Grid item>
               <Button
                 color="primary"

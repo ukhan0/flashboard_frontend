@@ -8,15 +8,19 @@ import clsx from 'clsx';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { renameDocumentTypes } from './topicHelpers';
-
 import {
-  setOpenTopicSearchDialog,
   setSelectedIndustries,
-  setSelectedSearch,
   resetAllSearchParams,
+  setAllSearchParams,
+  setSelectedSearch,
+  setSuggestions,
+  setShowComposeNew,
   setShowUpdateButton,
+  setSearchLabel,
+  setOpenTopicSearchDialog,
   setBackDropOnCompanyClick
 } from '../../reducers/Topic';
+
 const useStyles = makeStyles(theme => ({
   dialog: {
     marginLeft: '20px',
@@ -33,12 +37,19 @@ const useStyles = makeStyles(theme => ({
   from: {
     display: 'inline',
     textTransform: 'capitalize'
+  },
+  editSeachSection: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'baseline',
   }
 }));
 
 const TopicDialog = props => {
   const classes = useStyles();
-  const { currentSearchDetail, documentTypes, selectedDocumentTypes, openTopicSearchDialog } = useSelector(
+  const { currentSearchDetail, documentTypes, selectedDocumentTypes, openTopicSearchDialog, selectedSearch, savedSearches } = useSelector(
     state => state.Topic
   );
   const isSuggestions = currentSearchDetail.selectedSuggestions;
@@ -50,15 +61,36 @@ const TopicDialog = props => {
   let endDate = currentSearchDetail.endDate;
   let documents = currentSearchDetail.documentType ? currentSearchDetail.documentType : [];
   const dispatch = useDispatch();
+  
   const displayDateFormat = 'MMMM YYYY';
+
   const handleOpenTopicDialog = () => {
     dispatch(setOpenTopicSearchDialog(!openTopicSearchDialog));
     dispatch(setSelectedIndustries([]));
     dispatch(setShowUpdateButton(false));
-    dispatch(setSelectedSearch(null, null));
     dispatch(resetAllSearchParams());
     dispatch(setBackDropOnCompanyClick(false));
   };
+
+  const setSearchParamsEdit = searchObj => {
+    dispatch(setSelectedSearch(searchObj));
+    dispatch(setSuggestions({}));
+    dispatch(setAllSearchParams(searchObj));
+    dispatch(setSearchLabel(searchObj.searchLabel));
+    dispatch(setOpenTopicSearchDialog(true));
+  };
+
+  const handleEdit = () => {
+    const searchObj = savedSearches.find(s => selectedSearch.searchId === s.searchId)
+    if(!searchObj) {
+      return;
+    }
+    dispatch(setShowUpdateButton(true));
+    dispatch(setShowComposeNew(true));
+    dispatch(setBackDropOnCompanyClick(false));
+    setSearchParamsEdit(searchObj);
+  };
+
   return (
     <Fragment>
       <div className={classes.label}>
@@ -68,6 +100,7 @@ const TopicDialog = props => {
               <span className="text-black-50 d-block">Searching:</span>
               <span className="font-weight-bold">{currentSearchDetail.searchLabel}</span>
               <br></br>
+              <span className="text-black-50">{currentSearchDetail.searchTerm}</span>
               <span className="text-black-50">{selectedSug.length > 0 ? selectedSug.flat().join(', ') : null}</span>
             </Grid>
             <Grid item xs={3}>
@@ -94,7 +127,19 @@ const TopicDialog = props => {
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end" alignItems="center">
                 <Grid item>
-                  <TopicDropDown />
+                  <div className={classes.editSeachSection}>
+                    { 
+                      !openTopicSearchDialog ? 
+                        <div>
+                          <Button color="primary" size="small" aria-haspopup="true" onClick={handleEdit}>
+                            Edit
+                          </Button>
+                        </div>
+                         : 
+                        null 
+                    }
+                    <TopicDropDown />
+                  </div>
                 </Grid>
                 <Grid item>
                   <Button onClick={handleOpenTopicDialog} variant="contained" color="primary" className="m-2">

@@ -31,7 +31,7 @@ const columnDefs = [
     flex: 1,
     colId: 'documentDate',
     valueFormatter: params =>
-      params.data.document_date ? moment(params.data.document_date).format('DD MMMM, YYYY') : ''
+      params.data.document_date ? moment(params.data.document_date.split('.')[0]).format('DD MMMM, YYYY') : ''
   },
   {
     headerName: 'Period Date',
@@ -54,6 +54,7 @@ export default function FilingsResultsTable() {
       let selectedItem = getCompanyByTickerUniverse(params.data.ticker, 'all');
       let company = formatComapnyData(selectedItem);
       company.recentId = params.data.document_id;
+      company.documentType = params.data.document_type;
       dispatch(setSelectedWatchlist(company));
       history.push('/sentiment');
     }

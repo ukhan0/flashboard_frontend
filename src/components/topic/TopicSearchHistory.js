@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, orderBy } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setAllSearchParams,
@@ -17,7 +17,7 @@ import {
   resetAllSearchParams,
   setBackDropOnCompanyClick
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, fetchTopicsList, deleteSearch } from './topicActions';
+import { performTopicSearchAggregate, fetchTopicsList, deleteSearch, perfomeSearchPayloadTweets } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
@@ -66,6 +66,7 @@ export default function TopicSearchHistory(props) {
   const [deleteSearchId, setDeleteSearchId] = React.useState(null);
   const { cancelTokenSourceHighlights, savedSearches, selectedSearch } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
+  const sortedSearches = orderBy(savedSearches, [search => search.searchLabel.toLowerCase()], ['asc']);
   const firstTimeLoad = useRef(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   useEffect(() => {
@@ -81,18 +82,18 @@ export default function TopicSearchHistory(props) {
   };
 
   const setSearchParams = useCallback(
-    searchObj => {
+    (searchObj, showLoader = true) => {
       dispatch(setSelectedSearch(searchObj));
       dispatch(setSuggestions({}));
       dispatch(setAllSearchParams(searchObj));
       setTimeout(() => {
         dispatch(resetResultsPage());
-        dispatch(performTopicSearchAggregate(true, true));
+        dispatch(performTopicSearchAggregate(showLoader, true));
+        dispatch(perfomeSearchPayloadTweets(showLoader, true));
         // cancel existing calls if there are any
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();
         }
-        // dispatch(cancelExistingHightlightsCalls(true));
         // now perform actual search
         setTimeout(() => {
           dispatch(cancelExistingHightlightsCalls(false));
@@ -107,7 +108,8 @@ export default function TopicSearchHistory(props) {
       if (!getQueryParams.get('topicId')) {
         firstTimeLoad.current = true;
         // set first search of first topic as default search
-        const firstSearch = get(savedSearches, '[0]', null);
+        const sortedSearches = orderBy(savedSearches, [search => search.searchLabel.toLowerCase()], ['asc']);
+        const firstSearch = get(sortedSearches, '[0]', null);
         if (!selectedSearch && firstSearch) {
           setSearchParams(firstSearch);
         }
@@ -132,8 +134,8 @@ export default function TopicSearchHistory(props) {
     dispatch(resetAllSearchParams());
   };
 
-  const handleSearch = s => {
-    setSearchParams(s);
+  const handleSearch = (s, showLoader = true) => {
+    setSearchParams(s, showLoader);
     props.handleClose();
     dispatch(setBackDropOnCompanyClick(false));
   };
@@ -148,6 +150,14 @@ export default function TopicSearchHistory(props) {
     dispatch(deleteSearch(deleteSearchId));
   };
 
+  const handleEdit = (search) => {
+    dispatch(setShowUpdateButton(true));
+    dispatch(setShowComposeNew(true));
+    dispatch(setBackDropOnCompanyClick(false));
+    setSearchParamsEdit(search);
+    handleSearch(search, false)
+  }
+
   return (
     <div className={classes.savedSearchesSection}>
       <TopicDeleteSearchConfirmDialog
@@ -156,8 +166,8 @@ export default function TopicSearchHistory(props) {
         confirmDeleteSearch={confirmDeleteSearch}
       />
       <List component="nav" className={classes.root}>
-        {savedSearches.length > 0 ? (
-          savedSearches.map((s, index) => {
+        {sortedSearches.length > 0 ? (
+          sortedSearches.map((s, index) => {
             return (
               <ListItem
                 button
@@ -174,11 +184,7 @@ export default function TopicSearchHistory(props) {
                     aria-label="comments"
                     size="small"
                     onClick={() => {
-                      dispatch(setShowUpdateButton(true));
-                      dispatch(setShowComposeNew(true));
-                      dispatch(setBackDropOnCompanyClick(false));
-                      setSearchParamsEdit(s);
-                      props.handleClose();
+                      handleEdit(s)
                     }}>
                     <EditIcon className={classes.editIcon} />
                   </IconButton>

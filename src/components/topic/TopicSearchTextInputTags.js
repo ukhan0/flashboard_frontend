@@ -1,11 +1,9 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
-import Chip from '@material-ui/core/Chip';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTopicSearchText, resetSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
+import { resetSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
+import TopicSearchTextTags from './TopicSearchTextTags';
 const useStyles = makeStyles(theme => ({
   root: {
     '& > * + *': {
@@ -23,7 +21,7 @@ export default function Tags() {
   const classes = useStyles();
   const inputRef = React.useRef();
   const [key, setKey] = React.useState('');
-  const { searchText, simpleSearchTextArray, ignoreSearchTextArray } = useSelector(state => state.Topic);
+  const { searchText, simpleSearchTextArray } = useSelector(state => state.Topic);
 
   const dispatch = useDispatch();
   const handleSearch = (event, values) => {
@@ -54,41 +52,28 @@ export default function Tags() {
     }
   };
   const handleSearchTags = values => {
-    const value1 = ignoreSearchTextArray.map(value => `"-${value}"`).join(' AND ');
     const value = values.map(value => `"${value}"`).join(' OR ');
     dispatch(setSimpleSearchTextArray(values));
-    dispatch(setTopicSearchText(`${value} ${ignoreSearchTextArray.length > 0 ? `AND ${value1}` : ''} `));
-    setKey(searchText);
+    setKey(value);
   };
+
+  const handleSeachTagOnFocusOut = value => {
+    let values = simpleSearchTextArray;
+    if (value.length > 0) {
+      values.push(value);
+      handleSearchTags(values);
+    }
+  };
+
   return (
     <div className={classes.root}>
-      <Autocomplete
+      <TopicSearchTextTags
+        handleSeachTagOnFocusOut={handleSeachTagOnFocusOut}
+        handleSearch={handleSearch}
+        handleKeyDown={handleKeyDown}
         key={key}
-        multiple
-        size="small"
-        id="tags-outlined"
-        closeIcon={false}
-        onChange={(event, value) => {
-          handleSearch(event, value);
-        }}
-        options={[]}
-        value={simpleSearchTextArray.length > 0 ? simpleSearchTextArray : []}
-        freeSolo
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              color="primary"
-              style={{ maxHeight: '22px' }}
-              variant="outlined"
-              label={option}
-              {...getTagProps({ index })}
-            />
-          ))
-        }
-        renderInput={params => {
-          params.inputProps.onKeyDown = handleKeyDown;
-          return <TextField inputRef={inputRef} size="small" {...params} variant="outlined" fullWidth />;
-        }}
+        values={simpleSearchTextArray}
+        inputRef={inputRef}
       />
     </div>
   );

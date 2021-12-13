@@ -1,6 +1,7 @@
 export const SET_COMPANY_FILLING_DATA = 'FILLING/SET_COMPANY_FILLING_DATA ';
 export const SET_COMPANY_FILLING_GRAPH_DATA = 'FILLING/SET_COMPANY_FILLING_GRAPH_DATA ';
 export const SET_COMPANY_FILLING_REVENUE_DATA = 'FILLING/SET_COMPANY_FILLING_REVENUE_DATA ';
+export const SET_COMPANY_PRICE_0VERLAY = 'FILLING/SET_COMPANY_PRICE_0VERLAY';
 export const setCompanyFillingData = companyFillingData => ({
   type: SET_COMPANY_FILLING_DATA,
   companyFillingData
@@ -14,12 +15,17 @@ export const setCompanyFillingRevenueData = filingsRevenueData => ({
   type: SET_COMPANY_FILLING_REVENUE_DATA,
   filingsRevenueData
 });
+export const setCompanyPriceOverlay = priceOverlay => ({
+  type: SET_COMPANY_PRICE_0VERLAY,
+  priceOverlay
+});
 
 const getDefaultState = () => {
   return {
     fillingsData: [],
     fillingsGraphData: [],
-    filingsRevenueData: []
+    filingsRevenueData: [],
+    priceOverlay: []
   };
 };
 
@@ -36,6 +42,8 @@ export default function reducer(
       return { ...state, filingsRevenueData: action.filingsRevenueData };
     case SET_COMPANY_FILLING_GRAPH_DATA:
       return { ...state, fillingsGraphData: action.fillingsGraphData };
+    case SET_COMPANY_PRICE_0VERLAY:
+      return { ...state, priceOverlay: action.priceOverlay };
     default:
       break;
   }

@@ -1,21 +1,24 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
-
+import { useHistory } from 'react-router-dom';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/highcharts-more';
-
-import {  Grid, Card, Divider } from '@material-ui/core';
+import { setTopicSearchText, setIsFromSideBar } from '../../reducers/Topic';
+import { Grid, Card, Divider } from '@material-ui/core';
 import { orderBy } from 'lodash';
 export default function FilingsCompanyRevenueGraph() {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const { filingsRevenueData } = useSelector(state => state.Filings);
-  const caculateStrength = filingsRevenueData.map(v => {
+  let caculateStrength = filingsRevenueData.map(v => {
     return { ...v, strength: v.newCount - v.oldCount };
   });
 
+  caculateStrength = caculateStrength.slice(0, 100);
   const zeroValue = caculateStrength.filter(v => v.oldCount === 0);
   const nonZeroValue = caculateStrength.filter(v => v.oldCount > 0);
 
@@ -24,7 +27,6 @@ export default function FilingsCompanyRevenueGraph() {
   let nonZeroValuesDesc = orderBy(nonZeroValue, ['strength'], ['desc']);
 
   let finalResult = zeroValuesDesc.concat(nonZeroValuesDesc);
-
   let filingsRevenue1 = finalResult.map(v => {
     return { name: v.name, low: -v.oldCount, high: 0 };
   });
@@ -100,9 +102,19 @@ export default function FilingsCompanyRevenueGraph() {
         }
       },
       series: {
-        lineWidth: 1
-        //className: 'main-color',
-        //negativeColor: true
+        lineWidth: 10,
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function() {
+              if (this) {
+                dispatch(setIsFromSideBar(false));
+                dispatch(setTopicSearchText(this.name));
+                history.push('/sentiment');
+              }
+            }
+          }
+        }
       }
     },
     series: [

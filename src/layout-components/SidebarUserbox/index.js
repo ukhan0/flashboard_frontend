@@ -3,15 +3,22 @@ import { Avatar, Box } from '@material-ui/core';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import config from '../../config/config';
-
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(theme => ({
+  tickerLogo: {
+    '& .MuiAvatar-img': {
+      objectFit: 'contain'
+    }
+  }
+}));
 const SidebarUserbox = props => {
+  const classes = useStyles();
   const { sidebarToggle, sidebarHover } = useSelector(state => state.ThemeOptions);
   const { selectedItem } = useSelector(state => state.Watchlist);
-  
   return (
     <Fragment>
       <Box
-        className={clsx('app-sidebar-userbox', {
+        className={clsx('app-sidebar-userbox', classes.tickerLogo, {
           'app-sidebar-userbox--collapsed': sidebarToggle && !sidebarHover
         })}>
         <Avatar

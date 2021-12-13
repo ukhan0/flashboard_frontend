@@ -15,8 +15,9 @@ import {
   cancelExistingHightlightsCalls,
   setSnackBarActive
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate } from './topicActions';
+import { performTopicSearchAggregate, perfomeSearchPayloadTweets } from './topicActions';
 import TopicCompose from './TopicCompose';
+import TopicTweets from './TopicTweets';
 const Topic = () => {
   const classes = topicStyles();
   const {
@@ -25,7 +26,10 @@ const Topic = () => {
     cancelTokenSourceHighlights,
     isSnackBarActive,
     snackBarMessage,
-    snackBarSeverity
+    snackBarSeverity,
+    openTopicSearchDialog,
+    showUpdateButton,
+    searchIndex
   } = useSelector(state => state.Topic);
 
   const dispatch = useDispatch();
@@ -33,6 +37,7 @@ const Topic = () => {
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
+    dispatch(perfomeSearchPayloadTweets(true, true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
@@ -50,24 +55,26 @@ const Topic = () => {
 
   return (
     <div className={classes.root}>
-      <TopicCurrentSearchDetail />
+      {!openTopicSearchDialog || (openTopicSearchDialog && showUpdateButton) ? <TopicCurrentSearchDetail /> : null}
       <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Grid container spacing={1}>
-            <Grid item xs={4}>
-              <TopicHistoryChart />
+          {searchIndex === 'tweets' ? null : (
+            <Grid container spacing={1}>
+              <Grid item xs={4}>
+                <TopicHistoryChart />
+              </Grid>
+              <Grid item xs={4}>
+                <TopicCompanyResultsTable />
+              </Grid>
+              <Grid item xs={4}>
+                <TopicPieChart onChange={handleSearch} />
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <TopicCompanyResultsTable />
-            </Grid>
-            <Grid item xs={4}>
-              <TopicPieChart onChange={handleSearch} />
-            </Grid>
-          </Grid>
+          )}
         </Grid>
         <Grid item xs={12}>
-          <TopicSearchResults />
+          {searchIndex === 'tweets' ? <TopicTweets /> : <TopicSearchResults />}
         </Grid>
       </Grid>
       <TopicSnackbar

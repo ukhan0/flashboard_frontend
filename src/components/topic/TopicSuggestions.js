@@ -28,7 +28,7 @@ const useStyles = makeStyles(_theme => ({
 }));
 
 export default function TopicSuggestionsDialog(props) {
-  const { suggestions, selectedSuggestions, suggestionsIsLoading, simpleSearchTextArray } = useSelector(
+  const { suggestions, selectedSuggestions, suggestionsIsLoading, simpleSearchTextArray, isSimpleSearch } = useSelector(
     state => state.Topic
   );
 
@@ -51,16 +51,20 @@ export default function TopicSuggestionsDialog(props) {
     if (!isSuggestionChecked(value)) {
       newSelectedSuggestions[keyWord] = [...newSelectedSuggestions[keyWord], value];
       dispatch(setSelectedSuggestions(newSelectedSuggestions));
-      simpleSearchTextArrayCopy.push(value);
-      dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
+      if (isSimpleSearch) {
+        simpleSearchTextArrayCopy.push(value);
+        dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
+      }
     } else {
       const newKeyWordSelectedSuggestions = [...selectedSuggestions[keyWord]];
       remove(newKeyWordSelectedSuggestions, v => v === value); // it mutatues array
       selectedSuggestions[keyWord] = newKeyWordSelectedSuggestions;
       dispatch(setSelectedSuggestions(selectedSuggestions));
       const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
-      simpleSearchTextArray.splice(index, 1);
-      dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
+      if (isSimpleSearch) {
+        simpleSearchTextArray.splice(index, 1);
+        dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
+      }
     }
   };
 

@@ -2,13 +2,17 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import FilingsTimelineChart from './FilingsTimelineChart ';
 import FilingsDetailsGraph from './FilingsDetailsGraph';
-import { getCompanyFilingListing, getCompanyFilingGraphData, getCompanyFilingRevenueData } from './FillingAction';
+import {
+  getCompanyFilingListing,
+  getCompanyFilingGraphData,
+  getCompanyFilingRevenueData,
+  getCompanyPrice0verlayOnTimeline
+} from './FillingAction';
 import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
-import { setCompanyFillingGraphData } from '../../reducers/Filings';
 import FillingTable from './FilingsTable';
+import FilingsTimelineChart from './FillingCompanyPriceOverlay';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -33,11 +37,11 @@ const Filings = () => {
   const history = useHistory();
 
   useEffect(() => {
-    dispatch(setCompanyFillingGraphData([]));
     dispatch(getCompanyFilingListing());
     dispatch(getCompanyFilingGraphData());
     dispatch(getCompanyFilingRevenueData());
-  }, [dispatch]);
+    dispatch(getCompanyPrice0verlayOnTimeline());
+  }, [dispatch, selectedItem]);
 
   if (!selectedItem) {
     history.push('/watchlist');

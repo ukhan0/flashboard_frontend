@@ -5,8 +5,9 @@ import { FormControl, TextField } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { getCompleteWatchlist } from '../../utils/helpers';
-import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
-
+import { setWatchlistSearchText, setSelectedTickerSymbol, setSelectedWatchlist } from '../../reducers/Watchlist';
+import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 const createOptionLabel = option => {
   return `${option.ticker} - ${option.name}`;
 };
@@ -16,7 +17,7 @@ const WatchlistTopicSearch = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { selectedTickerSymbol, searchText } = useSelector(state => state.Watchlist);
+  const { selectedTickerSymbol, searchText, selectedFileType } = useSelector(state => state.Watchlist);
 
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table
@@ -46,6 +47,12 @@ const WatchlistTopicSearch = props => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
       dispatch(setSelectedTickerSymbol(newSelectedSymbol));
       dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
+      let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, 'all');
+      let company = formatComapnyData(selectedItem);
+      company.recentId = selectedFileType === '10k' ? company.recentId10k : company.recentId10q;
+      company.oldId = selectedFileType === '10k' ? company.oldId10k : company.oldId10q;
+      company.documentType = selectedFileType;
+      dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
     }
   };
@@ -61,6 +68,7 @@ const WatchlistTopicSearch = props => {
     <FormControl className={classes.formControl}>
       <Autocomplete
         loading={loading}
+        style={{ backgroundColor: 'white', borderRadius: '12px' }}
         loadingText={'Loading...'}
         className={classes.searchField}
         onChange={selectionChanged}
@@ -71,7 +79,6 @@ const WatchlistTopicSearch = props => {
         renderInput={params => (
           <TextField
             {...params}
-            label="Search"
             variant="outlined"
             placeholder="Type Company Name or Symbol"
             onChange={e => handleSearchTextChange(e.target.value)}

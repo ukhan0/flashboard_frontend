@@ -5,6 +5,7 @@ import { isEmpty, get } from 'lodash';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import FillingRevenueGraph from './FilingsCompanyRevenueGraph';
+import HighChartDelay from 'highcharts-tooltip-delay';
 Highcharts.setOptions({
   lang: {
     thousandsSep: ','
@@ -16,26 +17,18 @@ const FilingsDetailsGraph = props => {
   let risks = [];
   let notes = [];
   let dates = [];
-  let totals = [];
   if (!isEmpty(fillingsGraphData)) {
     dates = fillingsGraphData.map(s => s.document_date);
-    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', ''));
-    risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', ''));
-    notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', ''));
-    totals = fillingsGraphData.map(s => {
-      let totalWc = get(s, 'total.wwwccc', 0);
-      let mdaWc = get(s, 'mda.wwwccc', 0);
-      let noteWc = get(s, 'notes.wwwccc', 0);
-      let riskWc = get(s, 'risk_factors.wwwccc.wwwccc', 0);
-      let wc = mdaWc + noteWc + riskWc;
-      return totalWc - wc;
-    });
+    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', 0));
+    risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', 0));
+    notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', 0));
   }
-
+  React.useEffect(() => {
+    HighChartDelay(Highcharts);
+  }, []);
   const options = {
     chart: {
       type: 'column'
-      // height: 500,
     },
     title: {
       text: null
@@ -68,7 +61,8 @@ const FilingsDetailsGraph = props => {
     },
     tooltip: {
       headerFormat: '<b>{point.x}</b><br/>',
-      pointFormat: '{series.name} WORD COUNT: {point.y}<br/>'
+      pointFormat: '{series.name} WORD COUNT: {point.y}<br/>',
+      delayForDisplay: 2000
     },
     plotOptions: {
       column: {
@@ -95,11 +89,6 @@ const FilingsDetailsGraph = props => {
         data: mdas.filter(e => e),
         color: '#7fe4a6'
       }
-      // {
-      //   name: 'total',
-      //   data: totals.filter(e => e),
-      //   color: '#7fe4a6'
-      // }
     ]
   };
 

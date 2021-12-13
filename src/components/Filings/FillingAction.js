@@ -2,7 +2,8 @@ import axios from 'axios';
 import {
   setCompanyFillingData,
   setCompanyFillingGraphData,
-  setCompanyFillingRevenueData
+  setCompanyFillingRevenueData,
+  setCompanyPriceOverlay
 } from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
@@ -69,7 +70,9 @@ export const getCompanyFilingRevenueData = () => {
       return;
     }
     try {
-      const response = await axios.get(`${config.fillingApiUrl}?f1=${4460725}&f2=${6588021}&output=json`);
+      const response = await axios.get(
+        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json`
+      );
 
       const data = get(response, 'data', []);
 
@@ -80,6 +83,28 @@ export const getCompanyFilingRevenueData = () => {
       }
     } catch (error) {
       dispatch(setCompanyFillingRevenueData([]));
+    }
+  };
+};
+
+export const getCompanyPrice0verlayOnTimeline = () => {
+  return async (dispatch, getState) => {
+    const { selectedItem } = getState().Watchlist;
+
+    if (!selectedItem) {
+      return;
+    }
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/get_price_by_ticker?ticker=${selectedItem.ticker}`);
+
+      const data = get(response, 'data', []);
+      if (response) {
+        dispatch(setCompanyPriceOverlay(data));
+      } else {
+        dispatch(setCompanyPriceOverlay([]));
+      }
+    } catch (error) {
+      dispatch(setCompanyPriceOverlay([]));
     }
   };
 };

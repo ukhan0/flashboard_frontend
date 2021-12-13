@@ -8,35 +8,20 @@ const SocialSentiment = () => {
   if (!selectedItem) {
     history.push('/watchlist');
   }
-  React.useEffect(() => {
-    let ticker = selectedItem ? selectedItem.ticker : null;
-    window.SMA.SMAIntraDay({
-      container: 'sma_intraday_container',
-      width: '100%',
-      height: '550',
-      ontology: 'ticker',
-      apikey: '354fa8b5d5639db1b72b4ad2434c780309ad1f52',
-      subjects: ticker
-    });
-
-    window.SMA.SMAIntraDayDetail({
-      container: 'sma_intraday_detailed_container',
-      width: '100%',
-      height: '650',
-      apikey: '354fa8b5d5639db1b72b4ad2434c780309ad1f52',
-      ontology: 'ticker',
-      subjects: ticker,
-      // hideDropdown: true,
-      showHeading: true,
-      // chartColor: 'f89d03',
-      hideHeader: true
-    });
-  }, [selectedItem]);
-
   return (
     <div>
-      <div id="sma_intraday_container"></div>
-      <div style={{ height: '100%' }} id="sma_intraday_detailed_container"></div>
+      <div>
+        {selectedItem ? (
+          <iframe
+            src={`https://activetraders.socialmarketanalytics.com/charts/sentiment/${selectedItem.ticker}?ontology=ticker&token=618fe17256f94d64d61ecca43988533e`}
+            title="Social Sentiment"
+            width="100%"
+            height={`${window.innerHeight - 90}px`}
+            samesite="None"
+            frameBorder="0"
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

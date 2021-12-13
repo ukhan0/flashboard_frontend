@@ -66,7 +66,7 @@ export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
     let selected = type.map(v => {
       if (v === 'FMP-transcript') {
-        v = 'Earning Calls';
+        v = 'Earning Call';
       }
       return v;
     });
@@ -78,7 +78,32 @@ export const renameDocumentTypes = type => {
   }
 
   if (type === 'FMP-transcript') {
-    type = 'Earning Calls';
+    type = 'Earning Call';
   }
   return type;
+};
+
+export const deleteSearchSuggestionsByKey = (suggestions, deleteKeys, deleteValues) => {
+  let searchValues = [];
+  if (Array.isArray(deleteValues)) {
+    searchValues = deleteValues;
+  } else {
+    searchValues = deleteValues.split(' ');
+  }
+  let valuesWiths = searchValues.map(v => `${v}s`);
+  let values = searchValues.concat(valuesWiths);
+  deleteKeys.forEach(v => {
+    delete suggestions[v];
+  });
+
+  values.forEach(val => {
+    forEach(suggestions, (v, k) => {
+      let filterValues = v.filter(function(item) {
+        return item.toLowerCase() !== val.toLowerCase();
+      });
+      suggestions[k] = filterValues.length > 0 ? filterValues : [];
+    });
+  });
+
+  return suggestions;
 };

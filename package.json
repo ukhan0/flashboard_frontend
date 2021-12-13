@@ -34,6 +34,7 @@
     "hamburgers": "1.1.3",
     "highcharts": "^9.0.1",
     "highcharts-react-official": "^3.0.0",
+    "highcharts-tooltip-delay": "^1.4.1",
     "html-to-draftjs": "01.5.0",
     "immutability-helper": "3.0.1",
     "leaflet": "1.6.0",
@@ -83,12 +84,14 @@
     "build:dev": "env-cmd -f .env.dev react-scripts build",
     "build:sma:staging": "env-cmd -f .env.stag react-scripts build",
     "build:sma:live": "env-cmd -f .env.live react-scripts build",
+    "build:udt": "env-cmd -f .env.udt react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
     "deploy:dev": "aws s3 sync build/ s3://flashboard --acl public-read --profile experts",
     "deploy:sma:staging": "aws s3 sync build/ s3://sma-webapp-react --acl public-read --profile flashboard",
-    "deploy:sma:live": "aws s3 sync build/ s3://filingsflash.com --acl public-read --profile flashboard"
+    "deploy:sma:live": "aws s3 sync build/ s3://filingsflash.com --acl public-read --profile flashboard",
+    "deploy:udt": "aws s3 sync build/ s3://unstructureddataterminal.com --acl public-read --profile flashboard"
   },
   "eslintConfig": {
     "extends": "react-app"

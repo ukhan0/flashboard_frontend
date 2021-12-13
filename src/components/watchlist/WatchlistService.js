@@ -43,7 +43,9 @@ class WatchListService {
   };
 
   clearFilter = () => {
-    this.agGridAPI.setFilterModel(null);
+    if (this.agGridAPI) {
+      this.agGridAPI.setFilterModel(null);
+    }
   };
 
   exportWatchlist(format) {

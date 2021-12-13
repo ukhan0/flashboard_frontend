@@ -23,7 +23,7 @@ export default function FilingsTimelineChart() {
     let y = moment(v.document_date).format('YYYY');
     let m = moment(v.document_date).format('M');
     let d = moment(v.document_date).format('D');
-    let date = Date.UTC(parseInt(y), parseInt(m), parseInt(d));
+    let date = Date.UTC(parseInt(y), parseInt(m - 1), parseInt(d));
     return {
       ticker: v.ticker,
       document_id: v.document_id,

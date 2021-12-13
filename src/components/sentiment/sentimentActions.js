@@ -26,7 +26,7 @@ export const getSentimentData = () => {
     try {
       dispatch(setIsLoading(true));
       const formData = new FormData();
-      formData.append('search_term', selectedSug.length > 0 ? fullSearchText : searchText);
+      formData.append('search_term', selectedSug.length > 0 ? fullSearchText : `"${searchText}"`);
       const response = await axios.post(
         `${config.sentimentUrl}?id=${recentId}&es_index=filling_sentiment4`,
         isFromSideBar ? '' : formData

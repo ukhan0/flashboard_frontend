@@ -1,34 +1,26 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-import { Hidden, IconButton, AppBar, Box, Tooltip } from '@material-ui/core';
-
+import { Hidden, IconButton, AppBar, Box, Tooltip, Button } from '@material-ui/core';
+import { checkIsFilterActive } from '../../components/watchlist/WatchlistHelpers';
 import { connect } from 'react-redux';
-
-import {
-  setSidebarToggle,
-  setSidebarToggleMobile
-} from '../../reducers/ThemeOptions';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import projectLogo from '../../assets/images/logos/sma-logo.svg';
 
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
 import HeaderMenuSimple from '../../layout-components/HeaderMenuSimple';
-
+import useStyles from '../../components/watchlist/watchlistStyles';
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-
+import GlobalTickerSearchField from '../../components/watchlist/WatchlistSearch';
+import WatchlistConfirmationDialog from 'components/watchlist/ActionConfirmation';
+import WatchlistService from '../../components/watchlist/WatchlistService';
+import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
 const Header = props => {
-  const toggleSidebar = () => {
-    setSidebarToggle(!sidebarToggle);
-  };
-
-  const toggleSidebarMobile = () => {
-    setSidebarToggleMobile(!sidebarToggleMobile);
-  };
-
   const {
     headerShadow,
     headerFixed,
@@ -38,6 +30,29 @@ const Header = props => {
     setSidebarToggleMobile,
     sidebarToggleMobile
   } = props;
+  const { searchText } = useSelector(state => state.Watchlist);
+  const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
+  const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
+  const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const toggleSidebar = () => {
+    setSidebarToggle(!sidebarToggle);
+  };
+
+  const toggleSidebarMobile = () => {
+    setSidebarToggleMobile(!sidebarToggleMobile);
+  };
+  const clearFilterHandler = state => {
+    dispatch(setSelectedTickerSymbol(null));
+    WatchlistService.clearFilter();
+    setIsFilterActive(false);
+    setConfirmationClearFilterDialog(false);
+    dispatch(setWatchlistSearchText(''));
+  };
+  useEffect(() => {
+    setIsFilterActiveOnSearch(searchText);
+  }, [searchText]);
 
   return (
     <Fragment>
@@ -53,10 +68,7 @@ const Header = props => {
           <Hidden lgUp>
             <Box className="app-logo-wrapper" title="SMA">
               <Link to="/" className="app-logo-link">
-                <IconButton
-                  color="primary"
-                  size="medium"
-                  className="app-logo-btn">
+                <IconButton color="primary" size="medium" className="app-logo-btn">
                   <img className="app-logo-img" alt="SMA" src={projectLogo} />
                 </IconButton>
               </Link>
@@ -74,16 +86,8 @@ const Header = props => {
                     'btn-toggle-collapse-closed': sidebarToggle
                   })}>
                   <Tooltip title="Toggle Sidebar" placement="right">
-                    <IconButton
-                      color="inherit"
-                      onClick={toggleSidebar}
-                      size="medium"
-                      className="btn-inverse">
-                      {sidebarToggle ? (
-                        <MenuRoundedIcon />
-                      ) : (
-                        <MenuOpenRoundedIcon />
-                      )}
+                    <IconButton color="inherit" onClick={toggleSidebar} size="medium" className="btn-inverse">
+                      {sidebarToggle ? <MenuRoundedIcon /> : <MenuOpenRoundedIcon />}
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -91,19 +95,35 @@ const Header = props => {
               <HeaderMenuSimple />
             </Box>
           </Hidden>
+          <WatchlistConfirmationDialog
+            isOpen={confirmationClearFilterDialog}
+            Agree={() => clearFilterHandler()}
+            disAgree={() => setConfirmationClearFilterDialog(false)}
+            actionName="filter"
+          />
           <Box className="d-flex align-items-center">
+            {isFilterActive || isFilterActiveOnSearch ? (
+              <Button
+                color="primary"
+                className={classes.button}
+                size="small"
+                variant="contained"
+                onClick={() => {
+                  setConfirmationClearFilterDialog(true);
+                }}>
+                Clear Filtering
+              </Button>
+            ) : null}
+
+            <div style={{ width: '200px' }}>
+              <GlobalTickerSearchField />
+            </div>
+
             <HeaderUserbox />
             <Box className="toggle-sidebar-btn-mobile">
               <Tooltip title="Toggle Sidebar" placement="right">
-                <IconButton
-                  color="inherit"
-                  onClick={toggleSidebarMobile}
-                  size="medium">
-                  {sidebarToggleMobile ? (
-                    <MenuOpenRoundedIcon />
-                  ) : (
-                    <MenuRoundedIcon />
-                  )}
+                <IconButton color="inherit" onClick={toggleSidebarMobile} size="medium">
+                  {sidebarToggleMobile ? <MenuOpenRoundedIcon /> : <MenuRoundedIcon />}
                 </IconButton>
               </Tooltip>
             </Box>
