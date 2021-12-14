@@ -28,7 +28,8 @@ import {
   setSelectedCompanyName,
   setOpenTopicSearchDialog,
   isDateSet,
-  setTweetsData
+  setTweetsData,
+  setTweetsMapData
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -448,7 +449,7 @@ export const findSuggestions = () => {
   return async (dispatch, getState) => {
     const { searchText, suggestions, selectedSuggestions, isSimpleSearch, simpleSearchTextArray } = getState().Topic;
     let searchSug = '';
-    if (isSimpleSearch && simpleSearchTextArray.length < 0 || (!isEmpty(suggestions) || !searchText)) { 
+    if ((isSimpleSearch && simpleSearchTextArray.length < 0) || !isEmpty(suggestions) || !searchText) {
       return;
     }
 
@@ -529,7 +530,7 @@ export const findSuggestions = () => {
     }
   };
 };
-export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = false) => {
+export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = false, tweetsUrl, isMapData) => {
   return async (dispatch, getState) => {
     const {
       selectedDocumentTypes,
@@ -608,7 +609,7 @@ export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = f
     if (getState().Topic.searchIndex === 'tweets') {
       try {
         const response = await axios.post(
-          `${config.apiUrl}/api/dictionary/search_tweets_data`,
+          `${config.apiUrl}${tweetsUrl}`,
           {
             ...createSearchPayloadTweets(getState().Topic, freshSearch)
           },
@@ -630,20 +631,22 @@ export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = f
         }
 
         if (newSearchResults.data) {
-          dispatch(setTweetsData(newSearchResults.data));
+          isMapData
+            ? dispatch(setTweetsMapData(newSearchResults.buckets.profileLocationAgg))
+            : dispatch(setTweetsData(newSearchResults.data));
 
           dispatch(setSearchBackdrop(null, false));
         } else {
           dispatch(isDateSet(false));
           dispatch(setSearchBackdrop(null, false));
           dispatch(setSearchError(true));
-          dispatch(setTweetsData([]));
+          isMapData ? dispatch(setTweetsMapData([])) : dispatch(setTweetsData([]));
         }
       } catch (error) {
         dispatch(isDateSet(false));
         dispatch(setSearchBackdrop(null, false));
         dispatch(setSearchError(true));
-        dispatch(setTweetsData([]));
+        isMapData ? dispatch(setTweetsMapData([])) : dispatch(setTweetsData([]));
       }
     }
   };

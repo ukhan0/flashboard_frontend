@@ -16,6 +16,7 @@ import {
   setSnackBarActive
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, perfomeSearchPayloadTweets } from './topicActions';
+import TweetsMap from './TopicTweetsMap';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
 const Topic = () => {
@@ -37,7 +38,8 @@ const Topic = () => {
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
-    dispatch(perfomeSearchPayloadTweets(true, true));
+    dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_data', false));
+    dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_aggregate_data', true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
@@ -74,7 +76,14 @@ const Topic = () => {
           )}
         </Grid>
         <Grid item xs={12}>
-          {searchIndex === 'tweets' ? <TopicTweets /> : <TopicSearchResults />}
+          {searchIndex === 'tweets' ? (
+            <>
+              <TweetsMap />
+              <TopicTweets />
+            </>
+          ) : (
+            <TopicSearchResults />
+          )}
         </Grid>
       </Grid>
       <TopicSnackbar
