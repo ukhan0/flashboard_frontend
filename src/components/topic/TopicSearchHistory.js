@@ -89,7 +89,8 @@ export default function TopicSearchHistory(props) {
       setTimeout(() => {
         dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(showLoader, true));
-        dispatch(perfomeSearchPayloadTweets(showLoader, true));
+        dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_data', false));
+        dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_aggregate_data', true));
         // cancel existing calls if there are any
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();

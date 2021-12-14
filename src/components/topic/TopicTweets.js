@@ -67,6 +67,7 @@ const useStyles = makeStyles(theme => ({
 }));
 const deleteSummaryObject = data => {
   delete data['tweet_json.object.summary'];
+  delete data['contents'];
   if (data['tweet_json.long_object.body']) {
     delete data['tweet_json.body'];
   }
