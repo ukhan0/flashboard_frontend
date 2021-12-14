@@ -17,7 +17,7 @@ const baseGraphOptions = {
   tooltip: {
     headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
     pointFormat: '<span>{point.name}</span>: <b>{point.y}</b>',
-    enabled: false
+    enabled: true
   },
   plotOptions: {
     series: {
@@ -32,7 +32,7 @@ const baseGraphOptions = {
   },
   series: [
     {
-      name: 'Documents Count',
+      name: 'Tweets Count',
       colorByPoint: true,
       data: []
     }
@@ -69,7 +69,7 @@ export default function TopicTweetsPieChart(props) {
       calculateTweets.push(v);
     }
   });
-  const mapData = calculateTweets.map(v => ({name: v.key.toLowerCase(), y: v.doc_count}));
+  const mapData = calculateTweets.map(v => ({name: v.key.toUpperCase(), y: v.doc_count}));
 
   const newGraphOptions = cloneDeep(baseGraphOptions);
   newGraphOptions.series[0].data = mapData;
