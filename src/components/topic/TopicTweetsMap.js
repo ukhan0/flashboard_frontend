@@ -8,20 +8,10 @@ import Map from 'highcharts/modules/map';
 import { mapMockData } from '../../reducers/filingsMockData';
 import { useSelector } from 'react-redux';
 const useStyles = makeStyles(theme => ({
-  dialog: {
-    marginLeft: '20px',
-    marginRight: '20px'
-  },
-  dialog2: {
-    minWidth: '500px'
-  },
   label: {
     marginLeft: '16px',
     marginRight: '16px',
     marginTop: '20px'
-  },
-  fontSize: {
-    fontSize: '0.75rem'
   }
 }));
 
