@@ -16,7 +16,8 @@ import {
   setSnackBarActive
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, perfomeSearchPayloadTweets } from './topicActions';
-import TweetsMap from './TopicTweetsMap';
+import TopicTweetsMap from './TopicTweetsMap';
+import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
 const Topic = () => {
@@ -77,10 +78,21 @@ const Topic = () => {
         </Grid>
         <Grid item xs={12}>
           {searchIndex === 'tweets' ? (
-            <>
-              <TweetsMap />
-              <TopicTweets />
-            </>
+            <Grid container>
+              <Grid item xs={12}>
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <TopicTweetsMap />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TopicTweetsPieChart />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <TopicTweets />
+              </Grid>
+            </Grid>
           ) : (
             <TopicSearchResults />
           )}
