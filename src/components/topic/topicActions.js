@@ -632,7 +632,7 @@ export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = f
 
         if (newSearchResults.data) {
           isMapData
-            ? dispatch(setTweetsMapData(newSearchResults.buckets.profileLocationAgg))
+            ? dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode))
             : dispatch(setTweetsData(newSearchResults.data));
 
           dispatch(setSearchBackdrop(null, false));

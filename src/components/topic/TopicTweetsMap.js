@@ -7,6 +7,7 @@ import Highcharts from 'highcharts';
 import Map from 'highcharts/modules/map';
 import { mapMockData } from '../../reducers/filingsMockData';
 import { useSelector } from 'react-redux';
+import { cloneDeep } from 'lodash';
 const useStyles = makeStyles(theme => ({
   label: {
     marginLeft: '16px',
@@ -27,42 +28,7 @@ export default function TopicTweetsMap() {
       calculateTweets.push(v);
     }
   });
-
-  const mapData = calculateTweets.map(v => {
-    return [v.key, v.doc_count];
-  });
-  var data = [
-    ['au', 5],
-    ['bd', 1],
-    ['br', 2],
-    ['ca', 7],
-    ['co', 1],
-    ['cy', 1],
-    ['de', 2],
-    ['es', 1],
-    ['fr', 6],
-    ['gb', 23],
-    ['ge', 1],
-    ['gh', 1],
-    ['hk', 1],
-    ['id', 3],
-    ['in', 11],
-    ['it', 1],
-    ['jp', 1],
-    ['kr', 1],
-    ['lb', 1],
-    ['my', 1],
-    ['ng', 1],
-    ['nl', 2],
-    ['no', 1],
-    ['ph', 3],
-    ['sg', 1],
-    ['th', 1],
-    ['tr', 1],
-    ['ua', 1],
-    ['us', 58],
-    ['za', 2]
-  ];
+  const mapData = calculateTweets.map(v => [v.key.toLowerCase(), v.doc_count]);
 
   const options = {
     title: {
@@ -87,8 +53,8 @@ export default function TopicTweetsMap() {
     series: [
       {
         mapData: mapMockData,
-        data: mapData.length > 0 ? mapData : data,
-        name: 'Random data',
+        data: cloneDeep(mapData),
+        name: 'Tweets',
         states: {
           hover: {
             color: '#BADA55'
