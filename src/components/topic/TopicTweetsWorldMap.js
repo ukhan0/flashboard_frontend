@@ -87,7 +87,7 @@ export default function TopicTweetsMap() {
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
-            <span className={'font-weight-bold'}>Rehan</span>
+            {/* <span className={'font-weight-bold'}>Rehan</span> */}
           </div>
           {states ? (
             <Button
