@@ -530,7 +530,7 @@ export const findSuggestions = () => {
     }
   };
 };
-export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = false) => {
+export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const {
       selectedDocumentTypes,

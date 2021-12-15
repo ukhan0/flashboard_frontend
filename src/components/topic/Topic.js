@@ -15,7 +15,7 @@ import {
   cancelExistingHightlightsCalls,
   setSnackBarActive
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, perfomeSearchPayloadTweets } from './topicActions';
+import { performTopicSearchAggregate, performTopicTweetsSearchAggregate } from './topicActions';
 import TopicTweetsMap from './TopicTweetsMap';
 import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
@@ -39,7 +39,7 @@ const Topic = () => {
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
-    dispatch(perfomeSearchPayloadTweets(true, true));
+    dispatch(performTopicTweetsSearchAggregate(true, true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();

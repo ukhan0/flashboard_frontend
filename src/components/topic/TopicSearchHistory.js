@@ -17,7 +17,12 @@ import {
   resetAllSearchParams,
   setBackDropOnCompanyClick
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, fetchTopicsList, deleteSearch, perfomeSearchPayloadTweets } from './topicActions';
+import {
+  performTopicSearchAggregate,
+  fetchTopicsList,
+  deleteSearch,
+  performTopicTweetsSearchAggregate
+} from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
@@ -89,7 +94,7 @@ export default function TopicSearchHistory(props) {
       setTimeout(() => {
         dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(showLoader, true));
-        dispatch(perfomeSearchPayloadTweets(true, true));
+        dispatch(performTopicTweetsSearchAggregate(true, true));
         // cancel existing calls if there are any
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();

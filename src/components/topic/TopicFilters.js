@@ -17,7 +17,7 @@ import {
   handleSaveSearch,
   performTopicSearchAggregate,
   performTopicSearchHighlights,
-  perfomeSearchPayloadTweets
+  performTopicTweetsSearchAggregate
 } from './topicActions';
 import {
   setOpenTopicSearchDialog,
@@ -79,9 +79,8 @@ const TopicFilters = props => {
   const handleUpdateSaveSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
-    dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_data', false));
-    dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_aggregate_data', true));
-    
+    dispatch(performTopicTweetsSearchAggregate(true, true));
+
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
