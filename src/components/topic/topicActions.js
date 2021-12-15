@@ -530,7 +530,7 @@ export const findSuggestions = () => {
     }
   };
 };
-export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = false, tweetsUrl, isMapData) => {
+export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const {
       selectedDocumentTypes,
@@ -609,7 +609,7 @@ export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = f
     if (getState().Topic.searchIndex === 'tweets') {
       try {
         const response = await axios.post(
-          `${config.apiUrl}${tweetsUrl}`,
+          `${config.apiUrl}/api/dictionary/search_tweets_data`,
           {
             ...createSearchPayloadTweets(getState().Topic, freshSearch)
           },
@@ -631,22 +631,23 @@ export const perfomeSearchPayloadTweets = (showBackdrop = false, freshSearch = f
         }
 
         if (newSearchResults.data) {
-          isMapData
-            ? dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode))
-            : dispatch(setTweetsData(newSearchResults.data));
+          dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
+          dispatch(setTweetsData(newSearchResults.data));
 
           dispatch(setSearchBackdrop(null, false));
         } else {
           dispatch(isDateSet(false));
           dispatch(setSearchBackdrop(null, false));
           dispatch(setSearchError(true));
-          isMapData ? dispatch(setTweetsMapData([])) : dispatch(setTweetsData([]));
+          dispatch(setTweetsMapData([]));
+          dispatch(setTweetsData([]));
         }
       } catch (error) {
         dispatch(isDateSet(false));
         dispatch(setSearchBackdrop(null, false));
         dispatch(setSearchError(true));
-        isMapData ? dispatch(setTweetsMapData([])) : dispatch(setTweetsData([]));
+        dispatch(setTweetsMapData([]));
+        dispatch(setTweetsData([]));
       }
     }
   };

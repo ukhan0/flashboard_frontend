@@ -39,8 +39,7 @@ const Topic = () => {
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
-    dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_data', false));
-    dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_aggregate_data', true));
+    dispatch(perfomeSearchPayloadTweets(true, true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();

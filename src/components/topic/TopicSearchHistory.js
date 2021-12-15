@@ -89,8 +89,7 @@ export default function TopicSearchHistory(props) {
       setTimeout(() => {
         dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(showLoader, true));
-        dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_data', false));
-        dispatch(perfomeSearchPayloadTweets(true, true, '/api/dictionary/search_tweets_aggregate_data', true));
+        dispatch(perfomeSearchPayloadTweets(true, true));
         // cancel existing calls if there are any
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();
@@ -151,13 +150,13 @@ export default function TopicSearchHistory(props) {
     dispatch(deleteSearch(deleteSearchId));
   };
 
-  const handleEdit = (search) => {
+  const handleEdit = search => {
     dispatch(setShowUpdateButton(true));
     dispatch(setShowComposeNew(true));
     dispatch(setBackDropOnCompanyClick(false));
     setSearchParamsEdit(search);
-    handleSearch(search, false)
-  }
+    handleSearch(search, false);
+  };
 
   return (
     <div className={classes.savedSearchesSection}>
@@ -185,7 +184,7 @@ export default function TopicSearchHistory(props) {
                     aria-label="comments"
                     size="small"
                     onClick={() => {
-                      handleEdit(s)
+                      handleEdit(s);
                     }}>
                     <EditIcon className={classes.editIcon} />
                   </IconButton>
