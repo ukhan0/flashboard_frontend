@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper } from '@material-ui/core';
+import { Card } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -69,18 +69,25 @@ export default function TopicTweetsPieChart(props) {
       calculateTweets.push(v);
     }
   });
-  const mapData = calculateTweets.map(v => ({name: v.key.toUpperCase(), y: v.doc_count}));
+  const mapData = calculateTweets.map(v => ({ name: v.key.toUpperCase(), y: v.doc_count }));
 
   const newGraphOptions = cloneDeep(baseGraphOptions);
   newGraphOptions.series[0].data = mapData;
 
   return (
     <div className={classes.label}>
-      <Paper elevation={6} className={clsx('app-page-title')}>
-        <div style={{ height: '100%', width: '100%' }}>
-          <HighchartsReact highcharts={Highcharts} options={newGraphOptions} />
+      <Card className="card-box mb-4">
+        <div className="card-header">
+          <div className="card-header--title">
+            <span className={'font-weight-bold'}>Rehan</span>
+          </div>
         </div>
-      </Paper>
+        <div className={clsx('mb-2')}>
+          <div style={{ height: '100%', width: '100%' }}>
+            <HighchartsReact highcharts={Highcharts} options={newGraphOptions} />
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

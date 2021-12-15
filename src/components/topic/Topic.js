@@ -15,8 +15,8 @@ import {
   cancelExistingHightlightsCalls,
   setSnackBarActive
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, performTopicTweetsSearchAggregate } from './topicActions';
-import TopicTweetsMap from './TopicTweetsMap';
+import { performTopicSearchAggregate, performTopicTweetsSearchAggregate, getWorldMapData } from './topicActions';
+import TopicTweetsWorldMap from './TopicTweetsWorldMap';
 import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
@@ -54,7 +54,9 @@ const Topic = () => {
   const handleCloseSnackBar = () => {
     dispatch(setSnackBarActive(false));
   };
-
+  React.useEffect(() => {
+    dispatch(getWorldMapData());
+  }, [dispatch]);
   return (
     <div className={classes.root}>
       {!openTopicSearchDialog || (openTopicSearchDialog && showUpdateButton) ? <TopicCurrentSearchDetail /> : null}
@@ -81,7 +83,7 @@ const Topic = () => {
               <Grid item xs={12}>
                 <Grid container spacing={1}>
                   <Grid item xs={6}>
-                    <TopicTweetsMap />
+                    <TopicTweetsWorldMap />
                   </Grid>
                   <Grid item xs={6}>
                     <TopicTweetsPieChart />

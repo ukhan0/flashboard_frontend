@@ -54,6 +54,9 @@ export const SET_SEARCH_TEXT_WITH_AND = 'TOPIC/SET_SEARCH_TEXT_WITH_AND';
 export const SET_SEARCH_INDEX = 'TOPIC/SET_SEARCH_INDEX';
 export const SET_TWEETS_DATA = 'TOPIC/SET_TWEETS_DATA';
 export const SET_TWEETS_MAP_DATA = 'TOPIC/SET_TWEETS_MAP_DATA';
+export const SET_TWEETS_WORLD_MAP_DATA = 'TOPIC/SET_TWEETS_WORLD_MAP_DATA';
+export const SET_TWEETS_COUNTRY_MAP_DATA = 'TOPIC/SET_TWEETS_COUNTRY_MAP_DATA';
+
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
@@ -317,8 +320,20 @@ export const setTweetsMapData = tweetsMapData => ({
   tweetsMapData
 });
 
+export const setTweetsWorldMapData = tweetsWorldMapData => ({
+  type: SET_TWEETS_WORLD_MAP_DATA,
+  tweetsWorldMapData
+});
+
+export const setTweetsCountryMapData = tweetsCountryMapData => ({
+  type: SET_TWEETS_COUNTRY_MAP_DATA,
+  tweetsCountryMapData
+});
+
 const searchDefaultState = () => ({
   searchText: '',
+  tweetsWorldMapData: {},
+  tweetsCountryMapData: {},
   tweetsData: [],
   tweetsMapData: [],
   searchIndex: 'filling_sentiment4',
@@ -568,6 +583,10 @@ export default function reducer(
       return { ...state, tweetsData: action.tweetsData };
     case SET_TWEETS_MAP_DATA:
       return { ...state, tweetsMapData: action.tweetsMapData };
+    case SET_TWEETS_WORLD_MAP_DATA:
+      return { ...state, tweetsWorldMapData: action.tweetsWorldMapData };
+    case SET_TWEETS_COUNTRY_MAP_DATA:
+      return { ...state, tweetsCountryMapData: action.tweetsCountryMapData };
     default:
       break;
   }
