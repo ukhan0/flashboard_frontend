@@ -37,10 +37,10 @@ export default function TopicTweetsMap() {
 
   const options = {
     title: {
-      text: ''
+      text: 'Tweets Count'
     },
     subtitle: {
-      text: 'Tweets'
+      text: ''
     },
     mapNavigation: {
       enabled: true,

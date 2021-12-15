@@ -49,10 +49,10 @@ export default function TopicTweetsMap(props) {
 
   const options = {
     title: {
-      text: 'Highmaps basic demo'
+      text: 'Tweets Count'
     },
     subtitle: {
-      text: 'Tweets'
+      text: ''
     },
     mapNavigation: {
       enabled: true,
