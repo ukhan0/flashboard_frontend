@@ -16,6 +16,7 @@ import { upperCase, get } from 'lodash';
 import clsx from 'clsx';
 import pinOpen from '../../assets/images/illustrations/minimize.svg';
 import pinClose from '../../assets/images/illustrations/maximize-size-option.svg';
+import SentimentHighlight from './SentimentHighlight';
 const useStyles = makeStyles(theme => {
   return {
     list: {
@@ -252,6 +253,9 @@ const SentimentTableOfContent = props => {
             ) : null
           )
         )}
+        <>
+          <SentimentHighlight />
+        </>
       </div>
     </React.Fragment>
   );
