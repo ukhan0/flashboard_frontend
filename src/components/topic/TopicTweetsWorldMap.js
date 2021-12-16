@@ -10,11 +10,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import { getMapDataByCountry } from './topicActions';
 import TopicTweetsCountryMap from './TopicTweetsCountryMap';
+import { worldMapData } from '../../config/worldMapData';
 const useStyles = makeStyles(theme => ({
   label: {
     marginLeft: '16px',
     marginRight: '16px',
     marginTop: '20px'
+  },
+  btnHover: {
+    cursor: 'pointer'
   }
 }));
 
@@ -22,8 +26,7 @@ export default function TopicTweetsMap() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [states, setState] = React.useState(false);
-  const { tweetsMapData, tweetsWorldMapData, tweetsCountryMapData } = useSelector(state => state.Topic);
-  // const { tweetsCountryMapData } = useSelector(state => state.Topic);
+  const { tweetsMapData, tweetsCountryMapData } = useSelector(state => state.Topic);
   let calculateTweets = [];
   tweetsMapData.forEach(v => {
     let isCountry = calculateTweets.find(c => c.key === v.key);
@@ -37,7 +40,7 @@ export default function TopicTweetsMap() {
 
   const options = {
     title: {
-      text: 'Tweets Count'
+      text: ''
     },
     subtitle: {
       text: ''
@@ -57,7 +60,7 @@ export default function TopicTweetsMap() {
 
     series: [
       {
-        mapData: tweetsWorldMapData,
+        mapData: worldMapData,
         data: cloneDeep(mapData),
         name: 'Tweets',
         states: {
@@ -74,7 +77,9 @@ export default function TopicTweetsMap() {
             // On click, look for a detailed map
             click: function() {
               dispatch(getMapDataByCountry(this['hc-key']));
-              setState(true);
+              setTimeout(() => {
+                setState(true);
+              }, [500]);
             }
           }
         }
@@ -87,16 +92,17 @@ export default function TopicTweetsMap() {
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
-            {/* <span className={'font-weight-bold'}>Rehan</span> */}
+            <span className={'font-weight-bold'}>Tweets Count</span>
           </div>
           {states ? (
-            <Button
+            <span
               onClick={() => {
-                setState(!states);
+                setState(false);
                 dispatch(setTweetsCountryMapData({}));
-              }}>
+              }}
+              className={clsx('font-weight-bold', classes.btnHover)}>
               Reset
-            </Button>
+            </span>
           ) : null}
         </div>
         <div className={clsx('mb-2', classes.contentSection)}>

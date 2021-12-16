@@ -9,7 +9,7 @@ import { cloneDeep } from 'lodash';
 
 const baseGraphOptions = {
   chart: {
-    type: 'pie',
+    type: 'pie'
   },
   title: {
     text: null
@@ -79,7 +79,7 @@ export default function TopicTweetsPieChart(props) {
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
-            {/* <span className={'font-weight-bold'}>Rehan</span> */}
+            <span className={'font-weight-bold'}>Tweets Count</span>
           </div>
         </div>
         <div className={clsx('mb-2')}>

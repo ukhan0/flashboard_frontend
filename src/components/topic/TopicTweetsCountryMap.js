@@ -49,7 +49,7 @@ export default function TopicTweetsMap(props) {
 
   const options = {
     title: {
-      text: 'Tweets Count'
+      text: ''
     },
     subtitle: {
       text: ''
@@ -81,14 +81,6 @@ export default function TopicTweetsMap(props) {
           enabled: true,
           format: '{point.name}'
         }
-      },
-      {
-        name: 'Separators',
-        type: 'mapline',
-        // data: mapMockData,
-        color: 'silver',
-        showInLegend: false,
-        enableMouseTracking: false
       }
     ]
   };

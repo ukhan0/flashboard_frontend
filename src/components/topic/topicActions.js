@@ -30,7 +30,6 @@ import {
   isDateSet,
   setTweetsData,
   setTweetsMapData,
-  setTweetsWorldMapData,
   setTweetsCountryMapData
 } from '../../reducers/Topic';
 import axios from 'axios';
@@ -701,22 +700,6 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
     ticker: ''
   };
   return data;
-};
-
-export const getWorldMapData = () => {
-  return async dispatch => {
-    try {
-      const response = await axios.get(`https://code.highcharts.com/mapdata/custom/world-highres.geo.json`);
-      const data = get(response, 'data', {});
-      if (response) {
-        dispatch(setTweetsWorldMapData(data));
-      } else {
-        dispatch(setTweetsWorldMapData({}));
-      }
-    } catch (error) {
-      dispatch(setTweetsWorldMapData({}));
-    }
-  };
 };
 
 export const getMapDataByCountry = country => {
