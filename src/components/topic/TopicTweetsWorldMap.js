@@ -60,12 +60,17 @@ export default function TopicTweetsMap() {
 
     series: [
       {
+        animation: true,
         mapData: worldMapData,
         data: cloneDeep(mapData),
         name: 'Tweets',
+        allowPointSelect: true,
         states: {
           hover: {
             color: '#BADA55'
+          },
+          select: {
+            color: 'black'
           }
         },
         dataLabels: {

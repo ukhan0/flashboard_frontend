@@ -69,12 +69,17 @@ export default function TopicTweetsMap(props) {
 
     series: [
       {
+        animation: true,
         mapData: props.tweetsCountryMapData,
         data: data,
         name: 'Tweets',
+        allowPointSelect: true,
         states: {
           hover: {
             color: '#BADA55'
+          },
+          select: {
+            color: 'black'
           }
         },
         dataLabels: {
