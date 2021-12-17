@@ -13,17 +13,19 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: 'orange',
       paddingLeft: 2,
       paddingRight: 2,
-      borderRadius: 4
+      borderRadius: 4,
+      cursor: 'pointer'
     }
   },
   clickable: {
-    cursor: 'pointer'
+    // cursor: 'pointer'
   },
   margin: {
     marginTop: '7px',
     background: 'white',
     marginLeft: '20px',
-    marginRight: '20px'
+    marginRight: '20px',
+    marginBottom: '20px'
   },
   documentDate: {
     fontSize: '20px'
@@ -60,9 +62,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentHighlights = () => {
+const SentimentHighlights = props => {
   const classes = useStyles();
   const { sentimentHighlights } = useSelector(state => state.Sentiment);
+  const clickHandle = path => {
+    props.clickHandle(path);
+  };
   return (
     <div>
       <PerfectScrollbar>
@@ -71,19 +76,20 @@ const SentimentHighlights = () => {
             <Fragment key={`rs${index}`}>
               <Paper elevation={6} className={classes.margin}>
                 <Box p={4}>
-                  <div className={classes.resultSection}>
-                    <div key={`rst${index}`}>
-                      <p
-                        key={`rstc${index}`}
-                        className={clsx(
-                          classes.searchResultText,
-                          classes.paragraphHeading,
-                          classes.clickable,
-                          classes.line,
-                          'font-size-mg mb-2 text-black-50'
-                        )}
-                        dangerouslySetInnerHTML={{ __html: content }}></p>
-                    </div>
+                  <div key={`rst${index}`}>
+                    <p
+                      key={`rstc${index}`}
+                      className={clsx(
+                        classes.searchResultText,
+                        classes.paragraphHeading,
+                        classes.clickable,
+                        classes.line,
+                        'font-size-mg mb-2 text-black-50'
+                      )}
+                      onClick={e => {
+                        clickHandle(`#${index + 1}text`);
+                      }}
+                      dangerouslySetInnerHTML={{ __html: content }}></p>
                   </div>
                 </Box>
               </Paper>

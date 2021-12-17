@@ -1,6 +1,6 @@
 import React from 'react';
 import HighchartsReact from 'highcharts-react-official';
-import { Button, Card } from '@material-ui/core';
+import { Card } from '@material-ui/core';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Highcharts from 'highcharts';

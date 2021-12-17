@@ -12,7 +12,14 @@ import { getSearchCombinations, getSelectedSuggestionAsArr } from '../topic/topi
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
-    const { isFromSideBar, searchText, selectedSuggestions } = getState().Topic;
+    const {
+      isFromSideBar,
+      searchText,
+      selectedSuggestions,
+      isSimpleSearch,
+      simpleSearchTextArray
+    } = getState().Topic;
+    const searchTerm = isSimpleSearch ? simpleSearchTextArray.map(value => `"${value}"`).join(' OR ') : searchText;
     let selectedSug = [];
     if (!isEmpty(selectedSuggestions)) {
       selectedSug = Object.values(selectedSuggestions);
@@ -31,7 +38,7 @@ export const getSentimentData = () => {
     try {
       dispatch(setIsLoading(true));
       const formData = new FormData();
-      formData.append('search_term', selectedSug.length > 0 ? fullSearchText : `"${searchText}"`);
+      formData.append('search_term', selectedSug.length > 0 ? fullSearchText : `"${searchTerm}"`);
       const response = await axios.post(
         `${config.sentimentUrl}?id=${recentId}&es_index=filling_sentiment4`,
         isFromSideBar ? '' : formData
@@ -67,8 +74,8 @@ export const getSentimentHighlights = () => {
     if (!isEmpty(selectedSuggestions)) {
       selectedSug = Object.values(selectedSuggestions);
     }
-    const recentId = get(selectedItem, 'recentId', null);
-    if (!recentId) {
+    const documentId = get(selectedItem, 'documentId', null);
+    if (!documentId) {
       return;
     }
 
@@ -80,7 +87,7 @@ export const getSentimentHighlights = () => {
     try {
       const response = await axios.post(`${config.apiUrl}/api/dictionary/search_by_document_id`, {
         searchTerm: isFromSideBar ? '' : `${selectedSug.length > 0 ? fullSearchText : searchTerm}`,
-        document_id: recentId,
+        document_id: documentId,
         orderBy: 'desc',
         sortBy: 'document_date',
         page: 0,

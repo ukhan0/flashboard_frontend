@@ -254,7 +254,7 @@ const SentimentTableOfContent = props => {
           )
         )}
         <>
-          <SentimentHighlight />
+          <SentimentHighlight clickHandle={clickHandle} />
         </>
       </div>
     </React.Fragment>

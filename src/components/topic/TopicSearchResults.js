@@ -156,6 +156,7 @@ const TopicSearchResults = () => {
     const companyId = get(companyDocumentResultData, 'company_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);
     const documentDate = get(companyDocumentResultData, 'document_date', null);
+    const documentId = get(companyDocumentResultData, 'document_id', null);
     const ticker = get(companyDocumentResultData, 'ticker', null);
     const companiesList = getCompleteWatchlist() || [];
     let company = companiesList.find(c => toLower(c.ticker) === toLower(ticker));
@@ -167,10 +168,17 @@ const TopicSearchResults = () => {
       company.documentType = documentType;
       company.last = documentDate;
       company.companyId = companyId;
+      company.documentId = documentId;
       dispatch(setSelectedWatchlist(company));
     } else {
       dispatch(
-        setSelectedWatchlist({ recentId: recentId, companyId: companyId, ticker: ticker, documentType: documentType })
+        setSelectedWatchlist({
+          recentId: recentId,
+          companyId: companyId,
+          ticker: ticker,
+          documentType: documentType,
+          documentId: documentId
+        })
       );
     }
     if (isGoToSentiment) {
