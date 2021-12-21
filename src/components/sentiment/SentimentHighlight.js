@@ -1,9 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Paper, Box } from '@material-ui/core';
+import { Paper, Box, Grid } from '@material-ui/core';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -18,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   clickable: {
-    // cursor: 'pointer'
+    cursor: 'pointer'
   },
   margin: {
     marginTop: '7px',
@@ -65,37 +67,77 @@ const useStyles = makeStyles(theme => ({
 const SentimentHighlights = props => {
   const classes = useStyles();
   const { sentimentHighlights } = useSelector(state => state.Sentiment);
-  const clickHandle = path => {
-    props.clickHandle(path);
+  const [currentTextId, setCurrentTextId] = React.useState(1);
+  //   Index as path
+  const clickHandle = index => {
+    props.clickHandle(`#${index + 1}text`);
+
+    setCurrentTextId(index + 1);
+  };
+
+  const handleNext = () => {
+    props.clickHandle(`#${currentTextId + 1}text`);
+
+    setCurrentTextId(currentTextId + 1);
+  };
+  const handlePre = () => {
+    if (currentTextId - 1 < 0) {
+      return;
+    }
+    props.clickHandle(`#${currentTextId - 1}text`);
+
+    setCurrentTextId(currentTextId - 1);
   };
   return (
     <div>
       <PerfectScrollbar>
-        {sentimentHighlights.map((content, index) => {
-          return (
-            <Fragment key={`rs${index}`}>
-              <Paper elevation={6} className={classes.margin}>
-                <Box p={4}>
-                  <div key={`rst${index}`}>
-                    <p
-                      key={`rstc${index}`}
-                      className={clsx(
-                        classes.searchResultText,
-                        classes.paragraphHeading,
-                        classes.clickable,
-                        classes.line,
-                        'font-size-mg mb-2 text-black-50'
-                      )}
-                      onClick={e => {
-                        clickHandle(`#${index + 1}text`);
-                      }}
-                      dangerouslySetInnerHTML={{ __html: content }}></p>
-                  </div>
-                </Box>
-              </Paper>
-            </Fragment>
-          );
-        })}
+        <Paper elevation={6} className={classes.margin}>
+          <div style={{ textAlign: 'center' }}>
+            <Grid container direction="row" justifyContent="flex-end" alignItems="flex-end">
+              <Grid item>
+                <ArrowBackIosIcon
+                  fontSize="small"
+                  className={classes.clickable}
+                  onClick={() => {
+                    handlePre();
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <h7>Pre-Next</h7>
+              </Grid>
+              <Grid item>
+                <ArrowForwardIosIcon
+                  fontSize="small"
+                  className={classes.clickable}
+                  onClick={() => {
+                    handleNext();
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </div>
+          <Box p={4}>
+            {sentimentHighlights.map((content, index) => {
+              return (
+                <div key={`rst${index}`}>
+                  <p
+                    key={`rstc${index}`}
+                    className={clsx(
+                      classes.searchResultText,
+                      classes.paragraphHeading,
+                      classes.line,
+                      'font-size-mg mb-2 text-black-50'
+                    )}
+                    onClick={e => {
+                      clickHandle(index);
+                    }}
+                    dangerouslySetInnerHTML={{ __html: content }}></p>
+                </div>
+              );
+            })}
+          </Box>
+        </Paper>
       </PerfectScrollbar>
     </div>
   );

@@ -253,9 +253,7 @@ const SentimentTableOfContent = props => {
             ) : null
           )
         )}
-        <>
-          <SentimentHighlight clickHandle={clickHandle} />
-        </>
+        {!isLoading ? <SentimentHighlight clickHandle={clickHandle} /> : null}
       </div>
     </React.Fragment>
   );
