@@ -92,8 +92,8 @@ const SentimentHighlights = props => {
     <div>
       <PerfectScrollbar>
         <Paper elevation={6} className={classes.margin}>
-          <div style={{ textAlign: 'center' }}>
-            <Grid container direction="row" justifyContent="flex-end" alignItems="flex-end">
+          <div>
+            <Grid container direction="row" justify="flex-end" alignItems="flex-end">
               <Grid item>
                 <ArrowBackIosIcon
                   fontSize="small"

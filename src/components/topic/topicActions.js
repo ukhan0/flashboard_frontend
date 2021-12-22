@@ -2,7 +2,8 @@ import {
   getSearchCombinations,
   getSelectedSuggestionAsArr,
   removeDuplicateSuggestions,
-  deleteSearchSuggestionsByKey
+  deleteSearchSuggestionsByKey,
+  getSearchText
 } from './topicHelpers';
 import {
   setSelectedSearch,
@@ -232,17 +233,15 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
   const startDate = new URLSearchParams(window.location.search).get('startDate');
   const endDate = new URLSearchParams(window.location.search).get('endDate');
   const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
-  const value1 = topicState.simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
-  const value = topicState.ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
-  const value2 = topicState.searchTextWithAnd.map(value => `"${value}"`).join(' AND ');
-  const searchText = `(${value1})${value2.length > 0 ? `AND(${value2})` : ''}${
-    value.length > 0 ? `AND(${value})` : ''
-  }`;
-  const fullSearchText = onlySuggestionSingleArr.length
-    ? `${topicState.searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
-    : topicState.searchText;
   const data = {
-    searchTerm: topicState.isSimpleSearch ? searchText : fullSearchText,
+    searchTerm: getSearchText(
+      topicState.simpleSearchTextArray,
+      topicState.ignoreSearchTextArray,
+      topicState.searchTextWithAnd,
+      onlySuggestionSingleArr,
+      topicState.searchText,
+      topicState.isSimpleSearch
+    ),
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
     startDate: startDate
       ? startDate && topicState.isDate
@@ -299,7 +298,6 @@ export const fetchTopicsList = () => {
   return async dispatch => {
     const response = await axios.get(`${config.apiUrl}/api/search/list_searches/${user.id}`);
     const savedSearch = get(response, 'data.data', []);
-
     if (savedSearch.length > 0) {
       dispatch(setSavedSearches(savedSearch));
     } else {
@@ -314,7 +312,7 @@ export const fetchTopicsList = () => {
 };
 
 const createSearchSaveMiniPayload = topicState => {
-  const { suggestionsArr, suggestionsSingleArr } = getSelectedSuggestionAsArr(
+  const { suggestionsArr, suggestionsSingleArr, onlySuggestionSingleArr } = getSelectedSuggestionAsArr(
     topicState.selectedSuggestions,
     topicState.searchText
   );
@@ -332,6 +330,14 @@ const createSearchSaveMiniPayload = topicState => {
   const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText;
   return {
     selectedSuggestions: topicState.selectedSuggestions,
+    searchedText: getSearchText(
+      topicState.simpleSearchTextArray,
+      topicState.ignoreSearchTextArray,
+      topicState.searchTextWithAnd,
+      onlySuggestionSingleArr,
+      topicState.searchText,
+      topicState.isSimpleSearch
+    ),
     startDate: format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss'),
     endDate: format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss'),
     orderBy: topicState.orderBy,
@@ -449,14 +455,11 @@ export const deleteSearch = searchId => {
 export const findSuggestions = () => {
   return async (dispatch, getState) => {
     const { searchText, suggestions, selectedSuggestions, isSimpleSearch, simpleSearchTextArray } = getState().Topic;
-    let searchSug = '';
-    if ((isSimpleSearch && simpleSearchTextArray.length < 0) || !isEmpty(suggestions) || !searchText) {
+    let searchSug = simpleSearchTextArray.length > 0 && isSimpleSearch ? simpleSearchTextArray.join(' ') : searchText;
+    if (!isEmpty(suggestions) || !searchSug) {
       return;
     }
 
-    if (simpleSearchTextArray.length > 0 && isSimpleSearch) {
-      searchSug = simpleSearchTextArray.join(' ');
-    }
     dispatch(setSuggestionsIsLoading(true));
 
     try {

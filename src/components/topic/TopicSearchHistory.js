@@ -15,7 +15,9 @@ import {
   setOpenTopicSearchDialog,
   setSelectedIndustries,
   resetAllSearchParams,
-  setBackDropOnCompanyClick
+  setBackDropOnCompanyClick,
+  setSearchResultHighlights,
+  setSearchResults
 } from '../../reducers/Topic';
 import {
   performTopicSearchAggregate,
@@ -75,7 +77,9 @@ export default function TopicSearchHistory(props) {
   const firstTimeLoad = useRef(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   useEffect(() => {
-    dispatch(fetchTopicsList());
+    setTimeout(() => {
+      dispatch(fetchTopicsList());
+    }, 500);
   }, [dispatch]);
 
   const setSearchParamsEdit = searchObj => {
@@ -153,6 +157,11 @@ export default function TopicSearchHistory(props) {
   const confirmDeleteSearch = () => {
     setModal(!isModal);
     dispatch(deleteSearch(deleteSearchId));
+    dispatch(resetAllSearchParams());
+    dispatch(setOpenTopicSearchDialog(false));
+    dispatch(setSearchResultHighlights([]));
+    dispatch(setSearchResults({}));
+    dispatch(setShowUpdateButton(false));
   };
 
   const handleEdit = search => {

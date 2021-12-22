@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem, Select, ListItemText, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchIndex } from '../../reducers/Topic';
+import { setSearchIndex, setSelectedDocumentTypes } from '../../reducers/Topic';
 import searchIndexs from '../../config/searchIndexs';
 
 const useStyles = makeStyles(theme => ({
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 const TopicIndexDropDown = props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const { searchIndex } = useSelector(state => state.Topic);
+  const { searchIndex, documentTypes } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const handleClose = () => {
     setOpen(false);
@@ -26,6 +26,9 @@ const TopicIndexDropDown = props => {
   };
 
   const handleSelectionChange = e => {
+    let documentTypeValue = documentTypes.map(e => e.value);
+    dispatch(setSelectedDocumentTypes(documentTypeValue));
+
     dispatch(setSearchIndex(e.target.value));
   };
 

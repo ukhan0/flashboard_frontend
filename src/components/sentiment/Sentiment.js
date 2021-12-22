@@ -51,7 +51,7 @@ const Sentiment = () => {
   useEffect(() => {
     if (selectedItem) {
       dispatch(getSentimentData());
-      dispatch(getSentimentHighlights());
+      // dispatch(getSentimentHighlights());
       if (hideCards === 'true') {
         dispatch(getCompanyFilingGraphData());
       }

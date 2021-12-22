@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton, Typography, Button } from '@material-ui/core';
+import { IconButton, Typography, Button, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
@@ -57,6 +57,13 @@ const useStyles = makeStyles(theme => {
     },
     crossIcon: {
       color: 'black'
+    },
+    link: {
+      color: 'white',
+      marginRight: '20px',
+      '&:hover': {
+        color: 'blue'
+      }
     }
   };
 });
@@ -65,6 +72,7 @@ const SentimentTableOfContent = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, isLoading, isPin } = useSelector(state => state.Sentiment);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const displayData = [];
   function sortObject(obj) {
     let newObj = [];
@@ -253,7 +261,18 @@ const SentimentTableOfContent = props => {
             ) : null
           )
         )}
-        {!isLoading ? <SentimentHighlight clickHandle={clickHandle} /> : null}
+        {/* {!isLoading ? <SentimentHighlight clickHandle={clickHandle} /> : null} */}
+        {selectedItem ? (
+          <Grid container direction="row" justify="flex-end" alignItems="flex-end">
+            <Grid item>
+              <a
+                href={`https://engine-spirit.s-factors.com/dictionary/historysummary?id=${selectedItem.recentId}`}
+                target="_blank">
+                <p className={clsx(classes.link)}>Veiw</p>
+              </a>
+            </Grid>
+          </Grid>
+        ) : null}
       </div>
     </React.Fragment>
   );
