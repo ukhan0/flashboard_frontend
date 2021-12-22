@@ -130,7 +130,7 @@ export default function TopicCompantResultsTable() {
       colId: 'ticker'
     },
     {
-      headerName: 'HITS',
+      headerName: 'DOCUMENTS',
       field: 'doc_count',
       menuTabs: false,
       editable: false,

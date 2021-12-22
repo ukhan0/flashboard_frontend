@@ -44,6 +44,7 @@ const columnDefs = [
     valueFormatter: params => (params.data.period_date ? params.data.period_date : '')
   }
 ];
+
 export default function FilingsResultsTable() {
   const history = useHistory();
   const dispatch = useDispatch();

@@ -11,6 +11,7 @@ Highcharts.setOptions({
     thousandsSep: ','
   }
 });
+
 const FilingsDetailsGraph = props => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
   let mdas = [];

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSentimentData } from './sentimentActions';
+import { getSentimentData, getSentimentHighlights } from './sentimentActions';
 import { useHistory } from 'react-router-dom';
 import SentimentContentSection from './SentimentContentSection';
 import SentimentTableOfContent from './SentimentTableOfContent';
@@ -33,26 +33,25 @@ const Sentiment = () => {
   if (!getQueryParams.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
-  
   useEffect(() => {
     if (!firstTimeLoad.current) {
       firstTimeLoad.current = true;
       if (getQueryParams.get('recentId')) {
         let ticker = getQueryParams.get('ticker');
         const localSelectedItem = getCompanyByTicker(ticker);
-        if(localSelectedItem) {
+        if (localSelectedItem) {
           let company = formatComapnyData(localSelectedItem);
           company.recentId = getQueryParams.get('recentId');
           dispatch(setSelectedWatchlist(company));
         }
-      }   
+      }
     }
   }, [dispatch, getQueryParams]);
 
-
   useEffect(() => {
-    if(selectedItem) {
+    if (selectedItem) {
       dispatch(getSentimentData());
+      // dispatch(getSentimentHighlights());
       if (hideCards === 'true') {
         dispatch(getCompanyFilingGraphData());
       }

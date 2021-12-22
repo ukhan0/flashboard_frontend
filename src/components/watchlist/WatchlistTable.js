@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-enterprise';
+import 'ag-grid-community';
 import {
   parseDateStr,
   parseNumber,
@@ -465,13 +465,13 @@ const WatchlistTable = props => {
   };
 
   const cellMouseOverEvent = () => {
-    if (!gridApi) {
-      return;
-    }
-    const isToolPanel = gridApi.isToolPanelShowing();
-    if (isToolPanel) {
-      gridApi.closeToolPanel();
-    }
+    // if (!gridApi) {
+    //   return;
+    // }
+    // const isToolPanel = gridApi.isToolPanelShowing();
+    // if (isToolPanel) {
+    //   gridApi.closeToolPanel();
+    // }
   };
   return (
     <div onMouseLeave={cellMouseOverEvent} className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>

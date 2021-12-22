@@ -15,7 +15,9 @@ import {
   cancelExistingHightlightsCalls,
   setSnackBarActive
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, perfomeSearchPayloadTweets } from './topicActions';
+import { performTopicSearchAggregate, performTopicTweetsSearchAggregate } from './topicActions';
+import TopicTweetsWorldMap from './TopicTweetsWorldMap';
+import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
 const Topic = () => {
@@ -37,7 +39,7 @@ const Topic = () => {
   const handleSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
-    dispatch(perfomeSearchPayloadTweets(true, true));
+    dispatch(performTopicTweetsSearchAggregate(true, true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
@@ -74,7 +76,25 @@ const Topic = () => {
           )}
         </Grid>
         <Grid item xs={12}>
-          {searchIndex === 'tweets' ? <TopicTweets /> : <TopicSearchResults />}
+          {searchIndex === 'tweets' ? (
+            <Grid container>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <TopicTweetsWorldMap />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TopicTweetsPieChart />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <TopicTweets />
+              </Grid>
+            </Grid>
+          ) : (
+            <TopicSearchResults />
+          )}
         </Grid>
       </Grid>
       <TopicSnackbar

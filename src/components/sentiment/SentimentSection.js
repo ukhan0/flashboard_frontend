@@ -71,7 +71,7 @@ const SentimentSection = props => {
     maxV: 1,
     n: 100
   });
-
+  let yellowTextCount = 0;
   const { data, isLoading, selectedHeadingId, isApiResponseReceived, sentiment } = useSelector(
     state => state.Sentiment
   );
@@ -300,7 +300,6 @@ const SentimentSection = props => {
     }
     newDisplayData.push(processedData);
   });
-
   return (
     <div>
       {isLoading ? (
@@ -346,14 +345,19 @@ const SentimentSection = props => {
                                                       {d.type === 'element' ? (
                                                         Array.isArray(d.elements) ? (
                                                           d.elements.map((g, k) => {
+                                                            if (g) {
+                                                              yellowTextCount = yellowTextCount + 1;
+                                                            }
                                                             return (
                                                               <span
+                                                                id={createHash(`#${yellowTextCount}text`)}
                                                                 key={k}
                                                                 style={{
                                                                   backgroundColor: 'orange',
                                                                   paddingLeft: 2,
                                                                   paddingRight: 2,
-                                                                  borderRadius: 4
+                                                                  borderRadius: 4,
+                                                                  scrollMarginTop: '300px'
                                                                 }}>
                                                                 {g.text ? g.text : null}
                                                               </span>

@@ -10,6 +10,7 @@ export const SET_CURRENT_TOC = 'TOPIC/SET_CURRENT_TOC ';
 export const SET_SHOW_TOC_BUTTON = 'TOPIC/SET_SHOW_TOC_BUTTON  ';
 export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED ';
 export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
+export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
 
 export const setSentimentResult = data => ({
   type: SET_SENTIMENT_RESULT,
@@ -65,6 +66,11 @@ export const setSentimentFilters = sentiment => ({
   sentiment
 });
 
+export const setSentimentHighlights= sentimentHighlights => ({
+  type: SET_SENTIMENT_HIGHLIGHTS,
+  sentimentHighlights
+});
+
 const getDefaultState = () => {
   return {
     cardGraphData: [
@@ -92,7 +98,8 @@ const getDefaultState = () => {
     isTocButton: true,
     currentToc: false,
     isApiResponseReceived: false,
-    sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible'
+    sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible',
+    sentimentHighlights: []
   };
 };
 
@@ -125,6 +132,8 @@ export default function reducer(
       return { ...state, isApiResponseReceived: action.isApiResponseReceived };
     case SET_SENTIMENT:
       return { ...state, sentiment: action.sentiment };
+    case SET_SENTIMENT_HIGHLIGHTS:
+      return { ...state, sentimentHighlights: action.sentimentHighlights };
 
     default:
       break;

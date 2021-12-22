@@ -107,3 +107,24 @@ export const deleteSearchSuggestionsByKey = (suggestions, deleteKeys, deleteValu
 
   return suggestions;
 };
+
+export const getSearchText = (
+  simpleSearchTextArray,
+  ignoreSearchTextArray,
+  searchTextWithAnd,
+  onlySuggestionSingleArr,
+  searchText,
+  isSimpleSearch
+) => {
+  const value1 = simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
+  const value = ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
+  const value2 = searchTextWithAnd.map(value => `"${value}"`).join(' AND ');
+  const searchTerm = `(${value1})${value2.length > 0 ? `AND(${value2})` : ''}${
+    value.length > 0 ? `AND(${value})` : ''
+  }`;
+  const fullSearchText = onlySuggestionSingleArr.length
+    ? `${searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
+    : searchText;
+
+  return isSimpleSearch ? searchTerm : fullSearchText;
+};

@@ -15,9 +15,16 @@ import {
   setOpenTopicSearchDialog,
   setSelectedIndustries,
   resetAllSearchParams,
-  setBackDropOnCompanyClick
+  setBackDropOnCompanyClick,
+  setSearchResultHighlights,
+  setSearchResults
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, fetchTopicsList, deleteSearch, perfomeSearchPayloadTweets } from './topicActions';
+import {
+  performTopicSearchAggregate,
+  fetchTopicsList,
+  deleteSearch,
+  performTopicTweetsSearchAggregate
+} from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
@@ -70,7 +77,9 @@ export default function TopicSearchHistory(props) {
   const firstTimeLoad = useRef(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   useEffect(() => {
-    dispatch(fetchTopicsList());
+    setTimeout(() => {
+      dispatch(fetchTopicsList());
+    }, 500);
   }, [dispatch]);
 
   const setSearchParamsEdit = searchObj => {
@@ -89,7 +98,7 @@ export default function TopicSearchHistory(props) {
       setTimeout(() => {
         dispatch(resetResultsPage());
         dispatch(performTopicSearchAggregate(showLoader, true));
-        dispatch(perfomeSearchPayloadTweets(showLoader, true));
+        dispatch(performTopicTweetsSearchAggregate(true, true));
         // cancel existing calls if there are any
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();
@@ -148,15 +157,20 @@ export default function TopicSearchHistory(props) {
   const confirmDeleteSearch = () => {
     setModal(!isModal);
     dispatch(deleteSearch(deleteSearchId));
+    dispatch(resetAllSearchParams());
+    dispatch(setOpenTopicSearchDialog(false));
+    dispatch(setSearchResultHighlights([]));
+    dispatch(setSearchResults({}));
+    dispatch(setShowUpdateButton(false));
   };
 
-  const handleEdit = (search) => {
+  const handleEdit = search => {
     dispatch(setShowUpdateButton(true));
     dispatch(setShowComposeNew(true));
     dispatch(setBackDropOnCompanyClick(false));
     setSearchParamsEdit(search);
-    handleSearch(search, false)
-  }
+    handleSearch(search, false);
+  };
 
   return (
     <div className={classes.savedSearchesSection}>
@@ -184,7 +198,7 @@ export default function TopicSearchHistory(props) {
                     aria-label="comments"
                     size="small"
                     onClick={() => {
-                      handleEdit(s)
+                      handleEdit(s);
                     }}>
                     <EditIcon className={classes.editIcon} />
                   </IconButton>

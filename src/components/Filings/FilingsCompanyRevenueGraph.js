@@ -10,6 +10,7 @@ import highchartsGantt from 'highcharts/highcharts-more';
 import { setTopicSearchText, setIsFromSideBar } from '../../reducers/Topic';
 import { Grid, Card, Divider } from '@material-ui/core';
 import { orderBy } from 'lodash';
+
 export default function FilingsCompanyRevenueGraph() {
   const history = useHistory();
   const dispatch = useDispatch();

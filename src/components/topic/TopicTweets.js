@@ -5,6 +5,7 @@ import { Grid, Paper, Box, Avatar } from '@material-ui/core';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { get } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -66,6 +67,7 @@ const useStyles = makeStyles(theme => ({
 }));
 const deleteSummaryObject = data => {
   delete data['tweet_json.object.summary'];
+  delete data['contents'];
   if (data['tweet_json.long_object.body']) {
     delete data['tweet_json.body'];
   }
@@ -90,7 +92,7 @@ const TopicSearchResults = () => {
                       <Grid item>
                         <Avatar
                           alt="TwitterLogo"
-                          src={`${v.tweet_json.actor.image}`}
+                          src={`${get(v, 'tweet_json.actor.image', '')}`}
                           className="app-sidebar-userbox-avatar"
                           style={{ float: 'left' }}
                         />

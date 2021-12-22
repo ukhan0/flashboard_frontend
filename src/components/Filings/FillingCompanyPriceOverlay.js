@@ -12,7 +12,8 @@ import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
 import HighChartDelay from 'highcharts-tooltip-delay';
-export default function FilingsTimelineChart() {
+
+export default function FillingCompanyPriceOverlay() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { priceOverlay, fillingsData } = useSelector(state => state.Filings);
