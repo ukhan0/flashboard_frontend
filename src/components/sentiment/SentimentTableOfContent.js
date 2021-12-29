@@ -268,7 +268,7 @@ const SentimentTableOfContent = props => {
               <a
                 href={`https://engine-spirit.s-factors.com/dictionary/historysummary?id=${selectedItem.recentId}`}
                 target="_blank">
-                <p className={clsx(classes.link)}>Veiw</p>
+                <p className={clsx(classes.link)}>View</p>
               </a>
             </Grid>
           </Grid>

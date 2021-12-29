@@ -42,6 +42,24 @@ const columnDefs = [
     flex: 1,
     colId: 'periodDate',
     valueFormatter: params => (params.data.period_date ? params.data.period_date : '')
+  },
+  {
+    headerName: 'Sentiment',
+    field: 'sentiment',
+    menuTabs: false,
+    editable: false,
+    sortable: false,
+    flex: 1,
+    colId: 'sentiment'
+  },
+  {
+    headerName: 'Word Count',
+    field: 'word_count',
+    menuTabs: false,
+    editable: false,
+    sortable: false,
+    flex: 1,
+    colId: 'WordCount'
   }
 ];
 
@@ -49,7 +67,7 @@ export default function FilingsResultsTable() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
-  const fillingsDataCopy = cloneDeep(fillingsData);
+  let fillingsDataCopy = cloneDeep(fillingsData);
   const cellClicked = async params => {
     if (params.data) {
       let selectedItem = getCompanyByTickerUniverse(params.data.ticker, 'all');

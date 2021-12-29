@@ -5,40 +5,44 @@ import {
   setIsApiResponseReceived,
   setSentimentHighlights
 } from '../../reducers/Sentiment';
-import { get, isEmpty } from 'lodash';
+import { setFillingsSearchText } from '../../reducers/Filings';
+import { get } from 'lodash';
 import config from '../../config/config';
-import { getSearchCombinations, getSelectedSuggestionAsArr } from '../topic/topicHelpers';
+import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers';
 
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
+    const { fillingsSearchText } = getState().Filings;
     const {
       isFromSideBar,
       searchText,
       selectedSuggestions,
       isSimpleSearch,
-      simpleSearchTextArray
+      simpleSearchTextArray,
+      ignoreSearchTextArray,
+      searchTextWithAnd
     } = getState().Topic;
-    const searchTerm = isSimpleSearch ? simpleSearchTextArray.map(value => `"${value}"`).join(' OR ') : searchText;
-    let selectedSug = [];
-    if (!isEmpty(selectedSuggestions)) {
-      selectedSug = Object.values(selectedSuggestions);
-    }
     const recentId = get(selectedItem, 'recentId', null);
     if (!recentId) {
       return;
     }
-
     const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText);
 
-    const fullSearchText = onlySuggestionSingleArr.length
-      ? `${searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
-      : searchText;
-    // console.log(fullSearchText,"text")
+    let searchTerm = fillingsSearchText
+      ? fillingsSearchText
+      : getSearchText(
+          simpleSearchTextArray,
+          ignoreSearchTextArray,
+          searchTextWithAnd,
+          onlySuggestionSingleArr,
+          searchText,
+          isSimpleSearch
+        );
     try {
       dispatch(setIsLoading(true));
       const formData = new FormData();
-      formData.append('search_term', selectedSug.length > 0 ? fullSearchText : `"${searchTerm}"`);
+      formData.append('search_term', searchTerm);
       const response = await axios.post(
         `${config.sentimentUrl}?id=${recentId}&es_index=filling_sentiment4`,
         isFromSideBar ? '' : formData
@@ -47,12 +51,15 @@ export const getSentimentData = () => {
       if (response) {
         dispatch(setIsApiResponseReceived(true));
         dispatch(setSentimentResult(data));
+        dispatch(setFillingsSearchText(''));
       } else {
         dispatch(setSentimentResult(null));
+        dispatch(setFillingsSearchText(''));
       }
       dispatch(setIsLoading(false));
     } catch (error) {
       dispatch(setSentimentResult(null));
+      dispatch(setFillingsSearchText(''));
       dispatch(setIsLoading(false));
     }
   };
@@ -67,13 +74,11 @@ export const getSentimentHighlights = () => {
       selectedSuggestions,
       searchIndex,
       isSimpleSearch,
-      simpleSearchTextArray
+      simpleSearchTextArray,
+      ignoreSearchTextArray,
+      searchTextWithAnd
     } = getState().Topic;
-    const searchTerm = isSimpleSearch ? simpleSearchTextArray.map(value => `"${value}"`).join(' OR ') : searchText;
-    let selectedSug = [];
-    if (!isEmpty(selectedSuggestions)) {
-      selectedSug = Object.values(selectedSuggestions);
-    }
+
     const documentId = get(selectedItem, 'documentId', null);
     if (!documentId) {
       return;
@@ -81,12 +86,17 @@ export const getSentimentHighlights = () => {
 
     const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText);
 
-    const fullSearchText = onlySuggestionSingleArr.length
-      ? `${searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
-      : searchText;
+    let searchTerm = getSearchText(
+      simpleSearchTextArray,
+      ignoreSearchTextArray,
+      searchTextWithAnd,
+      onlySuggestionSingleArr,
+      searchText,
+      isSimpleSearch
+    );
     try {
       const response = await axios.post(`${config.apiUrl}/api/dictionary/search_by_document_id`, {
-        searchTerm: isFromSideBar ? '' : `${selectedSug.length > 0 ? fullSearchText : searchTerm}`,
+        searchTerm: isFromSideBar ? '' : `${searchTerm}`,
         document_id: documentId,
         orderBy: 'desc',
         sortBy: 'document_date',

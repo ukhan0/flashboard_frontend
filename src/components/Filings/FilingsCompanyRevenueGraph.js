@@ -7,7 +7,8 @@ import { useHistory } from 'react-router-dom';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/highcharts-more';
-import { setTopicSearchText, setIsFromSideBar } from '../../reducers/Topic';
+import { setIsFromSideBar } from '../../reducers/Topic';
+import { setFillingsSearchText } from '../../reducers/Filings';
 import { Grid, Card, Divider } from '@material-ui/core';
 import { orderBy } from 'lodash';
 
@@ -110,7 +111,7 @@ export default function FilingsCompanyRevenueGraph() {
             click: function() {
               if (this) {
                 dispatch(setIsFromSideBar(false));
-                dispatch(setTopicSearchText(this.name));
+                dispatch(setFillingsSearchText(this.name));
                 history.push('/sentiment');
               }
             }

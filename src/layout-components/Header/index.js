@@ -4,8 +4,6 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
 import { Hidden, IconButton, AppBar, Box, Tooltip, Button } from '@material-ui/core';
-import { checkIsFilterActive } from '../../components/watchlist/WatchlistHelpers';
-import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import projectLogo from '../../assets/images/logos/sma-logo.svg';
@@ -21,34 +19,27 @@ import WatchlistConfirmationDialog from 'components/watchlist/ActionConfirmation
 import WatchlistService from '../../components/watchlist/WatchlistService';
 import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
 const Header = props => {
-  const {
-    headerShadow,
-    headerFixed,
-    setSidebarToggle,
-    sidebarToggle,
-    showSidebar,
-    setSidebarToggleMobile,
-    sidebarToggleMobile
-  } = props;
-  const { searchText } = useSelector(state => state.Watchlist);
-  const [isFilterActive, setIsFilterActive] = useState(checkIsFilterActive());
+  const { searchText, isFilterActive } = useSelector(state => state.Watchlist);
+  const { headerShadow, headerFixed, sidebarToggleMobile, showSidebar, sidebarToggle } = useSelector(
+    state => state.ThemeOptions
+  );
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
   const classes = useStyles();
   const dispatch = useDispatch();
   const toggleSidebar = () => {
-    setSidebarToggle(!sidebarToggle);
+    dispatch(setSidebarToggle(!sidebarToggle));
   };
 
   const toggleSidebarMobile = () => {
-    setSidebarToggleMobile(!sidebarToggleMobile);
+    dispatch(setSidebarToggleMobile(!sidebarToggleMobile));
   };
   const clearFilterHandler = state => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
-    setIsFilterActive(false);
     setConfirmationClearFilterDialog(false);
     dispatch(setWatchlistSearchText(''));
+    setIsFilterActiveOnSearch('');
   };
   useEffect(() => {
     setIsFilterActiveOnSearch(searchText);
@@ -134,17 +125,4 @@ const Header = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  headerShadow: state.ThemeOptions.headerShadow,
-  headerFixed: state.ThemeOptions.headerFixed,
-  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile,
-  sidebarToggle: state.ThemeOptions.sidebarToggle,
-  showSidebar: state.ThemeOptions.showSidebar
-});
-
-const mapDispatchToProps = dispatch => ({
-  setSidebarToggle: enable => dispatch(setSidebarToggle(enable)),
-  setSidebarToggleMobile: enable => dispatch(setSidebarToggleMobile(enable))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

@@ -1,21 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { TextField, FormControl, FormControlLabel, Checkbox } from '@material-ui/core';
 import Dropzone from 'react-dropzone';
 import useStyles from './WatchlistTopicStyles';
 import { setWatchlistSelectedSymbols, setOverwriteCheckBox } from '../../../reducers/Watchlist';
 
 const WatchlistTopicUploadCSV = props => {
-  const { selectedSymbols, setWatchlistSelectedSymbols, overwriteCheckBox, setOverwriteCheckBox } = props;
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { overwriteCheckBox, selectedSymbols } = useSelector(state => state.Watchlist);
 
   const loadFile = async file => {
     let text = await file.text();
     if (text) {
-      setWatchlistSelectedSymbols([]);
+      dispatch(setWatchlistSelectedSymbols([]));
       const symbolsArr = text.split('\n');
       if (symbolsArr.length) {
-        setWatchlistSelectedSymbols(symbolsArr);
+        dispatch(setWatchlistSelectedSymbols(symbolsArr));
       }
     }
   };
@@ -61,7 +62,7 @@ const WatchlistTopicUploadCSV = props => {
             color="primary"
             value={overwriteCheckBox}
             onChange={() => {
-              setOverwriteCheckBox(!overwriteCheckBox);
+              dispatch(setOverwriteCheckBox(!overwriteCheckBox));
             }}
           />
         }
@@ -71,14 +72,4 @@ const WatchlistTopicUploadCSV = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  selectedSymbols: state.Watchlist.selectedSymbols,
-  checkBox: state.Watchlist.checkBox
-});
-
-const mapDispatchToProps = dispatch => ({
-  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value)),
-  setOverwriteCheckBox: value => dispatch(setOverwriteCheckBox(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicUploadCSV);
+export default WatchlistTopicUploadCSV;

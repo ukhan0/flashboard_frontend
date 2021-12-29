@@ -5,7 +5,6 @@ import { isEmpty, get } from 'lodash';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import FillingRevenueGraph from './FilingsCompanyRevenueGraph';
-import HighChartDelay from 'highcharts-tooltip-delay';
 Highcharts.setOptions({
   lang: {
     thousandsSep: ','
@@ -24,9 +23,6 @@ const FilingsDetailsGraph = props => {
     risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', 0));
     notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', 0));
   }
-  React.useEffect(() => {
-    HighChartDelay(Highcharts);
-  }, []);
   const options = {
     chart: {
       type: 'column'
@@ -62,14 +58,24 @@ const FilingsDetailsGraph = props => {
     },
     tooltip: {
       headerFormat: '<b>{point.x}</b><br/>',
-      pointFormat: '{series.name} WORD COUNT: {point.y}<br/>',
-      delayForDisplay: 2000
+      pointFormat: '{series.name} WORD COUNT: {point.y}<br/>'
     },
     plotOptions: {
       column: {
         stacking: 'normal',
         dataLabels: {
           enabled: true
+        }
+      },
+      series: {
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function() {
+              if (this) {
+              }
+            }
+          }
         }
       }
     },

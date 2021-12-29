@@ -19,12 +19,7 @@ import {
   setSearchResultHighlights,
   setSearchResults
 } from '../../reducers/Topic';
-import {
-  performTopicSearchAggregate,
-  fetchTopicsList,
-  deleteSearch,
-  performTopicTweetsSearchAggregate
-} from './topicActions';
+import { performTopicSearchAggregate, deleteSearch, performTopicTweetsSearchAggregate } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
@@ -76,11 +71,6 @@ export default function TopicSearchHistory(props) {
   const sortedSearches = orderBy(savedSearches, [search => search.searchLabel.toLowerCase()], ['asc']);
   const firstTimeLoad = useRef(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
-  useEffect(() => {
-    setTimeout(() => {
-      dispatch(fetchTopicsList());
-    }, 500);
-  }, [dispatch]);
 
   const setSearchParamsEdit = searchObj => {
     dispatch(setSelectedSearch(searchObj));

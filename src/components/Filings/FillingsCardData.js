@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import HighChartDelay from 'highcharts-tooltip-delay';
 // import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useSelector } from 'react-redux';
@@ -57,9 +56,7 @@ const FilingsCards = () => {
     notes = fillingsGraphData.map(s => get(s, 'notes.ssssss', 0));
     dates = fillingsGraphData.map(d => d.document_date);
   }
-  React.useEffect(() => {
-    HighChartDelay(Highcharts);
-  }, []);
+
   let cardArray = [
     {
       heading: 'RISK & FACTORS',
@@ -87,8 +84,7 @@ const FilingsCards = () => {
         tooltip: {
           enabled: true,
           shared: false,
-          valueDecimals: 2,
-          delayForDisplay: 2000
+          valueDecimals: 2
         },
         yAxis: {
           visible: false,
@@ -169,8 +165,7 @@ const FilingsCards = () => {
         tooltip: {
           enabled: true,
           shared: false,
-          valueDecimals: 2,
-          delayForDisplay: 2000
+          valueDecimals: 2
         },
         yAxis: {
           visible: false,
@@ -251,8 +246,7 @@ const FilingsCards = () => {
         tooltip: {
           enabled: true,
           shared: false,
-          valueDecimals: 2,
-          delayForDisplay: 2000
+          valueDecimals: 2
         },
         yAxis: {
           visible: false,

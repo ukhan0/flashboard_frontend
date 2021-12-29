@@ -15,7 +15,7 @@ import {
   cancelExistingHightlightsCalls,
   setSnackBarActive
 } from '../../reducers/Topic';
-import { performTopicSearchAggregate, performTopicTweetsSearchAggregate } from './topicActions';
+import { performTopicSearchAggregate, performTopicTweetsSearchAggregate, fetchTopicsList } from './topicActions';
 import TopicTweetsWorldMap from './TopicTweetsWorldMap';
 import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
@@ -50,7 +50,9 @@ const Topic = () => {
       dispatch(cancelExistingHightlightsCalls(false));
     }, 1000);
   };
-
+  React.useEffect(() => {
+    dispatch(fetchTopicsList());
+  }, [dispatch]);
   const handleCloseSnackBar = () => {
     dispatch(setSnackBarActive(false));
   };

@@ -11,8 +11,6 @@ import { getColorByDocType, getCompanyByTickerUniverse } from './FillingsHelper'
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
-import HighChartDelay from 'highcharts-tooltip-delay';
-
 export default function FillingCompanyPriceOverlay() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -20,9 +18,6 @@ export default function FillingCompanyPriceOverlay() {
   let data = priceOverlay.map(v => {
     return [parseInt(new Date(v.as_of_date).getTime()), parseFloat(v.close_price)];
   });
-  React.useEffect(() => {
-    HighChartDelay(Highcharts);
-  }, []);
 
   const newData = fillingsData.map(v => {
     let y = moment(v.document_date).format('YYYY');
@@ -56,9 +51,6 @@ export default function FillingCompanyPriceOverlay() {
   });
 
   const options = {
-    tooltip: {
-      delayForDisplay: 2000
-    },
     rangeSelector: {
       selected: 3
     },

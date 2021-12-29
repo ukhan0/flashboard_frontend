@@ -24,6 +24,8 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
+import { checkIsFilterActive } from './WatchlistHelpers';
+import { setIsFilterActive } from '../../reducers/Watchlist';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -422,6 +424,7 @@ const WatchlistTable = props => {
   const storeFilteringState = params => {
     const filteringModel = params.api.getFilterModel();
     props.storeFilteringState(filteringModel);
+    dispatch(setIsFilterActive(checkIsFilterActive()));
   };
 
   const handleGridReady = params => {

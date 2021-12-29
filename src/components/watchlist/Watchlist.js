@@ -57,7 +57,8 @@ const Watchlist = props => {
     searchText,
     selectedTickerSymbol,
     isNewWatchListDataAvailable,
-    isColorEnable
+    isColorEnable,
+    overwriteCheckBox
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [dataVersion, setDataVersion] = useState(1);
@@ -232,7 +233,8 @@ const Watchlist = props => {
       setLoading(true);
       const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
         user_id: user.id,
-        ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(',')
+        ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
+        delete_old_values: overwriteCheckBox
       });
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
@@ -317,7 +319,7 @@ const Watchlist = props => {
                     ? () => handleUpload(selectedTickerSymbol.ticker)
                     : () => setTopicDialogOpen(true)
                 }>
-                Add to Watchlist
+                Bulk Import
               </Button>
             </Grid>
           </Grid>
