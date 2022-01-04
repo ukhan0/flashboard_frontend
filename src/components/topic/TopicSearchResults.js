@@ -16,6 +16,7 @@ import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } fr
 import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
 import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
+import moment  from 'moment';
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -221,7 +222,7 @@ const TopicSearchResults = () => {
                               &nbsp; &nbsp;
                               {companyResult.document_date ? (
                                 <span className={clsx(classes.documentDate, 'text-black-50')}>
-                                  {new Date(companyResult.document_date).toLocaleDateString()}
+                                  {moment(companyResult.document_date).format('DD/MM/YYYY')}
                                 </span>
                               ) : null}
                             </h2>

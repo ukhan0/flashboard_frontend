@@ -97,11 +97,13 @@ const TopicSearchResults = () => {
                           style={{ float: 'left' }}
                         />
                         <div style={{ float: 'left', paddingLeft: '5px' }}>
-                          <a target="_blank" rel="noopener noreferrer" href={v.source}>
+                          <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${v.posting_account}`}>
                             <span className={classes.topic}> {v.topic_names}</span>
                             &nbsp;
                             {v.posting_account}
-                            <br />
+                          </a>
+                          <br></br>
+                          <a target="_blank" rel="noopener noreferrer" href={`${get(v, 'tweet_json.link', '')}`}>
                             <span>{v.source}</span>
                           </a>
                         </div>

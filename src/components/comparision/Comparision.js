@@ -25,7 +25,7 @@ const Comparision = props => {
   );
   const [comparisionSection, setComparisionSection] = useState(
     get(getComparisionSettings(), 'comparisionSection', 'totdoc')
-  )
+  );
 
   let metricQueryParam = '';
   const history = useHistory();
@@ -55,7 +55,7 @@ const Comparision = props => {
         let selectedItem = getCompanyByTicker(ticker);
         let company = formatComapnyData(selectedItem);
         company.recentId = getQueryParams.current.get('recentId');
-        company.oldId=getQueryParams.current.get('oldId');
+        company.oldId = getQueryParams.current.get('oldId');
         dispatch(setSelectedWatchlist(company));
       }
     }
@@ -99,9 +99,16 @@ const Comparision = props => {
       break;
   }
 
-   const oldId =  selectedFileType === '10k' ? get(selectedItem, 'oldId10k', null) : get(selectedItem, 'oldId10q', null)
-   const recentId = selectedFileType === '10k' ? get(selectedItem, 'recentId10k', null) : get(selectedItem, 'recentId10q', null)
-
+  const oldId = getQueryParams.current.get('oldId')
+    ? getQueryParams.current.get('oldId')
+    : selectedFileType === '10k'
+    ? get(selectedItem, 'oldId10k', null)
+    : get(selectedItem, 'oldId10q', null);
+  const recentId = getQueryParams.current.get('recentId')
+    ? getQueryParams.current.get('recentId')
+    : selectedFileType === '10k'
+    ? get(selectedItem, 'recentId10k', null)
+    : get(selectedItem, 'recentId10q', null);
   return (
     <>
       <ComparisionFilters

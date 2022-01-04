@@ -3,14 +3,16 @@ import TopicSearchHistory from './TopicSearchHistory';
 import { Grid, Menu, Button, ButtonGroup, List } from '@material-ui/core';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-
+import { preventParentClick } from './topicHelpers';
 export default function TopicSavedSearchesDropDown() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const openMenu = event => {
+    preventParentClick(event);
     setAnchorEl(event.currentTarget);
   };
-  const closeMenu = () => {
+  const closeMenu = event => {
+    preventParentClick(event);
     setAnchorEl(null);
   };
 
@@ -20,7 +22,7 @@ export default function TopicSavedSearchesDropDown() {
         <Grid item>
           <ButtonGroup variant="outlined" color="primary" aria-label="split button" onClick={openMenu}>
             <Button>My Themes</Button>
-            <Button color="primary" size="small" aria-haspopup="true" onClick={openMenu}>
+            <Button color="primary" size="small" aria-haspopup="true">
               <ArrowDropDownIcon />
             </Button>
           </ButtonGroup>

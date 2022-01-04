@@ -151,8 +151,21 @@ const colDefs = [
     colId: 'mktcap',
     width: 117,
     filter: 'agNumberColumnFilter',
+    filterParams: {
+      numberParser: text => {
+        if (text === null) {
+          text = null;
+        } else {
+          if (!isNaN(parseFloat(text.replace(',', '.')))) {
+            text = parseFloat(text.replace(',', '.'));
+          }
+        }
+        return text;
+      }
+    },
     valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
+    autoComplete: false,
     cellStyle: () => {
       return { textAlign: 'right' };
     }
@@ -164,6 +177,18 @@ const colDefs = [
     colId: 'adv',
     filter: 'agNumberColumnFilter',
     width: 127,
+    filterParams: {
+      numberParser: text => {
+        if (text === null) {
+          text = null;
+        } else {
+          if (!isNaN(parseFloat(text.replace(',', '.')))) {
+            text = parseFloat(text.replace(',', '.'));
+          }
+        }
+        return text;
+      }
+    },
     valueGetter: params => parseNumber(get(params, 'data.adv', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
     cellStyle: () => {

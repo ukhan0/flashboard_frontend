@@ -11,7 +11,7 @@ import { isEmpty, get, round } from 'lodash';
 import { getCompanyByTickerUniverse } from './FillingsHelper';
 const useStyles = makeStyles(theme => ({
   card: {
-    height: 180
+    height: 270
   },
   chart: {
     position: 'absolute',
@@ -66,14 +66,8 @@ const FilingsCards = () => {
       options: {
         chart: {
           type: 'areaspline',
-          height: 130,
-          width: 180,
-          spacingBottom: 0,
-          spacingLeft: 0,
-          spacingRight: 0,
-          marginBottom: 0,
-          marginLeft: 0,
-          marginRight: 0
+          height: 200,
+          width: 180
         },
         title: {
           text: null
@@ -97,8 +91,18 @@ const FilingsCards = () => {
         },
         xAxis: {
           categories: dates,
+
+          type: 'datetime',
           title: {
             text: null
+          },
+          labels: {
+            style: {
+              color: '#999999'
+            },
+            formatter: function() {
+              return Highcharts.dateFormat('%b %y', new Date(this.value));
+            }
           }
         },
         plotOptions: {
@@ -147,14 +151,8 @@ const FilingsCards = () => {
       options: {
         chart: {
           type: 'areaspline',
-          height: 130,
-          width: 180,
-          spacingBottom: 0,
-          spacingLeft: 0,
-          spacingRight: 0,
-          marginBottom: 0,
-          marginLeft: 0,
-          marginRight: 0
+          height: 250,
+          width: 180
         },
         title: {
           text: null
@@ -178,8 +176,17 @@ const FilingsCards = () => {
         },
         xAxis: {
           categories: dates,
+          type: 'datetime',
           title: {
             text: null
+          },
+          labels: {
+            style: {
+              color: '#999999'
+            },
+            formatter: function() {
+              return Highcharts.dateFormat('%b %y', new Date(this.value));
+            }
           }
         },
         plotOptions: {
@@ -228,14 +235,8 @@ const FilingsCards = () => {
       options: {
         chart: {
           type: 'areaspline',
-          height: 130,
-          width: 180,
-          spacingBottom: 0,
-          spacingLeft: 0,
-          spacingRight: 0,
-          marginBottom: 0,
-          marginLeft: 0,
-          marginRight: 0
+          height: 250,
+          width: 180
         },
         title: {
           text: null
@@ -258,7 +259,19 @@ const FilingsCards = () => {
           }
         },
         xAxis: {
-          categories: dates
+          categories: dates,
+          type: 'datetime',
+          title: {
+            text: null
+          },
+          labels: {
+            style: {
+              color: '#999999'
+            },
+            formatter: function() {
+              return Highcharts.dateFormat('%b %y', new Date(this.value));
+            }
+          }
         },
         plotOptions: {
           series: {

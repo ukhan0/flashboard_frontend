@@ -7,7 +7,7 @@ import TopicDropDown from './TopicDrowpDown';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import { renameDocumentTypes } from './topicHelpers';
+import { renameDocumentTypes, preventParentClick } from './topicHelpers';
 import {
   setSelectedIndustries,
   resetAllSearchParams,
@@ -29,7 +29,8 @@ const useStyles = makeStyles(theme => ({
   label: {
     marginLeft: '16px',
     marginRight: '16px',
-    marginTop: '5px'
+    marginTop: '5px',
+    cursor: 'pointer'
   },
   fontSize: {
     fontSize: '0.75rem'
@@ -43,15 +44,20 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'nowrap',
     alignContent: 'center',
     justifyContent: 'center',
-    alignItems: 'baseline',
+    alignItems: 'baseline'
   }
 }));
 
 const TopicDialog = props => {
   const classes = useStyles();
-  const { currentSearchDetail, documentTypes, selectedDocumentTypes, openTopicSearchDialog, selectedSearch, savedSearches } = useSelector(
-    state => state.Topic
-  );
+  const {
+    currentSearchDetail,
+    documentTypes,
+    selectedDocumentTypes,
+    openTopicSearchDialog,
+    selectedSearch,
+    savedSearches
+  } = useSelector(state => state.Topic);
   const isSuggestions = currentSearchDetail.selectedSuggestions;
   let selectedSug = [];
   if (!isEmpty(isSuggestions)) {
@@ -61,10 +67,11 @@ const TopicDialog = props => {
   let endDate = currentSearchDetail.endDate;
   let documents = currentSearchDetail.documentType ? currentSearchDetail.documentType : [];
   const dispatch = useDispatch();
-  
+
   const displayDateFormat = 'MMMM YYYY';
 
-  const handleOpenTopicDialog = () => {
+  const handleOpenTopicDialog = e => {
+    preventParentClick(e);
     dispatch(setOpenTopicSearchDialog(!openTopicSearchDialog));
     dispatch(setSelectedIndustries([]));
     dispatch(setShowUpdateButton(false));
@@ -80,9 +87,11 @@ const TopicDialog = props => {
     dispatch(setOpenTopicSearchDialog(true));
   };
 
-  const handleEdit = () => {
-    const searchObj = savedSearches.find(s => selectedSearch.searchId === s.searchId)
-    if(!searchObj) {
+  const handleEdit = e => {
+    preventParentClick(e);
+
+    const searchObj = savedSearches.find(s => selectedSearch.searchId === s.searchId);
+    if (!searchObj) {
       return;
     }
     dispatch(setShowUpdateButton(true));
@@ -94,7 +103,11 @@ const TopicDialog = props => {
   return (
     <Fragment>
       <div className={classes.label}>
-        <Paper className={clsx('app-page-title')}>
+        <Paper
+          className={clsx('app-page-title')}
+          onClick={e => {
+            handleEdit(e);
+          }}>
           <Grid container spacing={2}>
             <Grid item xs={3}>
               <span className="text-black-50 d-block">Searching:</span>
@@ -128,21 +141,18 @@ const TopicDialog = props => {
               <Grid container direction="row" justify="flex-end" alignItems="center">
                 <Grid item>
                   <div className={classes.editSeachSection}>
-                    { 
-                      !openTopicSearchDialog ? 
-                        <div>
-                          <Button color="primary" size="small" aria-haspopup="true" onClick={handleEdit}>
-                            Edit
-                          </Button>
-                        </div>
-                         : 
-                        null 
-                    }
+                    {!openTopicSearchDialog ? (
+                      <div>
+                        <Button color="primary" size="small" aria-haspopup="true" onClick={e => handleEdit(e)}>
+                          Edit
+                        </Button>
+                      </div>
+                    ) : null}
                     <TopicDropDown />
                   </div>
                 </Grid>
                 <Grid item>
-                  <Button onClick={handleOpenTopicDialog} variant="contained" color="primary" className="m-2">
+                  <Button onClick={e => handleOpenTopicDialog(e)} variant="contained" color="primary" className="m-2">
                     <span className="btn-wrapper--icon">
                       {openTopicSearchDialog ? (
                         <FontAwesomeIcon icon={['fas', 'upload']} />

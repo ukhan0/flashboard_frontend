@@ -1,9 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-import { Hidden, IconButton, AppBar, Box, Tooltip, Button } from '@material-ui/core';
+import { Hidden, IconButton, AppBar, Box, Tooltip } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import projectLogo from '../../assets/images/logos/sma-logo.svg';
@@ -11,7 +11,6 @@ import projectLogo from '../../assets/images/logos/sma-logo.svg';
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
 import HeaderMenuSimple from '../../layout-components/HeaderMenuSimple';
-import useStyles from '../../components/watchlist/watchlistStyles';
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import GlobalTickerSearchField from '../../components/watchlist/WatchlistSearch';
@@ -19,13 +18,10 @@ import WatchlistConfirmationDialog from 'components/watchlist/ActionConfirmation
 import WatchlistService from '../../components/watchlist/WatchlistService';
 import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
 const Header = props => {
-  const { searchText, isFilterActive } = useSelector(state => state.Watchlist);
   const { headerShadow, headerFixed, sidebarToggleMobile, showSidebar, sidebarToggle } = useSelector(
     state => state.ThemeOptions
   );
-  const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
-  const classes = useStyles();
   const dispatch = useDispatch();
   const toggleSidebar = () => {
     dispatch(setSidebarToggle(!sidebarToggle));
@@ -39,11 +35,7 @@ const Header = props => {
     WatchlistService.clearFilter();
     setConfirmationClearFilterDialog(false);
     dispatch(setWatchlistSearchText(''));
-    setIsFilterActiveOnSearch('');
   };
-  useEffect(() => {
-    setIsFilterActiveOnSearch(searchText);
-  }, [searchText]);
 
   return (
     <Fragment>
@@ -93,19 +85,6 @@ const Header = props => {
             actionName="filter"
           />
           <Box className="d-flex align-items-center">
-            {isFilterActive || isFilterActiveOnSearch ? (
-              <Button
-                color="primary"
-                className={classes.button}
-                size="small"
-                variant="contained"
-                onClick={() => {
-                  setConfirmationClearFilterDialog(true);
-                }}>
-                Clear Filtering
-              </Button>
-            ) : null}
-
             <div style={{ width: '200px' }}>
               <GlobalTickerSearchField />
             </div>

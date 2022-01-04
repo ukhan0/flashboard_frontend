@@ -4,6 +4,7 @@ import { get, debounce } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
 import cjson from 'compressed-json';
+import { Box } from '@material-ui/core';
 import {
   formatData,
   storeColumnsState,
@@ -55,6 +56,7 @@ const Watchlist = props => {
     selectedSymbols,
     count,
     searchText,
+    isFilterActive,
     selectedTickerSymbol,
     isNewWatchListDataAvailable,
     isColorEnable,
@@ -72,6 +74,7 @@ const Watchlist = props => {
   const [errorSnackbar, setErrorSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('Unable to Add/Remove Ticker To/From Watchlist');
   const firstTimeLoad = useRef(true);
+  const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
 
   const searchFromCompleteData = useCallback(() => {
     const rawData = getCompleteWatchlist();
@@ -272,7 +275,12 @@ const Watchlist = props => {
     WatchlistService.clearFilter();
     setConfirmationClearFilterDialog(false);
     dispatch(setWatchlistSearchText(''));
+    setIsFilterActiveOnSearch('');
   };
+
+  useEffect(() => {
+    setIsFilterActiveOnSearch(searchText);
+  }, [searchText]);
 
   const clearSortHandler = state => {
     const columnState = getColumnState();
@@ -308,6 +316,20 @@ const Watchlist = props => {
         </Grid>
         <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
+            <Box className="d-flex align-items-center">
+              {isFilterActive || isFilterActiveOnSearch ? (
+                <Button
+                  color="primary"
+                  className={classes.button}
+                  size="small"
+                  variant="contained"
+                  onClick={() => {
+                    setConfirmationClearFilterDialog(true);
+                  }}>
+                  Clear Filtering
+                </Button>
+              ) : null}
+            </Box>
             <Grid item>
               <Button
                 color="primary"
@@ -319,7 +341,7 @@ const Watchlist = props => {
                     ? () => handleUpload(selectedTickerSymbol.ticker)
                     : () => setTopicDialogOpen(true)
                 }>
-                Bulk Import
+                Add Watchlist
               </Button>
             </Grid>
           </Grid>

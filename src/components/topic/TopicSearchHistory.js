@@ -24,6 +24,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
 import TopicDeleteSearchConfirmDialog from './TopicDeleteSearchConfirmDialog';
+import { preventParentClick } from './topicHelpers';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -125,7 +126,8 @@ export default function TopicSearchHistory(props) {
     }
   }, [savedSearches, setSearchParams, selectedSearch, getQueryParams]);
 
-  const clickHereHandle = () => {
+  const clickHereHandle = e => {
+    preventParentClick(e);
     dispatch(setOpenTopicSearchDialog(true));
     dispatch(setSelectedIndustries([]));
     dispatch(setShowUpdateButton(false));
@@ -133,19 +135,22 @@ export default function TopicSearchHistory(props) {
     dispatch(resetAllSearchParams());
   };
 
-  const handleSearch = (s, showLoader = true) => {
+  const handleSearch = (e, s, showLoader = true) => {
+    preventParentClick(e);
     setSearchParams(s, showLoader);
     props.handleClose();
     dispatch(setBackDropOnCompanyClick(false));
   };
-  const handleDeleteSearch = searchId => {
+  const handleDeleteSearch = (e, searchId) => {
+    preventParentClick(e);
     setModal(!isModal);
     if (searchId) {
       setDeleteSearchId(searchId);
     }
   };
-  const confirmDeleteSearch = () => {
+  const confirmDeleteSearch = e => {
     setModal(!isModal);
+    preventParentClick(e);
     dispatch(deleteSearch(deleteSearchId));
     dispatch(resetAllSearchParams());
     dispatch(setOpenTopicSearchDialog(false));
@@ -154,16 +159,24 @@ export default function TopicSearchHistory(props) {
     dispatch(setShowUpdateButton(false));
   };
 
-  const handleEdit = search => {
+  const handleEdit = (e, search) => {
+    if (e) {
+      preventParentClick(e);
+    }
+
     dispatch(setShowUpdateButton(true));
     dispatch(setShowComposeNew(true));
     dispatch(setBackDropOnCompanyClick(false));
     setSearchParamsEdit(search);
-    handleSearch(search, false);
+    handleSearch(e, search, false);
   };
 
   return (
-    <div className={classes.savedSearchesSection}>
+    <div
+      className={classes.savedSearchesSection}
+      onClick={e => {
+        preventParentClick(e);
+      }}>
       <TopicDeleteSearchConfirmDialog
         open={isModal}
         handleDeleteSearch={handleDeleteSearch}
@@ -178,8 +191,8 @@ export default function TopicSearchHistory(props) {
                 className={classes.nested}
                 key={index}
                 selected={selectedSearch && selectedSearch.searchId === s.searchId}
-                onClick={() => {
-                  handleSearch(s);
+                onClick={e => {
+                  handleSearch(e, s);
                 }}>
                 <ListItemText primary={<p className={classes.label}>{s.searchLabel}</p>} />
 
@@ -187,12 +200,12 @@ export default function TopicSearchHistory(props) {
                   <IconButton
                     aria-label="comments"
                     size="small"
-                    onClick={() => {
-                      handleEdit(s);
+                    onClick={e => {
+                      handleEdit(e, s);
                     }}>
                     <EditIcon className={classes.editIcon} />
                   </IconButton>
-                  <IconButton aria-label="comments" size="small" onClick={() => handleDeleteSearch(s.searchId)}>
+                  <IconButton aria-label="comments" size="small" onClick={e => handleDeleteSearch(e, s.searchId)}>
                     <DeleteForeverIcon className={classes.deleteIcon} />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -204,8 +217,8 @@ export default function TopicSearchHistory(props) {
             You don't have any saved topics yet. <br></br>
             <span
               style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-              onClick={() => {
-                clickHereHandle();
+              onClick={e => {
+                clickHereHandle(e);
                 props.handleClose();
               }}>
               Click here

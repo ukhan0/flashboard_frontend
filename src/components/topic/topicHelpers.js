@@ -128,3 +128,9 @@ export const getSearchText = (
 
   return isSimpleSearch ? searchTerm : fullSearchText;
 };
+
+export const preventParentClick = e => {
+  if (e) {
+    e.stopPropagation();
+  }
+};

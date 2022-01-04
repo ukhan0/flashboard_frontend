@@ -5,8 +5,11 @@ const TopicDeleteSearchConfirmDialog = props => {
   return (
     <Dialog
       open={props.open}
-      onClose={() => {
-        props.handleDeleteSearch();
+      onClick={e => {
+        e.stopPropagation();
+      }}
+      onClose={e => {
+        props.handleDeleteSearch(e);
       }}>
       <div className="text-center p-5">
         <div className="avatar-icon-wrapper rounded-circle m-0">
@@ -18,8 +21,8 @@ const TopicDeleteSearchConfirmDialog = props => {
         <p className="mb-0 font-size-lg text-muted">You cannot undo this operation.</p>
         <div className="pt-4">
           <Button
-            onClick={() => {
-              props.confirmDeleteSearch();
+            onClick={e => {
+              props.confirmDeleteSearch(e);
             }}
             color="primary"
             variant="contained"
@@ -27,8 +30,8 @@ const TopicDeleteSearchConfirmDialog = props => {
             <span className="btn-wrapper--label">Delete</span>
           </Button>
           <Button
-            onClick={() => {
-              props.handleDeleteSearch();
+            onClick={e => {
+              props.handleDeleteSearch(e);
             }}
             variant="outlined"
             color="secondary"

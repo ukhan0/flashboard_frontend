@@ -124,7 +124,11 @@ export const currencyFormater = (value, fractionDigits = 2, currencyType = 'USD'
   }
   return `${prefix}${formatedNumber}${postfix}`;
 };
-
+export const currencyFormaterr = (currency, sign) => {
+  var sansDec = currency.toFixed(0);
+  var formatted = sansDec.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return sign + `${formatted}`;
+};
 export const descriptionValueStyler = params => {
   if (isNull(params.value)) {
     return null;
