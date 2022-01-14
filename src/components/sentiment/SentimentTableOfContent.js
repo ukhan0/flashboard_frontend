@@ -16,7 +16,6 @@ import { upperCase, get } from 'lodash';
 import clsx from 'clsx';
 import pinOpen from '../../assets/images/illustrations/minimize.svg';
 import pinClose from '../../assets/images/illustrations/maximize-size-option.svg';
-import SentimentHighlight from './SentimentHighlight';
 const useStyles = makeStyles(theme => {
   return {
     list: {
@@ -267,7 +266,9 @@ const SentimentTableOfContent = props => {
             <Grid item>
               <a
                 href={`https://engine-spirit.s-factors.com/dictionary/historysummary?id=${selectedItem.recentId}`}
-                target="_blank">
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <p className={clsx(classes.link)}>Veiw</p>
               </a>
             </Grid>

@@ -46,13 +46,13 @@ export const getSentimentData = () => {
       const data = get(response, 'data', []);
       if (response) {
         dispatch(setIsApiResponseReceived(true));
-        dispatch(setSentimentResult(data));
+        dispatch(setSentimentResult(data, recentId));
       } else {
-        dispatch(setSentimentResult(null));
+        dispatch(setSentimentResult(null, null));
       }
       dispatch(setIsLoading(false));
     } catch (error) {
-      dispatch(setSentimentResult(null));
+      dispatch(setSentimentResult(null, null));
       dispatch(setIsLoading(false));
     }
   };

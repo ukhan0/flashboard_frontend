@@ -149,7 +149,7 @@ const TopicSearchResults = () => {
     dispatch(setSelectedHeadingId(createHash(`id${replaceDots}`)));
     dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
-    dispatch(setSentimentResult(null));
+    dispatch(setSentimentResult(null, null));
     dispatch(setSelectedTickerSymbol(null));
     dispatch(setWatchlistSearchText(''));
     const fileId = get(companyDocumentResultData, 'summary_id', null);

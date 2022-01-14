@@ -310,7 +310,7 @@ const SentimentSection = props => {
         newDisplayData.map((d, index) => {
           return index !== 0 ? (
             <div
-              key={index}
+              key={`1_${index}`}
               style={{
                 paddingLeft: d.lvl * 4 + 4,
                 scrollMarginTop: '210px'
@@ -322,7 +322,7 @@ const SentimentSection = props => {
                     ? d.newData.elements[0].elements.map((a, indexx) => {
                         return (
                           <div
-                            key={indexx}
+                            key={`2_${indexx}`}
                             style={{
                               backgroundColor: '#' + parentClr(0)
                               // backgroundColor: '#' + parentClr(a.attributes ? (a.attributes.v ? a.attributes.v : 0) : 0)
@@ -331,9 +331,10 @@ const SentimentSection = props => {
                               ? Array.isArray(a.elements)
                                 ? a.elements.map((c, i) => {
                                     return (
-                                      <span key={i}>
+                                      <span key={`3_${i}`}>
                                         {c.type === 'element' ? (
                                           <span
+                                            key={`4_${i}`}
                                             className={clsx(classes.content, classes.searchResultText)}
                                             style={{
                                               backgroundColor: '#' + childClr(c.attributes ? c.attributes.v : 0)
@@ -351,7 +352,7 @@ const SentimentSection = props => {
                                                             return (
                                                               <span
                                                                 id={createHash(`#${yellowTextCount}text`)}
-                                                                key={k}
+                                                                key={`4_${k}`}
                                                                 style={{
                                                                   backgroundColor: 'orange',
                                                                   paddingLeft: 2,
@@ -390,6 +391,7 @@ const SentimentSection = props => {
                 </div>
               ) : (
                 <p
+                  key={`11_${index}`}
                   className={clsx(
                     classes.upper,
                     classes.searchResultTextHeading,
