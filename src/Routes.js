@@ -58,10 +58,11 @@ const SuspenseLoading = () => {
   );
 };
 
-const isLoginRequired = (user, path) => {
+const isLoginRequired = (user, path, location) => {
   let loginRequired = false;
   if (!user && path !== '/PagesRegister' && path !== '/LandingPage' && path !== '/' && path !== '/ImpersonateLogin') {
     loginRequired = true;
+    localStorage.setItem('redirect_url', JSON.stringify(location));
   }
   return loginRequired;
 };
@@ -71,7 +72,7 @@ const Routes = () => {
   // if user is not loggedIn then redirect to login page.
   const user = JSON.parse(localStorage.getItem('user'));
   const path = location.pathname;
-  let loginRequired = isLoginRequired(user, path);
+  let loginRequired = isLoginRequired(user, path, location);
 
   return loginRequired ? (
     <Redirect to="/PagesRegister" />

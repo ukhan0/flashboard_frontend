@@ -29,6 +29,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
+const FilingsTimelineChartMemo = React.memo(FilingsTimelineChart, (prevProps, nextProps) => {
+  // compare props to decide either prev and next props are equal are not.
+  // currently we don't have have any props. 
+  return true;    // true means, don't re-render the component.
+});
+
 const Filings = () => {
   const dispatch = useDispatch();
   const { selectedItem } = useSelector(state => state.Watchlist);
@@ -51,7 +58,7 @@ const Filings = () => {
     <div>
       <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
       <div className={classes.companyTimelineChart}>
-        <FilingsTimelineChart />
+        <FilingsTimelineChartMemo />
       </div>
       <div>
         <FilingsCards />

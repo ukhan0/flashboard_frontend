@@ -5,8 +5,10 @@ import {
   setIsApiResponseReceived,
   setSentimentHighlights
 } from '../../reducers/Sentiment';
+
 import { setFillingsSearchText } from '../../reducers/Filings';
 import { get } from 'lodash';
+
 import config from '../../config/config';
 import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers';
 
@@ -14,6 +16,7 @@ export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
     const { fillingsSearchText } = getState().Filings;
+
     const {
       isFromSideBar,
       searchText,

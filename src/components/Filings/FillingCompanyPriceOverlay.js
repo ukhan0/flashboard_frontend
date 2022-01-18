@@ -11,6 +11,7 @@ import { getColorByDocType, getCompanyByTickerUniverse } from './FillingsHelper'
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
+
 export default function FillingCompanyPriceOverlay() {
   const dispatch = useDispatch();
   const history = useHistory();

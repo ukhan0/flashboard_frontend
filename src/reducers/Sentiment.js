@@ -12,9 +12,10 @@ export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED 
 export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
 export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
 
-export const setSentimentResult = data => ({
+export const setSentimentResult = (data, recentId) => ({
   type: SET_SENTIMENT_RESULT,
-  data
+  data,
+  recentId
 });
 
 export const setSearchId = searchId => ({
@@ -91,6 +92,7 @@ const getDefaultState = () => {
       { heading: 'NOTES TO  FINANCIAL STATEMENT', content: 'High', num: 93, percent: 21, data: [0, 10, 6, 3, 9, 5, 17] }
     ],
     data: null,
+    sentimentRecentId: null,
     isLoading: false,
     selectedHeadingId: null,
     isPin: false,
@@ -111,7 +113,7 @@ export default function reducer(
 ) {
   switch (action.type) {
     case SET_SENTIMENT_RESULT:
-      return { ...state, data: action.data };
+      return { ...state, data: action.data, sentimentRecentId: action.recentId};
     case SET_SEARCH_ID:
       return { ...state, searchId: action.searchId };
     case SET_CARD_GRAPH_DATA:
