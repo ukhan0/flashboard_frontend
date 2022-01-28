@@ -1,4 +1,4 @@
-import { getSentimentSettings } from '../components/sentiment/SentimentHelper';
+import { getSentimentSettings } from '../components/sentiment/SentimentHelpers';
 export const SET_SENTIMENT_RESULT = 'SENTIMENT/SET_SENTIMENT_RESPONSE_DATA';
 export const SET_SEARCH_ID = 'SENTIMENT/SET_SEARCH_ID';
 export const SET_CARD_GRAPH_DATA = 'SENTIMENT/SET_GRAPH_DATA';
@@ -11,6 +11,7 @@ export const SET_SHOW_TOC_BUTTON = 'TOPIC/SET_SHOW_TOC_BUTTON  ';
 export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED ';
 export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
 export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
+export const SET_IS_FROM_FILLING = 'TOPIC/SET_IS_FROM_FILLING ';
 
 export const setSentimentResult = (data, recentId) => ({
   type: SET_SENTIMENT_RESULT,
@@ -67,9 +68,14 @@ export const setSentimentFilters = sentiment => ({
   sentiment
 });
 
-export const setSentimentHighlights= sentimentHighlights => ({
+export const setSentimentHighlights = sentimentHighlights => ({
   type: SET_SENTIMENT_HIGHLIGHTS,
   sentimentHighlights
+});
+
+export const setIsFromfilling = isFromFilling => ({
+  type: SET_IS_FROM_FILLING,
+  isFromFilling
 });
 
 const getDefaultState = () => {
@@ -101,7 +107,8 @@ const getDefaultState = () => {
     currentToc: false,
     isApiResponseReceived: false,
     sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible',
-    sentimentHighlights: []
+    sentimentHighlights: [],
+    isFromFilling: false
   };
 };
 
@@ -113,7 +120,7 @@ export default function reducer(
 ) {
   switch (action.type) {
     case SET_SENTIMENT_RESULT:
-      return { ...state, data: action.data, sentimentRecentId: action.recentId};
+      return { ...state, data: action.data, sentimentRecentId: action.recentId };
     case SET_SEARCH_ID:
       return { ...state, searchId: action.searchId };
     case SET_CARD_GRAPH_DATA:
@@ -136,6 +143,8 @@ export default function reducer(
       return { ...state, sentiment: action.sentiment };
     case SET_SENTIMENT_HIGHLIGHTS:
       return { ...state, sentimentHighlights: action.sentimentHighlights };
+    case SET_IS_FROM_FILLING:
+      return { ...state, isFromFilling: action.isFromFilling };
 
     default:
       break;

@@ -20,15 +20,11 @@ export default function FilingsCompanyRevenueGraph() {
     return { ...v, strength: v.newCount - v.oldCount };
   });
 
-  caculateStrength = caculateStrength.slice(0, 100);
-  const zeroValue = caculateStrength.filter(v => v.oldCount === 0);
-  const nonZeroValue = caculateStrength.filter(v => v.oldCount > 0);
+  const filterData = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
 
-  let zeroValuesDesc = orderBy(zeroValue, ['strength'], ['desc']);
+  let filterDataSorted = orderBy(filterData, ['strength'], ['desc']);
 
-  let nonZeroValuesDesc = orderBy(nonZeroValue, ['strength'], ['desc']);
-
-  let finalResult = zeroValuesDesc.concat(nonZeroValuesDesc);
+  let finalResult = filterDataSorted;
   let filingsRevenue1 = finalResult.map(v => {
     return { name: v.name, low: -v.oldCount, high: 0 };
   });

@@ -55,6 +55,8 @@ export const SET_SEARCH_INDEX = 'TOPIC/SET_SEARCH_INDEX';
 export const SET_TWEETS_DATA = 'TOPIC/SET_TWEETS_DATA';
 export const SET_TWEETS_MAP_DATA = 'TOPIC/SET_TWEETS_MAP_DATA';
 export const SET_TWEETS_COUNTRY_MAP_DATA = 'TOPIC/SET_TWEETS_COUNTRY_MAP_DATA';
+export const SET_TWEETS_COUNTRY_STATES_MAP_DATA = 'TOPIC/SET_TWEETS_COUNTRY_STATES_MAP_DATA';
+export const SET_TWEETS_TABLE_DATA = 'TOPIC/SET_TWEETS_TABLE_DATA';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -324,6 +326,16 @@ export const setTweetsCountryMapData = tweetsCountryMapData => ({
   tweetsCountryMapData
 });
 
+export const setTweetsCountryStatesMapData = tweetsCountryStatesMapData => ({
+  type: SET_TWEETS_COUNTRY_STATES_MAP_DATA,
+  tweetsCountryStatesMapData
+});
+
+export const setTweetsTableData = tweetsTableData => ({
+  type: SET_TWEETS_TABLE_DATA,
+  tweetsTableData
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
@@ -335,6 +347,8 @@ const searchDefaultState = () => ({
   orderBy: 'desc',
   sortBy: 'document_date',
   selectedSuggestions: {},
+  tweetsCountryStatesMapData: [],
+  tweetsTableData: [],
   selectedDocumentTypes: [
     'FMP-transcript',
     '10-K',
@@ -578,6 +592,10 @@ export default function reducer(
       return { ...state, tweetsMapData: action.tweetsMapData };
     case SET_TWEETS_COUNTRY_MAP_DATA:
       return { ...state, tweetsCountryMapData: action.tweetsCountryMapData };
+    case SET_TWEETS_COUNTRY_STATES_MAP_DATA:
+      return { ...state, tweetsCountryStatesMapData: action.tweetsCountryStatesMapData };
+    case SET_TWEETS_TABLE_DATA:
+      return { ...state, tweetsTableData: action.tweetsTableData };
     default:
       break;
   }

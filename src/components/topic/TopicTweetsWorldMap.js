@@ -22,10 +22,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TopicTweetsMap() {
+export default function TopicTweetsWorldMap() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [states, setState] = React.useState(false);
+  const [selectedCountry, setSelectedCountry] = React.useState('');
   const { tweetsMapData, tweetsCountryMapData } = useSelector(state => state.Topic);
   let calculateTweets = [];
   tweetsMapData.forEach(v => {
@@ -82,6 +83,7 @@ export default function TopicTweetsMap() {
             // On click, look for a detailed map
             click: function() {
               dispatch(getMapDataByCountry(this['hc-key']));
+              setSelectedCountry(this['hc-key']);
               setTimeout(() => {
                 setState(true);
               }, [500]);
@@ -113,7 +115,7 @@ export default function TopicTweetsMap() {
         <div className={clsx('mb-2', classes.contentSection)}>
           {states ? (
             <>
-              <TopicTweetsCountryMap tweetsCountryMapData={tweetsCountryMapData} />
+              <TopicTweetsCountryMap tweetsCountryMapData={tweetsCountryMapData} selectedCountry={selectedCountry} />
             </>
           ) : (
             <HighchartsReact options={options} constructorType={'mapChart'} highcharts={Map(Highcharts)} />

@@ -35,7 +35,13 @@ const Cache = () => {
     axios
       .get(`${apiUrl}=all`)
       .then(response => {
-        storeCompleteWatchlist(get(response, 'data.data.content', []));
+        let data = get(response, 'data.data.content', []);
+        data.forEach(element => {
+          delete element['c'];
+          delete element['d'];
+        });
+
+        storeCompleteWatchlist(data);
         setDataCachedDay();
         dispatch(setCompleteDataLoadedFlag(true));
         localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);

@@ -11,11 +11,26 @@ import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { BeatLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import {
+  setSentimentResult,
+} from '../../reducers/Sentiment';
+import FilingsCompanyDetails from '../Filings/FilingsCompanyDetails';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles(theme => ({
+  companyDetail: {
+    top: 60,
+    position: 'sticky',
+    padding: 15,
+    zIndex: 1
+  }
+}));
 const Comparision = props => {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
   const { selectedItem, selectedFileType } = useSelector(state => state.Watchlist);
+  const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
   );
@@ -56,6 +71,7 @@ const Comparision = props => {
         let company = formatComapnyData(selectedItem);
         company.recentId = getQueryParams.current.get('recentId');
         company.oldId = getQueryParams.current.get('oldId');
+        dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(company));
       }
     }
@@ -111,6 +127,7 @@ const Comparision = props => {
     : get(selectedItem, 'recentId10q', null);
   return (
     <>
+      <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
       <ComparisionFilters
         handleComparisionDifference={handleComparisionDifference}
         handleComparisionMethod={handleComparisionMethod}

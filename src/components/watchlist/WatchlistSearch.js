@@ -5,7 +5,13 @@ import { FormControl, TextField } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { getCompleteWatchlist } from '../../utils/helpers';
-import { setWatchlistSearchText, setSelectedTickerSymbol, setSelectedWatchlist } from '../../reducers/Watchlist';
+import {
+  setWatchlistSearchText,
+  setSelectedTickerSymbol,
+  setSelectedWatchlist,
+  setIsTickerSelected
+} from '../../reducers/Watchlist';
+import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 const createOptionLabel = option => {
@@ -17,7 +23,9 @@ const WatchlistTopicSearch = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { selectedTickerSymbol, searchText, selectedFileType } = useSelector(state => state.Watchlist);
+  const { selectedTickerSymbol, searchText, selectedFileType, isTickerSelected } = useSelector(
+    state => state.Watchlist
+  );
 
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table
@@ -45,6 +53,7 @@ const WatchlistTopicSearch = props => {
 
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
+      dispatch(setIsTickerSelected(true));
       dispatch(setSelectedTickerSymbol(newSelectedSymbol));
       dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
       let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, 'all');
@@ -52,6 +61,7 @@ const WatchlistTopicSearch = props => {
       company.recentId = selectedFileType === '10k' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10k' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
+      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
     }
@@ -78,12 +88,18 @@ const WatchlistTopicSearch = props => {
         getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (
           <TextField
+            onBlur={() => {
+              if (!isTickerSelected) {
+                dispatch(setWatchlistSearchText(''));
+              }
+            }}
             {...params}
             variant="outlined"
             placeholder="Type Company Name or Symbol"
             onChange={e => handleSearchTextChange(e.target.value)}
             fullWidth
             size="small"
+            autoComplete="new-password"
           />
         )}
       />

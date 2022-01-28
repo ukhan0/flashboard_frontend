@@ -7,6 +7,7 @@ import { get } from 'lodash';
 import config from '../../config/config';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import SentimentFilters from './SentimentFiltres';
+import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
@@ -69,7 +70,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Period Date:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{data ? new Date(get(data, 'period_date', null)).toLocaleDateString() : null}</h6>
+                <h6>{data ? dateFormaterMoment(parseDateStrMoment(get(data, 'period_date', null))) : null}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -87,7 +88,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Publish Date:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{data ? new Date(get(data, 'document_date', null)).toLocaleDateString() : null}</h6>
+                <h6>{data ? dateFormaterMoment(parseDateStrMoment(get(data, 'document_date', null))) : null}</h6>
               </Grid>
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">

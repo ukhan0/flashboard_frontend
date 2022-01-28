@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import FilingsDetailsGraph from './FilingsDetailsGraph';
+import FilingsDetailsGraph from './FilingsDetailsWordCountGraph';
 import {
   getCompanyFilingListing,
   getCompanyFilingGraphData,
@@ -12,7 +12,7 @@ import {
 import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import FillingTable from './FilingsTable';
-import FilingsTimelineChart from './FillingCompanyPriceOverlay';
+import FillingCompanyStockChart from './FillingCompanyStockChart';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -29,11 +29,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
-const FilingsTimelineChartMemo = React.memo(FilingsTimelineChart, (prevProps, nextProps) => {
+const FilingsTimelineChartMemo = React.memo(FillingCompanyStockChart, (prevProps, nextProps) => {
   // compare props to decide either prev and next props are equal are not.
-  // currently we don't have have any props. 
-  return true;    // true means, don't re-render the component.
+  // currently we don't have have any props.
+  return true; // true means, don't re-render the component.
 });
 
 const Filings = () => {

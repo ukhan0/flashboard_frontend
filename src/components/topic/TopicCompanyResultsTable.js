@@ -87,7 +87,11 @@ export default function TopicCompantResultsTable() {
   const companyResults = get(searchResult, 'buckets.groupByCompanyTicker', []);
 
   const finalResult = companyResults.map(v => {
-    return { key: v.key.cn, ticker: v.key.ct, doc_count: v.doc_count };
+    return {
+      key: v.key.cn,
+      ticker: v.key.ct || v.key.cid,
+      doc_count: v.doc_count
+    };
   });
   const companyNameSorter = v => v.key.toLowerCase();
   let sortedCompanyData = orderBy(finalResult, ['doc_count', companyNameSorter], ['desc', 'asc']);

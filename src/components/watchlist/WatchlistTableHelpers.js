@@ -1,5 +1,6 @@
 import { isNull, includes, capitalize, lowerCase, round, get } from 'lodash';
-
+import { sectorIndustry } from '../../config/sectorIndustry';
+import moment from 'moment';
 const changedStyles = {
   lowest: { backgroundColor: '#bf2828', color: '#ffffff', width: 80, textTransform: 'capitalize' },
   low: { backgroundColor: '#f50101', color: '#ffffff', width: 80, textTransform: 'capitalize' },
@@ -30,7 +31,7 @@ export const formatExportValue = params => {
     } else if (colId === 'adv') {
       return currencyFormater(params.value, 0, 'USD');
     } else if (colId === 'last') {
-      return dateFormater(params.value);
+      return dateFormaterMoment(params.value);
     } else if (colId === 'sentiment') {
       return percentFormater(params, true);
     } else if (colId === 'sentimentWord') {
@@ -63,11 +64,31 @@ export const dateFormater = value => {
   return formatedValue;
 };
 
+export const dateFormaterMoment = value => {
+  let formatedValue = null;
+  if (value) {
+    formatedValue = value.format('MM/DD/YYYY');
+  }
+  return formatedValue;
+};
+
 export const parseDateStr = dateStr => {
   let dateObj = null;
   if (dateStr) {
     try {
       dateObj = new Date(dateStr);
+    } catch (e) {
+      dateObj = null;
+    }
+  }
+  return dateObj;
+};
+
+export const parseDateStrMoment = dateStr => {
+  let dateObj = null;
+  if (dateStr) {
+    try {
+      dateObj = moment(dateStr);
     } catch (e) {
       dateObj = null;
     }
@@ -171,6 +192,13 @@ export const changeWordStyler = value => {
     }
   }
   return style;
+};
+export const getSectorIndustryById = id => {
+  let data = sectorIndustry[id] || '';
+  if (!data) {
+    data = { id: '', sector: '', industry: '' };
+  }
+  return data;
 };
 
 export const lastReportedState = 'desc';

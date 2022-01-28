@@ -67,9 +67,7 @@ const TopicDialog = props => {
   let endDate = currentSearchDetail.endDate;
   let documents = currentSearchDetail.documentType ? currentSearchDetail.documentType : [];
   const dispatch = useDispatch();
-
   const displayDateFormat = 'MMMM YYYY';
-
   const handleOpenTopicDialog = e => {
     preventParentClick(e);
     dispatch(setOpenTopicSearchDialog(!openTopicSearchDialog));

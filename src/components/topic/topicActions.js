@@ -3,7 +3,8 @@ import {
   getSelectedSuggestionAsArr,
   removeDuplicateSuggestions,
   deleteSearchSuggestionsByKey,
-  getSearchText
+  getSearchText,
+  getCurrentSearchDispaly
 } from './topicHelpers';
 import {
   setSelectedSearch,
@@ -31,7 +32,9 @@ import {
   isDateSet,
   setTweetsData,
   setTweetsMapData,
-  setTweetsCountryMapData
+  setTweetsCountryMapData,
+  setTweetsCountryStatesMapData,
+  setTweetsTableData
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -65,10 +68,16 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     const startDate = new URLSearchParams(window.location.search).get('startDate');
     const endDate = new URLSearchParams(window.location.search).get('endDate');
     let currentDate = new Date();
-    const value1 = simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
-    const value = ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
-    const value2 = searchTextWithAnd.map(value => `"${value}"`).join(' AND ');
-    currentSearchDetail.searchTerm = isSimpleSearch ? `${value1} ${value2} ${value}` : searchText;
+    const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(getState().Topic.selectedSuggestions, searchText);
+    currentSearchDetail.searchTerm = getCurrentSearchDispaly(
+      simpleSearchTextArray,
+      ignoreSearchTextArray,
+      searchTextWithAnd,
+      onlySuggestionSingleArr,
+      searchText,
+      isSimpleSearch
+    );
+
     currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
     currentSearchDetail.searchLabel = getState().Topic.searchLabel;
     currentSearchDetail.startDate = startDate
@@ -230,8 +239,10 @@ export const performTopicSearchHighlights = (freshSearch = false, companyName = 
 
 const createSearchPayload = (topicState, freshSearch, searchFrom = null, companyName = null) => {
   const searchId = get(topicState.selectedSearch, 'searchId', null);
-  const startDate = new URLSearchParams(window.location.search).get('startDate');
-  const endDate = new URLSearchParams(window.location.search).get('endDate');
+  // const startDate = new URLSearchParams(window.location.search).get('startDate');
+  // const endDate = new URLSearchParams(window.location.search).get('endDate');
+  const startTime = new URLSearchParams(window.location.search).get('startTime');
+  const endTime = new URLSearchParams(window.location.search).get('endTime');
   const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
   const data = {
     searchTerm: getSearchText(
@@ -243,26 +254,16 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       topicState.isSimpleSearch
     ),
     searchfrom: searchFrom ? `sma_data_json.${searchFrom}` : '',
-    startDate: startDate
-      ? startDate && topicState.isDate
-        ? topicState.isDate
-          ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
-          : moment()
-              .subtract(12, 'months')
-              .format('YYYY-MM-DD HH:mm:ss')
-        : startDate
+    startDate: startTime
+      ? undefined
       : topicState.isDate
       ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
       : moment()
           .subtract(12, 'months')
           .format('YYYY-MM-DD HH:mm:ss'),
 
-    endDate: endDate
-      ? endDate && topicState.isDate
-        ? topicState.isDate
-          ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
-          : moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-        : endDate
+    endDate: endTime
+      ? undefined
       : topicState.isDate
       ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
       : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -279,7 +280,9 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       : undefined,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
-    searchIndex: topicState.searchIndex
+    searchIndex: topicState.searchIndex,
+    startTime: startTime ? startTime : undefined,
+    endTime: endTime ? endTime : undefined
   };
   return data;
 };
@@ -485,7 +488,11 @@ export const findSuggestions = () => {
 
       forEach(newSuggestions, (v, k) => {
         let filteredData = v.filter(
-          item => item.indexOf('https') === -1 && item.indexOf(')') === -1 && item.indexOf('#') === -1
+          item =>
+            item.indexOf('https') === -1 &&
+            item.indexOf(')') === -1 &&
+            item.indexOf('#') === -1 &&
+            item.indexOf('http') === -1
         );
 
         filterNewSuggestions[k] = filteredData.length > 0 ? filteredData : [];
@@ -558,10 +565,15 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
     const startDate = new URLSearchParams(window.location.search).get('startDate');
     const endDate = new URLSearchParams(window.location.search).get('endDate');
     let currentDate = new Date();
-    const value1 = simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
-    const value = ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
-    const value2 = searchTextWithAnd.map(value => `"${value}"`).join(' AND ');
-    currentSearchDetail.searchTerm = isSimpleSearch ? `${value1} ${value2} ${value}` : searchText;
+    const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(getState().Topic.selectedSuggestions, searchText);
+    currentSearchDetail.searchTerm = getCurrentSearchDispaly(
+      simpleSearchTextArray,
+      ignoreSearchTextArray,
+      searchTextWithAnd,
+      onlySuggestionSingleArr,
+      searchText,
+      isSimpleSearch
+    );
     currentSearchDetail.selectedSuggestions = getState().Topic.selectedSuggestions;
     currentSearchDetail.searchLabel = getState().Topic.searchLabel;
     currentSearchDetail.startDate = startDate
@@ -593,6 +605,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
       : currentDate;
     currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
     currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
+
     dispatch(setCurrentSearchtDetail(currentSearchDetail));
     const cancelTokenSource = axios.CancelToken.source();
     dispatch(setSearchStart());
@@ -636,7 +649,9 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
 
         if (newSearchResults.data) {
           dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
+          dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
           dispatch(setTweetsData(newSearchResults.data));
+          dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
 
           dispatch(setSearchBackdrop(null, false));
         } else {
@@ -645,6 +660,8 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           dispatch(setSearchError(true));
           dispatch(setTweetsMapData([]));
           dispatch(setTweetsData([]));
+          dispatch(setTweetsCountryStatesMapData([]));
+          dispatch(setTweetsTableData([]));
         }
       } catch (error) {
         dispatch(isDateSet(false));
@@ -652,6 +669,8 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         dispatch(setSearchError(true));
         dispatch(setTweetsMapData([]));
         dispatch(setTweetsData([]));
+        dispatch(setTweetsCountryStatesMapData([]));
+        dispatch(setTweetsTableData([]));
       }
     }
   };
@@ -660,17 +679,16 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
   const startDate = new URLSearchParams(window.location.search).get('startDate');
   const endDate = new URLSearchParams(window.location.search).get('endDate');
   const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
-  const value1 = topicState.simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
-  const value = topicState.ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
-  const value2 = topicState.searchTextWithAnd.map(value => `"${value}"`).join(' AND ');
-  const searchText = `(${value1})${value2.length > 0 ? `AND(${value2})` : ''}${
-    value.length > 0 ? `AND(${value})` : ''
-  }`;
-  const fullSearchText = onlySuggestionSingleArr.length
-    ? `${topicState.searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
-    : topicState.searchText;
+
   const data = {
-    searchTerm: topicState.isSimpleSearch ? searchText : fullSearchText,
+    searchTerm: getSearchText(
+      topicState.simpleSearchTextArray,
+      topicState.ignoreSearchTextArray,
+      topicState.searchTextWithAnd,
+      onlySuggestionSingleArr,
+      topicState.searchText,
+      topicState.isSimpleSearch
+    ),
 
     startDate: startDate
       ? startDate && topicState.isDate

@@ -2,7 +2,6 @@ import axios from 'axios';
 import {
   setSentimentResult,
   setIsLoading,
-  setIsApiResponseReceived,
   setSentimentHighlights
 } from '../../reducers/Sentiment';
 
@@ -45,15 +44,16 @@ export const getSentimentData = () => {
     try {
       dispatch(setIsLoading(true));
       const formData = new FormData();
-      formData.append('search_term', searchTerm);
+      if (searchTerm.length > 2) {
+        formData.append('search_term', searchTerm);
+      }
       const response = await axios.post(
         `${config.sentimentUrl}?id=${recentId}&es_index=filling_sentiment4`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);
       if (response) {
-        dispatch(setIsApiResponseReceived(true));
-        dispatch(setSentimentResult(data));
+        dispatch(setSentimentResult(data, recentId));
         dispatch(setFillingsSearchText(''));
       } else {
         dispatch(setSentimentResult(null));

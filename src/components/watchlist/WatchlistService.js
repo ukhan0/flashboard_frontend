@@ -1,5 +1,4 @@
 import { formatExportValue } from './WatchlistTableHelpers';
-
 const exportParams = {
   fileName: 'WatchList',
   processCellCallback: formatExportValue
@@ -26,6 +25,20 @@ class WatchListService {
 
   sizeColumnsToFit = () => {
     this.agGridAPI.sizeColumnsToFit();
+  };
+
+  mangeAgGridColunms = (coldId, status) => {
+    this.agGridColumnAPI.setColumnsVisible([coldId], status);
+  };
+
+  getAgGridAColunms = () => {
+    let columns = [];
+    let displayedColumns = [];
+    if (this.agGridColumnAPI?.columnController?.columnDefs) {
+      columns = this.agGridColumnAPI.columnController.columnDefs;
+      displayedColumns = this.agGridColumnAPI.getAllDisplayedColumns().map(v => v.colId);
+    }
+    return { columns: columns, displayedColumns: displayedColumns };
   };
 
   clearSort = sort => {

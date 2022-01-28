@@ -18,6 +18,7 @@ export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
 export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_DOCUMENT_TYPE_CALLS';
 export const SET_IS_FILTER_ACTIVE = 'WATCHLIST/SET_IS_FILTER_ACTIVE';
+export const SET_IS_TICKER_SELECTED = 'WATCHLIST/SET_IS_TICKER_SELECTED';
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
@@ -102,6 +103,11 @@ export const setIsFilterActive = isFilterActive => ({
   isFilterActive
 });
 
+export const setIsTickerSelected = isTickerSelected => ({
+  type: SET_IS_TICKER_SELECTED,
+  isTickerSelected
+});
+
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
@@ -132,7 +138,8 @@ const getDefaultState = () => {
     isColorEnable: user ? (user.enable_watchlist_color ? user.enable_watchlist_color : false) : false,
     isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
     cancelExistingDocumentTypeCalls: null,
-    isFilterActive: false
+    isFilterActive: false,
+    isTickerSelected: false
   };
 };
 
@@ -182,6 +189,8 @@ export default function reducer(
       return { ...state, cancelExistingDocumentTypeCalls: action.cancelExistingDocumentTypeCalls };
     case SET_IS_FILTER_ACTIVE:
       return { ...state, isFilterActive: action.isFilterActive };
+    case SET_IS_TICKER_SELECTED:
+      return { ...state, isTickerSelected: action.isTickerSelected };
     default:
       break;
   }

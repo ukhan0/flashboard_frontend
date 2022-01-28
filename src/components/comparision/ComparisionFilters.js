@@ -25,7 +25,7 @@ const ComparisionFilters = props => {
           </ButtonGroup>{' '}
         </Grid>
         <Grid item>
-          <div className="text-black-50 opacity-6"> Comparision Method</div>
+          <div className="text-black-50 opacity-6"> Comparison Method</div>
           <ButtonGroup color="primary">
             {comparisionMethodTypes.map((method, i) => (
               <Button

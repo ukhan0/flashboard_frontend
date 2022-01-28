@@ -12,11 +12,16 @@ import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
 import { getCompleteWatchlist } from '../../utils/helpers';
 import { setIsFromSideBar } from '../../reducers/Topic';
-import { setSelectedHeadingId, setIsApiResponseReceived, setSentimentResult } from '../../reducers/Sentiment';
+import {
+  setSelectedHeadingId,
+  setIsApiResponseReceived,
+  setSentimentResult,
+  setIsFromfilling
+} from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
 import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
-import moment  from 'moment';
+import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -144,6 +149,7 @@ const TopicSearchResults = () => {
     if (searchIndex === 'filling_int_sentiment4') {
       return;
     }
+    dispatch(setIsFromfilling(false));
     const actualTitle = t.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
     const replaceDots = removel4.replaceAll('.', 'id');
@@ -170,8 +176,10 @@ const TopicSearchResults = () => {
       company.last = documentDate;
       company.companyId = companyId;
       company.documentId = documentId;
+      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(company));
     } else {
+      dispatch(setSentimentResult(null, null));
       dispatch(
         setSelectedWatchlist({
           recentId: recentId,
@@ -222,7 +230,7 @@ const TopicSearchResults = () => {
                               &nbsp; &nbsp;
                               {companyResult.document_date ? (
                                 <span className={clsx(classes.documentDate, 'text-black-50')}>
-                                  {moment(companyResult.document_date).format('DD/MM/YYYY')}
+                                  {dateFormaterMoment(parseDateStrMoment(companyResult.document_date))}
                                 </span>
                               ) : null}
                             </h2>

@@ -26,3 +26,25 @@ export const getColorByDocType = type => {
   }
   return color;
 };
+
+export const sectionIds = {
+  '#ff98a4': 1245845125803209,
+  '#7fc8fd': 5402784905830826,
+  '#7fe4a6': 2862340249443704
+};
+const stateKey = 'filling::state';
+export const storeColumnsState = state => {
+  localStorage.setItem(stateKey, JSON.stringify(state));
+};
+export const getColumnState = () => {
+  const offRampAlertsTableState = localStorage.getItem(stateKey);
+  let columnState = [];
+  if (offRampAlertsTableState) {
+    try {
+      columnState = JSON.parse(offRampAlertsTableState);
+    } catch (error) {
+      // logException(error);
+    }
+  }
+  return columnState;
+};

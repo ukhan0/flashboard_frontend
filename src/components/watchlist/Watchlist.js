@@ -20,8 +20,10 @@ import {
   setCount,
   setWatchlistSearchText,
   setSelectedTickerSymbol,
-  setIsNewWatchlistDataAvailable
+  setIsNewWatchlistDataAvailable,
+  setIsTickerSelected
 } from '../../reducers/Watchlist';
+import { setSentimentResult } from '../../reducers/Sentiment';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import WatchlistConfirmationDialog from './ActionConfirmation';
@@ -40,6 +42,7 @@ import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
 import { setHeadingRedirect } from '../../reducers/Topic';
+import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -75,6 +78,8 @@ const Watchlist = props => {
   const [snackbarMessage, setSnackbarMessage] = React.useState('Unable to Add/Remove Ticker To/From Watchlist');
   const firstTimeLoad = useRef(true);
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
+  const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
+  const [isAgGridActions, setIsAgGridActions] = useState(false);
 
   const searchFromCompleteData = useCallback(() => {
     const rawData = getCompleteWatchlist();
@@ -123,6 +128,7 @@ const Watchlist = props => {
         last: selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q,
         recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
         oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
+        periodDate: selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'],
         documentType: selectedFileType,
         isColorEnable: isColorEnable
       };
@@ -143,13 +149,16 @@ const Watchlist = props => {
           watchlistData.splice(updatedTickerDetail, 1);
         }
         deleteTicker(rowData.ticker);
+        dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
       } else {
         // add ticker
         handleUpload(rowData.ticker);
+        dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
       }
     } else {
+      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(rowData));
       dispatch(setSidebarDisplay(true));
       if (
@@ -276,6 +285,7 @@ const Watchlist = props => {
     setConfirmationClearFilterDialog(false);
     dispatch(setWatchlistSearchText(''));
     setIsFilterActiveOnSearch('');
+    dispatch(setIsTickerSelected(false));
   };
 
   useEffect(() => {
@@ -295,10 +305,29 @@ const Watchlist = props => {
     setConfirmationClearSortDialog(false);
   };
 
+  const handleOpenAgGridSideBar = isActions => {
+    setIsAgGridActions(isActions);
+    setIsAgGridSideBarOpen(true);
+  };
+  const handleCloseAgGridSideBar = () => {
+    setIsAgGridSideBarOpen(false);
+  };
+
   const gridData = firstTimeLoad.current ? null : processWatchlistData();
 
   return (
     <>
+      {WatchlistService.getAgGridAColunms().columns.length > 0 ? (
+        <>
+          <WatchlistCustomColumnsSideBar
+            storeColumnsState={onStoreColumnsState}
+            open={isAgGridSideBarOpen}
+            handleCloseAgGridSideBar={handleCloseAgGridSideBar}
+            isAgGridActions={isAgGridActions}
+            title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
+          />
+        </>
+      ) : null}
       {loading ? (
         <div className={classes.loaderContainer}>
           <div className={classes.loaderSection}>
@@ -331,6 +360,16 @@ const Watchlist = props => {
               ) : null}
             </Box>
             <Grid item>
+              {/* <Button
+                color="primary"
+                variant="contained"
+                className={classes.button}
+                size="small"
+                onClick={() => {
+                  handleOpenAgGridSideBar();
+                }}>
+                Action
+              </Button> */}
               <Button
                 color="primary"
                 variant="contained"
@@ -348,7 +387,7 @@ const Watchlist = props => {
         </Grid>
       </Grid>
 
-      <div className={classes.watchlistTableContainer} style={{ height: window.innerHeight - 160 }}>
+      <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
         <WatchlistTable
           data={gridData}
           storeColumnsState={onStoreColumnsState}
@@ -357,7 +396,25 @@ const Watchlist = props => {
           filteringState={getFilteringState()}
           onColumnClick={onColumnClick}
         />
+        <div style={{ width: 20, marginTop: 5 }}>
+          <div
+            className={classes.agButtons}
+            onClick={() => {
+              handleOpenAgGridSideBar(false);
+            }}>
+            Columns
+          </div>
+          <br />
+          <div
+            className={classes.agButtons}
+            onClick={() => {
+              handleOpenAgGridSideBar(true);
+            }}>
+            Actions
+          </div>
+        </div>
       </div>
+
       <WatchlistTopicDialog
         open={topicDialogOpen}
         onClose={() => setTopicDialogOpen(false)}

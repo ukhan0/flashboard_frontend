@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core';
 import { BeatLoader } from 'react-spinners';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSentimentData, getSentimentHighlights } from './sentimentActions';
+import { getSentimentData } from './sentimentActions';
 import { useHistory } from 'react-router-dom';
 import SentimentContentSection from './SentimentContentSection';
 import SentimentTableOfContent from './SentimentTableOfContent';
@@ -12,8 +12,12 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { getCompanyFilingGraphData } from '../Filings/FillingAction';
+import { get, cloneDeep } from 'lodash';
 import config from '../../config/config';
-import { get } from 'lodash';
+import convert from 'xml-js';
+import { createHash } from '../../utils/helpers';
+import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
+import { visitOutlineObjTable, visitOutlineObj, removeHeadingTags } from './SentimentHelpers';
 
 const useStyles = makeStyles(theme => ({
   tableOfContent: {
@@ -29,12 +33,15 @@ const useStyles = makeStyles(theme => ({
 
 const Sentiment = () => {
   const { selectedItem } = useSelector(state => state.Watchlist);
-  const { isPin, sentimentRecentId } = useSelector(state => state.Sentiment);
+  const { isPin, data, sentimentRecentId } = useSelector(state => state.Sentiment);
   const [isLoading, setIsLoading] = useState(true);
+
   const dispatch = useDispatch();
   const classes = useStyles();
   const history = useHistory();
   const firstTimeLoad = useRef(false);
+  const [tableData, setTableData] = useState([]);
+  const [contentData, setContentData] = useState([]);
   let hideCards = config.hideCard;
   let getQueryParams = new URLSearchParams(useLocation().search);
   if (!getQueryParams.get('recentId') && !selectedItem) {
@@ -45,13 +52,27 @@ const Sentiment = () => {
       firstTimeLoad.current = true;
       if (getQueryParams.get('recentId')) {
         let ticker = getQueryParams.get('ticker');
-        getCompanyByTicker(ticker).then(localSelectedItem => {
-          if (localSelectedItem) {
-            let company = formatComapnyData(localSelectedItem);
-            company.recentId = getQueryParams.get('recentId');
-            dispatch(setSelectedWatchlist(company));
-          }
-        });
+        let rawData = localStorage.getItem(`watchlist-data-all`);
+        if (rawData) {
+          getCompanyByTicker(ticker).then(localSelectedItem => {
+            if (localSelectedItem) {
+              let company = formatComapnyData(localSelectedItem);
+              company.recentId = getQueryParams.get('recentId');
+              dispatch(setSentimentResult(null, null));
+              dispatch(setSelectedWatchlist(company));
+              dispatch(setIsFromfilling(true));
+            }
+          });
+        } else {
+          let company = {};
+          company.recentId = getQueryParams.get('recentId');
+          company.sector = getQueryParams.get('sector');
+          company.industry = getQueryParams.get('industry');
+          company.ticker = getQueryParams.get('ticker');
+          dispatch(setSentimentResult(null, null));
+          dispatch(setSelectedWatchlist(company));
+          dispatch(setIsFromfilling(true));
+        }
       }
     }
   }, [dispatch, getQueryParams]);
@@ -66,12 +87,6 @@ const Sentiment = () => {
     }
   }, [dispatch, selectedItem, hideCards, sentimentRecentId]);
 
-  const handleSelection = path => {
-    setTimeout(() => {
-      document.getElementById(path).scrollIntoView();
-    }, 100);
-  };
-
   const getCompanyByTicker = async ticker => {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -84,6 +99,55 @@ const Sentiment = () => {
       }, 100);
     });
   };
+
+  const handleSelection = path => {
+    setTimeout(() => {
+      if (document.getElementById(path)) {
+        document.getElementById(path).scrollIntoView();
+      }
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    const setTimeoutRef = setTimeout(() => {
+      // create table of contents
+      const tempTableData = [];
+      const headings = get(data, 'sma_data_json', []);
+      visitOutlineObjTable(tempTableData, headings, 0, '');
+
+      setTableData(cloneDeep(tempTableData));
+
+      // create display data
+      const displayData = [];
+      const content = get(data, 'sma_data_json', []);
+      visitOutlineObj(displayData, content, 0, '');
+      const newDisplayData = [];
+      displayData.forEach(d => {
+        const processedData = { ...d };
+        processedData.id = createHash(d.path);
+        if (d.content) {
+          let newContent = removeHeadingTags(d.content);
+          newContent = `<span>${newContent}</span>`;
+          try {
+            processedData.newData = convert.xml2js(newContent.replaceAll('&', ''));
+          } catch (e) {
+            processedData.newData = null;
+          }
+        }
+        newDisplayData.push(processedData);
+      });
+
+      setContentData(cloneDeep(newDisplayData));
+    }, 100);
+
+    return () => {
+      clearTimeout(setTimeoutRef);
+    };
+  }, [data]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -101,17 +165,17 @@ const Sentiment = () => {
         <Grid container spacing={0}>
           <Grid item xs={8}>
             <div className={classes.companyDetail}>
-              <SentimentContentSection />
+              <SentimentContentSection contentData={contentData} />
             </div>
           </Grid>
           <Grid item xs={4}>
             <div className={classes.tableOfContent}>
-              <SentimentTableOfContent onSelection={handleSelection} />
+              <SentimentTableOfContent tableData={tableData} onSelection={handleSelection} />
             </div>
           </Grid>
         </Grid>
       ) : (
-        <SentimentContentSection />
+        <SentimentContentSection contentData={contentData} tableData={tableData} />
       )}
     </>
   );

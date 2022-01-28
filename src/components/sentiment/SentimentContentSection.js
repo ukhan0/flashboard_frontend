@@ -76,7 +76,6 @@ const SentimentContentSection = props => {
         }}>
         Back
       </Button>
-      {hideCards === 'true' ? <SentimentCard /> : null}
       <div className={classes.companyDetail}>
         {selectedItem ? (
           <Box m={2}>
@@ -84,6 +83,7 @@ const SentimentContentSection = props => {
           </Box>
         ) : null}
       </div>
+      {hideCards === 'true' ? <SentimentCard /> : null}
       <div className={classes.drawerOpener}>
         {isTocButton ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
@@ -91,8 +91,8 @@ const SentimentContentSection = props => {
           </Button>
         ) : null}
       </div>
-      <SentimentSection onSelection={handleSelection} />
-      <SentimentDrawer onSelection={handleSelection} />
+      <SentimentSection contentData={props.contentData} onSelection={handleSelection} />
+      <SentimentDrawer tableData={props.tableData} onSelection={handleSelection} />
       <div className={classes.goToTopContainer}>
         <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
           <UpIcon />

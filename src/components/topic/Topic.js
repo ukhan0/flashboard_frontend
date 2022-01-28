@@ -20,6 +20,7 @@ import TopicTweetsWorldMap from './TopicTweetsWorldMap';
 import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
+import TopicTweetTable from './TopicTweetsTable';
 const Topic = () => {
   const classes = topicStyles();
   const {
@@ -82,10 +83,13 @@ const Topic = () => {
             <Grid container>
               <Grid item xs={12}>
                 <Grid container>
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <TopicTweetsWorldMap />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
+                    <TopicTweetTable />
+                  </Grid>
+                  <Grid item xs={4}>
                     <TopicTweetsPieChart />
                   </Grid>
                 </Grid>

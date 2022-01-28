@@ -1,10 +1,14 @@
 import React, { Fragment } from 'react';
 import { Grid, Card, Divider } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import FillingRevenueGraph from './FilingsCompanyRevenueGraph';
+import config from '../../config/config';
+import { sectionIds } from './FillingsHelper';
+import { useHistory } from 'react-router-dom';
+import { setIsFromfilling, setSelectedHeadingId } from '../../reducers/Sentiment';
 Highcharts.setOptions({
   lang: {
     thousandsSep: ','
@@ -13,6 +17,9 @@ Highcharts.setOptions({
 
 const FilingsDetailsGraph = props => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  let hideGraphs = config.hideGraph;
   let mdas = [];
   let risks = [];
   let notes = [];
@@ -73,6 +80,9 @@ const FilingsDetailsGraph = props => {
           events: {
             click: function() {
               if (this) {
+                dispatch(setIsFromfilling(true));
+                dispatch(setSelectedHeadingId(sectionIds[this.color] || ''));
+                history.push('/sentiment');
               }
             }
           }
@@ -103,10 +113,10 @@ const FilingsDetailsGraph = props => {
     <Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6} lg={6}>
-          <FillingRevenueGraph />
+          {hideGraphs === 'false' ? <FillingRevenueGraph /> : null}
         </Grid>
 
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={hideGraphs === 'false' ? 6 : 12} lg={hideGraphs === 'false' ? 6 : 12}>
           <Card className="mb-4">
             <div className="card-header-alt d-flex justify-content-between p-4">
               <Grid container spacing={3}>

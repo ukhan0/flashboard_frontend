@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { setSidebarToggle } from '../../reducers/ThemeOptions';
 import { useHistory } from 'react-router-dom';
-
+import Help from '../../components/navigationBar/Navigation';
 const HeaderMenu = props => {
   const location = useLocation();
   const history = useHistory();
@@ -21,7 +21,6 @@ const HeaderMenu = props => {
     history.push('/topic');
   };
 
-
   return (
     <Fragment>
       <div className="app-header-menu">
@@ -29,10 +28,7 @@ const HeaderMenu = props => {
           size="medium"
           color="inherit"
           onClick={goToWatchlist}
-          className={clsx(
-            'btn-inverse font-size-xs mx-2',
-            location.pathname === '/watchlist' ? 'btn-active' : ''
-          )}>
+          className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/watchlist' ? 'btn-active' : '')}>
           Home
         </Button>
         <Button
@@ -40,21 +36,15 @@ const HeaderMenu = props => {
           color="inherit"
           onClick={gotToTopic}
           disabled={false}
-          className={clsx(
-            'btn-inverse font-size-xs mx-2',
-            location.pathname === '/topic' ? 'btn-active' : ''
-          )}>
+          className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/topic' ? 'btn-active' : '')}>
           ThemeX
         </Button>
         <Button
           size="medium"
           color="inherit"
-          disabled={true}
-          className={clsx(
-            'btn-inverse font-size-xs mx-2',
-            location.pathname === '/alerts' ? 'btn-active' : ''
-          )}>
-          Alerts
+          disabled={false}
+          className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/alerts' ? 'btn-active' : '')}>
+          <Help />
         </Button>
       </div>
     </Fragment>

@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 const SentimentCompanyDetails = props => {
   const { fillingsData } = useSelector(state => state.Filings);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
   const companyDetail = get(fillingsData, '[0]', []);
 
@@ -53,7 +54,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Sector:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(companyDetail, 'sector', null)}</h6>
+                <h6>{get(selectedItem, 'sector', null)}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -63,7 +64,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Industry:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6>{get(companyDetail, 'industry', null)}</h6>
+                <h6>{get(selectedItem, 'industry', null)}</h6>
               </Grid>
             </Grid>
           </Grid>

@@ -1,6 +1,6 @@
 import { forEach, get, isEmpty, isArray } from 'lodash';
 import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
-
+import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
   mda: ['w', 'x', 'y', 'z', 'aa', 'ab', 'ac'],
@@ -82,8 +82,8 @@ export const formatComapnyData = rawData => {
   return {
     ticker: rawData.ticker,
     companyName: rawData.b,
-    industry: rawData.d,
-    sector: rawData.c,
+    industry: getSectorIndustryById(rawData.cc).industry,
+    sector: getSectorIndustryById(rawData.cc).sector,
     mktcap: rawData.e,
     adv: rawData.f,
     last10k: rawData.last_10k,
@@ -95,6 +95,8 @@ export const formatComapnyData = rawData => {
     oldId10k: rawData['bv'],
     oldId10q: rawData['bx'],
     oldId: rawData['bv'],
+    periodDate10k: rawData['ca'],
+    periodDate10q: rawData['cb'],
     isTickerActive: get(rawData, 'isTickerActive', false)
   };
 };

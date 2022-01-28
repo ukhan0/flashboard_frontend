@@ -134,3 +134,22 @@ export const preventParentClick = e => {
     e.stopPropagation();
   }
 };
+
+export const getCurrentSearchDispaly = (
+  simpleSearchTextArray,
+  ignoreSearchTextArray,
+  searchTextWithAnd,
+  onlySuggestionSingleArr,
+  searchText,
+  isSimpleSearch
+) => {
+  const value1 = simpleSearchTextArray.filter(value => `${value},`);
+  const value = ignoreSearchTextArray.filter(value => `${value},`);
+  const value2 = searchTextWithAnd.filter(value => `${value},`);
+  const searchTerm = `${value1}${value}${value2}`;
+  const fullSearchText = onlySuggestionSingleArr.length
+    ? `${searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
+    : searchText;
+
+  return isSimpleSearch ? searchTerm : fullSearchText;
+};

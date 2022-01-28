@@ -7,17 +7,15 @@ import { List, Typography } from '@material-ui/core';
 
 import useRouter from 'utils/useRouter';
 import SidebarMenuListItem from './SidebarMenuListItem';
-import {useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 
 const SidebarMenuList = props => {
   const { pages, ...rest } = props;
-  const {selectedItem} = useSelector(state=>state.Watchlist)
+  const { selectedItem } = useSelector(state => state.Watchlist);
+
   return (
     <List className="p-0">
-      {pages.reduce(
-        (items, page) => reduceChildRoutes({ items, page, selectedItem, ...rest }),
-        []
-      )}
+      {pages.reduce((items, page) => reduceChildRoutes({ items, page, selectedItem, ...rest }), [])}
     </List>
   );
 };
@@ -45,11 +43,7 @@ const reduceChildRoutes = props => {
         open={Boolean(open)}
         title={page.label}>
         <div className="sidebar-menu-children py-2">
-          <SidebarMenuList
-            depth={depth + 1}
-            pages={page.content}
-            router={router}
-          />
+          <SidebarMenuList depth={depth + 1} pages={page.content} router={router} />
         </div>
       </SidebarMenuListItem>
     );
@@ -62,14 +56,15 @@ const reduceChildRoutes = props => {
         key={page.label}
         label={page.badge}
         title={page.label}
-        disabled={ 
-          page.label === 'Comparison'||  page.label === 'Social Sentiment'
-          ? selectedItem
-            ? selectedItem.ticker
-             ? page.disabled
-             : true
+        disabled={
+          page.label === 'Comparison' || page.label === 'Filings'
+            ? selectedItem
+              ? selectedItem.ticker && selectedItem.oldId
+                ? page.disabled
+                : true
+              : page.disabled
             : page.disabled
-          : page.disabled}
+        }
       />
     );
   }
@@ -84,9 +79,7 @@ const SidebarMenu = props => {
 
   return (
     <Component {...rest} className={className}>
-      {title && (
-        <Typography className="app-sidebar-heading">{title}</Typography>
-      )}
+      {title && <Typography className="app-sidebar-heading">{title}</Typography>}
       <SidebarMenuList depth={0} pages={pages} router={router} />
     </Component>
   );

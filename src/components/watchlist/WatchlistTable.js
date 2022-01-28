@@ -4,14 +4,14 @@ import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
 import {
-  parseDateStr,
+  parseDateStrMoment,
   parseNumber,
   percentFormater,
   currencyFormater,
   descriptionValueStyler,
   changeWordGetter,
   changeWordFormatter,
-  dateFormater,
+  dateFormaterMoment,
   numberWordComparator,
   lastReportedState
 } from './WatchlistTableHelpers';
@@ -165,7 +165,6 @@ const colDefs = [
     },
     valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
-    autoComplete: false,
     cellStyle: () => {
       return { textAlign: 'right' };
     }
@@ -202,11 +201,24 @@ const colDefs = [
     colId: 'last',
     width: 117,
     sort: lastReportedState,
-    valueGetter: params => parseDateStr(get(params, 'data.last', null)),
-    valueFormatter: params => dateFormater(params.value),
+    valueGetter: params => parseDateStrMoment(get(params, 'data.last', null)),
+    valueFormatter: params => dateFormaterMoment(params.value),
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    getQuickFilterText: params => dateFormater(params.value)
+    getQuickFilterText: params => dateFormaterMoment(params.value)
+  },
+  {
+    headerName: 'Period Date',
+    headerTooltip: 'Period Date',
+    field: 'periodDate',
+    colId: 'periodDate',
+    width: 117,
+    sort: lastReportedState,
+    valueGetter: params => parseDateStrMoment(get(params, 'data.periodDate', null)),
+    valueFormatter: params => dateFormaterMoment(params.value),
+    filter: 'agDateColumnFilter',
+    cellClass: ['center-align-text'],
+    getQuickFilterText: params => dateFormaterMoment(params.value)
   },
   {
     headerName: 'Aggregated Sentiment',
@@ -422,7 +434,7 @@ const colDefs = [
 
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const { searchText, selectedMetric } = useSelector(state => state.Watchlist);
+  const { searchText, selectedMetric, isTickerSelected } = useSelector(state => state.Watchlist);
   const [gridApi, setGridApi] = useState(null);
   let getQueryParams = new URLSearchParams(useLocation().search);
   const storeColumnsState = params => {
@@ -433,6 +445,19 @@ const WatchlistTable = props => {
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
   };
+  React.useEffect(() => {
+    if (!gridApi) {
+      return;
+    }
+    const tickerFilterInstance = gridApi.getFilterInstance('ticker');
+    if (isTickerSelected) {
+      tickerFilterInstance.setModel({
+        type: 'equals',
+        filter: searchText
+      });
+    }
+    gridApi.onFilterChanged();
+  }, [isTickerSelected, gridApi, searchText]);
 
   const cellClicked = async params => {
     if (params.data) {
@@ -455,6 +480,28 @@ const WatchlistTable = props => {
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
     setGridApi(params.api);
+    const stateKey = 'watchlist::state';
+    const currentColumnsState = localStorage.getItem(stateKey);
+    let columns = JSON.parse(currentColumnsState);
+    if (columns) {
+      props.storeColumnsState(columns);
+    } else {
+      const columnState = params.columnApi.getColumnState();
+      props.storeColumnsState(columnState);
+    }
+    const columnsState = props.columnsState;
+    const filteringState = props.filteringState;
+
+    if (columnsState && columnsState.length) {
+      params.columnApi.applyColumnState({
+        state: columnsState,
+        applyOrder: true
+      });
+    }
+
+    if (filteringState && !isEmpty(filteringState)) {
+      params.api.setFilterModel(filteringState);
+    }
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
@@ -485,7 +532,7 @@ const WatchlistTable = props => {
     const tickerFilterInstance = gridApi.getFilterInstance('ticker');
     if (getQueryParams.get('ticker')) {
       tickerFilterInstance.setModel({
-        type: 'Equals',
+        type: 'equals',
         filter: getQueryParams.get('ticker')
       });
     }

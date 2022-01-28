@@ -16,6 +16,7 @@ import PersonIcon from '@material-ui/icons/PersonOutlined';
 import ReceiptIcon from '@material-ui/icons/ReceiptOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import MessageIcon from '@material-ui/icons/Message';
 
 var iconsMap = {
   BarChartIcon: BarChartIcon,
@@ -35,7 +36,8 @@ var iconsMap = {
   PersonIcon: PersonIcon,
   ReceiptIcon: ReceiptIcon,
   SettingsIcon: SettingsIcon,
-  ViewModuleIcon: ViewModuleIcon
+  ViewModuleIcon: ViewModuleIcon,
+  MessageIcon: MessageIcon
 };
 
 const sideBarItems = [
@@ -59,7 +61,7 @@ const sideBarItems = [
   },
   {
     label: 'Social Sentiment',
-    icon: 'SettingsIcon',
+    icon: 'MessageIcon',
     to: '/socialSentiment',
     disabled: false
   }

@@ -4,6 +4,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
@@ -90,6 +91,7 @@ export default function FilingsTimelineChart() {
                 let selectedItem = getCompanyByTickerUniverse(this.ticker, 'all');
                 let company = formatComapnyData(selectedItem);
                 company.recentId = this.document_id;
+                dispatch(setSentimentResult(null, null));
                 dispatch(setSelectedWatchlist(company));
                 history.push('/sentiment');
               }

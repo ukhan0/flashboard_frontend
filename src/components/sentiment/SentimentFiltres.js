@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ButtonGroup, Button } from '@material-ui/core';
 import { sentimentTypes } from '../../config/filterTypes';
 import { useSelector, useDispatch } from 'react-redux';
-import {  saveSentimentSettings } from './SentimentHelper';
+import {  saveSentimentSettings } from './SentimentHelpers';
 import { setSentimentFilters } from '../../reducers/Sentiment';
 
 const SentimentFilters = () => {

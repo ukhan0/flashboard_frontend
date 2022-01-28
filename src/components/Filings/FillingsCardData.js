@@ -4,47 +4,30 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useSelector } from 'react-redux';
 import { isEmpty, get, round } from 'lodash';
-import { getCompanyByTickerUniverse } from './FillingsHelper';
 const useStyles = makeStyles(theme => ({
   card: {
     height: 270
   },
   chart: {
     position: 'absolute',
-
     right: 0,
-    bottom: 0
+    width: '100%',
+    // bottom: 0,
+    marginLeft: 0
   }
 }));
 
 const FilingsCards = () => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
-  const { selectedItem } = useSelector(state => state.Watchlist);
-  const data = getCompanyByTickerUniverse(get(selectedItem, 'ticker', ''), 'all');
+  const { sidebarToggle, sidebarToggleMobile } = useSelector(state => state.ThemeOptions);
+
   let riskSentiment;
   let noteSentiment;
   let mdaSentiment;
-  if (data && selectedItem.documentType) {
-    let docType = selectedItem.documentType.replace('-', '').toLowerCase();
-    if (docType === '10q' || docType === '10k') {
-      riskSentiment =
-        docType === '10q'
-          ? { sentimentQuintile: data.as, sentimentChangeQuintile: data.au }
-          : { sentimentQuintile: data.al, sentimentChangeQuintile: data.an };
-      noteSentiment =
-        docType === '10q'
-          ? { sentimentQuintile: data.bi, sentimentChangeQuintile: data.bk }
-          : { sentimentQuintile: data.az, sentimentChangeQuintile: data.bb };
-      mdaSentiment =
-        docType === '10q'
-          ? { sentimentQuintile: data.ae, sentimentChangeQuintile: data.ag }
-          : { sentimentQuintile: data.x, sentimentChangeQuintile: data.z };
-    }
-  }
+  const cardHeight = 200;
+  // const cardWidth = 200;
 
   let mda = [];
   let risk = [];
@@ -56,6 +39,15 @@ const FilingsCards = () => {
     notes = fillingsGraphData.map(s => get(s, 'notes.ssssss', 0));
     dates = fillingsGraphData.map(d => d.document_date);
   }
+  React.useEffect(() => {
+    if (Highcharts.charts[0]) {
+      setTimeout(() => {
+        Highcharts.charts[0].reflow();
+        Highcharts.charts[1].reflow();
+        Highcharts.charts[2].reflow();
+      }, [300]);
+    }
+  }, [sidebarToggle, sidebarToggleMobile]);
 
   let cardArray = [
     {
@@ -66,8 +58,8 @@ const FilingsCards = () => {
       options: {
         chart: {
           type: 'areaspline',
-          height: 200,
-          width: 180
+          height: cardHeight
+          // width: cardWidth
         },
         title: {
           text: null
@@ -151,8 +143,8 @@ const FilingsCards = () => {
       options: {
         chart: {
           type: 'areaspline',
-          height: 250,
-          width: 180
+          height: cardHeight
+          // width: cardWidth
         },
         title: {
           text: null
@@ -235,8 +227,8 @@ const FilingsCards = () => {
       options: {
         chart: {
           type: 'areaspline',
-          height: 250,
-          width: 180
+          height: cardHeight
+          // width: cardWidth
         },
         title: {
           text: null
@@ -345,7 +337,7 @@ const FilingsCards = () => {
             <Card className={classes.card}>
               <p style={{ textAlign: 'center', marginTop: '5px' }}>{data.heading}</p>
               <Grid container>
-                <Grid item xs={6}>
+                <Grid item xs={4} md={4}>
                   <CardContent>
                     <h5>{`(${quintileChange.length > 0 ? getCount(quintileChange.filter(e => e)) : ''})`}</h5>
                     <label className="text-black-50 d-block">Filing Sentiment</label>
@@ -361,8 +353,12 @@ const FilingsCards = () => {
                   </span> */}
                   </CardContent>
                 </Grid>
-                <Grid item xs={6} className={classes.chart}>
-                  <HighchartsReact highcharts={Highcharts} options={data.options} />
+                <Grid item xs={8} md={8} className={classes.chart}>
+                  <HighchartsReact
+                    containerProps={{ style: { width: '100%' } }}
+                    highcharts={Highcharts}
+                    options={data.options}
+                  />
                 </Grid>
               </Grid>
             </Card>

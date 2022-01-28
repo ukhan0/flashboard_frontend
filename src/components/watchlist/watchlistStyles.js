@@ -30,5 +30,12 @@ export default makeStyles(() => ({
   },
   formControl: {
     width: '100%'
+  },
+  agButtons: {
+    writingMode: 'vertical-rl',
+    textOrientation: 'mixed',
+    cursor: 'pointer',
+    backgroundColor: 'lightgray',
+    padding: '8px 0px'
   }
 }));

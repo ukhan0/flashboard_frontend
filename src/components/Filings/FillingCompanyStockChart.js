@@ -10,11 +10,13 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import { getColorByDocType, getCompanyByTickerUniverse } from './FillingsHelper';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
 
 export default function FillingCompanyPriceOverlay() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { sidebarToggle, sidebarToggleMobile } = useSelector(state => state.ThemeOptions);
   const { priceOverlay, fillingsData } = useSelector(state => state.Filings);
   let data = priceOverlay.map(v => {
     return [parseInt(new Date(v.as_of_date).getTime()), parseFloat(v.close_price)];
@@ -53,7 +55,7 @@ export default function FillingCompanyPriceOverlay() {
 
   const options = {
     rangeSelector: {
-      selected: 3
+      selected: 4
     },
 
     title: {
@@ -95,6 +97,9 @@ export default function FillingCompanyPriceOverlay() {
       {
         type: 'flags',
         data: newData,
+        dataLabels: {
+          allowOverlap: true
+        },
         // color: Highcharts.getOptions().colors[0], // same as onSeries
         // fillColor: Highcharts.getOptions().colors[0],
         fillColor: newData.color,
@@ -104,6 +109,7 @@ export default function FillingCompanyPriceOverlay() {
               let selectedItem = getCompanyByTickerUniverse(event.point.options.ticker, 'all');
               let company = formatComapnyData(selectedItem);
               company.recentId = event.point.options.document_id;
+              dispatch(setSentimentResult(null, null));
               dispatch(setSelectedWatchlist(company));
               history.push('/sentiment');
             }
@@ -123,6 +129,14 @@ export default function FillingCompanyPriceOverlay() {
       }
     ]
   };
+
+  React.useEffect(() => {
+    if (Highcharts.charts[0]) {
+      setTimeout(() => {
+        Highcharts.charts[0].reflow();
+      }, [400]);
+    }
+  }, [sidebarToggle, sidebarToggleMobile]);
   return (
     <Paper className={clsx('app-page-title')}>
       <div style={{ height: '100%', width: '100%' }}>
