@@ -1,5 +1,5 @@
 import React from 'react';
-import GuidelineVideo from './GuidelineVideo';
+import GuidelineVideo from './GuidelineVideos';
 import { videosData } from './videosData';
 
 const Guidelines = () => {
