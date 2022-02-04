@@ -7,7 +7,6 @@ import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
 import { upperCase, get } from 'lodash';
 import Rainbow from './Rainbow';
-
 const useStyles = makeStyles(theme => ({
   lvl: {
     fontSize: 20
@@ -72,7 +71,7 @@ const SentimentSection = props => {
     n: 100
   });
   let yellowTextCount = 0;
-  const { data, isLoading, selectedHeadingId, sentiment, isFromFilling } = useSelector(state => state.Sentiment);
+  const { data, isLoading, selectedHeadingId, sentiment } = useSelector(state => state.Sentiment);
   useEffect(() => {
     if (selectedHeadingId && data) {
       setTimeout(() => {
@@ -124,7 +123,6 @@ const SentimentSection = props => {
       return clr;
     }
   };
-
   return (
     <div>
       {isLoading ? (
@@ -162,11 +160,7 @@ const SentimentSection = props => {
                                             key={`4_${i}`}
                                             className={clsx(classes.content, classes.searchResultText)}
                                             style={{
-                                              backgroundColor: `${
-                                                isFromFilling
-                                                  ? 'white'
-                                                  : '#' + childClr(c.attributes ? c.attributes.v : 0)
-                                              }`
+                                              backgroundColor: '#' + childClr(c.attributes ? c.attributes.v : 0)
                                             }}>
                                             {c.elements
                                               ? c.elements.map((d, e) => {
@@ -185,19 +179,34 @@ const SentimentSection = props => {
                                                                     key={`4_${k}`}
                                                                     style={{
                                                                       backgroundColor: `${
-                                                                        isFromFilling ? 'white' : 'orange'
+                                                                        d.attributes
+                                                                          ? d.attributes.class === 'yellowColor'
+                                                                            ? 'orange'
+                                                                            : '#' +
+                                                                              childClr(
+                                                                                d.attributes ? d.attributes.v : 0
+                                                                              )
+                                                                          : '#' +
+                                                                            childClr(d.attributes ? d.attributes.v : 0)
                                                                       }`,
                                                                       paddingLeft: 2,
                                                                       paddingRight: 2,
-                                                                      borderRadius: 4,
+                                                                      //borderRadius: 4,
+                                                                      borderRadius: `${
+                                                                        d.attributes
+                                                                          ? d.attributes.class === 'yellowColor'
+                                                                            ? 4
+                                                                            : 0
+                                                                          : 0
+                                                                      }`,
                                                                       scrollMarginTop: '300px'
                                                                     }}>
-                                                                    {g.text ? g.text : null}
+                                                                    {g.text ? g.text : g.name === 'br' ? <br /> : ''}
                                                                   </span>
                                                                 );
                                                               })
                                                             : null}
-                                                          {d.name ? (
+                                                          {d.name === 'br' ? (
                                                             <>
                                                               <br /> <br />{' '}
                                                             </>

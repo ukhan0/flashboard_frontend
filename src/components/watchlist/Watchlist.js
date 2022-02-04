@@ -23,6 +23,12 @@ import {
   setIsNewWatchlistDataAvailable,
   setIsTickerSelected
 } from '../../reducers/Watchlist';
+import {
+  setCompanyFillingData,
+  setCompanyFillingGraphData,
+  setCompanyFillingRevenueData,
+  setCompanyPriceOverlay
+} from '../../reducers/Filings';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
@@ -140,6 +146,10 @@ const Watchlist = props => {
   }, [selectedFileType, selectedMetric, watchlistData, isColorEnable]);
 
   const onColumnClick = (rowData, columnId) => {
+    dispatch(setCompanyFillingData([]));
+    dispatch(setCompanyFillingGraphData([]));
+    dispatch(setCompanyFillingRevenueData([]));
+    dispatch(setCompanyPriceOverlay([]));
     dispatch(setHeadingRedirect(null));
     rowData.documentType = selectedFileType;
     if (columnId === 'actions') {

@@ -8,6 +8,7 @@ import FillingRevenueGraph from './FilingsCompanyRevenueGraph';
 import config from '../../config/config';
 import { sectionIds } from './FillingsHelper';
 import { useHistory } from 'react-router-dom';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setIsFromfilling, setSelectedHeadingId } from '../../reducers/Sentiment';
 Highcharts.setOptions({
   lang: {
@@ -17,6 +18,7 @@ Highcharts.setOptions({
 
 const FilingsDetailsGraph = props => {
   const { fillingsGraphData } = useSelector(state => state.Filings);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const history = useHistory();
   let hideGraphs = config.hideGraph;
@@ -24,9 +26,11 @@ const FilingsDetailsGraph = props => {
   let risks = [];
   let notes = [];
   let dates = [];
+  let document_id = [];
   if (!isEmpty(fillingsGraphData)) {
     dates = fillingsGraphData.map(s => s.document_date);
-    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', 0));
+    document_id = fillingsGraphData.map(s => s.document_id);
+    mdas = fillingsGraphData.map(s => get(s, 'mda.wwwccc', 0), { d: 12 });
     risks = fillingsGraphData.map(s => get(s, 'risk_factors.wwwccc', 0));
     notes = fillingsGraphData.map(s => get(s, 'notes.wwwccc', 0));
   }
@@ -38,7 +42,8 @@ const FilingsDetailsGraph = props => {
       text: null
     },
     xAxis: {
-      categories: dates
+      categories: dates,
+      data: document_id
     },
     yAxis: {
       visible: false,
@@ -80,9 +85,15 @@ const FilingsDetailsGraph = props => {
           events: {
             click: function() {
               if (this) {
-                dispatch(setIsFromfilling(true));
-                dispatch(setSelectedHeadingId(sectionIds[this.color] || ''));
-                history.push('/sentiment');
+                let recentId = this.series.chart.options.xAxis[0].data[this.index];
+                if (recentId) {
+                  // recentId = recentId.toString().replace('9000', '');
+                  selectedItem.recentId = recentId;
+                  dispatch(setSelectedWatchlist(selectedItem));
+                  dispatch(setIsFromfilling(true));
+                  dispatch(setSelectedHeadingId(sectionIds[this.series.name] || ''));
+                  history.push('/sentiment');
+                }
               }
             }
           }

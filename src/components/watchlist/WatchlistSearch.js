@@ -99,7 +99,10 @@ const WatchlistTopicSearch = props => {
             onChange={e => handleSearchTextChange(e.target.value)}
             fullWidth
             size="small"
-            autoComplete="new-password"
+            inputProps={{
+              ...params.inputProps,
+              autoComplete: 'new-password',
+            }}
           />
         )}
       />

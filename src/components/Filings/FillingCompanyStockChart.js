@@ -12,7 +12,7 @@ import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
-
+import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 export default function FillingCompanyPriceOverlay() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -21,16 +21,10 @@ export default function FillingCompanyPriceOverlay() {
   let data = priceOverlay.map(v => {
     return [parseInt(new Date(v.as_of_date).getTime()), parseFloat(v.close_price)];
   });
-
   const newData = fillingsData.map(v => {
-    let y = moment(v.document_date).format('YYYY');
-    let m = moment(v.document_date).format('M');
-    let d = moment(v.document_date).format('D');
-    let date = Date.UTC(parseInt(y), parseInt(m - 1), parseInt(d));
+    let date = new Date(dateFormaterMoment(parseDateStrMoment(v.document_date.split('.')[0]))).getTime();
     let rename = renameDocumentTypes(v.document_type);
-
     let title = rename;
-
     if (rename === 'Earning Call') {
       title = 'EC';
     } else if (title === '8-K') {
@@ -53,6 +47,8 @@ export default function FillingCompanyPriceOverlay() {
     };
   });
 
+  let latestDate = newData[newData.length - 1];
+
   const options = {
     rangeSelector: {
       selected: 4
@@ -60,6 +56,9 @@ export default function FillingCompanyPriceOverlay() {
 
     title: {
       text: 'Timeline'
+    },
+    xAxis: {
+      max: latestDate ? latestDate.x : new Date().getTime()
     },
 
     yAxis: {

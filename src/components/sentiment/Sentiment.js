@@ -16,7 +16,7 @@ import { get, cloneDeep } from 'lodash';
 import config from '../../config/config';
 import convert from 'xml-js';
 import { createHash } from '../../utils/helpers';
-import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
+import { setSentimentResult } from '../../reducers/Sentiment';
 import { visitOutlineObjTable, visitOutlineObj, removeHeadingTags } from './SentimentHelpers';
 
 const useStyles = makeStyles(theme => ({
@@ -60,7 +60,6 @@ const Sentiment = () => {
               company.recentId = getQueryParams.get('recentId');
               dispatch(setSentimentResult(null, null));
               dispatch(setSelectedWatchlist(company));
-              dispatch(setIsFromfilling(true));
             }
           });
         } else {
@@ -71,7 +70,6 @@ const Sentiment = () => {
           company.ticker = getQueryParams.get('ticker');
           dispatch(setSentimentResult(null, null));
           dispatch(setSelectedWatchlist(company));
-          dispatch(setIsFromfilling(true));
         }
       }
     }

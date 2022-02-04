@@ -17,7 +17,8 @@ import {
   resetAllSearchParams,
   setBackDropOnCompanyClick,
   setSearchResultHighlights,
-  setSearchResults
+  setSearchResults,
+  setIsUnsavedSearch
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, deleteSearch, performTopicTweetsSearchAggregate } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
@@ -136,6 +137,7 @@ export default function TopicSearchHistory(props) {
   };
 
   const handleSearch = (e, s, showLoader = true) => {
+    dispatch(setIsUnsavedSearch(false));
     preventParentClick(e);
     setSearchParams(s, showLoader);
     props.handleClose();
@@ -163,7 +165,7 @@ export default function TopicSearchHistory(props) {
     if (e) {
       preventParentClick(e);
     }
-
+    dispatch(setIsUnsavedSearch(false));
     dispatch(setShowUpdateButton(true));
     dispatch(setShowComposeNew(true));
     dispatch(setBackDropOnCompanyClick(false));

@@ -367,7 +367,7 @@ const colDefs = [
     }
   },
   {
-    headerName: 'Word Count Percentage',
+    headerName: 'Word Count Change Percentage',
     headerTooltip:
       "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
     field: 'wordCountChangePercent',
@@ -401,11 +401,11 @@ const colDefs = [
   {
     headerName: 'Word Count Change Quintile',
     headerTooltip:
-      'Quintile of the security for that Factor<br />' +
-      'Lowest – First quintile of the factor (1st - 20th percentile)<br />' +
-      'Low – Second quintile of the factor (21st - 40th percentile)<br />' +
-      'Median – Third quintile of the factor (41st - 60th percentile)<br />' +
-      'High – Fourth quintile of the factor (61st - 80th percentile)<br />' +
+      'Quintile of the security for that Factor , ' +
+      'Lowest – First quintile of the factor (1st - 20th percentile) ,  ' +
+      'Low – Second quintile of the factor (21st - 40th percentile) ,  ' +
+      'Median – Third quintile of the factor (41st - 60th percentile) ,  ' +
+      'High – Fourth quintile of the factor (61st - 80th percentile)  , ' +
       'Highest – Fifth quintile of the factor (81st - 100th percentile)',
     field: 'wordCountChangePercentWord',
     colId: 'wordCountChangePercentWord',

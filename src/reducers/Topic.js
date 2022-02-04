@@ -57,6 +57,7 @@ export const SET_TWEETS_MAP_DATA = 'TOPIC/SET_TWEETS_MAP_DATA';
 export const SET_TWEETS_COUNTRY_MAP_DATA = 'TOPIC/SET_TWEETS_COUNTRY_MAP_DATA';
 export const SET_TWEETS_COUNTRY_STATES_MAP_DATA = 'TOPIC/SET_TWEETS_COUNTRY_STATES_MAP_DATA';
 export const SET_TWEETS_TABLE_DATA = 'TOPIC/SET_TWEETS_TABLE_DATA';
+export const SET_IS_UNSAVED_SEARCH = 'TOPIC/SET_IS_UNSAVED_SEARCH';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -335,6 +336,10 @@ export const setTweetsTableData = tweetsTableData => ({
   type: SET_TWEETS_TABLE_DATA,
   tweetsTableData
 });
+export const setIsUnsavedSearch = isUnsavedSearch => ({
+  type: SET_IS_UNSAVED_SEARCH,
+  isUnsavedSearch
+});
 
 const searchDefaultState = () => ({
   searchText: '',
@@ -392,7 +397,8 @@ const searchDefaultState = () => ({
   isSimpleSearch: true,
   simpleSearchTextArray: [],
   ignoreSearchTextArray: [],
-  searchTextWithAnd: []
+  searchTextWithAnd: [],
+  isUnsavedSearch: false
 });
 
 const getDefaultState = () => {
@@ -596,6 +602,8 @@ export default function reducer(
       return { ...state, tweetsCountryStatesMapData: action.tweetsCountryStatesMapData };
     case SET_TWEETS_TABLE_DATA:
       return { ...state, tweetsTableData: action.tweetsTableData };
+    case SET_IS_UNSAVED_SEARCH:
+      return { ...state, isUnsavedSearch: action.isUnsavedSearch };
     default:
       break;
   }

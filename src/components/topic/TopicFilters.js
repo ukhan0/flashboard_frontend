@@ -24,7 +24,8 @@ import {
   resetResultsPage,
   cancelExistingHightlightsCalls,
   setIsTopicEmailAlertEnable,
-  setIsSimpleSearch
+  setIsSimpleSearch,
+  setIsUnsavedSearch
 } from '../../reducers/Topic';
 import { searchVersionTypes } from '../../config/filterTypes';
 
@@ -80,7 +81,7 @@ const TopicFilters = props => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
     dispatch(performTopicTweetsSearchAggregate(true, true));
-
+    dispatch(setIsUnsavedSearch(false));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
@@ -127,6 +128,10 @@ const TopicFilters = props => {
 
   const handleClose = () => {
     setOpenThemeDialog(false);
+  };
+  const handleSearch = () => {
+    props.onSearch();
+    dispatch(setIsUnsavedSearch(true));
   };
   let isButtonActive = true;
   if (searchText.length > 2 || simpleSearchTextArray.length > 0 || ignoreSearchTextArray.length > 0) {
@@ -249,7 +254,7 @@ const TopicFilters = props => {
               style={{ width: '100px' }}
               variant="contained"
               color="primary"
-              onClick={() => props.onSearch()}>
+              onClick={() => handleSearch()}>
               Search
             </Button>
           </Grid>

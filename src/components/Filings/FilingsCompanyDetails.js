@@ -25,10 +25,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentCompanyDetails = props => {
-  const { fillingsData } = useSelector(state => state.Filings);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
-  const companyDetail = get(fillingsData, '[0]', []);
 
   return (
     <Fragment>
@@ -36,7 +34,7 @@ const SentimentCompanyDetails = props => {
         <Box className={classes.tickerLogo} mr={2}>
           <Avatar
             alt="-"
-            src={`${config.companyLogoPath}${get(companyDetail, 'ticker', null)}.png`}
+            src={`${config.companyLogoPath}${get(selectedItem, 'ticker', null)}.png`}
             className={classes.logo}
           />
         </Box>
@@ -44,7 +42,7 @@ const SentimentCompanyDetails = props => {
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <h5>{get(companyDetail, 'company_name', null)}</h5>
+                <h5>{get(selectedItem, 'companyName', null)}</h5>
               </Grid>
             </Grid>
           </Grid>

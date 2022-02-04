@@ -28,9 +28,9 @@ export const getColorByDocType = type => {
 };
 
 export const sectionIds = {
-  '#ff98a4': 1245845125803209,
-  '#7fc8fd': 5402784905830826,
-  '#7fe4a6': 2862340249443704
+  RISK: 1245845125803209,
+  NOTES: 5402784905830826,
+  MDA: 2862340249443704
 };
 const stateKey = 'filling::state';
 export const storeColumnsState = state => {

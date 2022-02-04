@@ -31,7 +31,7 @@ const columnDefs = [
     field: 'document_type',
     menuTabs: false,
     editable: false,
-    sortable: false,
+    sortable: true,
     flex: 1,
     colId: 'documentType',
     valueFormatter: params => renameDocumentTypes(params.data.document_type)
@@ -46,26 +46,26 @@ const columnDefs = [
     colId: 'documentDate',
     // filter: 'agDateColumnFilter',
     valueFormatter: params =>
-      params.data.document_date ? dateFormaterMoment(parseDateStrMoment(params.data.document_date)) : ''
+      params.data.document_date ? dateFormaterMoment(parseDateStrMoment(params.data.document_date.split('.')[0])) : ''
   },
   {
     headerName: 'Period Date',
     field: 'period_date',
     menuTabs: false,
     editable: false,
-    sortable: false,
+    sortable: true,
     flex: 1,
     colId: 'periodDate',
     // filter: 'agDateColumnFilter',
     valueFormatter: params =>
-      params.data.period_date ? dateFormaterMoment(parseDateStrMoment(params.data.period_date)) : ''
+      params.data.period_date ? dateFormaterMoment(parseDateStrMoment(params.data.period_date.split('.')[0])) : ''
   },
   {
     headerName: 'Sentiment',
     field: 'sentiment',
     menuTabs: false,
     editable: false,
-    sortable: false,
+    sortable: true,
     flex: 1,
     colId: 'sentiment',
     type: 'numericColumn',
@@ -78,7 +78,7 @@ const columnDefs = [
     colId: 'WordCount',
     menuTabs: false,
     editable: false,
-    sortable: false,
+    sortable: true,
     type: 'numericColumn',
     filter: 'agNumberColumnFilter'
   }

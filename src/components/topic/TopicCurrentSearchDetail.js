@@ -56,7 +56,9 @@ const TopicDialog = props => {
     selectedDocumentTypes,
     openTopicSearchDialog,
     selectedSearch,
-    savedSearches
+    savedSearches,
+    isUnsavedSearch,
+    searchLabel
   } = useSelector(state => state.Topic);
   const isSuggestions = currentSearchDetail.selectedSuggestions;
   let selectedSug = [];
@@ -88,14 +90,19 @@ const TopicDialog = props => {
   const handleEdit = e => {
     preventParentClick(e);
 
-    const searchObj = savedSearches.find(s => selectedSearch.searchId === s.searchId);
-    if (!searchObj) {
-      return;
+    if (!isUnsavedSearch) {
+      const searchObj = savedSearches.find(s => selectedSearch.searchId === s.searchId);
+      if (!searchObj) {
+        return;
+      }
+      dispatch(setShowUpdateButton(true));
+      dispatch(setShowComposeNew(true));
+      dispatch(setBackDropOnCompanyClick(false));
+      setSearchParamsEdit(searchObj);
+    } else {
+      dispatch(setSearchLabel(searchLabel));
+      dispatch(setOpenTopicSearchDialog(true));
     }
-    dispatch(setShowUpdateButton(true));
-    dispatch(setShowComposeNew(true));
-    dispatch(setBackDropOnCompanyClick(false));
-    setSearchParamsEdit(searchObj);
   };
 
   return (
