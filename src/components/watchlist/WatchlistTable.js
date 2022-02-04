@@ -26,6 +26,7 @@ import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import { checkIsFilterActive } from './WatchlistHelpers';
 import { setIsFilterActive } from '../../reducers/Watchlist';
+import { getPriorityKeyValue } from '../../utils/helpers'
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -234,7 +235,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(get(params, 'data.sentiment', null)),
-          word: changeWordGetter(get(params, 'data.sentimentWord', null))
+          word: changeWordGetter(getPriorityKeyValue(params, "sentimentWord"))
         };
       }
       return sentimentObj;
@@ -260,7 +261,7 @@ const colDefs = [
     valueGetter: params => {
       return {
         number: parseNumber(get(params, 'data.sentiment', null)),
-        word: changeWordGetter(get(params, 'data.sentimentWord', null))
+        word: changeWordGetter(getPriorityKeyValue(params, "sentimentWord"))
       };
     },
     valueFormatter: params => {
@@ -268,7 +269,9 @@ const colDefs = [
     },
     comparator: numberWordComparator,
     filterParams: {
-      valueGetter: params => get(params, 'data.sentimentWord', null)
+      valueGetter: params => {
+        return getPriorityKeyValue(params, "sentimentWord")
+      }
     },
     cellRenderer: 'WordStatusRenderer'
   },
@@ -286,7 +289,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
+          word: changeWordGetter(getPriorityKeyValue(params, "sentimentChangeWord"))
         };
       }
       return sentimentObj;
@@ -315,7 +318,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
+          word: changeWordGetter(getPriorityKeyValue(params, "sentimentChangeWord"))
         };
       }
       return sentimentObj;
@@ -325,7 +328,9 @@ const colDefs = [
     },
     comparator: numberWordComparator,
     filterParams: {
-      valueGetter: params => get(params, 'data.sentimentChangeWord', null)
+      valueGetter: params => {
+        return getPriorityKeyValue(params, "sentimentChangeWord")
+      }
     },
     cellRenderer: 'WordStatusRenderer'
   },
@@ -343,7 +348,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+          word: changeWordGetter(getPriorityKeyValue(params, "wordCountChangePercentWord"))
         };
       }
       return sentimentObj;
@@ -381,7 +386,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+          word: changeWordGetter(getPriorityKeyValue(params, "wordCountChangePercentWord"))
         };
       }
       return sentimentObj;
@@ -416,7 +421,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+          word: changeWordGetter(getPriorityKeyValue(params, "wordCountChangePercentWord"))
         };
       }
       return sentimentObj;
@@ -426,7 +431,9 @@ const colDefs = [
     },
     comparator: numberWordComparator,
     filterParams: {
-      valueGetter: params => get(params, 'data.wordCountChangePercentWord', null)
+      valueGetter: params => {
+        return getPriorityKeyValue(params, "wordCountChangePercentWord")
+      }
     },
     cellRenderer: 'WordStatusRenderer'
   }

@@ -36,11 +36,6 @@ const Cache = () => {
       .get(`${apiUrl}=all`)
       .then(response => {
         let data = get(response, 'data.data.content', []);
-        data.forEach(element => {
-          delete element['c'];
-          delete element['d'];
-        });
-
         storeCompleteWatchlist(data);
         setDataCachedDay();
         dispatch(setCompleteDataLoadedFlag(true));
