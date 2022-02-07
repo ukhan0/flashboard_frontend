@@ -78,13 +78,20 @@ const visitOutlineObjTable = (acc, obj, lvl, path) => {
       }
     }
     let li = {};
-    if (prop.includes('-ht')) {
+    if (prop.includes('-ht') || (detectedLevel === "ex" && prop==="l1")) {
+      if(prop.includes('-ht') && detectedLevel === "ex"){
+        continue;
+      }
       prop = obj[prop];
       path += 'id' + detectedLevel.replaceAll(' ', '_').replaceAll('.', '');
       path = path.toLowerCase();
       var detectlvlHdng = detectlvlHeading(obj);
       if (detectlvlHdng) {
-        prop = obj[detectlvlHdng + '-ht'];
+        if(detectedLevel === "ex"){
+          prop = obj[detectlvlHdng];
+        } else {
+          prop = obj[detectlvlHdng + '-ht'];
+        }
       }
       if (prop !== 'Headingtag' && prop !== 'Sectiontext' && prop !== 'data') {
         if (lvl === 1 && prop.includes('.htm')) {
@@ -138,6 +145,9 @@ const detectSecTextFromCurrentObj = obj => {
 
 const visitOutlineObj = (acc, obj, lvl, path) => {
   lvl += 1;
+  if(obj["ex"]){
+    obj["l1-ht"] = obj["l1"]
+  }
   for (let prop in obj) {
     let removeHeadingFromContent;
     let detectedLevel = detectlevelCurrentObj(obj);
