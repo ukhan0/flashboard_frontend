@@ -169,7 +169,7 @@ const visitOutlineObj = (acc, obj, lvl, path) => {
     if (!isNaN(prop)) {
       visitOutlineObj(acc, obj[prop], lvl, path);
     }
-    if (prop.includes('-ht')) {
+    if (prop.includes('-ht') || prop.includes('ht')) {
       prop = obj[prop];
       let objIdx = detectObjFromCurrentObj(obj);
       let stIdx = detectSecTextFromCurrentObj(obj);
