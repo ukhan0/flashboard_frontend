@@ -1,9 +1,5 @@
 import axios from 'axios';
-import {
-  setSentimentResult,
-  setIsLoading,
-  setSentimentHighlights
-} from '../../reducers/Sentiment';
+import { setSentimentResult, setIsLoading, setSentimentHighlights } from '../../reducers/Sentiment';
 
 import { setFillingsSearchText } from '../../reducers/Filings';
 import { get } from 'lodash';
@@ -14,6 +10,7 @@ import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
+    const { searchIndex } = getState().Topic;
     const { fillingsSearchText } = getState().Filings;
 
     const {
@@ -48,7 +45,7 @@ export const getSentimentData = () => {
         formData.append('search_term', searchTerm);
       }
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=filling_sentiment4`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=${searchIndex}`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);

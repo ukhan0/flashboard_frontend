@@ -80,9 +80,7 @@ const TopicSearchResults = () => {
   const classes = useStyles();
   const resultsSection = useRef(null);
   const history = useHistory();
-  const { isSearchLoading, searchResultHighlights, selectedCompanyName, searchIndex } = useSelector(
-    state => state.Topic
-  );
+  const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -146,9 +144,6 @@ const TopicSearchResults = () => {
   }, [selectedCompanyName, summaryByCompany]);
 
   const goToSentimentScreen = (companyDocumentResultData, content, t) => {
-    if (searchIndex === 'filling_int_sentiment4') {
-      return;
-    }
     dispatch(setIsFromfilling(false));
     const actualTitle = t.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
