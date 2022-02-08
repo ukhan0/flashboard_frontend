@@ -10,6 +10,7 @@ import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTa
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
+import { setIsFromThemex } from '../../reducers/Topic';
 import { getCompanyByTickerUniverse, storeColumnsState, getColumnState } from './FillingsHelper';
 import FillingsService from './FillingsService';
 import { cloneDeep } from 'lodash';
@@ -98,6 +99,7 @@ export default function FilingsResultsTable() {
       dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(company));
       dispatch(setIsFromfilling(true));
+      dispatch(setIsFromThemex(false));
       history.push('/sentiment');
     }
   };

@@ -47,7 +47,7 @@ import { getWatchlist } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
-import { setHeadingRedirect } from '../../reducers/Topic';
+import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 
 const compileTikcerData = selectedSymbols => {
@@ -146,6 +146,7 @@ const Watchlist = props => {
   }, [selectedFileType, selectedMetric, watchlistData, isColorEnable]);
 
   const onColumnClick = (rowData, columnId) => {
+    dispatch(setIsFromThemex(false));
     dispatch(setCompanyFillingData([]));
     dispatch(setCompanyFillingGraphData([]));
     dispatch(setCompanyFillingRevenueData([]));

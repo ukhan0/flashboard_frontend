@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 const SentimentContentSection = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
-  const { searchIndex } = useSelector(state => state.Topic);
+  const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -84,7 +84,11 @@ const SentimentContentSection = props => {
           </Box>
         ) : null}
       </div>
-      {hideCards === 'true' && !searchIndex === 'filling_int_sentiment4' ? <SentimentCard /> : null}
+      {hideCards === 'true' ? (
+        searchIndex === 'filling_int_sentiment4' && isFromThemex ? null : (
+          <SentimentCard />
+        )
+      ) : null}
       <div className={classes.drawerOpener}>
         {isTocButton ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>

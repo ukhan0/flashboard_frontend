@@ -11,7 +11,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
 import { getCompleteWatchlist } from '../../utils/helpers';
-import { setIsFromSideBar } from '../../reducers/Topic';
+import { setIsFromSideBar, setIsFromThemex } from '../../reducers/Topic';
 import {
   setSelectedHeadingId,
   setIsApiResponseReceived,
@@ -186,6 +186,7 @@ const TopicSearchResults = () => {
       );
     }
     if (isGoToSentiment) {
+      dispatch(setIsFromThemex(true));
       history.push('/sentiment');
     }
   };

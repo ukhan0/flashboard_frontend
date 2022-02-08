@@ -15,6 +15,7 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
 import { getCompanyByTickerUniverse, getColorByDocType } from './FillingsHelper';
+import { setIsFromThemex } from 'reducers/Topic';
 
 export default function FilingsTimelineChart() {
   const history = useHistory();
@@ -93,6 +94,7 @@ export default function FilingsTimelineChart() {
                 company.recentId = this.document_id;
                 dispatch(setSentimentResult(null, null));
                 dispatch(setSelectedWatchlist(company));
+                dispatch(setIsFromThemex(false));
                 history.push('/sentiment');
               }
             }

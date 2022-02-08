@@ -13,6 +13,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
+import { setIsFromThemex } from 'reducers/Topic';
 export default function FillingCompanyPriceOverlay() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -110,6 +111,7 @@ export default function FillingCompanyPriceOverlay() {
               company.recentId = event.point.options.document_id;
               dispatch(setSentimentResult(null, null));
               dispatch(setSelectedWatchlist(company));
+              dispatch(setIsFromThemex(false));
               history.push('/sentiment');
             }
           }
