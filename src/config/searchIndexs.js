@@ -1,7 +1,7 @@
 export default [
   {
     label: 'Domestic Filings',
-    value: 'filling_sentiment4'
+    value: 'filling_sentiment5'
   },
   {
     label: 'Global Filings',

@@ -11,7 +11,7 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex } from '../../reducers/Topic';
-import { getCompanyByTickerUniverse, storeColumnsState, getColumnState } from './FillingsHelper';
+import { storeColumnsState, getColumnState } from './FillingsHelper';
 import FillingsService from './FillingsService';
 import { cloneDeep } from 'lodash';
 
@@ -89,15 +89,14 @@ export default function FilingsResultsTable() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   let fillingsDataCopy = cloneDeep(fillingsData);
   const cellClicked = async params => {
     if (params.data) {
-      let selectedItem = getCompanyByTickerUniverse(params.data.ticker, 'all');
-      let company = formatComapnyData(selectedItem);
-      company.recentId = params.data.document_id;
-      company.documentType = params.data.document_type;
+      selectedItem.recentId = params.data.document_id;
+      selectedItem.documentType = params.data.document_type;
       dispatch(setSentimentResult(null, null));
-      dispatch(setSelectedWatchlist(company));
+      dispatch(setSelectedWatchlist(selectedItem));
       dispatch(setIsFromfilling(true));
       dispatch(setIsFromThemex(false));
       history.push('/sentiment');

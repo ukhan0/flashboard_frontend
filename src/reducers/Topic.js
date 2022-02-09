@@ -352,7 +352,7 @@ const searchDefaultState = () => ({
   tweetsCountryMapData: {},
   tweetsData: [],
   tweetsMapData: [],
-  searchIndex: 'filling_sentiment4',
+  searchIndex: 'filling_sentiment5',
   startDate: subMonths(startOfMonth(new Date()), 12),
   endDate: endOfMonth(new Date()),
   orderBy: 'desc',

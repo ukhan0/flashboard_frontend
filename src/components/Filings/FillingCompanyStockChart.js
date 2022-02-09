@@ -7,8 +7,7 @@ import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
 import moment from 'moment';
 import { renameDocumentTypes } from '../topic/topicHelpers';
-import { getColorByDocType, getCompanyByTickerUniverse } from './FillingsHelper';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getColorByDocType } from './FillingsHelper';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +18,7 @@ export default function FillingCompanyPriceOverlay() {
   const history = useHistory();
   const { sidebarToggle, sidebarToggleMobile } = useSelector(state => state.ThemeOptions);
   const { priceOverlay, fillingsData } = useSelector(state => state.Filings);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   let data = priceOverlay.map(v => {
     return [parseInt(new Date(v.as_of_date).getTime()), parseFloat(v.close_price)];
   });
@@ -106,11 +106,9 @@ export default function FillingCompanyPriceOverlay() {
         events: {
           click: function(event) {
             if (event) {
-              let selectedItem = getCompanyByTickerUniverse(event.point.options.ticker, 'all');
-              let company = formatComapnyData(selectedItem);
-              company.recentId = event.point.options.document_id;
+              selectedItem.recentId = event.point.options.document_id;
               dispatch(setSentimentResult(null, null));
-              dispatch(setSelectedWatchlist(company));
+              dispatch(setSelectedWatchlist(selectedItem));
               dispatch(setIsFromThemex(false));
               history.push('/sentiment');
             }
