@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TickerLogo(props) {
+function TickerLogo(props) {
   const classes = useStyles();
 
   return (
@@ -34,3 +34,9 @@ export default function TickerLogo(props) {
     </Box>
   );
 }
+
+function areEqual(prevProps, nextProps) {
+ return true;
+}
+
+export default React.memo(TickerLogo, areEqual)

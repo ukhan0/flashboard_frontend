@@ -545,23 +545,16 @@ const WatchlistTable = props => {
     }
     gridApi.onFilterChanged();
   };
-
-  const cellMouseOverEvent = () => {
-    // if (!gridApi) {
-    //   return;
-    // }
-    // const isToolPanel = gridApi.isToolPanelShowing();
-    // if (isToolPanel) {
-    //   gridApi.closeToolPanel();
-    // }
-  };
+  
   return (
-    <div onMouseLeave={cellMouseOverEvent} className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact
         sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
+        getRowNodeId={d => d.ticker}
+        immutableData={true}
         quickFilterText={searchText}
         columnDefs={colDefs}
         defaultColDef={defaultColDef}
@@ -577,7 +570,6 @@ const WatchlistTable = props => {
         onColumnMoved={storeColumnsState}
         onColumnVisible={storeColumnsState}
         onSortChanged={storeColumnsState}
-        onCellMouseOver={cellMouseOverEvent}
         suppressScrollOnNewData={true}
         onFilterChanged={storeFilteringState}></AgGridReact>
     </div>

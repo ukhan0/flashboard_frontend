@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function AddRemoveIcon(props) {
+function AddRemoveIcon(props) {
   const [flagStarIcon, setFlagStarIcon] = React.useState(props.value);
   const classes = useStyles();
   const toggle = () => {
@@ -32,3 +32,9 @@ export default function AddRemoveIcon(props) {
     </Tooltip>
   );
 }
+
+function areEqual(prevProps, nextProps) {
+ return prevProps.value === nextProps.value;
+}
+
+export default React.memo(AddRemoveIcon, areEqual)
