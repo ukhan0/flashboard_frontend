@@ -65,15 +65,17 @@ export const createHash = function(str, seed = 0) {
 const convertPriorityTextToInteger = data => {
   const keys_arr = getKeysToConvert();
   const mappingObj = priorityMappingObj(true);
-  data.forEach(element => {
-    delete element['c'];
-    delete element['d'];
-    for (const [key, value] of Object.entries(element)) {
-      if (keys_arr.includes(key)) {
-        element[key] = mappingObj[value];
+    data.forEach(element => {
+      delete element['c'];
+      delete element['d'];
+      for (const [key, value] of Object.entries(element)) {
+        if (keys_arr.includes(key)) {
+          if(value in mappingObj){
+            element[key] = mappingObj[value];
+          }
+        }
       }
-    }
-  });
+    });
   return data;
 };
 
