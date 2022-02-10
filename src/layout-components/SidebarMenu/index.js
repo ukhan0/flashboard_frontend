@@ -59,7 +59,7 @@ const reduceChildRoutes = props => {
         disabled={
           page.label === 'Comparison' || page.label === 'Filings'
             ? selectedItem
-              ? selectedItem.ticker && selectedItem.oldId
+              ? selectedItem.ticker
                 ? page.disabled
                 : true
               : page.disabled

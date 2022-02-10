@@ -366,7 +366,7 @@ const Watchlist = props => {
                   onClick={() => {
                     setConfirmationClearFilterDialog(true);
                   }}>
-                  Clear Filtering
+                  Clear Filters
                 </Button>
               ) : null}
             </Box>

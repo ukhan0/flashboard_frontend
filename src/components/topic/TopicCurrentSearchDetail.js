@@ -20,7 +20,7 @@ import {
   setOpenTopicSearchDialog,
   setBackDropOnCompanyClick
 } from '../../reducers/Topic';
-
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
   dialog: {
     marginLeft: '20px',
@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
 
 const TopicDialog = props => {
   const classes = useStyles();
+  const history = useHistory();
   const {
     currentSearchDetail,
     documentTypes,
@@ -72,6 +73,11 @@ const TopicDialog = props => {
   const displayDateFormat = 'MMMM YYYY';
   const handleOpenTopicDialog = e => {
     preventParentClick(e);
+    let currURL = window.location.href;
+    let afterDomain = currURL.substring(currURL.lastIndexOf('/') + 1);
+    let beforeQueryString = afterDomain.split('?')[0];
+    history.push(`/${beforeQueryString}`);
+
     dispatch(setOpenTopicSearchDialog(!openTopicSearchDialog));
     dispatch(setSelectedIndustries([]));
     dispatch(setShowUpdateButton(false));

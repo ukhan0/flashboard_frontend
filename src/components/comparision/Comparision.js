@@ -4,16 +4,14 @@ import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import ComparisionFilters from './ComparisionFilters';
-import { getComparisionSettings, saveComparisionSettings } from './ComparisionHelper';
+import { getComparisionSettings, saveComparisionSettings, getOldId, getRecentId } from './ComparisionHelper';
 import { get } from 'lodash';
 import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { BeatLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import {
-  setSentimentResult,
-} from '../../reducers/Sentiment';
+import { setSentimentResult } from '../../reducers/Sentiment';
 import FilingsCompanyDetails from '../Filings/FilingsCompanyDetails';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -115,12 +113,11 @@ const Comparision = props => {
       break;
   }
 
-  const oldId = getQueryParams.current.get('oldId')
-    ? getQueryParams.current.get('oldId')
-    : selectedFileType === '10k'
-    ? get(selectedItem, 'oldId10k', null)
-    : get(selectedItem, 'oldId10q', null);
-  const recentId = getQueryParams.current.get('recentId')
+  const oldId = getOldId(getQueryParams, selectedFileType, selectedItem);
+
+  const recentId = getRecentId(getQueryParams, selectedFileType, selectedItem);
+
+  getQueryParams.current.get('recentId')
     ? getQueryParams.current.get('recentId')
     : selectedFileType === '10k'
     ? get(selectedItem, 'recentId10k', null)
