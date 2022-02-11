@@ -56,6 +56,9 @@ const visitOutlineObjTable = (acc, obj, lvl, path) => {
   lvl += 1;
   obj = sortObject(obj);
   // $i = 0;
+  if(obj["l1-ht"] && obj["l1-ht"].includes(".htm")){
+    obj["l1-ht"] = obj["l1"]
+  }
   for (let prop in obj) {
     let detectedLevel = detectlevelCurrentObj(obj);
     if (detectedLevel === 'l4' || detectedLevel.includes('-st')) {
@@ -145,7 +148,7 @@ const detectSecTextFromCurrentObj = obj => {
 
 const visitOutlineObj = (acc, obj, lvl, path) => {
   lvl += 1;
-  if(obj["ex"]){
+  if(obj["ex"] || (obj["l1-ht"] && obj["l1-ht"].includes(".htm"))){
     obj["l1-ht"] = obj["l1"]
   }
   for (let prop in obj) {
@@ -179,7 +182,7 @@ const visitOutlineObj = (acc, obj, lvl, path) => {
     if (!isNaN(prop)) {
       visitOutlineObj(acc, obj[prop], lvl, path);
     }
-    if (prop.includes('-ht') || prop.includes('ht')) {
+    if (prop.includes('ht')) {
       prop = obj[prop];
       let objIdx = detectObjFromCurrentObj(obj);
       let stIdx = detectSecTextFromCurrentObj(obj);
