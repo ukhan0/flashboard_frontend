@@ -223,7 +223,7 @@ const colDefs = [
   },
   {
     headerName: 'Aggregated Sentiment',
-    headerTooltip: `The aggregated sentiment of the parsed text using SMA's proprietary Financial NLP`,
+    headerTooltip: `The aggregated sentiment of the parsed text using \n SMA\`s proprietary Financial NLP`,
     field: 'sentiment',
     width: 112,
     colId: 'sentiment',
@@ -254,7 +254,7 @@ const colDefs = [
   },
   {
     headerName: 'Sentiment Quintile',
-    headerTooltip: 'Value Description',
+    headerTooltip: 'Sentiment Quintile',
     field: 'sentimentWord',
     colId: 'sentimentWord',
     width: 106,
@@ -277,7 +277,7 @@ const colDefs = [
   },
   {
     headerName: 'Sentiment Change',
-    headerTooltip: "The raw change in 'Sentiment' from the company's most recent filing of the same type.",
+    headerTooltip: "The raw change in `Sentiment` from the company`s most recent filing of the same type.",
     field: 'sentimentChange',
     colId: 'sentimentChange',
     type: 'numericColumn',
@@ -308,7 +308,7 @@ const colDefs = [
   },
   {
     headerName: 'Sentiment Change Quintile',
-    headerTooltip: 'Sentiment Change Word',
+    headerTooltip: 'Sentiment Change Quintile',
     field: 'sentimentChangeWord',
     colId: 'sentimentChangeWord',
     width: 118,
@@ -336,7 +336,7 @@ const colDefs = [
   },
   {
     headerName: 'Word Count Change',
-    headerTooltip: `The raw change in Word Count of the parsed text from the company's most recent filing of the same type.`,
+    headerTooltip: `The raw change in Word Count of the parsed text from the company\`s most recent filing of the same type.`,
     field: 'wordCountChange',
     colId: 'wordCountChange',
     type: 'numericColumn',
@@ -374,7 +374,7 @@ const colDefs = [
   {
     headerName: 'Word Count Change Percentage',
     headerTooltip:
-      "The percentage change in Word Count of the parsed text from the company's most recent filing of the same type.",
+      "The percentage change in Word Count of the parsed text from the company`s most recent filing of the same type.",
     field: 'wordCountChangePercent',
     colId: 'wordCountChangePercent',
     type: 'numericColumn',
@@ -571,6 +571,7 @@ const WatchlistTable = props => {
         onColumnVisible={storeColumnsState}
         onSortChanged={storeColumnsState}
         suppressScrollOnNewData={true}
+        enableBrowserTooltips={true}
         onFilterChanged={storeFilteringState}></AgGridReact>
     </div>
   );
