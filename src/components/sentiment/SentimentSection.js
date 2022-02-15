@@ -219,6 +219,13 @@ const SentimentSection = props => {
                                                   );
                                                 })
                                               : null}
+                                            <>
+                                              {c.name === 'br' ? (
+                                                <>
+                                                  <br />
+                                                </>
+                                              ) : null}
+                                            </>
                                           </span>
                                         ) : (
                                           c.text

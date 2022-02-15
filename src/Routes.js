@@ -24,6 +24,7 @@ const Sentiment = lazy(() => import('./components/sentiment'));
 const Filings = lazy(() => import('./components/Filings'));
 const SocialSentiment = lazy(() => import('./components/socialSentiment'));
 const Guideline = lazy(() => import('./components/guidelines'));
+const HomePage = lazy(() => import('./components/homePage'));
 
 const pageVariants = {
   initial: {
@@ -133,7 +134,8 @@ const Routes = () => {
                     '/sentiment',
                     '/topic',
                     '/socialSentiment',
-                    '/guideline'
+                    '/guideline',
+                    '/home'
                   ]}>
                   <LeftSidebar>
                     <Switch location={location} key={location.pathname}>
@@ -150,6 +152,7 @@ const Routes = () => {
                         <Route path="/topic" component={Topic} />
                         <Route path="/socialSentiment" component={SocialSentiment} />
                         <Route path="/guideline" component={Guideline} />
+                        <Route path="/home" component={HomePage} />
                       </motion.div>
                     </Switch>
                   </LeftSidebar>
