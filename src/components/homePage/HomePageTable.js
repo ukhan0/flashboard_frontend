@@ -72,7 +72,6 @@ const columnDefs = [
 ];
 
 export default function HomePageTable() {
-
   const { recentCompaniesData } = useSelector(state => state.HomePage);
   return (
     <Card className="card-box mb-4">

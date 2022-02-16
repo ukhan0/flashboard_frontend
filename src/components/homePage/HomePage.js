@@ -4,7 +4,6 @@ import HomePageTable from './HomePageTable';
 import { getRecentCompaniesData } from './homePageActions';
 import { useDispatch } from 'react-redux';
 import HomeStockChart from './HomePageStockChart';
-
 export default function HomePage() {
   const dispatch = useDispatch();
   React.useEffect(() => {
@@ -19,9 +18,6 @@ export default function HomePage() {
         <Grid item xs={6}>
           <HomeStockChart />
         </Grid>
-        {/* <Grid item xs={4}>
-        <StockChatr/>
-        </Grid> */}
       </Grid>
     </div>
   );
