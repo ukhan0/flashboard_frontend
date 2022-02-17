@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import { Tooltip } from '@material-ui/core';
@@ -21,6 +21,10 @@ function AddRemoveIcon(props) {
       setFlagStarIcon(true);
     }
   };
+
+  useEffect(() => {
+    setFlagStarIcon(props.value)
+  }, [props.value])
 
   return (
     <Tooltip arrow title={flagStarIcon ? 'Remove from Watchlist' : 'Add to Watchlist'}>

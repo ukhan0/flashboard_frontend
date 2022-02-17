@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Grid, Button } from '@material-ui/core';
-import { get, debounce } from 'lodash';
+import { get, debounce, isArray, cloneDeep } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
-import cjson from 'compressed-json';
+// import cjson from 'compressed-json';
 import { Box } from '@material-ui/core';
 import {
   formatData,
@@ -11,7 +11,6 @@ import {
   storeFilteringState,
   getColumnState,
   getFilteringState,
-  syncCachedData
 } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
@@ -21,7 +20,8 @@ import {
   setWatchlistSearchText,
   setSelectedTickerSymbol,
   setIsNewWatchlistDataAvailable,
-  setIsTickerSelected
+  setIsTickerSelected,
+  setCompleteCompaniesData
 } from '../../reducers/Watchlist';
 import {
   setCompanyFillingData,
@@ -46,7 +46,6 @@ import { isObject } from 'lodash';
 import { getWatchlist } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
-import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 
@@ -69,7 +68,9 @@ const Watchlist = props => {
     selectedTickerSymbol,
     isNewWatchListDataAvailable,
     isColorEnable,
-    overwriteCheckBox
+    overwriteCheckBox,
+    completeCompaniesData,
+    isCompleteCompaniesDataLoaded,
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [dataVersion, setDataVersion] = useState(1);
@@ -88,31 +89,49 @@ const Watchlist = props => {
   const [isAgGridActions, setIsAgGridActions] = useState(false);
 
   const searchFromCompleteData = useCallback(() => {
-    const rawData = getCompleteWatchlist();
+    const rawData = completeCompaniesData;
     if (rawData) {
       dispatch(setIsNewWatchlistDataAvailable(true));
       setWatchlistData(formatData(rawData));
     }
-  }, [dispatch]);
+  }, [dispatch, completeCompaniesData]);
+
+  useEffect(() => {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
+
+  const syncCompleteDataOnPage = useCallback(newData => {
+    const rawCompleteData = cloneDeep(completeCompaniesData);
+    if (!rawCompleteData || !isArray(rawCompleteData)) {
+      return;
+    }
+    newData.forEach(nd => {
+      const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+      rawCompleteData[tickerIndex] = nd;
+    });
+    dispatch(setCompleteCompaniesData(rawCompleteData));
+  }, [completeCompaniesData, dispatch])
 
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
       if (selectedUniverse === 'all') {
-        rawData = localStorage.getItem(`watchlist-data-${selectedUniverse}`);
-        if (rawData) {
-          rawData = cjson.decompress.fromString(rawData);
-        }
+        rawData = completeCompaniesData;
       } else {
         setLoading(true);
         rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType));
-        syncCachedData(rawData);
+        syncCompleteDataOnPage(rawData);
         // update cached data of all (Complete) watchlist
         if (!firstTimeLoad.current) {
           dispatch(setIsNewWatchlistDataAvailable(false));
         }
       }
-
+      
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
         setTopicDialogOpen(true);
         dispatch(setCount(count + 1));
@@ -123,7 +142,7 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse, selectedFileType, count, dispatch]);
+  }, [selectedUniverse, completeCompaniesData , syncCompleteDataOnPage , selectedFileType, count, dispatch]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -154,16 +173,23 @@ const Watchlist = props => {
     dispatch(setHeadingRedirect(null));
     rowData.documentType = selectedFileType;
     if (columnId === 'actions') {
+      let updatedTickerDetailIndex = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
+      let watchListDataArr = cloneDeep(watchlistData)
       if (rowData.isTickerActive) {
         if (selectedUniverse === 'watchlist') {
-          let updatedTickerDetail = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
-          watchlistData.splice(updatedTickerDetail, 1);
+          watchListDataArr.splice(updatedTickerDetailIndex, 1);
+          setWatchlistData(watchListDataArr)
+        } else {
+          watchListDataArr[updatedTickerDetailIndex].isTickerActive = false
+          setWatchlistData(watchListDataArr)
         }
         deleteTicker(rowData.ticker);
         dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
       } else {
         // add ticker
+        watchListDataArr[updatedTickerDetailIndex].isTickerActive = true
+        setWatchlistData(watchListDataArr)
         handleUpload(rowData.ticker);
         dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
@@ -192,7 +218,7 @@ const Watchlist = props => {
         fetchData();
       }
     }
-  }, [fetchData, dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
+  }, [fetchData , dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
 
   useEffect(() => {
     firstTimeLoad.current = false;
@@ -208,13 +234,11 @@ const Watchlist = props => {
     let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
     if (updatedTickerDetail !== -1) {
       rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-      storeCompleteWatchlist(rawCompleteData);
-    } else {
-      return;
+      dispatch(setCompleteCompaniesData(rawCompleteData));
     }
   };
   const updateChacheData = (ticker, isTicker) => {
-    let rawCompleteData = getCompleteWatchlist();
+    let rawCompleteData = cloneDeep(completeCompaniesData);
     if (Array.isArray(ticker)) {
       for (let i = 0; i < ticker.length; i++) {
         let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
@@ -222,10 +246,10 @@ const Watchlist = props => {
           rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
         }
       }
+      dispatch(setCompleteCompaniesData(rawCompleteData));
     } else {
       updateTickerValue(rawCompleteData, ticker, isTicker);
     }
-    storeCompleteWatchlist(rawCompleteData);
   };
 
   const deleteTicker = async ticker => {
@@ -371,16 +395,6 @@ const Watchlist = props => {
               ) : null}
             </Box>
             <Grid item>
-              {/* <Button
-                color="primary"
-                variant="contained"
-                className={classes.button}
-                size="small"
-                onClick={() => {
-                  handleOpenAgGridSideBar();
-                }}>
-                Action
-              </Button> */}
               <Button
                 color="primary"
                 variant="contained"

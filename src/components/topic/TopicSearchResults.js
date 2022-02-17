@@ -10,7 +10,6 @@ import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
-import { getCompleteWatchlist } from '../../utils/helpers';
 import { setIsFromSideBar, setIsFromThemex } from '../../reducers/Topic';
 import {
   setSelectedHeadingId,
@@ -22,6 +21,7 @@ import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
 import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
+
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -81,6 +81,7 @@ const TopicSearchResults = () => {
   const resultsSection = useRef(null);
   const history = useHistory();
   const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
+  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -90,6 +91,15 @@ const TopicSearchResults = () => {
   const [y, setY] = useState('');
   const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
+
+  useEffect(() => {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
     const companyNames = uniqBy(allComapnyResults, 'company_name');
@@ -160,8 +170,7 @@ const TopicSearchResults = () => {
     const documentDate = get(companyDocumentResultData, 'document_date', null);
     const documentId = get(companyDocumentResultData, 'document_id', null);
     const ticker = get(companyDocumentResultData, 'ticker', null);
-    const companiesList = getCompleteWatchlist() || [];
-    let company = companiesList.find(c => toLower(c.ticker) === toLower(ticker));
+    let company = completeCompaniesData.find(c => toLower(c.ticker) === toLower(ticker));
     const recentId = fileId.toString().replace('9000', '');
     if (company) {
       company = formatComapnyData(company);

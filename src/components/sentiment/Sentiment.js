@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Grid } from '@material-ui/core';
 import { BeatLoader } from 'react-spinners';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,7 +9,6 @@ import SentimentContentSection from './SentimentContentSection';
 import SentimentTableOfContent from './SentimentTableOfContent';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { getCompanyFilingGraphData } from '../Filings/FillingAction';
 import { get, cloneDeep } from 'lodash';
@@ -32,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Sentiment = () => {
-  const { selectedItem } = useSelector(state => state.Watchlist);
+  const { selectedItem, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const { isPin, data, sentimentRecentId } = useSelector(state => state.Sentiment);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -47,13 +46,30 @@ const Sentiment = () => {
   if (!getQueryParams.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
+
   useEffect(() => {
-    if (!firstTimeLoad.current) {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
+  const getCompanyByTicker = useCallback(async ticker => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        let company = completeCompaniesData.find(sd => sd.ticker === ticker);
+        resolve(cloneDeep(company));
+      }, 100);
+    });
+  },[completeCompaniesData]);
+
+  useEffect(() => {
+    if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
       firstTimeLoad.current = true;
       if (getQueryParams.get('recentId')) {
         let ticker = getQueryParams.get('ticker');
-        let rawData = localStorage.getItem(`watchlist-data-all`);
-        if (rawData) {
+        if (completeCompaniesData) {
           getCompanyByTicker(ticker).then(localSelectedItem => {
             if (localSelectedItem) {
               let company = formatComapnyData(localSelectedItem);
@@ -73,7 +89,7 @@ const Sentiment = () => {
         }
       }
     }
-  }, [dispatch, getQueryParams]);
+  }, [dispatch, getQueryParams, getCompanyByTicker , completeCompaniesData, isCompleteCompaniesDataLoaded]);
 
   useEffect(() => {
     const selectedItemRecentId = get(selectedItem, 'recentId', null);
@@ -84,19 +100,6 @@ const Sentiment = () => {
       }
     }
   }, [dispatch, selectedItem, hideCards, sentimentRecentId]);
-
-  const getCompanyByTicker = async ticker => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let rawData = localStorage.getItem(`watchlist-data-all`);
-        if (rawData) {
-          rawData = cjson.decompress.fromString(rawData);
-        }
-        let company = rawData.find(sd => sd.ticker === ticker);
-        resolve(company);
-      }, 100);
-    });
-  };
 
   const handleSelection = path => {
     setTimeout(() => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
@@ -8,8 +8,6 @@ import clsx from 'clsx';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
-import { getCompleteWatchlist } from '../../utils/helpers';
 import './TopicTableStyles.css';
 
 const useStyles = makeStyles(theme => ({
@@ -80,18 +78,27 @@ const useStyles = makeStyles(theme => ({
 export default function TopicTweetsTable() {
   const classes = useStyles();
   const { tweetsTableData } = useSelector(state => state.Topic);
+  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.WatchList);
 
-  const companiesList = getCompleteWatchlist() || [];
+  useEffect(() => {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
   const getCompanyName = ticker => {
     let companyName = '';
 
-    let company = companiesList.find(c => c.ticker.toLowerCase() === ticker.toLowerCase());
+    let company = completeCompaniesData.find(c => c.ticker.toLowerCase() === ticker.toLowerCase());
 
     if (company) {
       companyName = company.b;
     }
     return companyName;
   };
+
   const tableData = tweetsTableData.map(v => {
     return { companyName: getCompanyName(v.key), ticker: v.key, docCount: v.doc_count };
   });

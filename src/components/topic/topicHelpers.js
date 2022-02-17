@@ -65,7 +65,7 @@ export const removeDuplicateSuggestions = suggestionsObj => {
 export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
     let selected = type.map(v => {
-      if (v === 'FMP-transcript') {
+      if (v.toLowerCase() === 'fmp-transcript') {
         v = 'Earning Call';
       }
       return v;
@@ -77,7 +77,7 @@ export const renameDocumentTypes = type => {
     return selected.join(', ');
   }
 
-  if (type === 'FMP-transcript') {
+  if (type.toLowerCase() === 'fmp-transcript') {
     type = 'Earning Call';
   }
   return type;

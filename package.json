@@ -25,7 +25,6 @@
     "axios": "^0.21.1",
     "chart.js": "2.9.3",
     "clsx": "1.1.0",
-    "compressed-json": "^1.0.16",
     "date-fns": "2.9.0",
     "draft-js": "0.11.4",
     "draftjs-to-html": "0.9.1",
@@ -92,8 +91,8 @@
     "deploy:sma:staging": "aws s3 sync build/ s3://sma-webapp-react --acl public-read --profile flashboard",
     "deploy:sma:live": "aws s3 sync build/ s3://filingsflash.com --acl public-read --profile flashboard",
     "deploy:udt": "aws s3 sync build/ s3://unstructureddataterminal.com --acl public-read --profile flashboard",
-    "bd_staging":"yarn build:sma:staging && yarn deploy:sma:staging",
-    "bd_udt":"yarn build:udt && yarn deploy:udt"
+    "bd_staging": "yarn build:sma:staging && yarn deploy:sma:staging",
+    "bd_udt": "yarn build:udt && yarn deploy:udt"
   },
   "eslintConfig": {
     "extends": "react-app"

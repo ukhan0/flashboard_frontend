@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getCompleteWatchlist } from '../../utils/helpers';
 import { get, debounce } from 'lodash';
 import { setHomePageSelectedItem, setIsLoading } from './../../reducers/HomePage';
 import { useDispatch, useSelector } from 'react-redux';
+
 export default function ComboBox() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const { homePageSelectedItem } = useSelector(state => state.HomePage);
+  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   
+  useEffect(() => {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
   const createOptionLabel = option => {
     let ticker = '';
     ticker = option.ticker;
@@ -27,8 +36,7 @@ export default function ComboBox() {
 
     const searchabletext = text.toLowerCase();
     setLoading(true);
-    const completeWatchlist = getCompleteWatchlist() || [];
-    const filteredWatchlist = completeWatchlist
+    const filteredWatchlist = (completeCompaniesData || [])
       .filter(
         c =>
           get(c, 'b', '')

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState,useEffect } from 'react';
+import { connect , useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, Chip, TextField } from '@material-ui/core';
 import useStyles from './WatchlistTopicStyles';
 import { debounce, get } from 'lodash';
 import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
-import { getCompleteWatchlist } from '../../../utils/helpers';
 
 const createOptionLabel = option => {
   return `${option.ticker} - ${option.name}`;
@@ -15,11 +14,19 @@ const WatchlistTopicSearch = props => {
   const classes = useStyles();
   const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const [availableSymbols, setAvailableSymbols] = useState([]);
+  const { completeCompaniesData, isCompleteCompaniesDataLoaded} = useSelector(state => state.Watchlist);
+
+  useEffect(() => {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
 
   const handleSearchTextChange = debounce(async text => {
-    const completeWatchlist = getCompleteWatchlist() || [];
     const searchabletext = text.toLowerCase();
-    const filteredWatchlist = completeWatchlist
+    const filteredWatchlist = completeCompaniesData
       .filter(
         c =>
           get(c, 'b', '')

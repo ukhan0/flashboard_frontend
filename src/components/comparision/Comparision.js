@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { Typography } from '@material-ui/core';
 import ComparisionFilters from './ComparisionFilters';
 import { getComparisionSettings, saveComparisionSettings, getOldId, getRecentId } from './ComparisionHelper';
 import { get } from 'lodash';
-import cjson from 'compressed-json';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { BeatLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
@@ -27,7 +26,7 @@ const Comparision = props => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
-  const { selectedItem, selectedFileType } = useSelector(state => state.Watchlist);
+  const { selectedItem, selectedFileType, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
@@ -60,8 +59,23 @@ const Comparision = props => {
   if (!getQueryParams.current.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
+
+  const getCompanyByTicker = useCallback(ticker => {
+    let rawData = completeCompaniesData;
+    let company = rawData.find(sd => sd.ticker === ticker);
+    return company;
+  },[completeCompaniesData]);
+
   useEffect(() => {
-    if (!firstTimeLoad.current) {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
+  useEffect(() => {
+    if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
       firstTimeLoad.current = true;
       if (getQueryParams.current.get('recentId')) {
         let ticker = getQueryParams.current.get('ticker');
@@ -73,7 +87,8 @@ const Comparision = props => {
         dispatch(setSelectedWatchlist(company));
       }
     }
-  }, [dispatch]);
+  }, [dispatch, getCompanyByTicker, isCompleteCompaniesDataLoaded]);
+
   useEffect(() => {
     const comparisonSetting = {
       comparisionSection: comparisionSection,
@@ -83,15 +98,7 @@ const Comparision = props => {
 
     saveComparisionSettings(comparisonSetting);
   }, [comparisionDifference, comparisionMethod, comparisionSection]);
-
-  const getCompanyByTicker = ticker => {
-    let rawData = localStorage.getItem(`watchlist-data-all`);
-    if (rawData) {
-      rawData = cjson.decompress.fromString(rawData);
-    }
-    let company = rawData.find(sd => sd.ticker === ticker);
-    return company;
-  };
+  
   switch (comparisionSection) {
     case 'mda':
       metricQueryParam =

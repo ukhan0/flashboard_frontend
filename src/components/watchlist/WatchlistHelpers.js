@@ -1,5 +1,4 @@
-import { forEach, get, isEmpty, isArray } from 'lodash';
-import { storeCompleteWatchlist, getCompleteWatchlist } from '../../utils/helpers';
+import { forEach, get, isEmpty } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
@@ -152,18 +151,6 @@ export const checkIsSortActive = () => {
     }
   }
   return activeSortColumns.length === 0 ? false : true;
-};
-
-export const syncCachedData = newData => {
-  const rawCompleteData = getCompleteWatchlist();
-  if (!rawCompleteData || !isArray(rawCompleteData)) {
-    return;
-  }
-  newData.forEach(nd => {
-    const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
-    rawCompleteData[tickerIndex] = nd;
-  });
-  storeCompleteWatchlist(rawCompleteData);
 };
 
 export const getUser = () => {

@@ -19,6 +19,7 @@ export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_E
 export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_DOCUMENT_TYPE_CALLS';
 export const SET_IS_FILTER_ACTIVE = 'WATCHLIST/SET_IS_FILTER_ACTIVE';
 export const SET_IS_TICKER_SELECTED = 'WATCHLIST/SET_IS_TICKER_SELECTED';
+export const SET_COMPLETE_COMPANIES_DATA = "WATCHLIST/SET_COMPLETE_COMPANIES_DATA";
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
@@ -62,10 +63,6 @@ export const setRecentDataLoadedFlag = recentDataLoaded => ({
   type: SET_RECENT_DATALOADED_FLAG,
   recentDataLoaded
 });
-export const setCompleteDataLoadedFlag = completeDataLoaded => ({
-  type: SET_COMPELTE_DATALOADED_FLAG,
-  completeDataLoaded
-});
 export const resetWatchlist = () => ({
   type: RESET_WATCHLIST
 });
@@ -108,6 +105,16 @@ export const setIsTickerSelected = isTickerSelected => ({
   isTickerSelected
 });
 
+export const setCompleteDataLoadedFlag = isCompleteCompaniesDataLoaded => ({
+  type: SET_COMPELTE_DATALOADED_FLAG,
+  isCompleteCompaniesDataLoaded
+});
+
+export const setCompleteCompaniesData = completeCompaniesData => ({
+  type: SET_COMPLETE_COMPANIES_DATA,
+  completeCompaniesData
+});
+
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
@@ -130,7 +137,6 @@ const getDefaultState = () => {
     selectedSymbols: [],
     selectedItem: null,
     recentDataLoaded: false,
-    completeDataLoaded: false,
     overwriteCheckBox: false,
     selectedTickerSymbol: null,
     isNewWatchListDataAvailable: true,
@@ -139,7 +145,9 @@ const getDefaultState = () => {
     isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
     cancelExistingDocumentTypeCalls: null,
     isFilterActive: false,
-    isTickerSelected: false
+    isTickerSelected: false,
+    isCompleteCompaniesDataLoaded: false,
+    completeCompaniesData: [],
   };
 };
 
@@ -171,8 +179,6 @@ export default function reducer(
       return { ...state, selectedSymbols: action.selectedSymbols };
     case SET_RECENT_DATALOADED_FLAG:
       return { ...state, recentDataLoaded: action.recentDataLoaded };
-    case SET_COMPELTE_DATALOADED_FLAG:
-      return { ...state, completeDataLoaded: action.completeDataLoaded };
     case RESET_WATCHLIST:
       return { ...state, ...getDefaultState() };
     case SET_SELECTED_TICKER_SYMBOL:
@@ -191,6 +197,10 @@ export default function reducer(
       return { ...state, isFilterActive: action.isFilterActive };
     case SET_IS_TICKER_SELECTED:
       return { ...state, isTickerSelected: action.isTickerSelected };
+    case SET_COMPELTE_DATALOADED_FLAG:
+      return { ...state, isCompleteCompaniesDataLoaded: action.isCompleteCompaniesDataLoaded };
+    case SET_COMPLETE_COMPANIES_DATA:
+      return { ...state, completeCompaniesData: action.completeCompaniesData}
     default:
       break;
   }

@@ -19,7 +19,7 @@ const WatchlistFilters = props => {
     selectedFileType,
     selectedUniverse,
     selectedMetric,
-    completeDataLoaded,
+    isCompleteCompaniesDataLoaded,
     cancelExistingDocumentTypeCalls,
     isEmailAlertEnable,
     selectedItem
@@ -28,7 +28,7 @@ const WatchlistFilters = props => {
 
   const canItbeUsed = universeType => {
     let flag = false;
-    if (universeType === 'all' && !completeDataLoaded) {
+    if (universeType === 'all' && !isCompleteCompaniesDataLoaded) {
       flag = true;
     }
     return flag;

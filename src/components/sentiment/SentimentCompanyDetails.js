@@ -52,7 +52,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{`DocumentType:`}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6 className={classes.upperCase}>{renameDocumentTypes(get(data, 'document_type', null))}</h6>
+                <h6 className={classes.upperCase}>{renameDocumentTypes(get(data, 'document_type', ""))}</h6>
               </Grid>
             </Grid>
           </Grid>

@@ -8,6 +8,7 @@ import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompleteWatchListData } from '../../redux/actions/WishlistAction';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/modules/timeline';
@@ -21,6 +22,16 @@ export default function FilingsTimelineChart() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
+  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
+
+  useEffect(() => {
+    if(!isCompleteCompaniesDataLoaded){
+        // show loader
+    } else {
+      // hide loader
+    }
+  }, [isCompleteCompaniesDataLoaded]);
+
 
   const graphData = fillingsData.map(v => {
     let y = moment(v.document_date).format('YYYY');
@@ -89,7 +100,7 @@ export default function FilingsTimelineChart() {
           events: {
             click: function() {
               if (this) {
-                let selectedItem = getCompanyByTickerUniverse(this.ticker, 'all');
+                let selectedItem = getCompanyByTickerUniverse(this.ticker, completeCompaniesData);
                 let company = formatComapnyData(selectedItem);
                 company.recentId = this.document_id;
                 dispatch(setSentimentResult(null, null));
