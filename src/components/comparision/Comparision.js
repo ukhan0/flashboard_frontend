@@ -67,14 +67,6 @@ const Comparision = props => {
   },[completeCompaniesData]);
 
   useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
-
-  useEffect(() => {
     if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
       firstTimeLoad.current = true;
       if (getQueryParams.current.get('recentId')) {

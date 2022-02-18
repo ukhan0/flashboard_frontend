@@ -81,7 +81,7 @@ const TopicSearchResults = () => {
   const resultsSection = useRef(null);
   const history = useHistory();
   const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
-  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
+  const { completeCompaniesData } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -91,14 +91,6 @@ const TopicSearchResults = () => {
   const [y, setY] = useState('');
   const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
-
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
 
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));

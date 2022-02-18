@@ -47,14 +47,6 @@ const Sentiment = () => {
     history.push('/watchlist');
   }
 
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
-
   const getCompanyByTicker = useCallback(async ticker => {
     return new Promise(resolve => {
       setTimeout(() => {

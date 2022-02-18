@@ -69,8 +69,7 @@ const Watchlist = props => {
     isNewWatchListDataAvailable,
     isColorEnable,
     overwriteCheckBox,
-    completeCompaniesData,
-    isCompleteCompaniesDataLoaded,
+    completeCompaniesData
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [dataVersion, setDataVersion] = useState(1);
@@ -95,15 +94,6 @@ const Watchlist = props => {
       setWatchlistData(formatData(rawData));
     }
   }, [dispatch, completeCompaniesData]);
-
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
-
 
   const syncCompleteDataOnPage = useCallback(newData => {
     const rawCompleteData = cloneDeep(completeCompaniesData);

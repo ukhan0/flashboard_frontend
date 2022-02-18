@@ -23,17 +23,9 @@ const WatchlistTopicSearch = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { selectedTickerSymbol, searchText, selectedFileType, isTickerSelected , completeCompaniesData, isCompleteCompaniesDataLoaded} = useSelector(
+  const { selectedTickerSymbol, searchText, selectedFileType, isTickerSelected , completeCompaniesData} = useSelector(
     state => state.Watchlist
   );
-
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
 
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table

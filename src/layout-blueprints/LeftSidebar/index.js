@@ -9,14 +9,17 @@ import { connect } from 'react-redux';
 import { Sidebar, Header, Footer } from '../../layout-components';
 import { useLocation } from 'react-router-dom';
 import { get } from 'lodash';
+import useStyles  from '../../components/watchlist/watchlistStyles';
 
 const LeftSidebar = props => {
   const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
   const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights, isCompanyClick } = useSelector(state => state.Topic);
+  const { isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const location = useLocation();
 
   const dispatch = useDispatch()
   const classes = topicStyles();
+  const classes1 = useStyles();
   const closeBackdrop = () => {
     if(!cancelTokenSource){
       cancelTokenSourceHighlights.cancel()
@@ -34,6 +37,12 @@ const LeftSidebar = props => {
     <Fragment>
       <div className={clsx('app-wrapper', contentBackground)}>
         <Header />
+        {!isCompleteCompaniesDataLoaded ? (
+            <div className={classes1.loaderContainer} style={{  position: "fixed", zIndex: "1200", marginTop: "15px" }}>
+              <div className={classes1.loaderSection}>
+                <span className="m-1 badge badge-info">Companies Data Loading...</span>
+              </div>
+            </div> ) : null}
         <div
           className={clsx('app-main', {
             'app-main-sidebar-static': !sidebarFixed

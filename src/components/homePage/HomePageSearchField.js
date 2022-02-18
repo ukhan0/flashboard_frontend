@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { get, debounce } from 'lodash';
@@ -10,15 +10,7 @@ export default function ComboBox() {
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const { homePageSelectedItem } = useSelector(state => state.HomePage);
-  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
-  
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
+  const { completeCompaniesData } = useSelector(state => state.Watchlist);
 
   const createOptionLabel = option => {
     let ticker = '';

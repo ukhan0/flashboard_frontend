@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
@@ -78,15 +78,7 @@ const useStyles = makeStyles(theme => ({
 export default function TopicTweetsTable() {
   const classes = useStyles();
   const { tweetsTableData } = useSelector(state => state.Topic);
-  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.WatchList);
-
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
+  const { completeCompaniesData } = useSelector(state => state.WatchList);
 
   const getCompanyName = ticker => {
     let companyName = '';

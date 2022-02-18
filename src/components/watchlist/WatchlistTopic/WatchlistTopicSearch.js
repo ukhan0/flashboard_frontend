@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect , useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, Chip, TextField } from '@material-ui/core';
@@ -14,15 +14,7 @@ const WatchlistTopicSearch = props => {
   const classes = useStyles();
   const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { completeCompaniesData, isCompleteCompaniesDataLoaded} = useSelector(state => state.Watchlist);
-
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
+  const { completeCompaniesData } = useSelector(state => state.Watchlist);
 
   const handleSearchTextChange = debounce(async text => {
     const searchabletext = text.toLowerCase();

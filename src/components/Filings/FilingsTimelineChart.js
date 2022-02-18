@@ -22,16 +22,7 @@ export default function FilingsTimelineChart() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { fillingsData } = useSelector(state => state.Filings);
-  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
-
-  useEffect(() => {
-    if(!isCompleteCompaniesDataLoaded){
-        // show loader
-    } else {
-      // hide loader
-    }
-  }, [isCompleteCompaniesDataLoaded]);
-
+  const { completeCompaniesData } = useSelector(state => state.Watchlist);
 
   const graphData = fillingsData.map(v => {
     let y = moment(v.document_date).format('YYYY');
