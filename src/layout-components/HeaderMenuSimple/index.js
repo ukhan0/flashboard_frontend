@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { setSidebarToggle } from '../../reducers/ThemeOptions';
 import { useHistory } from 'react-router-dom';
 import Help from '../../components/navigationBar/Navigation';
-
 const HeaderMenu = props => {
   const location = useLocation();
   const history = useHistory();
@@ -32,18 +31,14 @@ const HeaderMenu = props => {
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/watchlist' ? 'btn-active' : '')}>
           Home
         </Button>
-        <>
-          <Button
-            aria-describedby="simple-popper"
-            size="medium"
-            color="inherit"
-            onClick={gotToTopic}
-            disabled={false}
-            className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/topic' ? 'btn-active' : '')}>
-            ThemeX
-          </Button>
-        </>
-
+        <Button
+          size="medium"
+          color="inherit"
+          onClick={gotToTopic}
+          disabled={false}
+          className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/topic' ? 'btn-active' : '')}>
+          ThemeX
+        </Button>
         <Button
           size="medium"
           color="inherit"

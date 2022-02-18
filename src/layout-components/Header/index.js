@@ -21,6 +21,7 @@ const Header = props => {
   const { headerShadow, headerFixed, sidebarToggleMobile, showSidebar, sidebarToggle } = useSelector(
     state => state.ThemeOptions
   );
+  const { isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
   const dispatch = useDispatch();
   const toggleSidebar = () => {
@@ -84,6 +85,12 @@ const Header = props => {
             disAgree={() => setConfirmationClearFilterDialog(false)}
             actionName="filter"
           />
+
+        {!isCompleteCompaniesDataLoaded ? (
+            <div style={{ marginTop: "15px"}}>
+              <span className="m-1 badge badge-info">Companies Data Loading...</span>
+            </div>) : null}
+
           <Box className="d-flex align-items-center">
             <div style={{ width: '200px' }}>
               <GlobalTickerSearchField />
