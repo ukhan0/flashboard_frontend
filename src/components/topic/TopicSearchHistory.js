@@ -16,8 +16,6 @@ import {
   setSelectedIndustries,
   resetAllSearchParams,
   setBackDropOnCompanyClick,
-  setSearchResultHighlights,
-  setSearchResults,
   setIsUnsavedSearch
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, deleteSearch, performTopicTweetsSearchAggregate } from './topicActions';
@@ -154,10 +152,13 @@ export default function TopicSearchHistory(props) {
     setModal(!isModal);
     preventParentClick(e);
     dispatch(deleteSearch(deleteSearchId));
-    dispatch(resetAllSearchParams());
+    if (deleteSearchId === selectedSearch.searchId) {
+      const searchObj = savedSearches.find(s => deleteSearchId === s.searchId);
+      dispatch(setSelectedSearch(searchObj));
+      dispatch(setAllSearchParams(searchObj));
+    }
+
     dispatch(setOpenTopicSearchDialog(false));
-    dispatch(setSearchResultHighlights([]));
-    dispatch(setSearchResults({}));
     dispatch(setShowUpdateButton(false));
   };
 

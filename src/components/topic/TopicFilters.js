@@ -101,6 +101,7 @@ const TopicFilters = props => {
   };
   const handleClickSaveSearch = () => {
     dispatch(handleSaveSearch());
+    props.onSearch();
     dispatch(setOpenTopicSearchDialog(false));
     // dispatch(setOpenTopicSearchDialog(false));
     setOpenThemeDialog(false);

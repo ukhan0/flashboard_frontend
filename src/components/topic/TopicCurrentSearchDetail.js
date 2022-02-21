@@ -95,7 +95,7 @@ const TopicDialog = props => {
 
   const handleEdit = e => {
     preventParentClick(e);
-
+    dispatch(setOpenTopicSearchDialog(true));
     if (!isUnsavedSearch) {
       const searchObj = savedSearches.find(s => selectedSearch.searchId === s.searchId);
       if (!searchObj) {

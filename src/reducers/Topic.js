@@ -59,6 +59,7 @@ export const SET_TWEETS_COUNTRY_STATES_MAP_DATA = 'TOPIC/SET_TWEETS_COUNTRY_STAT
 export const SET_TWEETS_TABLE_DATA = 'TOPIC/SET_TWEETS_TABLE_DATA';
 export const SET_IS_UNSAVED_SEARCH = 'TOPIC/SET_IS_UNSAVED_SEARCH';
 export const SET_IS_FROM_THEMEX = 'TOPIC/SET_IS_FROM_THEMEX';
+export const SET_IS_NEWLY_SAVED_SEARCH = 'TOPIC/SET_IS_NEWLY_SAVED_SEARCH';
 
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
@@ -347,6 +348,11 @@ export const setIsFromThemex = isFromThemex => ({
   isFromThemex
 });
 
+export const setIsnNewlySavedSearch = isNewlySavedSearch => ({
+  type: SET_IS_NEWLY_SAVED_SEARCH,
+  isNewlySavedSearch
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
@@ -443,7 +449,8 @@ const getDefaultState = () => {
     heading: null,
     isDate: false,
     isFromSideBar: false,
-    isFromThemex: false
+    isFromThemex: false,
+    isNewlySavedSearch: false
   };
 };
 
@@ -613,6 +620,8 @@ export default function reducer(
       return { ...state, isUnsavedSearch: action.isUnsavedSearch };
     case SET_IS_FROM_THEMEX:
       return { ...state, isFromThemex: action.isFromThemex };
+    case SET_IS_NEWLY_SAVED_SEARCH:
+      return { ...state, isNewlySavedSearch: action.isNewlySavedSearch };
     default:
       break;
   }

@@ -24,7 +24,6 @@ import {
   setIsSearchLoading,
   setSavedSearches,
   setSnackBarActive,
-  resetAllSearchParams,
   setShowComposeNew,
   setCurrentSearchtDetail,
   setSelectedCompanyName,
@@ -34,7 +33,9 @@ import {
   setTweetsMapData,
   setTweetsCountryMapData,
   setTweetsCountryStatesMapData,
-  setTweetsTableData
+  setTweetsTableData,
+  setAllSearchParams,
+  setIsnNewlySavedSearch
 } from '../../reducers/Topic';
 import axios from 'axios';
 import config from '../../config/config';
@@ -298,11 +299,17 @@ export const goToNextPage = () => {
 
 export const fetchTopicsList = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const { isNewlySavedSearch } = getState().Topic;
     const response = await axios.get(`${config.apiUrl}/api/search/list_searches/${user.id}`);
     const savedSearch = get(response, 'data.data', []);
     if (savedSearch.length > 0) {
+      if (isNewlySavedSearch) {
+        dispatch(setSelectedSearch(savedSearch[savedSearch.length - 1]));
+        dispatch(setAllSearchParams(savedSearch[savedSearch.length - 1]));
+      }
       dispatch(setSavedSearches(savedSearch));
+      dispatch(setIsnNewlySavedSearch(false));
     } else {
       dispatch(setShowComposeNew(true));
       dispatch(setSavedSearches([]));
@@ -310,6 +317,7 @@ export const fetchTopicsList = () => {
       dispatch(setSearchResults({}));
       dispatch(setSearchResultHighlights([]));
       dispatch(setCurrentSearchtDetail({}));
+      dispatch(setIsnNewlySavedSearch(false));
     }
   };
 };
@@ -366,6 +374,7 @@ export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
     const { searchText, isTopicEmailAlertEnable, searchLabel } = getState().Topic;
+    dispatch(setIsnNewlySavedSearch(true));
     const payload = {
       userId: user.id,
       searchText: searchText,
@@ -438,15 +447,10 @@ export const deleteTopic = topicId => {
 
 export const deleteSearch = searchId => {
   const user = JSON.parse(localStorage.getItem('user'));
-  return async (dispatch, getState) => {
-    const { selectedSearch } = getState().Topic;
+  return async dispatch => {
     const response = await axios.delete(`${config.apiUrl}/api/search/delete_search/${searchId}/${user.id}`);
     const isDeleted = get(response, 'data.data.status', false);
     if (isDeleted) {
-      if (selectedSearch && selectedSearch.searchId === searchId) {
-        dispatch(setSelectedSearch(null, null));
-      }
-      dispatch(resetAllSearchParams());
       dispatch(setSnackBarActive(true, 'success', 'Search Deleted successfully'));
       dispatch(fetchTopicsList());
     } else {

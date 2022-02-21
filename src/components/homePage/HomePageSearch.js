@@ -13,7 +13,6 @@ import {
   setIsSimpleSearch,
   setIsUnsavedSearch
 } from '../../reducers/Topic';
-import { resetSuggestions } from '../../reducers/Topic';
 import TopicIndexDropDown from '../topic/TopicIndexDropDown';
 import { useHistory } from 'react-router-dom';
 import TopicSuggestionsDialog from '../topic/TopicSuggestionsDialog';
@@ -56,7 +55,6 @@ const TopicFilters = props => {
     selectedSuggestions,
     simpleSearchTextArray,
     ignoreSearchTextArray,
-    isSimpleSearch,
     cancelTokenSourceHighlights
   } = useSelector(state => state.Topic);
 
@@ -90,16 +88,12 @@ const TopicFilters = props => {
 
   const handleCloseTopicSuggestionsDialog = () => {
     setIsSuggestionsDlgOpen(false);
-    if (isSimpleSearch) {
-      dispatch(resetSuggestions());
-    }
   };
 
   let isButtonActive = true;
   if (searchText.length > 2 || simpleSearchTextArray.length > 0 || ignoreSearchTextArray.length > 0) {
     isButtonActive = false;
   }
-
   return (
     <Grid spacing={0} container className={classes.topsection}>
       {isSuggestionsDlgOpen ? (
@@ -116,7 +110,7 @@ const TopicFilters = props => {
           <TopicSearchTextField />
 
           <div className={classes.suggestionsBtnSection}>
-            {!isSimpleSearch ? (
+            {
               <div className={classes.selectedSuggestionsList}>
                 {selectedSuggestionsArr.map((v, index) => (
                   <span key={`ssa${index}`} className="text-black-50">{`${v}${
@@ -124,7 +118,7 @@ const TopicFilters = props => {
                   }`}</span>
                 ))}
               </div>
-            ) : null}
+            }
             {isSearchAllowed(searchText, simpleSearchTextArray) ? (
               <Button color="primary" onClick={() => setIsSuggestionsDlgOpen(true)}>
                 Show Suggestions
