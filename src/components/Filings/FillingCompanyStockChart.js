@@ -58,6 +58,7 @@ export default function FillingCompanyPriceOverlay() {
     title: {
       text: 'Timeline'
     },
+    tooltip: { distance: 30 },
     xAxis: {
       max: latestDate ? latestDate.x : new Date().getTime()
     },
