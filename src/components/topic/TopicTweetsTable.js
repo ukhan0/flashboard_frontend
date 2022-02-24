@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
 export default function TopicTweetsTable() {
   const classes = useStyles();
   const { tweetsTableData } = useSelector(state => state.Topic);
-  const { completeCompaniesData } = useSelector(state => state.WatchList);
+  const { completeCompaniesData } = useSelector(state => state.Watchlist);
 
   const getCompanyName = ticker => {
     let companyName = '';
