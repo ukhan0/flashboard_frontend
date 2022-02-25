@@ -5,7 +5,7 @@ import { Grid, Paper, Box } from '@material-ui/core';
 import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex, toLower } from 'lodash';
 import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
-import { createResultTitle } from './topicHelpers';
+import { createResultTitle, extractResultTitleFromPath } from './topicHelpers';
 import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
@@ -21,6 +21,7 @@ import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
 import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -91,6 +92,7 @@ const TopicSearchResults = () => {
   const [y, setY] = useState('');
   const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
+  const replaceHeadingRegex = /<heading class="(.*)">(.*)<\/heading>/gm;
 
   useEffect(() => {
     const allComapnyResults = searchResultHighlights.map(srh => ({ ...srh }));
@@ -243,23 +245,29 @@ const TopicSearchResults = () => {
                           </Grid>
                         </Grid>
                         {get(companyResult, 'results', []).map((result, index) => {
+                          let resultIndex = index
                           return (
                             <div key={`rst${index}`}>
-                              <Grid
-                                key={`rsttt${index}`}
-                                container
-                                direction="row"
-                                justify="flex-start"
-                                alignItems="center">
-                                <Grid item>
-                                  <p className="font-size-lg mb-2 text-black-100">
-                                    {createResultTitle(result.title, companyResult.document_type)}
-                                  </p>
-                                </Grid>
-                              </Grid>
-
-                              {result.content.map((content, index) => (
-                                <p
+                              {result.content.map((content, index) => {
+                                const titleData = extractResultTitleFromPath(content)
+                                let htmlContentToShow = content.replaceAll(searchRegex, '').replaceAll(replaceHeadingRegex , "")
+                                  return <>
+                                  <Grid
+                                    key={`rsttt${resultIndex}`}
+                                    container
+                                    direction="row"
+                                    justify="flex-start"
+                                    alignItems="center">
+                                    <Grid item>
+                                      <p className="font-size-lg mb-2 text-black-100">
+                                        {titleData.map((contentTitle,indexTitle) => {
+                                          return <><span>{ contentTitle }</span>
+                                          <span>{!indexTitle ? <ArrowForwardIcon /> : null}</span></>
+                                        })}
+                                      </p>
+                                    </Grid>
+                                  </Grid>
+                                  <p
                                   key={`rstc${index}`}
                                   className={clsx(
                                     classes.searchResultText,
@@ -268,11 +276,12 @@ const TopicSearchResults = () => {
                                     classes.line,
                                     'font-size-mg mb-2 text-black-50'
                                   )}
-                                  dangerouslySetInnerHTML={{ __html: content.replaceAll(searchRegex, '') }}
+                                  dangerouslySetInnerHTML={{ __html: htmlContentToShow }}
                                   onClick={e => goToSentimentScreen(companyResult, content, result.title, e)}
                                   onMouseUp={e => handleMouseUp(e)}
-                                  onMouseDown={e => handleMouseDown(e)}></p>
-                              ))}
+                                  onMouseDown={e => handleMouseDown(e)}></p></>
+                                }
+                              )}
                             </div>
                           );
                         })}

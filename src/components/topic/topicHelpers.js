@@ -24,6 +24,23 @@ export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
   return { suggestionsArr, suggestionsSingleArr, onlySuggestionSingleArr };
 }
 
+export const extractResultTitleFromPath = (completeData) => {
+  var matches = completeData.match(/<span path="(.*)"><\/span>/gm);
+  let completeHeading = [];
+  if(matches.length > 0){
+    const spanData = matches[0];
+    let pathDataArr = spanData.split('"')
+    let pathData = pathDataArr[1]
+    let decodedHeadingDataArr = atob(pathData)
+    let splitdecodedHeadingDataArr = decodedHeadingDataArr.split("|")
+    if(splitdecodedHeadingDataArr.length > 2){
+      splitdecodedHeadingDataArr = splitdecodedHeadingDataArr.slice(-2);
+      completeHeading = splitdecodedHeadingDataArr
+    }
+  }
+  return completeHeading
+}
+
 export const createResultTitle = (rawTitle, docType) => {
   if (!rawTitle) {
     return '';
