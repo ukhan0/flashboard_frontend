@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { get, debounce } from 'lodash';
-import { setHomePageSelectedItem, setIsLoading } from './../../reducers/HomePage';
+import { setHomePageSelectedItem } from './../../reducers/HomePage';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function ComboBox() {
@@ -46,7 +46,6 @@ export default function ComboBox() {
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
       dispatch(setHomePageSelectedItem({ ticker: newSelectedSymbol.ticker }));
-      dispatch(setIsLoading(true));
       setAvailableSymbols([]);
     }
   };

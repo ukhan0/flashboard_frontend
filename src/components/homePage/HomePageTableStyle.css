@@ -1,0 +1,46 @@
+.ag-theme-alpine .ag-pivot-mode-panel {
+  display: none;
+}
+
+.ag-theme-alpine .center-align-text {
+  text-align: center;
+}
+
+.ag-theme-alpine .center-align-left {
+  text-align: center;
+}
+
+.ag-theme-alpine .no-padding {
+  padding: 0;
+}
+
+.ag-theme-alpine .ag-column-select-header {
+  display: none;
+}
+
+.ag-theme-alpine .actionColumnHeader .ag-header-cell-text {
+  display: none;
+}
+
+.ag-theme-alpine .allColumnHeader:hover {
+  background-color: #e5e5e5;
+}
+
+.ag-theme-alpine .allColumnHeader .ag-header-cell-text {
+  white-space: initial;
+}
+
+.ag-header-cell-label,
+.ag-header-group-cell-label {
+  display: flex;
+  flex: 1 1 auto;
+  overflow: hidden;
+  align-items: center;
+  text-overflow: ellipsis;
+  align-self: stretch;
+  text-align: center;
+}
+
+.ag-row-hover {
+  cursor: pointer !important;
+}

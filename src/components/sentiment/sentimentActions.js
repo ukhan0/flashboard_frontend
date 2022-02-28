@@ -10,8 +10,9 @@ import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
     const { selectedItem } = getState().Watchlist;
-    const { searchIndex, isFromThemex } = getState().Topic;
+    const { isFromThemex } = getState().Topic;
     const { fillingsSearchText } = getState().Filings;
+    const { sentimentSearchIndex } = getState().Sentiment;
 
     const {
       isFromSideBar,
@@ -45,7 +46,7 @@ export const getSentimentData = () => {
         formData.append('search_term', searchTerm);
       }
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? searchIndex : 'filling_sentiment5'}`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? sentimentSearchIndex : 'filling_sentiment5'}`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);

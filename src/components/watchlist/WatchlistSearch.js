@@ -23,7 +23,7 @@ const WatchlistTopicSearch = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { selectedTickerSymbol, searchText, selectedFileType, isTickerSelected , completeCompaniesData} = useSelector(
+  const { selectedTickerSymbol, searchText, selectedFileType, isTickerSelected, completeCompaniesData } = useSelector(
     state => state.Watchlist
   );
 
@@ -31,7 +31,9 @@ const WatchlistTopicSearch = props => {
     // free text search for Watchlist table
     dispatch(setWatchlistSearchText(text));
 
-    if (!text || text.length < 1) return;
+    if (!text || text.length < 1) {
+      return;
+    }
 
     const searchabletext = text.toLowerCase();
     setLoading(true);
@@ -54,7 +56,9 @@ const WatchlistTopicSearch = props => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
       dispatch(setIsTickerSelected(true));
       dispatch(setSelectedTickerSymbol(newSelectedSymbol));
-      dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
+      setTimeout(() => {
+        dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
+      }, [100]);
       let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, completeCompaniesData);
       let company = formatComapnyData(selectedItem);
       company.recentId = selectedFileType === '10k' ? company.recentId10k : company.recentId10q;
@@ -100,7 +104,7 @@ const WatchlistTopicSearch = props => {
             size="small"
             inputProps={{
               ...params.inputProps,
-              autoComplete: 'new-password',
+              autoComplete: 'new-password'
             }}
           />
         )}

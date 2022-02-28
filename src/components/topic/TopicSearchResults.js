@@ -15,7 +15,8 @@ import {
   setSelectedHeadingId,
   setIsApiResponseReceived,
   setSentimentResult,
-  setIsFromfilling
+  setIsFromfilling,
+  setSentimentSearchIndex
 } from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
@@ -147,9 +148,9 @@ const TopicSearchResults = () => {
     }
   }, [selectedCompanyName, summaryByCompany]);
 
-  const goToSentimentScreen = (companyDocumentResultData, content, t) => {
+  const goToSentimentScreen = (companyDocumentResultData, result) => {
     dispatch(setIsFromfilling(false));
-    const actualTitle = t.replace('sma_data_json.', '');
+    const actualTitle = result.title.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
     const replaceDots = removel4.replaceAll('.', 'id');
     dispatch(setSelectedHeadingId(createHash(`id${replaceDots}`)));
@@ -189,6 +190,7 @@ const TopicSearchResults = () => {
       );
     }
     if (isGoToSentiment) {
+      dispatch(setSentimentSearchIndex(result.index));
       dispatch(setIsFromThemex(true));
       history.push('/sentiment');
     }
@@ -278,7 +280,7 @@ const TopicSearchResults = () => {
                                     'font-size-mg mb-2 text-black-50'
                                   )}
                                   dangerouslySetInnerHTML={{ __html: htmlContentToShow }}
-                                  onClick={e => goToSentimentScreen(companyResult, content, result.title, e)}
+                                  onClick={e => goToSentimentScreen(companyResult, result)}
                                   onMouseUp={e => handleMouseUp(e)}
                                   onMouseDown={e => handleMouseDown(e)}></p></>
                                 }

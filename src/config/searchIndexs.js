@@ -1,14 +1,15 @@
+import config from './config';
 export default [
   {
     label: 'Domestic Filings',
-    value: 'filling_sentiment5'
+    value: config.domesticSearchIndex
   },
   {
     label: 'Global Filings',
-    value: 'filling_int_sentiment4'
+    value: config.globalSearchIndex
   },
   {
     label: 'Twitter',
-    value: 'tweets'
+    value: config.twitterSearchIndex
   }
 ];

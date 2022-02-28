@@ -8,7 +8,9 @@ const config = {
   hideCard: process.env.REACT_APP_HIDE_CARD,
   hideGraph: process.env.REACT_APP_HIDE_GRAPH,
   completeDataUpdateDuration: 1 * 60 * 60 * 1000, // miliseconds in a hour
-  elasticIndex: process.env.ELASTIC_INDEX,
+  domesticSearchIndex: process.env.REACT_APP_DOMESTIC_SEARCH_INDEX,
+  globalSearchIndex: process.env.REACT_APP_GLOBAL_SEARCH_INDEX,
+  twitterSearchIndex: process.env.REACT_APP_TWITTER_SEARCH_INDEX,
   fillingApiUrl: process.env.REACT_APP_FILING_URL
 };
 

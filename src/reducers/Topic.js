@@ -1,4 +1,5 @@
 import documentTypesData from '../config/documentTypesData';
+import config from '../config/config';
 import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { get } from 'lodash';
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
@@ -358,7 +359,7 @@ const searchDefaultState = () => ({
   tweetsCountryMapData: {},
   tweetsData: [],
   tweetsMapData: [],
-  searchIndex: 'filling_sentiment5',
+  searchIndex: config.domesticSearchIndex,
   startDate: subMonths(startOfMonth(new Date()), 12),
   endDate: endOfMonth(new Date()),
   orderBy: 'desc',

@@ -12,6 +12,12 @@ export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED 
 export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
 export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
 export const SET_IS_FROM_FILLING = 'TOPIC/SET_IS_FROM_FILLING ';
+export const SET_SENTIMENT_SEARCH_INDEX = 'TOPIC/SET_SENTIMENT_SEARCH_INDEX ';
+
+export const setSentimentSearchIndex = sentimentSearchIndex => ({
+  type: SET_SENTIMENT_SEARCH_INDEX,
+  sentimentSearchIndex
+});
 
 export const setSentimentResult = (data, recentId) => ({
   type: SET_SENTIMENT_RESULT,
@@ -108,7 +114,8 @@ const getDefaultState = () => {
     isApiResponseReceived: false,
     sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible',
     sentimentHighlights: [],
-    isFromFilling: false
+    isFromFilling: false,
+    sentimentSearchIndex: ''
   };
 };
 
@@ -145,6 +152,8 @@ export default function reducer(
       return { ...state, sentimentHighlights: action.sentimentHighlights };
     case SET_IS_FROM_FILLING:
       return { ...state, isFromFilling: action.isFromFilling };
+    case SET_SENTIMENT_SEARCH_INDEX:
+      return { ...state, sentimentSearchIndex: action.sentimentSearchIndex };
 
     default:
       break;

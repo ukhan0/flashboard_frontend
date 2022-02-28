@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { useSelector } from 'react-redux';
-import { get } from 'lodash';
-import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
+import { get, round } from 'lodash';
+import {
+  parseDateStrMoment,
+  dateFormaterMoment,
+  descriptionValueStyler,
+  parseNumber,
+  percentFormater,
+  changeWordGetter,
+  numberWordComparator
+} from '../watchlist/WatchlistTableHelpers';
 import TickerLogo from '../watchlist/WatchlistTableComponents/TickerLogo';
 import { Card } from '@material-ui/core';
 import clsx from 'clsx';
+import './HomePageTableStyle.css';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
+import { useDispatch } from 'react-redux';
+import { setHomePageSelectedItem } from '../../reducers/HomePage';
+import config from '../../config/config';
+import axios from 'axios';
+import { renameDocumentTypes } from '../topic/topicHelpers';
 const frameworkComponents = {
   TickerLogo: TickerLogo
 };
@@ -33,7 +48,8 @@ const columnDefs = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'document_type'
+    colId: 'document_type',
+    valueFormatter: params => renameDocumentTypes(params.data.document_type)
   },
 
   {
@@ -56,10 +72,32 @@ const columnDefs = [
     flex: 1,
     colId: 'agrregate_sentiment',
     type: 'numericColumn',
-    filter: 'agNumberColumnFilter'
+    filter: 'agNumberColumnFilter',
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.sentiment', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(get(params, 'data.sentiment', null)),
+          word: changeWordGetter(get(params, 'data.sentimentWord', null))
+        };
+      }
+      return sentimentObj;
+    },
+    valueFormatter: params => percentFormater(params, true),
+    comparator: numberWordComparator,
+    filterParams: {
+      valueGetter: params => {
+        const value = get(params, 'data.sentiment', null);
+        return value !== null ? parseNumber(value) : null;
+      }
+    },
+    cellStyle: params => {
+      return descriptionValueStyler(params);
+    }
   },
   {
-    headerName: 'Word Count',
+    headerName: 'Word Change Percentage',
     field: 'wordCount',
     menuTabs: false,
     editable: false,
@@ -67,25 +105,89 @@ const columnDefs = [
     flex: 1,
     colId: 'word_count',
     type: 'numericColumn',
-    filter: 'agNumberColumnFilter'
+    filter: 'agNumberColumnFilter',
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.wordCount', null);
+      let sentimentObj = null;
+      if (sentimentValue) {
+        sentimentObj = {
+          number: parseNumber(sentimentValue),
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+        };
+      }
+      return sentimentObj;
+    },
+    valueFormatter: params => percentFormater(params, true),
+    comparator: numberWordComparator,
+    filterParams: {
+      valueGetter: params => {
+        const value = get(params, 'data.wordCount', null);
+        return value !== null ? parseNumber(value) : null;
+      }
+    },
+    cellStyle: params => {
+      return descriptionValueStyler(params);
+    }
   }
 ];
 
 export default function HomePageTable() {
-  const { recentCompaniesData } = useSelector(state => state.HomePage);
+  const [recentCompaniesData, setRecentCompaniesData] = useState([]);
+  const dispatch = useDispatch();
+  const cellClicked = params => {
+    if (params.data) {
+      dispatch(setSelectedWatchlist(params.data));
+      dispatch(setHomePageSelectedItem(params.data));
+      dispatch(setSidebarToggle(false));
+      dispatch(setSidebarToggleMobile(false));
+    }
+  };
+
+  const getRecentCompaniesData = React.useCallback(async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`);
+      const data = get(response, 'data.data', []);
+      if (response) {
+        const recentData = data.map(d => {
+          return {
+            ...d,
+            docType: get(d, 'document_type', null),
+            sentiment: round(get(d, 'sentiment', null), 2),
+            // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
+            docDate: get(d, 'document_date', null),
+            wordCount: round(get(d, 'word_count', null), 2)
+            // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
+          };
+        });
+
+        setRecentCompaniesData(recentData);
+        dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
+      } else {
+        dispatch(setHomePageSelectedItem({}));
+        setRecentCompaniesData([]);
+      }
+    } catch (error) {
+      dispatch(setHomePageSelectedItem({}));
+      setRecentCompaniesData([]);
+    }
+  }, [dispatch]);
+  useEffect(() => {
+    getRecentCompaniesData();
+  }, [getRecentCompaniesData]);
+
   return (
     <Card className="card-box mb-4">
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Recent Watchlist Documents</div>
       </div>
-
-      <div className="ag-theme-alpine" style={{ height: '440px', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: '430px', width: '100%' }}>
         <AgGridReact
           columnDefs={columnDefs}
           rowSelection="single"
           rowData={recentCompaniesData}
           suppressCellSelection={true}
           frameworkComponents={frameworkComponents}
+          onCellClicked={cellClicked}
           multiSortKey={'ctrl'}></AgGridReact>
       </div>
     </Card>

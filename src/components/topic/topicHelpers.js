@@ -25,9 +25,9 @@ export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
 }
 
 export const extractResultTitleFromPath = (completeData) => {
-  var matches = completeData.match(/<span path="(.*)"><\/span>/gm);
+  let matches = completeData.match(/<span path="(.*)"><\/span>/gm) || [];
   let completeHeading = [];
-  if(matches.length > 0){
+  if(matches.length > 0) {
     const spanData = matches[0];
     let pathDataArr = spanData.split('"')
     let pathData = pathDataArr[1]
