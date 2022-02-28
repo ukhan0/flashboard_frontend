@@ -35,6 +35,9 @@ export const extractResultTitleFromPath = (completeData) => {
     let splitdecodedHeadingDataArr = decodedHeadingDataArr.split("|")
     if(splitdecodedHeadingDataArr.length > 2){
       splitdecodedHeadingDataArr = splitdecodedHeadingDataArr.slice(-2);
+      if(splitdecodedHeadingDataArr[1] === "data"){
+        splitdecodedHeadingDataArr.splice(1, 1)
+      }
       completeHeading = splitdecodedHeadingDataArr
     }
   }

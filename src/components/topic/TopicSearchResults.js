@@ -250,6 +250,7 @@ const TopicSearchResults = () => {
                             <div key={`rst${index}`}>
                               {result.content.map((content, index) => {
                                 const titleData = extractResultTitleFromPath(content)
+                                const titleDataLength = titleData.length
                                 let htmlContentToShow = content.replaceAll(searchRegex, '').replaceAll(replaceHeadingRegex , "")
                                   return <>
                                   <Grid
@@ -262,7 +263,7 @@ const TopicSearchResults = () => {
                                       <p className="font-size-lg mb-2 text-black-100">
                                         {titleData.map((contentTitle,indexTitle) => {
                                           return <><span>{ contentTitle }</span>
-                                          <span>{!indexTitle ? <ArrowForwardIcon /> : null}</span></>
+                                          <span>{!indexTitle && titleDataLength > 1 ? <ArrowForwardIcon /> : null}</span></>
                                         })}
                                       </p>
                                     </Grid>
