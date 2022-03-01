@@ -1,50 +1,49 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { debounce, get } from 'lodash';
-import { setSearchIndex, setSelectedDocumentTypes } from '../../reducers/Topic';
-import searchIndexs from '../../config/searchIndexs';
+import countriesCode from '../../config/countriesCode';
+import { setSelectedCountry } from '../../reducers/Topic';
 import TopicSearchDropDown from './TopicSearchDropDown';
 const createOptionLabel = option => {
-  return `${option.label}`;
+  return `${option.name}`;
 };
 
-const TopicIndexDropDown = props => {
+const TopicCountryDropDown = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [availableSymbols, setAvailableSymbols] = useState(searchIndexs);
-  const { searchIndex, documentTypes } = useSelector(state => state.Topic);
+  const [availableSymbols, setAvailableSymbols] = useState(countriesCode);
+  const { selectedCountry } = useSelector(state => state.Topic);
   const handleSearchTextChange = debounce(async text => {
     const searchabletext = text.toLowerCase();
     setLoading(true);
-    const filteredWatchlist = searchIndexs
+    const filteredWatchlist = countriesCode
       .filter(c =>
-        get(c, 'label', '')
+        get(c, 'name', '')
           .toLowerCase()
           .includes(searchabletext)
       )
-      .map(c => ({ label: c.label, value: c.value }));
+      .map(c => ({ name: c.name, code: c.code }));
     setAvailableSymbols(filteredWatchlist);
     setLoading(false);
   }, 200);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
-    if (newSelectedSymbol && newSelectedSymbol.value) {
-      dispatch(setSearchIndex(newSelectedSymbol));
-      let documentTypeValue = documentTypes.map(ee => ee.value);
-      dispatch(setSelectedDocumentTypes(documentTypeValue));
+    if (newSelectedSymbol && newSelectedSymbol.code) {
+      dispatch(setSelectedCountry(newSelectedSymbol));
       setAvailableSymbols([]);
     }
   };
+
   return (
     <TopicSearchDropDown
       selectionChanged={selectionChanged}
       handleSearchTextChange={handleSearchTextChange}
-      selectedValue={searchIndex}
       availableSymbols={availableSymbols}
+      selectedValue={selectedCountry}
       createOptionLabel={createOptionLabel}
       loading={loading}
     />
   );
 };
 
-export default TopicIndexDropDown;
+export default TopicCountryDropDown;

@@ -27,10 +27,10 @@ const Cache = () => {
         console.log(error);
       });
 
-      //  enable following lines and disable above lines to use dummy companies data
-      // dispatch(setCompleteCompaniesData(JSON.parse(dummyData)));
-      // console.log(JSON.parse(dummyData));
-      // dispatch(setCompleteDataLoadedFlag(true));
+    //  enable following lines and disable above lines to use dummy companies data
+    // dispatch(setCompleteCompaniesData(JSON.parse(dummyData)));
+    // console.log(JSON.parse(dummyData));
+    // dispatch(setCompleteDataLoadedFlag(true));
   }, [dispatch, user]);
 
   useEffect(() => {

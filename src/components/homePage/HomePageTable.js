@@ -145,7 +145,7 @@ export default function HomePageTable() {
 
   const getRecentCompaniesData = React.useCallback(async () => {
     try {
-      const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`);
+      const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing?order=DESC&limit=100`);
       const data = get(response, 'data.data', []);
       if (response) {
         const recentData = data.map(d => {

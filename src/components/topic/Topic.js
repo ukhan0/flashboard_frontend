@@ -64,7 +64,7 @@ const Topic = () => {
       <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          {searchIndex === 'tweets' ? null : (
+          {searchIndex['value'] === 'tweets' ? null : (
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <TopicHistoryChart />
@@ -79,7 +79,7 @@ const Topic = () => {
           )}
         </Grid>
         <Grid item xs={12}>
-          {searchIndex === 'tweets' ? (
+          {searchIndex['value'] === 'tweets' ? (
             <Grid container>
               <Grid item xs={12}>
                 <Grid container>

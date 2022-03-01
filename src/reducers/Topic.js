@@ -1,5 +1,6 @@
 import documentTypesData from '../config/documentTypesData';
 import config from '../config/config';
+import { getSearchIndex } from '../components/topic/topicHelpers';
 import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { get } from 'lodash';
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
@@ -61,7 +62,7 @@ export const SET_TWEETS_TABLE_DATA = 'TOPIC/SET_TWEETS_TABLE_DATA';
 export const SET_IS_UNSAVED_SEARCH = 'TOPIC/SET_IS_UNSAVED_SEARCH';
 export const SET_IS_FROM_THEMEX = 'TOPIC/SET_IS_FROM_THEMEX';
 export const SET_IS_NEWLY_SAVED_SEARCH = 'TOPIC/SET_IS_NEWLY_SAVED_SEARCH';
-
+export const SET_SELECTED_COUNTRY = 'TOPIC/SET_SELECTED_COUNTRY';
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
@@ -354,12 +355,20 @@ export const setIsnNewlySavedSearch = isNewlySavedSearch => ({
   isNewlySavedSearch
 });
 
+export const setSelectedCountry = selectedCountry => ({
+  type: SET_SELECTED_COUNTRY,
+  selectedCountry
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
   tweetsData: [],
   tweetsMapData: [],
-  searchIndex: config.domesticSearchIndex,
+  searchIndex: {
+    label: 'Domestic Filings',
+    value: config.domesticSearchIndex
+  },
   startDate: subMonths(startOfMonth(new Date()), 12),
   endDate: endOfMonth(new Date()),
   orderBy: 'desc',
@@ -411,7 +420,8 @@ const searchDefaultState = () => ({
   simpleSearchTextArray: [],
   ignoreSearchTextArray: [],
   searchTextWithAnd: [],
-  isUnsavedSearch: false
+  isUnsavedSearch: false,
+  selectedCountry: null
 });
 
 const getDefaultState = () => {
@@ -488,11 +498,12 @@ export default function reducer(
         orderBy: action.searchObj.searchJSON.orderBy,
         sortBy: action.searchObj.searchJSON.sortBy,
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
-        searchIndex: get(action.searchObj, 'searchJSON.searchIndex', searchDefaultState().searchIndex),
+        searchIndex: getSearchIndex(get(action.searchObj, 'searchJSON.searchIndex', searchDefaultState().searchIndex)),
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
         selectedSector: get(action.searchObj, 'searchJSON.sector', searchDefaultState().selectedSector),
         selectedIndustries: get(action.searchObj, 'searchJSON.industry_arr', searchDefaultState().selectedIndustries),
         isSimpleSearch: get(action.searchObj, 'searchJSON.isSimpleSearch', false),
+        selectedCountry: get(action.searchObj, 'searchJSON.countryCode', null),
         simpleSearchTextArray: get(
           action.searchObj,
           'searchJSON.simpleSearchTextArray',
@@ -623,6 +634,8 @@ export default function reducer(
       return { ...state, isFromThemex: action.isFromThemex };
     case SET_IS_NEWLY_SAVED_SEARCH:
       return { ...state, isNewlySavedSearch: action.isNewlySavedSearch };
+    case SET_SELECTED_COUNTRY:
+      return { ...state, selectedCountry: action.selectedCountry };
     default:
       break;
   }

@@ -31,6 +31,7 @@ import { searchVersionTypes } from '../../config/filterTypes';
 
 import TopicThemeLabelDialog from './TopicThemeLabelDialog';
 import { resetSuggestions } from '../../reducers/Topic';
+import TopicCountryDropDown from './TopicCountryDropDown';
 import TopicIndexDropDown from './TopicIndexDropDown';
 const useStyles = makeStyles(theme => ({
   topsection: {
@@ -50,6 +51,9 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 5
   },
   dateRange: {
+    marginTop: '28px'
+  },
+  country: {
     marginTop: '28px'
   }
 }));
@@ -202,12 +206,12 @@ const TopicFilters = props => {
                 </Button>
               ))}
             </ButtonGroup>
-            {/* <div style={{ marginTop: '22px' }}> */}
             <h6 className={classes.dateRange}>Date Range</h6>
             <TopicRangePicker />
             <h6 className={classes.dateRange}>Search From</h6>
             <TopicIndexDropDown />
-            {/* </div> */}
+            <h6 className={classes.country}>Select Country</h6>
+            <TopicCountryDropDown />
           </>
         </Grid>
         <Grid item sm={8} xs={8} lg={2} md={2}>

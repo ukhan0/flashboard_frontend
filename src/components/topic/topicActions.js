@@ -127,7 +127,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         });
       });
     }
-    if (getState().Topic.searchIndex === 'tweets') {
+    if (getState().Topic.searchIndex['value'] === 'tweets') {
       return;
     }
     try {
@@ -281,9 +281,10 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       : undefined,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
-    searchIndex: topicState.searchIndex,
+    searchIndex: topicState.searchIndex ? topicState.searchIndex['value'] : undefined,
     startTime: startTime ? startTime : undefined,
-    endTime: endTime ? endTime : undefined
+    endTime: endTime ? endTime : undefined,
+    countryCode: topicState.selectedCountry ? topicState.selectedCountry['code'] : undefined
   };
   return data;
 };
@@ -366,7 +367,8 @@ const createSearchSaveMiniPayload = topicState => {
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     company_arr:
       topicState.selectedWatchlistCompanyNames.length !== 0 ? topicState.selectedWatchlistCompanyNames : undefined,
-    searchIndex: topicState.searchIndex
+    searchIndex: topicState.searchIndex ? topicState.searchIndex : undefined,
+    countryCode: topicState.selectedCountry ? topicState.selectedCountry : undefined
   };
 };
 
@@ -627,7 +629,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         });
       });
     }
-    if (getState().Topic.searchIndex === 'tweets') {
+    if (getState().Topic.searchIndex['value'] === 'tweets') {
       try {
         const response = await axios.post(
           `${config.apiUrl}/api/dictionary/search_tweets_data`,
@@ -720,7 +722,7 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
     // orderBy: topicState.orderBy,
     page: topicState.pageNo,
     refresh_search: false,
-    searchIndex: topicState.searchIndex,
+    searchIndex: topicState.searchIndex['value'],
     document_type: '',
     ticker: ''
   };

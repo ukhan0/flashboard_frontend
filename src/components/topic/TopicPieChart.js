@@ -59,7 +59,7 @@ export default function TopicPieChart(props) {
       <Card className="card-box mb-4">
         <div className="card-header">
           <div className="card-header--title">
-            <span className={'font-weight-bold'}>{searchIndex === 'filling_int_sentiment4' ? 'Country' : selectedSector ? selectedSector : 'Sector'}</span>
+            <span className={'font-weight-bold'}>{searchIndex['value'] === 'filling_int_sentiment4' ? 'Country' : selectedSector ? selectedSector : 'Sector'}</span>
           </div>
           {selectedSector ? (
             <div>

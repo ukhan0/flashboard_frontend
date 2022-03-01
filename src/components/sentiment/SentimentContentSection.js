@@ -85,7 +85,7 @@ const SentimentContentSection = props => {
         ) : null}
       </div>
       {hideCards === 'true' ? (
-        searchIndex === 'filling_int_sentiment4' && isFromThemex ? null : (
+        searchIndex['value'] === 'filling_int_sentiment4' && isFromThemex ? null : (
           <SentimentCard />
         )
       ) : null}

@@ -1,16 +1,23 @@
-import React, { useState, Fragment, useEffect, useRef } from 'react';
+import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Grid, Paper, Box } from '@material-ui/core';
 import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex, toLower } from 'lodash';
 import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
-import { createResultTitle, extractResultTitleFromPath } from './topicHelpers';
+import { createResultTitle, preventParentClick, extractResultTitleFromPath } from './topicHelpers';
 import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
-import { setIsFromSideBar, setIsFromThemex } from '../../reducers/Topic';
+import {
+  setIsFromSideBar,
+  setIsFromThemex,
+  setSimpleSearchTextArray,
+  setIgnoreSearchTextArray,
+  setOpenTopicSearchDialog,
+  setTopicSearchText
+} from '../../reducers/Topic';
 import {
   setSelectedHeadingId,
   setIsApiResponseReceived,
@@ -79,10 +86,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TopicSearchResults = () => {
+  const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+  const [show, setShow] = useState(false); // hide menu
+  const [selectedText, setSelectedText] = useState(''); // hide menu
   const classes = useStyles();
   const resultsSection = useRef(null);
   const history = useHistory();
-  const { isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(state => state.Topic);
+  const {
+    isSearchLoading,
+    searchResultHighlights,
+    selectedCompanyName,
+    isSimpleSearch,
+    simpleSearchTextArray,
+    ignoreSearchTextArray,
+    searchText
+  } = useSelector(state => state.Topic);
   const { completeCompaniesData } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
@@ -93,6 +111,25 @@ const TopicSearchResults = () => {
   const [y, setY] = useState('');
   const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
+  const companyResultsDiv = useRef(null);
+
+  const handleClick = useCallback(() => (show ? setShow(!show) : null), [show]);
+
+  useEffect(() => {
+    if (companyResults.length === 0) {
+      return;
+    }
+    const companyResultsDivRef = companyResultsDiv.current;
+    if (companyResultsDiv && companyResultsDivRef) {
+      document.addEventListener('click', handleClick);
+    }
+
+    return () => {
+      if (companyResultsDiv && companyResultsDivRef) {
+        document.removeEventListener('click', handleClick);
+      }
+    };
+  }, [companyResults, handleClick]);
   const replaceHeadingRegex = /<heading class="(.*)">(.*)<\/heading>/gm;
 
   useEffect(() => {
@@ -197,23 +234,96 @@ const TopicSearchResults = () => {
   };
 
   const handleMouseDown = e => {
+    preventParentClick(e);
+    setShow(false);
+
     setX(e.pageX);
     setY(e.pageY);
   };
   const handleMouseUp = e => {
+    preventParentClick(e);
+
     const delta = 6;
     const diffX = Math.abs(e.pageX - x);
     const diffY = Math.abs(e.pageY - y);
+    let c = window.getSelection().toString();
+    if (c) {
+      setSelectedText(window.getSelection().toString());
+
+      setShow(true);
+      setAnchorPoint({ x: e.pageX, y: e.pageY });
+    }
     if (diffX < delta && diffY < delta) {
       setIsGotoSentiment(true);
     }
   };
+
+  const addSelectedTextInSearchTerm = () => {
+    if (isSimpleSearch && selectedText) {
+      let previousData = simpleSearchTextArray;
+      previousData.push(selectedText);
+      dispatch(setSimpleSearchTextArray(previousData));
+    }
+    if (!isSimpleSearch && selectedText) {
+      let data = `${searchText} OR ${selectedText}`;
+      dispatch(setTopicSearchText(data));
+    }
+    dispatch(setOpenTopicSearchDialog(true));
+  };
+  const removeSelectedTextInSearchTerm = () => {
+    if (isSimpleSearch && selectedText) {
+      let previousData = ignoreSearchTextArray;
+      previousData.push(selectedText);
+      dispatch(setIgnoreSearchTextArray(previousData));
+    }
+    if (!isSimpleSearch && selectedText) {
+      let data = `${searchText} NOT ${selectedText}`;
+      dispatch(setTopicSearchText(data));
+    }
+    dispatch(setOpenTopicSearchDialog(true));
+  };
   return (
     <div ref={resultsSection}>
-      <div>
-        <div className={classes.currentCompanyDetail}>
-          <TopicComapnyDetails companyDetail={companyDetails} />
-        </div>
+      <div className={classes.currentCompanyDetail}>
+        <TopicComapnyDetails companyDetail={companyDetails} />
+      </div>
+      <div className="app" ref={companyResultsDiv}>
+        {show ? (
+          <div
+            style={{
+              top: anchorPoint.y - 60,
+              left: anchorPoint.x - 40,
+              zIndex: 200,
+              position: 'fixed',
+              boxShadow: '0 3px 10px rgb(0 0 0 / 100%)',
+              borderRadius: '20px'
+            }}>
+            <ul className="list-group list-group-flush text-left">
+              <li className="list-group-item rounded-top" style={{ borderRadius: '10px' }}>
+                <div className="align-box-row">
+                  <div className="pl-2">
+                    <small
+                      style={{ cursor: 'pointer' }}
+                      className="font-weight-bold"
+                      onClick={() => addSelectedTextInSearchTerm()}>
+                      Add term in search
+                    </small>
+                    <div className="divider my-2"></div>
+                    <small
+                      style={{ cursor: 'pointer' }}
+                      className="font-weight-bold"
+                      onClick={() => removeSelectedTextInSearchTerm()}>
+                      Remove term from search
+                    </small>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <> </>
+        )}
+
         <PerfectScrollbar>
           {isSearchLoading && isEmpty(searchResultHighlights) ? (
             <></>
@@ -247,44 +357,54 @@ const TopicSearchResults = () => {
                           </Grid>
                         </Grid>
                         {get(companyResult, 'results', []).map((result, index) => {
-                          let resultIndex = index
+                          let resultIndex = index;
                           return (
                             <div key={`rst${index}`}>
                               {result.content.map((content, index) => {
-                                const titleData = extractResultTitleFromPath(content)
-                                const titleDataLength = titleData.length
-                                let htmlContentToShow = content.replaceAll(searchRegex, '').replaceAll(replaceHeadingRegex , "")
-                                  return <>
-                                  <Grid
-                                    key={`rsttt${resultIndex}`}
-                                    container
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="center">
-                                    <Grid item>
-                                      <p className="font-size-lg mb-2 text-black-100">
-                                        {titleData.map((contentTitle,indexTitle) => {
-                                          return <><span>{ contentTitle }</span>
-                                          <span>{!indexTitle && titleDataLength > 1 ? <ArrowForwardIcon /> : null}</span></>
-                                        })}
-                                      </p>
+                                const titleData = extractResultTitleFromPath(content);
+                                const titleDataLength = titleData.length;
+                                let htmlContentToShow = content
+                                  .replaceAll(searchRegex, '')
+                                  .replaceAll(replaceHeadingRegex, '');
+                                return (
+                                  <>
+                                    <Grid
+                                      key={`rsttt${resultIndex}`}
+                                      container
+                                      direction="row"
+                                      justify="flex-start"
+                                      alignItems="center">
+                                      <Grid item>
+                                        <p className="font-size-lg mb-2 text-black-100">
+                                          {titleData.map((contentTitle, indexTitle) => {
+                                            return (
+                                              <>
+                                                <span>{contentTitle}</span>
+                                                <span>
+                                                  {!indexTitle && titleDataLength > 1 ? <ArrowForwardIcon /> : null}
+                                                </span>
+                                              </>
+                                            );
+                                          })}
+                                        </p>
+                                      </Grid>
                                     </Grid>
-                                  </Grid>
-                                  <p
-                                  key={`rstc${index}`}
-                                  className={clsx(
-                                    classes.searchResultText,
-                                    classes.paragraphHeading,
-                                    classes.clickable,
-                                    classes.line,
-                                    'font-size-mg mb-2 text-black-50'
-                                  )}
-                                  dangerouslySetInnerHTML={{ __html: htmlContentToShow }}
-                                  onClick={e => goToSentimentScreen(companyResult, result)}
-                                  onMouseUp={e => handleMouseUp(e)}
-                                  onMouseDown={e => handleMouseDown(e)}></p></>
-                                }
-                              )}
+                                    <p
+                                      key={`rstc${index}`}
+                                      className={clsx(
+                                        classes.searchResultText,
+                                        classes.paragraphHeading,
+                                        classes.clickable,
+                                        classes.line,
+                                        'font-size-mg mb-2 text-black-50'
+                                      )}
+                                      dangerouslySetInnerHTML={{ __html: htmlContentToShow }}
+                                      onClick={e => goToSentimentScreen(companyResult, result)}
+                                      onMouseUp={e => handleMouseUp(e)}
+                                      onMouseDown={e => handleMouseDown(e)}></p>
+                                  </>
+                                );
+                              })}
                             </div>
                           );
                         })}

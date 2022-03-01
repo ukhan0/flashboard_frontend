@@ -41,7 +41,7 @@ export default function HelpNavigation() {
 
   return (
     <Fragment>
-      <Grid container direction="row" justifyContent="flex-end" alignItems="flex-end">
+      <Grid container direction="row" justify="flex-end" alignItems="flex-end">
         <Grid item>
           <div>
             <Box component="span" pr="2">

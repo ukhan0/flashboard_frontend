@@ -1,6 +1,7 @@
 import { get, forEach, uniq, cloneDeep } from 'lodash';
 import searchHeadingMapping from '../../config/searchHeadingMapping';
-
+import searchIndexs from 'config/searchIndexs';
+import config from '../../config/config'
 export function getSearchCombinations(suggestions) {
   const quotedCombinations = suggestions.map(c => `"${c}"`);
   return quotedCombinations.join(' OR ');
@@ -24,25 +25,25 @@ export function getSelectedSuggestionAsArr(suggestionsObjOrignal, searchText) {
   return { suggestionsArr, suggestionsSingleArr, onlySuggestionSingleArr };
 }
 
-export const extractResultTitleFromPath = (completeData) => {
+export const extractResultTitleFromPath = completeData => {
   let matches = completeData.match(/<span path="(.*)"><\/span>/gm) || [];
   let completeHeading = [];
-  if(matches.length > 0) {
+  if (matches.length > 0) {
     const spanData = matches[0];
-    let pathDataArr = spanData.split('"')
-    let pathData = pathDataArr[1]
-    let decodedHeadingDataArr = atob(pathData)
-    let splitdecodedHeadingDataArr = decodedHeadingDataArr.split("|")
-    if(splitdecodedHeadingDataArr.length > 2){
+    let pathDataArr = spanData.split('"');
+    let pathData = pathDataArr[1];
+    let decodedHeadingDataArr = atob(pathData);
+    let splitdecodedHeadingDataArr = decodedHeadingDataArr.split('|');
+    if (splitdecodedHeadingDataArr.length > 2) {
       splitdecodedHeadingDataArr = splitdecodedHeadingDataArr.slice(-2);
-      if(splitdecodedHeadingDataArr[1] === "data"){
-        splitdecodedHeadingDataArr.splice(1, 1)
+      if (splitdecodedHeadingDataArr[1] === 'data') {
+        splitdecodedHeadingDataArr.splice(1, 1);
       }
-      completeHeading = splitdecodedHeadingDataArr
+      completeHeading = splitdecodedHeadingDataArr;
     }
   }
-  return completeHeading
-}
+  return completeHeading;
+};
 
 export const createResultTitle = (rawTitle, docType) => {
   if (!rawTitle) {
@@ -172,4 +173,23 @@ export const getCurrentSearchDispaly = (
     : searchText;
 
   return isSimpleSearch ? searchTerm : fullSearchText;
+};
+
+export const getSearchIndex = data => {
+  let index = null;
+  if (typeof data === 'string') {
+    const section = searchIndexs.find(sd => sd.value === data);
+    if (section) {
+      index = section;
+    } else {
+      index = {
+        label: 'Domestic Filings',
+        value: config.domesticSearchIndex
+      };
+    }
+  } else {
+    index = data;
+  }
+
+  return index;
 };

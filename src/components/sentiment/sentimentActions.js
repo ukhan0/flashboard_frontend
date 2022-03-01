@@ -102,7 +102,7 @@ export const getSentimentHighlights = () => {
         orderBy: 'desc',
         sortBy: 'document_date',
         page: 0,
-        searchIndex: searchIndex
+        searchIndex: searchIndex['value']
       });
 
       const data = get(response, 'data', {});
