@@ -8,7 +8,8 @@ import {
   setWatchlistSearchText,
   setSelectedTickerSymbol,
   setSelectedWatchlist,
-  setIsTickerSelected
+  setIsTickerSelected,
+  setWatchlistType
 } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
@@ -30,20 +31,17 @@ const WatchlistTopicSearch = props => {
     selectedFileType,
     isTickerSelected,
     completeCompaniesData,
-    completeCompaniesDataGlobal,
-    selectedType
+    completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
-  const data = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
+
+  const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table
-
     if (!text || text.length < 1) {
       return;
     }
-
     const searchabletext = text.toLowerCase();
     setLoading(true);
-
     const filteredWatchlist = data
       .filter(
         c =>
@@ -54,7 +52,7 @@ const WatchlistTopicSearch = props => {
             .toLowerCase()
             .includes(searchabletext)
       )
-      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '' }));
+      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
     setAvailableSymbols(filteredWatchlist);
     setLoading(false);
   }, 200);
@@ -63,6 +61,7 @@ const WatchlistTopicSearch = props => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
       dispatch(setIsTickerSelected(true));
       dispatch(setSelectedTickerSymbol(newSelectedSymbol));
+      dispatch(setWatchlistType(newSelectedSymbol.type));
       setTimeout(() => {
         dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
       }, [100]);
