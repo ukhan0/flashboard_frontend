@@ -11,7 +11,7 @@ const SentimentPdf = props => {
   return (
     <>
       {isLoading ? (
-        <div style={{ textAlign: 'center' ,marginTop:'50px'}}>
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
           {' '}
           <BeatLoader color={'var(--primary)'} loading={true} size={10} />
         </div>
@@ -19,12 +19,12 @@ const SentimentPdf = props => {
 
       <iframe
         src={`${config.sentimentIframUrl}?filling_id=${selectedItem.recentId}`}
-        title="Comparision"
+        title="Sentiment"
         width="100%"
         height="1000px"
         samesite="None"
         frameBorder="0"
-        id="comparisionResult"
+        id="Sentiments"
         onLoad={() => {
           setIsloading(false);
         }}
