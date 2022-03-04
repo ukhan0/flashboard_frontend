@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setSentimentResult, setIsLoading, setSentimentHighlights } from '../../reducers/Sentiment';
+import { setSentimentResult, setIsLoading, setSentimentHighlights, setCanceHighlightsCall } from '../../reducers/Sentiment';
 
 import { setFillingsSearchText } from '../../reducers/Filings';
 import { get } from 'lodash';
@@ -9,7 +9,7 @@ import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers
 
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
-    const { selectedItem } = getState().Watchlist;
+    const { selectedItem, selectedType } = getState().Watchlist;
     const { isFromThemex } = getState().Topic;
     const { fillingsSearchText } = getState().Filings;
     const { sentimentSearchIndex } = getState().Sentiment;
@@ -46,7 +46,7 @@ export const getSentimentData = () => {
         formData.append('search_term', searchTerm);
       }
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? sentimentSearchIndex : 'filling_sentiment5'}`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? sentimentSearchIndex : (selectedType === "global") ? 'filling_sentiment_global*' : 'filling_sentiment_sec*'}`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);
@@ -96,13 +96,16 @@ export const getSentimentHighlights = () => {
       isSimpleSearch
     );
     try {
+      const cancelToken = axios.CancelToken.source();
+      dispatch(setCanceHighlightsCall(cancelToken));
       const response = await axios.post(`${config.apiUrl}/api/dictionary/search_by_document_id`, {
         searchTerm: isFromSideBar ? '' : `${searchTerm}`,
         document_id: documentId,
         orderBy: 'desc',
         sortBy: 'document_date',
         page: 0,
-        searchIndex: searchIndex['value']
+        searchIndex: searchIndex['value'],
+        cancelToken: cancelToken.token
       });
 
       const data = get(response, 'data', {});

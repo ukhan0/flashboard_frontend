@@ -79,10 +79,10 @@ export const formatData = rawDataArr => {
 
 export const formatComapnyData = rawData => {
   return {
-    ticker: rawData.ticker,
+    ticker: get(rawData, "ticker", null),
     companyName: rawData.b,
-    industry: getSectorIndustryById(rawData.cc).industry,
-    sector: getSectorIndustryById(rawData.cc).sector,
+    industry: (getSectorIndustryById(rawData.cc).industry) ? getSectorIndustryById(rawData.cc).industry : get(rawData, "d"),
+    sector: (getSectorIndustryById(rawData.cc).sector) ? getSectorIndustryById(rawData.cc).sector : get(rawData, "c") ,
     mktcap: rawData.e,
     adv: rawData.f,
     last10k: rawData.last_10k,
@@ -96,7 +96,11 @@ export const formatComapnyData = rawData => {
     oldId: rawData['bv'],
     periodDate10k: rawData['ca'],
     periodDate10q: rawData['cb'],
-    isTickerActive: get(rawData, 'isTickerActive', false)
+    isTickerActive: get(rawData, 'isTickerActive', false),
+    documentId: get(rawData, "document_id", null),
+    cid:  get(rawData, "cid", null),
+    companyId: get(rawData, "cid", null),
+    countryCode: get(rawData, "co", null),
   };
 };
 

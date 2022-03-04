@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Typography, Button, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
+import SentimentHighlights from "./SentimentHighlight"
+import { get } from 'lodash';
+import { getSentimentHighlights } from './sentimentActions';
+
 import {
   setSelectedHeadingId,
   setIsPin,
@@ -71,8 +75,13 @@ const useStyles = makeStyles(theme => {
 const SentimentTableOfContent = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { isLoading, isPin } = useSelector(state => state.Sentiment);
+  const { isLoading, isPin, canceHighlightsCall } = useSelector(state => state.Sentiment);
   const { selectedItem } = useSelector(state => state.Watchlist);
+  const documentId = get(selectedItem, 'documentId', null);
+
+  useEffect(() => {
+      dispatch(getSentimentHighlights());
+  }, [dispatch])
   
   const clickHandle = path => {
     props.onSelection(createHash(path));
@@ -99,6 +108,9 @@ const SentimentTableOfContent = props => {
     dispatch(setSentimentDrawerOpen(false));
     dispatch(setCurrentToc(false));
     dispatch(setShowTocButton(true));
+    if(canceHighlightsCall){
+      canceHighlightsCall.cancel();
+    }
   };
   return (
     <React.Fragment>
@@ -157,7 +169,7 @@ const SentimentTableOfContent = props => {
             ) : null
           )
         )}
-        {/* {!isLoading ? <SentimentHighlight clickHandle={clickHandle} /> : null} */}
+        {!isLoading && documentId ? <SentimentHighlights clickHandle={clickHandle} /> : null}
         {selectedItem ? (
           <Grid container direction="row" justify="flex-end" alignItems="flex-end">
             <Grid item>
@@ -166,7 +178,7 @@ const SentimentTableOfContent = props => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <p className={clsx(classes.link)}>Veiw</p>
+                <p className={clsx(classes.link)}>View</p>
               </a>
             </Grid>
           </Grid>

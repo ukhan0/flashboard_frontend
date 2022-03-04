@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import { Paper, Box, Grid, Avatar } from '@material-ui/core';
+import { Paper, Box, Grid, Avatar, ButtonGroup, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { get } from 'lodash';
 import config from '../../config/config';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import SentimentFilters from './SentimentFiltres';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
-
+import { sentimentVersions } from '../../config/filterTypes';
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
     display: 'flex',
@@ -52,7 +52,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{`DocumentType:`}&nbsp;</label>
               </Grid>
               <Grid item>
-                <h6 className={classes.upperCase}>{renameDocumentTypes(get(data, 'document_type', ""))}</h6>
+                <h6 className={classes.upperCase}>{renameDocumentTypes(get(data, 'document_type', ''))}</h6>
               </Grid>
             </Grid>
           </Grid>
@@ -71,6 +71,24 @@ const SentimentCompanyDetails = props => {
               </Grid>
               <Grid item>
                 <h6>{data ? dateFormaterMoment(parseDateStrMoment(get(data, 'period_date', null))) : null}</h6>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid item>
+                <label className="text-black-50 d-block">{'Version:'}&nbsp;</label>
+              </Grid>
+              <Grid item>
+                <ButtonGroup color="primary">
+                  {sentimentVersions.map((sentimentV, i) => (
+                    <Button
+                      size="small"
+                      key={`sent_${i}`}
+                      onClick={() => props.handleClickSentimentVersion(sentimentV.key)}
+                      variant={props.sentimentVesion === sentimentV.key ? 'contained' : 'outlined'}>
+                      {sentimentV.label}
+                    </Button>
+                  ))}
+                </ButtonGroup>
               </Grid>
             </Grid>
           </Grid>

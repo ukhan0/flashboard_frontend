@@ -13,9 +13,10 @@ import {
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import CloseIcon from '@material-ui/icons/Close';
 
 const createOptionLabel = option => {
-  return `${option.ticker} - ${option.name}`;
+  return `${option.ticker} - ${option.name} ${option.code ? `- ${option.code}` : ''} `;
 };
 
 const WatchlistTopicSearch = props => {
@@ -23,13 +24,18 @@ const WatchlistTopicSearch = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { selectedTickerSymbol, searchText, selectedFileType, isTickerSelected, completeCompaniesData } = useSelector(
-    state => state.Watchlist
-  );
-
+  const {
+    selectedTickerSymbol,
+    searchText,
+    selectedFileType,
+    isTickerSelected,
+    completeCompaniesData,
+    completeCompaniesDataGlobal,
+    selectedType
+  } = useSelector(state => state.Watchlist);
+  const data = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table
-    dispatch(setWatchlistSearchText(text));
 
     if (!text || text.length < 1) {
       return;
@@ -37,7 +43,8 @@ const WatchlistTopicSearch = props => {
 
     const searchabletext = text.toLowerCase();
     setLoading(true);
-    const filteredWatchlist = completeCompaniesData
+
+    const filteredWatchlist = data
       .filter(
         c =>
           get(c, 'b', '')
@@ -47,7 +54,7 @@ const WatchlistTopicSearch = props => {
             .toLowerCase()
             .includes(searchabletext)
       )
-      .map(c => ({ ticker: c.ticker, name: c.b }));
+      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '' }));
     setAvailableSymbols(filteredWatchlist);
     setLoading(false);
   }, 200);
@@ -59,12 +66,13 @@ const WatchlistTopicSearch = props => {
       setTimeout(() => {
         dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
       }, [100]);
-      let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, completeCompaniesData);
+      let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, data);
       let company = formatComapnyData(selectedItem);
       company.recentId = selectedFileType === '10k' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10k' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
       dispatch(setSentimentResult(null, null));
+
       dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
     }
@@ -87,7 +95,14 @@ const WatchlistTopicSearch = props => {
         onChange={selectionChanged}
         options={availableSymbols}
         value={selectedTickerSymbol}
-        closeIcon={false}
+        closeIcon={
+          <CloseIcon
+            onClick={() => {
+              dispatch(setWatchlistSearchText(''));
+            }}
+            fontSize="small"
+          />
+        }
         getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (
           <TextField

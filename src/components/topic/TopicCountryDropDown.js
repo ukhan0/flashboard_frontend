@@ -14,6 +14,9 @@ const TopicCountryDropDown = props => {
   const [availableSymbols, setAvailableSymbols] = useState(countriesCode);
   const { selectedCountry } = useSelector(state => state.Topic);
   const handleSearchTextChange = debounce(async text => {
+    if (!text) {
+      onClose();
+    }
     const searchabletext = text.toLowerCase();
     setLoading(true);
     const filteredWatchlist = countriesCode
@@ -33,6 +36,10 @@ const TopicCountryDropDown = props => {
       setAvailableSymbols([]);
     }
   };
+  const onClose = () => {
+    dispatch(setSelectedCountry(null));
+    setAvailableSymbols(countriesCode);
+  };
 
   return (
     <TopicSearchDropDown
@@ -42,6 +49,9 @@ const TopicCountryDropDown = props => {
       selectedValue={selectedCountry}
       createOptionLabel={createOptionLabel}
       loading={loading}
+      closeIcon={true}
+      onClose={onClose}
+      placeholder={'Type Country Name'}
     />
   );
 };

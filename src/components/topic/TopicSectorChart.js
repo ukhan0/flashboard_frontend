@@ -42,7 +42,7 @@ const baseGraphOptions = {
 };
 
 export default function TopicSectorChart(props) {
-  const { searchResult } = useSelector(state => state.Topic);
+  const { searchResult, searchIndex } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
 
@@ -55,15 +55,18 @@ export default function TopicSectorChart(props) {
     },
     [dispatch, props]
   );
-
   useEffect(() => {
-    const rawData = get(searchResult, 'buckets.groupBySectorIndustry', []);
+    const rawData =
+      searchIndex['label'] === 'Global Filings'
+        ? get(searchResult, 'buckets.docSector', [])
+        : get(searchResult, 'buckets.groupBySectorIndustry', []);
     const sectorData = [];
     const industryData = [];
 
     // see the data format here. https://www.highcharts.com/demo/pie-drilldown
     rawData.forEach(rd => {
-      const sectorName = trim(get(rd, 'key.gs', null));
+      const sectorName =
+        searchIndex['label'] === 'Global Filings' ? trim(get(rd, 'key', null)) : trim(get(rd, 'key.gs', null));
       const industryName = trim(get(rd, 'key.gi', null));
       const docCount = get(rd, 'doc_count', 0);
       if (!sectorName) {
@@ -92,7 +95,7 @@ export default function TopicSectorChart(props) {
       handleSectorClick(event.point.name);
     };
     setGraphOptions(newGraphOptions);
-  }, [searchResult, handleSectorClick]);
+  }, [searchResult, handleSectorClick, searchIndex]);
 
   return <HighchartsReact highcharts={Highcharts} options={graphOptions} />;
 }

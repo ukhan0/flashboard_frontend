@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Button, Fab, Box } from '@material-ui/core';
+import React, { useRef, useState } from 'react';
+import { Button, Fab, Box, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SentimentSection from './SentimentSection';
 import SentimentDrawer from './SentimentDrawer';
@@ -11,6 +11,8 @@ import config from '../../config/config';
 import { setSentimentDrawerOpen, setIsPin } from '../../reducers/Sentiment';
 import { useLocation } from 'react-router-dom';
 import SentimentCard from '../Filings/FillingsCardData';
+import SentimentPdf from './SentimentPdf';
+
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
@@ -35,6 +37,7 @@ const SentimentContentSection = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
+  const [sentimentVesion, setSentimentVersion] = useState('flatText');
   const classes = useStyles();
   const dispatch = useDispatch();
   const contentTopRef = useRef(null);
@@ -65,6 +68,9 @@ const SentimentContentSection = props => {
       history.push('/watchlist');
     }
   };
+  const handleClickSentimentVersion = v => {
+    setSentimentVersion(v);
+  };
 
   return (
     <div ref={contentTopRef}>
@@ -80,7 +86,10 @@ const SentimentContentSection = props => {
       <div className={classes.companyDetail}>
         {selectedItem ? (
           <Box m={2}>
-            <SentimentCompanyDetails />
+            <SentimentCompanyDetails
+              handleClickSentimentVersion={handleClickSentimentVersion}
+              sentimentVesion={sentimentVesion}
+            />
           </Box>
         ) : null}
       </div>
@@ -89,15 +98,28 @@ const SentimentContentSection = props => {
           <SentimentCard />
         )
       ) : null}
+
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item></Grid>
+        <Grid item></Grid>
+      </Grid>
+
       <div className={classes.drawerOpener}>
-        {isTocButton ? (
+        {isTocButton && sentimentVesion === 'flatText' ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
             Table of contents
           </Button>
         ) : null}
       </div>
-      <SentimentSection contentData={props.contentData} onSelection={handleSelection} />
-      <SentimentDrawer tableData={props.tableData} onSelection={handleSelection} />
+      {sentimentVesion === 'original' ? (
+        <SentimentPdf />
+      ) : (
+        <>
+          <SentimentSection contentData={props.contentData} onSelection={handleSelection} />
+          <SentimentDrawer tableData={props.tableData} onSelection={handleSelection} />
+        </>
+      )}
+
       <div className={classes.goToTopContainer}>
         <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
           <UpIcon />

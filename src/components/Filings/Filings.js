@@ -37,6 +37,7 @@ const FilingsTimelineChartMemo = React.memo(FillingCompanyStockChart, (prevProps
 
 const Filings = () => {
   const dispatch = useDispatch();
+  const { fillingsGraphData } = useSelector(state => state.Filings);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const classes = useStyles();
@@ -59,12 +60,8 @@ const Filings = () => {
       <div className={classes.companyTimelineChart}>
         <FilingsTimelineChartMemo />
       </div>
-      <div>
-        <FilingsCards />
-      </div>
-      <div className={classes.filingsDetailsGraph}>
-        <FilingsDetailsGraph />
-      </div>
+      <div>{fillingsGraphData.length > 0 ? <FilingsCards /> : null}</div>
+      <div className={classes.filingsDetailsGraph}>{fillingsGraphData.length > 0 ? <FilingsDetailsGraph /> : null}</div>
       <div>
         <FillingTable />
       </div>

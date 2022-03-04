@@ -367,7 +367,7 @@ const searchDefaultState = () => ({
   tweetsMapData: [],
   searchIndex: {
     label: 'Domestic Filings',
-    value: config.domesticSearchIndex
+    value: config.secSearchIndex
   },
   startDate: subMonths(startOfMonth(new Date()), 12),
   endDate: endOfMonth(new Date()),

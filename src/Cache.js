@@ -2,7 +2,12 @@ import React, { useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { get } from 'lodash';
 import config from './config/config';
-import { setCompleteDataLoadedFlag, setCompleteCompaniesData } from './reducers/Watchlist';
+import {
+  setCompleteDataLoadedFlag,
+  setCompleteCompaniesData,
+  setCompleteDataLoadedGlobalFlag,
+  setCompleteGlobalCompaniesData
+} from './reducers/Watchlist';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 // import dummyData from './dummyData';
@@ -13,7 +18,7 @@ const Cache = () => {
 
   const cacheData = useCallback(() => {
     const lastTimeDataUpdate = moment().format('hh:mm:ss');
-    const apiUrl = `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject`;
+    const apiUrl = `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=domestic&user_id=${user.id}&subject`;
     axios
       .get(`${apiUrl}=all`)
       .then(response => {
@@ -27,18 +32,36 @@ const Cache = () => {
         console.log(error);
       });
 
-    //  enable following lines and disable above lines to use dummy companies data
     // dispatch(setCompleteCompaniesData(JSON.parse(dummyData)));
     // console.log(JSON.parse(dummyData));
     // dispatch(setCompleteDataLoadedFlag(true));
   }, [dispatch, user]);
 
+  const cacheDataGlobal = useCallback(() => {
+    const lastTimeDataUpdate = moment().format('hh:mm:ss');
+    const apiUrl = `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=global&user_id=${user.id}&subject`;
+    axios
+      .get(`${apiUrl}=all`)
+      .then(response => {
+        let data = get(response, 'data.data.content', []);
+        dispatch(setCompleteGlobalCompaniesData(data));
+        dispatch(setCompleteDataLoadedGlobalFlag(true));
+        localStorage.setItem('lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      });
+  }, [dispatch, user]);
+
   useEffect(() => {
     if (user) {
       dispatch(setCompleteDataLoadedFlag(false));
+      dispatch(setCompleteDataLoadedGlobalFlag(false));
       cacheData();
+      cacheDataGlobal();
     }
-  }, [cacheData, user, dispatch]);
+  }, [cacheData, cacheDataGlobal, user, dispatch]);
 
   return <></>;
 };

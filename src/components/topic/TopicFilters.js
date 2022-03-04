@@ -273,7 +273,7 @@ const TopicFilters = props => {
                 onClick={() => {
                   handleOpenThemeDialog();
                 }}>
-                Update
+                Save
               </Button>
             ) : (
               <Button

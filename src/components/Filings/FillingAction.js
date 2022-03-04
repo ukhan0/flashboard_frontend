@@ -18,7 +18,9 @@ export const getCompanyFilingListing = () => {
     }
     try {
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_listing?${companyId ? `company_id=${companyId}` : `ticker=${ticker}`}`
+        `${config.apiUrl}/api/get_company_filing_listing?index=${config.fillingApiIndex}${
+          companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
+        }`
       );
 
       const data = get(response, 'data', []);
@@ -44,8 +46,8 @@ export const getCompanyFilingGraphData = () => {
     }
     try {
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_graph_detail?${
-          companyId ? `company_id=${companyId}` : `ticker=${escape(ticker)}`
+        `${config.apiUrl}/api/get_company_filing_graph_detail?index=${config.fillingApiIndex}${
+          companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
         }`
       );
 

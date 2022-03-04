@@ -10,7 +10,7 @@ import {
   storeColumnsState,
   storeFilteringState,
   getColumnState,
-  getFilteringState,
+  getFilteringState
 } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
@@ -59,6 +59,7 @@ const Watchlist = props => {
   const dispatch = useDispatch();
   const {
     selectedFileType,
+    selectedType,
     selectedUniverse,
     selectedMetric,
     selectedSymbols,
@@ -69,7 +70,8 @@ const Watchlist = props => {
     isNewWatchListDataAvailable,
     isColorEnable,
     overwriteCheckBox,
-    completeCompaniesData
+    completeCompaniesData,
+    completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [dataVersion, setDataVersion] = useState(1);
@@ -88,40 +90,47 @@ const Watchlist = props => {
   const [isAgGridActions, setIsAgGridActions] = useState(false);
 
   const searchFromCompleteData = useCallback(() => {
-    const rawData = completeCompaniesData;
+    const rawData = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
     if (rawData) {
       dispatch(setIsNewWatchlistDataAvailable(true));
       setWatchlistData(formatData(rawData));
     }
-  }, [dispatch, completeCompaniesData]);
+  }, [dispatch, completeCompaniesData, completeCompaniesDataGlobal, selectedType]);
 
-  const syncCompleteDataOnPage = useCallback(newData => {
-    const rawCompleteData = cloneDeep(completeCompaniesData);
-    if (!rawCompleteData || !isArray(rawCompleteData)) {
-      return;
-    }
-    newData.forEach(nd => {
-      const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
-      rawCompleteData[tickerIndex] = nd;
-    });
-    dispatch(setCompleteCompaniesData(rawCompleteData));
-  }, [completeCompaniesData, dispatch])
+  const syncCompleteDataOnPage = useCallback(
+    newData => {
+      const rawCompleteData = cloneDeep(selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal);
+      if (!rawCompleteData || !isArray(rawCompleteData)) {
+        return;
+      }
+      newData.forEach(nd => {
+        const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+        rawCompleteData[tickerIndex] = nd;
+      });
+      dispatch(setCompleteCompaniesData(rawCompleteData));
+    },
+    [completeCompaniesData, completeCompaniesDataGlobal , selectedType , dispatch]
+  );
 
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
       if (selectedUniverse === 'all') {
-        rawData = completeCompaniesData;
+        if (selectedType === 'domestic') {
+          rawData = completeCompaniesData;
+        } else {
+          rawData = completeCompaniesDataGlobal;
+        }
       } else {
         setLoading(true);
-        rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType));
+        rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
         syncCompleteDataOnPage(rawData);
         // update cached data of all (Complete) watchlist
         if (!firstTimeLoad.current) {
           dispatch(setIsNewWatchlistDataAvailable(false));
         }
       }
-      
+
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
         setTopicDialogOpen(true);
         dispatch(setCount(count + 1));
@@ -132,7 +141,16 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse, completeCompaniesData , syncCompleteDataOnPage , selectedFileType, count, dispatch]);
+  }, [
+    selectedUniverse,
+    completeCompaniesData,
+    completeCompaniesDataGlobal,
+    syncCompleteDataOnPage,
+    selectedFileType,
+    selectedType,
+    count,
+    dispatch
+  ]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -164,22 +182,22 @@ const Watchlist = props => {
     rowData.documentType = selectedFileType;
     if (columnId === 'actions') {
       let updatedTickerDetailIndex = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
-      let watchListDataArr = cloneDeep(watchlistData)
+      let watchListDataArr = cloneDeep(watchlistData);
       if (rowData.isTickerActive) {
         if (selectedUniverse === 'watchlist') {
           watchListDataArr.splice(updatedTickerDetailIndex, 1);
-          setWatchlistData(watchListDataArr)
+          setWatchlistData(watchListDataArr);
         } else {
-          watchListDataArr[updatedTickerDetailIndex].isTickerActive = false
-          setWatchlistData(watchListDataArr)
+          watchListDataArr[updatedTickerDetailIndex].isTickerActive = false;
+          setWatchlistData(watchListDataArr);
         }
         deleteTicker(rowData.ticker);
         dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
       } else {
         // add ticker
-        watchListDataArr[updatedTickerDetailIndex].isTickerActive = true
-        setWatchlistData(watchListDataArr)
+        watchListDataArr[updatedTickerDetailIndex].isTickerActive = true;
+        setWatchlistData(watchListDataArr);
         handleUpload(rowData.ticker);
         dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
@@ -208,7 +226,7 @@ const Watchlist = props => {
         fetchData();
       }
     }
-  }, [fetchData , dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
+  }, [fetchData, dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
 
   useEffect(() => {
     firstTimeLoad.current = false;
@@ -361,14 +379,14 @@ const Watchlist = props => {
         </div>
       ) : null}
       <Grid container direction="row" alignItems="flex-end" className={classes.space}>
-        <Grid item xs={8}>
+        <Grid item xs={10}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-end">
             <Grid item>
               <WatchlistFilters />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Box className="d-flex align-items-center">
               {isFilterActive || isFilterActiveOnSearch ? (

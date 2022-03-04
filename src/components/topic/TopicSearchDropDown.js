@@ -2,6 +2,7 @@ import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, TextField } from '@material-ui/core';
 import useStyles from '../watchlist/watchlistStyles';
+import CloseIcon from '@material-ui/icons/Close';
 const TopicSearchDropDown = props => {
   const classes = useStyles();
   return (
@@ -14,7 +15,16 @@ const TopicSearchDropDown = props => {
         onChange={props.selectionChanged}
         options={props.availableSymbols}
         value={props.selectedValue}
-        closeIcon={false}
+        closeIcon={
+          props.closeIcon ? (
+            <CloseIcon
+              onClick={() => {
+                props.onClose();
+              }}
+              fontSize="small"
+            />
+          ) : null
+        }
         getOptionLabel={option => props.createOptionLabel(option)}
         renderInput={params => (
           <TextField
@@ -24,12 +34,12 @@ const TopicSearchDropDown = props => {
             }}
             {...params}
             variant="outlined"
-            placeholder="Type Index Name"
+            placeholder={props.placeholder}
             onChange={e => props.handleSearchTextChange(e.target.value)}
             fullWidth
             size="small"
-            inputProps={{
-              ...params.inputProps,
+            InputProps={{
+              ...params.InputProps,
               autoComplete: 'new-password'
             }}
           />

@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 function TickerLogo(props) {
   const classes = useStyles();
-
+  const tickerValue = props.value.includes('-G') ? '' : props.value;
   return (
     <Box className={classes.tickerLogo}>
       <Avatar
@@ -29,14 +29,14 @@ function TickerLogo(props) {
         className={classes.logo}
       />
       <Box variant="outlined" className={classes.tickerText}>
-        {props.value}
+        {tickerValue}
       </Box>
     </Box>
   );
 }
 
 function areEqual(prevProps, nextProps) {
- return true;
+  return true;
 }
 
-export default React.memo(TickerLogo, areEqual)
+export default React.memo(TickerLogo, areEqual);

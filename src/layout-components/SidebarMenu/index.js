@@ -11,11 +11,13 @@ import { useSelector } from 'react-redux';
 
 const SidebarMenuList = props => {
   const { pages, ...rest } = props;
-  const { selectedItem } = useSelector(state => state.Watchlist);
-
+  const { selectedItem, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   return (
     <List className="p-0">
-      {pages.reduce((items, page) => reduceChildRoutes({ items, page, selectedItem, ...rest }), [])}
+      {pages.reduce(
+        (items, page) => reduceChildRoutes({ items, page, selectedItem, isCompleteCompaniesDataLoaded, ...rest }),
+        []
+      )}
     </List>
   );
 };
@@ -56,15 +58,7 @@ const reduceChildRoutes = props => {
         key={page.label}
         label={page.badge}
         title={page.label}
-        disabled={
-          page.label === 'Comparison' || page.label === 'Filings'
-            ? selectedItem
-              ? selectedItem.ticker
-                ? page.disabled
-                : true
-              : page.disabled
-            : page.disabled
-        }
+        disabled={selectedItem ? (page.label === 'Comparison' && !selectedItem.oldId ? true : page.disabled) : true}
       />
     );
   }

@@ -2,6 +2,14 @@ export const fileTypesSelection = [
   { label: '10-K', key: '10k' },
   { label: '10-Q', key: '10q' }
 ];
+export const fileTypesSelectionGlobal = [
+  { label: 'AR', key: '10k' },
+  { label: 'QR', key: '10q' }
+];
+export const typesSelection = [
+  { label: 'SEC', key: 'domestic' },
+  { label: 'SEDAR', key: 'global' }
+];
 export const universeSelection = [
   { label: 'Watchlist', key: 'watchlist' },
   { label: 'Recent', key: 'recent' },
@@ -37,4 +45,8 @@ export const comparisionViewTypes = [
 export const searchVersionTypes = [
   { label: 'Simple', key: true },
   { label: 'Advanced', key: false }
+];
+export const sentimentVersions = [
+  { label: 'Original', key: 'original' },
+  { label: 'Flat Text', key: 'flatText' }
 ];

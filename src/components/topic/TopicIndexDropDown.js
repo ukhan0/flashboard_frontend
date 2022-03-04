@@ -1,49 +1,47 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { debounce, get } from 'lodash';
 import { setSearchIndex, setSelectedDocumentTypes } from '../../reducers/Topic';
 import searchIndexs from '../../config/searchIndexs';
-import TopicSearchDropDown from './TopicSearchDropDown';
-const createOptionLabel = option => {
-  return `${option.label}`;
-};
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
+import { MenuItem, ListItemText } from '@material-ui/core';
+const useStyles = makeStyles(theme => ({
+  select: {
+    minWidth: 120,
+    width: '300px'
+  }
+}));
 
 const TopicIndexDropDown = props => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [availableSymbols, setAvailableSymbols] = useState(searchIndexs);
+  const classes = useStyles();
   const { searchIndex, documentTypes } = useSelector(state => state.Topic);
-  const handleSearchTextChange = debounce(async text => {
-    const searchabletext = text.toLowerCase();
-    setLoading(true);
-    const filteredWatchlist = searchIndexs
-      .filter(c =>
-        get(c, 'label', '')
-          .toLowerCase()
-          .includes(searchabletext)
-      )
-      .map(c => ({ label: c.label, value: c.value }));
-    setAvailableSymbols(filteredWatchlist);
-    setLoading(false);
-  }, 200);
-
-  const selectionChanged = async (e, newSelectedSymbol) => {
-    if (newSelectedSymbol && newSelectedSymbol.value) {
-      dispatch(setSearchIndex(newSelectedSymbol));
-      let documentTypeValue = documentTypes.map(ee => ee.value);
-      dispatch(setSelectedDocumentTypes(documentTypeValue));
-      setAvailableSymbols([]);
+  const selectionChanged = selectedIndex => {
+    if (selectedIndex.target.value) {
+      const index = searchIndexs.find(s => s.value === selectedIndex.target.value);
+      if (index) {
+        dispatch(setSearchIndex(index));
+        let documentTypeValue = documentTypes.map(ee => ee.value);
+        dispatch(setSelectedDocumentTypes(documentTypeValue));
+      }
     }
   };
   return (
-    <TopicSearchDropDown
-      selectionChanged={selectionChanged}
-      handleSearchTextChange={handleSearchTextChange}
-      selectedValue={searchIndex}
-      availableSymbols={availableSymbols}
-      createOptionLabel={createOptionLabel}
-      loading={loading}
-    />
+    <FormControl variant="outlined" size="small">
+      <Select
+        labelId="topicDocumentTypeDropdownLabel"
+        id="topicDocumentTypeDropdownId"
+        value={searchIndex['value']}
+        onChange={selectionChanged}
+        className={classes.select}>
+        {searchIndexs.map(documentType => (
+          <MenuItem key={documentType.value} value={documentType.value}>
+            <ListItemText primary={documentType.label} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 

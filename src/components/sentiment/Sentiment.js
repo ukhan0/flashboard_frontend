@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { getCompanyFilingGraphData } from '../Filings/FillingAction';
-import { get, cloneDeep } from 'lodash';
+import { get, cloneDeep, isEmpty } from 'lodash';
 import config from '../../config/config';
 import convert from 'xml-js';
 import { createHash } from '../../utils/helpers';
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
   loaderSection: {
     textAlign: 'center'
-  }
+  },
 }));
 
 const Sentiment = () => {
@@ -57,11 +57,11 @@ const Sentiment = () => {
   },[completeCompaniesData]);
 
   useEffect(() => {
-    if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
+    if (!firstTimeLoad.current) {
       firstTimeLoad.current = true;
       if (getQueryParams.get('recentId')) {
         let ticker = getQueryParams.get('ticker');
-        if (completeCompaniesData) {
+        if (completeCompaniesData && !isEmpty(completeCompaniesData)) {
           getCompanyByTicker(ticker).then(localSelectedItem => {
             if (localSelectedItem) {
               let company = formatComapnyData(localSelectedItem);

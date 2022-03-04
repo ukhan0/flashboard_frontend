@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
+import countriesCode from '../../config/countriesCode';
 import {
   parseDateStrMoment,
   parseNumber,
@@ -20,18 +21,20 @@ import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
 import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
 import TickerLogo from './WatchlistTableComponents/TickerLogo';
+import CountryCodeRenderer from './WatchlistTableComponents/CountryCodeRenderer';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import { checkIsFilterActive } from './WatchlistHelpers';
 import { setIsFilterActive } from '../../reducers/Watchlist';
-import { getPriorityKeyValue } from '../../utils/helpers'
+import { getPriorityKeyValue } from '../../utils/helpers';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
   TickerLogo: TickerLogo,
-  actions: Action
+  actions: Action,
+  CountryCodeRenderer: CountryCodeRenderer
 };
 
 const defaultColDef = {
@@ -235,7 +238,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(get(params, 'data.sentiment', null)),
-          word: changeWordGetter(getPriorityKeyValue(params, "sentimentWord"))
+          word: changeWordGetter(getPriorityKeyValue(params, 'sentimentWord'))
         };
       }
       return sentimentObj;
@@ -261,7 +264,7 @@ const colDefs = [
     valueGetter: params => {
       return {
         number: parseNumber(get(params, 'data.sentiment', null)),
-        word: changeWordGetter(getPriorityKeyValue(params, "sentimentWord"))
+        word: changeWordGetter(getPriorityKeyValue(params, 'sentimentWord'))
       };
     },
     valueFormatter: params => {
@@ -270,14 +273,14 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
-        return getPriorityKeyValue(params, "sentimentWord")
+        return getPriorityKeyValue(params, 'sentimentWord');
       }
     },
     cellRenderer: 'WordStatusRenderer'
   },
   {
     headerName: 'Sentiment Change',
-    headerTooltip: "The raw change in `Sentiment` from the company`s most recent filing of the same type.",
+    headerTooltip: 'The raw change in `Sentiment` from the company`s most recent filing of the same type.',
     field: 'sentimentChange',
     colId: 'sentimentChange',
     type: 'numericColumn',
@@ -289,7 +292,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, "sentimentChangeWord"))
+          word: changeWordGetter(getPriorityKeyValue(params, 'sentimentChangeWord'))
         };
       }
       return sentimentObj;
@@ -318,7 +321,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, "sentimentChangeWord"))
+          word: changeWordGetter(getPriorityKeyValue(params, 'sentimentChangeWord'))
         };
       }
       return sentimentObj;
@@ -329,7 +332,7 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
-        return getPriorityKeyValue(params, "sentimentChangeWord")
+        return getPriorityKeyValue(params, 'sentimentChangeWord');
       }
     },
     cellRenderer: 'WordStatusRenderer'
@@ -348,7 +351,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, "wordCountChangePercentWord"))
+          word: changeWordGetter(getPriorityKeyValue(params, 'wordCountChangePercentWord'))
         };
       }
       return sentimentObj;
@@ -374,7 +377,7 @@ const colDefs = [
   {
     headerName: 'Word Count Change Percentage',
     headerTooltip:
-      "The percentage change in Word Count of the parsed text from the company`s most recent filing of the same type.",
+      'The percentage change in Word Count of the parsed text from the company`s most recent filing of the same type.',
     field: 'wordCountChangePercent',
     colId: 'wordCountChangePercent',
     type: 'numericColumn',
@@ -386,7 +389,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, "wordCountChangePercentWord"))
+          word: changeWordGetter(getPriorityKeyValue(params, 'wordCountChangePercentWord'))
         };
       }
       return sentimentObj;
@@ -421,7 +424,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, "wordCountChangePercentWord"))
+          word: changeWordGetter(getPriorityKeyValue(params, 'wordCountChangePercentWord'))
         };
       }
       return sentimentObj;
@@ -432,10 +435,19 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
-        return getPriorityKeyValue(params, "wordCountChangePercentWord")
+        return getPriorityKeyValue(params, 'wordCountChangePercentWord');
       }
     },
     cellRenderer: 'WordStatusRenderer'
+  },
+  {
+    headerName: 'Country',
+    headerTooltip: 'Country',
+    field: 'countryCode',
+    colId: 'countryCode',
+    width: 158,
+    filter: 'agTextColumnFilter',
+    cellRenderer: 'CountryCodeRenderer'
   }
 ];
 
@@ -452,6 +464,7 @@ const WatchlistTable = props => {
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
   };
+
   React.useEffect(() => {
     if (!gridApi) {
       return;
@@ -545,7 +558,6 @@ const WatchlistTable = props => {
     }
     gridApi.onFilterChanged();
   };
-  
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact
@@ -553,7 +565,7 @@ const WatchlistTable = props => {
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
-        getRowNodeId={d => d.ticker}
+        getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
         immutableData={true}
         quickFilterText={searchText}
         columnDefs={colDefs}
@@ -572,6 +584,7 @@ const WatchlistTable = props => {
         onSortChanged={storeColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
+        context={countriesCode}
         onFilterChanged={storeFilteringState}></AgGridReact>
     </div>
   );

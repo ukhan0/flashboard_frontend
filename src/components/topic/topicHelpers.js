@@ -1,7 +1,7 @@
 import { get, forEach, uniq, cloneDeep } from 'lodash';
 import searchHeadingMapping from '../../config/searchHeadingMapping';
 import searchIndexs from 'config/searchIndexs';
-import config from '../../config/config'
+import config from '../../config/config';
 export function getSearchCombinations(suggestions) {
   const quotedCombinations = suggestions.map(c => `"${c}"`);
   return quotedCombinations.join(' OR ');
@@ -88,6 +88,10 @@ export const renameDocumentTypes = type => {
     let selected = type.map(v => {
       if (v.toLowerCase() === 'fmp-transcript') {
         v = 'Earning Call';
+      } else if(v.toLowerCase() === 'fin supp'){
+        v = 'FS';
+      } else if(v.toLowerCase() === 'other financials'){
+        v = 'OF';
       }
       return v;
     });
@@ -100,6 +104,10 @@ export const renameDocumentTypes = type => {
 
   if (type.toLowerCase() === 'fmp-transcript') {
     type = 'Earning Call';
+  } else if(type.toLowerCase() === 'fin supp'){
+    type = 'FS';
+  }  else if(type.toLowerCase() === 'other financials'){
+    type = 'OF';
   }
   return type;
 };
@@ -184,7 +192,7 @@ export const getSearchIndex = data => {
     } else {
       index = {
         label: 'Domestic Filings',
-        value: config.domesticSearchIndex
+        value: config.secSearchIndex
       };
     }
   } else {

@@ -37,6 +37,7 @@ import {
   setAllSearchParams,
   setIsnNewlySavedSearch
 } from '../../reducers/Topic';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import axios from 'axios';
 import config from '../../config/config';
 import { format } from 'date-fns';
@@ -162,6 +163,12 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           const companyNameSorter = v => v.key.cn.toLowerCase();
           let sortData = orderBy(results, ['doc_count', companyNameSorter], ['desc', 'asc']);
           let firstCompanySelected = sortData[0].key.cn;
+          let firstCompanyData = {
+            companyName: sortData[0].key.cn,
+            ticker: sortData[0].key.ct ? sortData[0].key.ct : '',
+            companyId: sortData[0].key.cid ? sortData[0].key.cid : ''
+          };
+          dispatch(setSelectedWatchlist(firstCompanyData));
           dispatch(setSelectedCompanyName(firstCompanySelected));
           dispatch(performTopicSearchHighlights(true, firstCompanySelected));
         }

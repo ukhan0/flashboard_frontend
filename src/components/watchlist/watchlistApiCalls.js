@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import axios from 'axios';
 import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
 
-export const getWatchlist = (selectedUniverse, selectedFileType) => {
+export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
@@ -11,7 +11,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType) => {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}`,
+        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${selectedType}`,
         {
           cancelToken: cancelToken.token
         }

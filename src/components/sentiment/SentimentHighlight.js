@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Paper, Box, Grid } from '@material-ui/core';
@@ -67,25 +67,37 @@ const useStyles = makeStyles(theme => ({
 const SentimentHighlights = props => {
   const classes = useStyles();
   const { sentimentHighlights } = useSelector(state => state.Sentiment);
-  const [currentTextId, setCurrentTextId] = React.useState(1);
+  const [currentTextId, setCurrentTextId] = React.useState(0);
+  const [viewedHighlights, setViewedHighlights] = React.useState(currentTextId);
+  const [totalHighlights, setTotalHighlights] = React.useState(sentimentHighlights.length);
+
+  useEffect(() => {
+    if(sentimentHighlights){
+      setTotalHighlights(sentimentHighlights.length)
+    }
+  }, [sentimentHighlights])
+
   //   Index as path
   const clickHandle = index => {
     props.clickHandle(`#${index + 1}text`);
-
+    setViewedHighlights(index + 1)
     setCurrentTextId(index + 1);
   };
 
   const handleNext = () => {
+    if (currentTextId + 1 > sentimentHighlights.length) {
+      return;
+    }
     props.clickHandle(`#${currentTextId + 1}text`);
-
+    setViewedHighlights(currentTextId + 1)
     setCurrentTextId(currentTextId + 1);
   };
   const handlePre = () => {
-    if (currentTextId - 1 < 0) {
+    if (currentTextId - 1 <= 0) {
       return;
     }
     props.clickHandle(`#${currentTextId - 1}text`);
-
+    setViewedHighlights(currentTextId - 1)
     setCurrentTextId(currentTextId - 1);
   };
   return (
@@ -104,7 +116,7 @@ const SentimentHighlights = props => {
                 />
               </Grid>
               <Grid item>
-                <h7>Pre-Next</h7>
+                <span>{viewedHighlights}/{totalHighlights}</span>
               </Grid>
               <Grid item>
                 <ArrowForwardIosIcon

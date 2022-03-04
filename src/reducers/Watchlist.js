@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
 export const SET_FILE_TYPE = 'WATCHLIST/SET_FILE_TYPE';
+export const SET_TYPE = 'WATCHLIST/SET_TYPE';
 export const SET_UNIVERSE = 'WATCHLIST/SET_UNIVERSE';
 export const SET_METRIC = 'WATCHLIST/SET_METRIC';
 export const SET_SEARCH_TEXT = 'WATCHLIST/SET_SEARCH_TEXT';
@@ -9,6 +10,7 @@ export const SET_SELECTED_SYMBOLS = 'WATCHLIST/SET_SELECTED_SYMBOLS';
 export const RESET_WATCHLIST = 'WATCHLIST/RESET_WATCHLIST';
 export const SET_RECENT_DATALOADED_FLAG = 'WATCHLIST/SET_RECENT_DATALOADED_FLAG';
 export const SET_COMPELTE_DATALOADED_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
+export const SET_COMPELTE_DATALOADED_GLOBAL_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_GLOBAL_FLAG';
 export const SET_COUNT = 'WATCHLIST/SET_COUNT';
 export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
 export const SET_SELECTED_TICKER_SYMBOL = 'WATCHLIST/SET_SELECTED_TICKER_SYMBOL';
@@ -20,6 +22,7 @@ export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_
 export const SET_IS_FILTER_ACTIVE = 'WATCHLIST/SET_IS_FILTER_ACTIVE';
 export const SET_IS_TICKER_SELECTED = 'WATCHLIST/SET_IS_TICKER_SELECTED';
 export const SET_COMPLETE_COMPANIES_DATA = "WATCHLIST/SET_COMPLETE_COMPANIES_DATA";
+export const SET_COMPLETE_COMPANIES_GLOBAL_DATA = "WATCHLIST/SET_COMPLETE_COMPANIES_GLOBAL_DATA";
 
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
@@ -29,6 +32,11 @@ export const setOverwriteCheckBox = overwriteCheckBox => ({
 export const setCount = count => ({
   type: SET_COUNT,
   count
+});
+
+export const setWatchlistType = watchlistType => ({
+  type: SET_TYPE,
+  watchlistType
 });
 
 export const setWatchlistFileType = fileType => ({
@@ -115,6 +123,19 @@ export const setCompleteCompaniesData = completeCompaniesData => ({
   completeCompaniesData
 });
 
+
+export const setCompleteDataLoadedGlobalFlag = isCompleteCompaniesDataGlobalLoaded => ({
+  type: SET_COMPELTE_DATALOADED_GLOBAL_FLAG,
+  isCompleteCompaniesDataGlobalLoaded
+});
+
+export const setCompleteGlobalCompaniesData = completeCompaniesDataGlobal => ({
+  type: SET_COMPLETE_COMPANIES_GLOBAL_DATA,
+  completeCompaniesDataGlobal
+});
+
+
+
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
@@ -126,11 +147,13 @@ const getWatchlistSettings = () => {
 const getDefaultState = () => {
   const user = getUser();
   const watchlistSetting = getWatchlistSettings();
-
+  const selectedTypeWatchList = !isEmpty(watchlistSetting) ? (watchlistSetting.selectedType) ? watchlistSetting.selectedType : 'domestic' : 'domestic'
+  const selectedFileTypeWatchList = !isEmpty(watchlistSetting) ? (selectedTypeWatchList === "domestic") ? watchlistSetting.selectedFileType : '10k' : '10q'
   return {
-    selectedFileType: !isEmpty(watchlistSetting) ? watchlistSetting.selectedFileType : '10q',
+    selectedType: selectedTypeWatchList,
+    selectedFileType: selectedFileTypeWatchList,
     selectedUniverse: !isEmpty(watchlistSetting) ? watchlistSetting.selectedUniverse : 'watchlist',
-    selectedMetric: !isEmpty(watchlistSetting) ? watchlistSetting.selectedMetric : 'totdoc',
+    selectedMetric: !isEmpty(watchlistSetting) ? (selectedTypeWatchList === "domestic") ? watchlistSetting.selectedMetric : 'totdoc' : 'totdoc',
     searchText: '',
     selectedTab: 0,
     count: 0,
@@ -147,7 +170,9 @@ const getDefaultState = () => {
     isFilterActive: false,
     isTickerSelected: false,
     isCompleteCompaniesDataLoaded: false,
+    isCompleteCompaniesDataGlobalLoaded: false,
     completeCompaniesData: [],
+    completeCompaniesDataGlobal: [],
   };
 };
 
@@ -165,6 +190,8 @@ export default function reducer(
       return { ...state, count: action.count };
     case SET_FILE_TYPE:
       return { ...state, selectedFileType: action.fileType };
+    case SET_TYPE:
+      return { ...state, selectedType: action.watchlistType , selectedMetric: (action.watchlistType==="global") ? "totdoc" : state.selectedMetric , selectedFileType:  (action.watchlistType==="global") ? "10k" : state.selectedFileType };
     case SET_UNIVERSE:
       return { ...state, selectedUniverse: action.universe };
     case SET_METRIC:
@@ -199,8 +226,12 @@ export default function reducer(
       return { ...state, isTickerSelected: action.isTickerSelected };
     case SET_COMPELTE_DATALOADED_FLAG:
       return { ...state, isCompleteCompaniesDataLoaded: action.isCompleteCompaniesDataLoaded };
+    case SET_COMPELTE_DATALOADED_GLOBAL_FLAG:
+      return { ...state, isCompleteCompaniesDataGlobalLoaded: action.isCompleteCompaniesDataGlobalLoaded };
     case SET_COMPLETE_COMPANIES_DATA:
       return { ...state, completeCompaniesData: action.completeCompaniesData}
+    case SET_COMPLETE_COMPANIES_GLOBAL_DATA:
+      return { ...state, completeCompaniesDataGlobal: action.completeCompaniesDataGlobal}
     default:
       break;
   }

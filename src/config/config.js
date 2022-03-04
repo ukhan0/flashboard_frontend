@@ -8,10 +8,12 @@ const config = {
   hideCard: process.env.REACT_APP_HIDE_CARD,
   hideGraph: process.env.REACT_APP_HIDE_GRAPH,
   completeDataUpdateDuration: 1 * 60 * 60 * 1000, // miliseconds in a hour
-  domesticSearchIndex: process.env.REACT_APP_DOMESTIC_SEARCH_INDEX,
+  secSearchIndex: process.env.REACT_APP_SEC_FILLING_SEARCH_INDEX,
   globalSearchIndex: process.env.REACT_APP_GLOBAL_SEARCH_INDEX,
   twitterSearchIndex: process.env.REACT_APP_TWITTER_SEARCH_INDEX,
-  fillingApiUrl: process.env.REACT_APP_FILING_URL
+  fillingApiIndex: process.env.REACT_APP_FILING_INDEX,
+  sedarSearchIndex: process.env.REACT_APP_SEDAR_FILLING_SEARCH_INDEX,
+  fillingApiUrl: process.env.REACT_APP_FILING_URL,
+  sentimentIframUrl: process.env.REACT_APP_SENTIMENT_IFRAME_URL
 };
-
 export default config;

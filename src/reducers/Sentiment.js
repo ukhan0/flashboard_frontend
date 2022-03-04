@@ -12,6 +12,7 @@ export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED 
 export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
 export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
 export const SET_IS_FROM_FILLING = 'TOPIC/SET_IS_FROM_FILLING ';
+export const CANCELE_HIGHLIGHT_CALLS = 'TOPIC/CANCELE_HIGHLIGHT_CALLS ';
 export const SET_SENTIMENT_SEARCH_INDEX = 'TOPIC/SET_SENTIMENT_SEARCH_INDEX ';
 
 export const setSentimentSearchIndex = sentimentSearchIndex => ({
@@ -23,6 +24,12 @@ export const setSentimentResult = (data, recentId) => ({
   type: SET_SENTIMENT_RESULT,
   data,
   recentId
+});
+
+
+export const setCanceHighlightsCall = canceHighlightsCall => ({
+  type: CANCELE_HIGHLIGHT_CALLS,
+  canceHighlightsCall
 });
 
 export const setSearchId = searchId => ({
@@ -115,6 +122,7 @@ const getDefaultState = () => {
     sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible',
     sentimentHighlights: [],
     isFromFilling: false,
+    canceHighlightsCall: null,
     sentimentSearchIndex: ''
   };
 };
@@ -154,6 +162,9 @@ export default function reducer(
       return { ...state, isFromFilling: action.isFromFilling };
     case SET_SENTIMENT_SEARCH_INDEX:
       return { ...state, sentimentSearchIndex: action.sentimentSearchIndex };
+
+    case CANCELE_HIGHLIGHT_CALLS:
+      return { ...state, canceHighlightsCall: action.canceHighlightsCall };
 
     default:
       break;

@@ -1,15 +1,19 @@
 import config from './config';
 export default [
   {
-    label: 'Domestic Filings',
-    value: config.domesticSearchIndex
+    label: 'SEC Filings',
+    value: config.secSearchIndex
+  },
+  {
+    label: 'SEDAR Filings',
+    value: config.sedarSearchIndex
   },
   {
     label: 'Global Filings',
     value: config.globalSearchIndex
   },
   {
-    label: 'Twitter',
+    label: 'Tweet',
     value: config.twitterSearchIndex
   }
 ];

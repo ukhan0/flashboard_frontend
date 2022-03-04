@@ -12,6 +12,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { setSelectedCompanyName, setBackDropOnCompanyClick } from '../../reducers/Topic';
 import { performTopicSearchHighlights } from './topicActions';
 import './TopicTableStyles.css';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
+import { setIsFromThemex } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
@@ -85,12 +88,12 @@ export default function TopicCompantResultsTable() {
   );
   const dispatch = useDispatch();
   const companyResults = get(searchResult, 'buckets.groupByCompanyTicker', []);
-
   const finalResult = companyResults.map(v => {
     return {
       key: v.key.cn,
       ticker: v.key.ct || v.key.cid,
-      doc_count: v.doc_count
+      doc_count: v.doc_count,
+      companyId: v.key.cid ? v.key.cid : ''
     };
   });
   const companyNameSorter = v => v.key.toLowerCase();
@@ -104,6 +107,18 @@ export default function TopicCompantResultsTable() {
       // get data for this company
       dispatch(performTopicSearchHighlights(true, params.data.key));
       dispatch(setBackDropOnCompanyClick(true));
+    }
+    if (params.data) {
+      let data = {
+        companyName: params.data.key,
+        ticker: params.data.ticker,
+        companyId: params.data.companyId
+      };
+
+      dispatch(setSentimentResult(null, null));
+      dispatch(setSelectedWatchlist(data));
+      dispatch(setIsFromfilling(true));
+      dispatch(setIsFromThemex(false));
     }
     dispatch(setSelectedCompanyName(params.data.key));
   };

@@ -40,7 +40,7 @@ const TopicDocumentTypeDropdown = props => {
       value={selectedDocumentTypes}
       onChange={handleSelectionChange}
       input={<Input />}
-      renderValue={selectedValues => renameDocumentTypes(selectedValues)}
+      renderValue={selectedValues => (isAllSelected ? ['All'] : renameDocumentTypes(selectedValues))}
       className={classes.multiSelect}>
       <MenuItem
         value="All"
