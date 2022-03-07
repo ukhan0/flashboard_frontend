@@ -54,7 +54,7 @@ const WatchlistTopicSearch = props => {
       .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
     setAvailableSymbols(filteredWatchlist);
     setLoading(false);
-  }, 200);
+  }, 500);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
