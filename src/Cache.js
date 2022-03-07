@@ -23,7 +23,13 @@ const Cache = () => {
       .get(`${apiUrl}=all`)
       .then(response => {
         let data = get(response, 'data.data.content', []);
-        dispatch(setCompleteCompaniesData(data));
+        let modifiedData = data.map(d => {
+          return {
+            ...d,
+            type: 'domestic'
+          };
+        });
+        dispatch(setCompleteCompaniesData(modifiedData));
         dispatch(setCompleteDataLoadedFlag(true));
         localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);
       })
@@ -44,7 +50,13 @@ const Cache = () => {
       .get(`${apiUrl}=all`)
       .then(response => {
         let data = get(response, 'data.data.content', []);
-        dispatch(setCompleteGlobalCompaniesData(data));
+        let modifiedData = data.map(d => {
+          return {
+            ...d,
+            type: 'global'
+          };
+        });
+        dispatch(setCompleteGlobalCompaniesData(modifiedData));
         dispatch(setCompleteDataLoadedGlobalFlag(true));
         localStorage.setItem('lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
       })

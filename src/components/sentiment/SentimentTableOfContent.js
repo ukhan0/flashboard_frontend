@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
-import SentimentHighlights from "./SentimentHighlight"
+import SentimentHighlights from './SentimentHighlight';
 import { get } from 'lodash';
 import { getSentimentHighlights } from './sentimentActions';
 
@@ -80,9 +80,9 @@ const SentimentTableOfContent = props => {
   const documentId = get(selectedItem, 'documentId', null);
 
   useEffect(() => {
-      dispatch(getSentimentHighlights());
-  }, [dispatch])
-  
+    dispatch(getSentimentHighlights());
+  }, [dispatch]);
+
   const clickHandle = path => {
     props.onSelection(createHash(path));
     dispatch(setSelectedHeadingId(createHash(path)));
@@ -108,7 +108,7 @@ const SentimentTableOfContent = props => {
     dispatch(setSentimentDrawerOpen(false));
     dispatch(setCurrentToc(false));
     dispatch(setShowTocButton(true));
-    if(canceHighlightsCall){
+    if (canceHighlightsCall) {
       canceHighlightsCall.cancel();
     }
   };
@@ -169,15 +169,14 @@ const SentimentTableOfContent = props => {
             ) : null
           )
         )}
-        {!isLoading && documentId ? <SentimentHighlights clickHandle={clickHandle} /> : null}
+        {!isLoading && documentId && false ? <SentimentHighlights clickHandle={clickHandle} /> : null}
         {selectedItem ? (
           <Grid container direction="row" justify="flex-end" alignItems="flex-end">
             <Grid item>
               <a
                 href={`https://engine-spirit.s-factors.com/dictionary/historysummary?id=${selectedItem.recentId}`}
                 target="_blank"
-                rel="noopener noreferrer"
-              >
+                rel="noopener noreferrer">
                 <p className={clsx(classes.link)}>View</p>
               </a>
             </Grid>
