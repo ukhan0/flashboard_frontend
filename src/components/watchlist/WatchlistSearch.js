@@ -33,7 +33,6 @@ const WatchlistTopicSearch = props => {
     completeCompaniesData,
     completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
-
   const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table
