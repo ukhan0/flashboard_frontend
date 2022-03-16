@@ -35,7 +35,8 @@ import {
   setTweetsCountryStatesMapData,
   setTweetsTableData,
   setAllSearchParams,
-  setIsnNewlySavedSearch
+  setIsnNewlySavedSearch,
+  setTopicSearchCompany
 } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import axios from 'axios';
@@ -57,6 +58,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       isSimpleSearch,
       searchText
     } = getState().Topic;
+    dispatch(setTopicSearchCompany(''));
     const currentSearchDetail = {};
     const sltSection = getState().Topic.selectedSection;
     if (sltSection === 'totdoc') {
