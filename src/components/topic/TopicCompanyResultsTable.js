@@ -118,7 +118,6 @@ export default function TopicCompantResultsTable() {
         ticker: params.data.ticker,
         companyId: params.data.companyId
       };
-      dispatch(setTopicSearchCompany(''));
       dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(data));
       dispatch(setIsFromfilling(true));
