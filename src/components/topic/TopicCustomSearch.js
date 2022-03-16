@@ -9,9 +9,6 @@ import { setSelectedWatchlistCompanyNames } from '../../reducers/Topic';
 const createOptionLabel = option => {
   return `${option.ticker} - ${option.name}`;
 };
-const createOptionLabelWithTicker = option => {
-  return `${option.ticker}`;
-};
 
 const TopicCustomSearch = props => {
   const { selectedWatchlistCompanyNames } = useSelector(state => state.Topic);
@@ -24,6 +21,14 @@ const TopicCustomSearch = props => {
   const availableCompanies = data.map(e => {
     return { name: e.b, ticker: e.ticker };
   });
+  const createOptionLabelWithTicker = option => {
+    let ticker = null;
+    let comp = availableCompanies.find(v => v.name.toLowerCase() === option.toLowerCase());
+    if (comp) {
+      ticker = comp['ticker'];
+    }
+    return ticker;
+  };
 
   const handleSearchTextChange = debounce(async text => {
     try {
@@ -54,7 +59,12 @@ const TopicCustomSearch = props => {
         getOptionLabel={option => createOptionLabel(option)}
         defaultValue={selectedWatchlistCompanyNames}
         renderTags={(value, getTagProps) =>
-          value.map((option, index) => <Chip label={createOptionLabelWithTicker(option)} {...getTagProps({ index })} />)
+          value.map((option, index) => (
+            <Chip
+              label={createOptionLabelWithTicker(option['name'] ? option['name'] : option)}
+              {...getTagProps({ index })}
+            />
+          ))
         }
         renderInput={params => (
           <TextField
