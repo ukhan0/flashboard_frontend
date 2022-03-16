@@ -44,3 +44,11 @@ export const getPriorityKeyValue = (params, key) => {
 export const eraseCompleteWatchlist = () => {
   localStorage.removeItem('watchlist-data-all');
 };
+
+export const setItemInLocalStorage = (v, data, isStringify) => {
+  localStorage.setItem(v, isStringify ? JSON.stringify(data) : data);
+};
+
+export const getItemFromLocalStorage = (v, isJsonParse) => {
+  isJsonParse ? JSON.parse(localStorage.getItem(v)) : localStorage.getItem(v);
+};

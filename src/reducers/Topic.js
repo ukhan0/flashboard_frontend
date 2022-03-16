@@ -1,8 +1,9 @@
 import documentTypesData from '../config/documentTypesData';
-import config from '../config/config';
+import searchIndexs from 'config/searchIndexs';
 import { getSearchIndex } from '../components/topic/topicHelpers';
 import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { get } from 'lodash';
+import { setItemInLocalStorage } from '../utils/helpers';
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
 export const SET_SEARCH_TEXT = 'TOPIC/SET_SEARCH_TEXT';
 export const SET_DATE_RANGE = 'TOPIC/SET_DATE_RANGE';
@@ -63,6 +64,16 @@ export const SET_IS_UNSAVED_SEARCH = 'TOPIC/SET_IS_UNSAVED_SEARCH';
 export const SET_IS_FROM_THEMEX = 'TOPIC/SET_IS_FROM_THEMEX';
 export const SET_IS_NEWLY_SAVED_SEARCH = 'TOPIC/SET_IS_NEWLY_SAVED_SEARCH';
 export const SET_SELECTED_COUNTRY = 'TOPIC/SET_SELECTED_COUNTRY';
+export const SET_TOPIC_SEARCH_COMPANY = 'TOPIC/SET_TOPIC_SEARCH_COMPANY';
+export const SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER';
+export const SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER';
+
+export const setTopicIndexDropDownSearchCombineReducer = () => ({
+  type: SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER
+});
+export const setTopicHandleSearchCombineReducer = () => ({
+  type: SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER
+});
 export const setSearchBackdrop = (cancelTokenSource, showBackdrop) => ({
   type: SET_SEARCH_BACKDROP,
   cancelTokenSource,
@@ -360,15 +371,17 @@ export const setSelectedCountry = selectedCountry => ({
   selectedCountry
 });
 
+export const setTopicSearchCompany = topicSearchedComapny => ({
+  type: SET_TOPIC_SEARCH_COMPANY,
+  topicSearchedComapny
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
   tweetsData: [],
   tweetsMapData: [],
-  searchIndex: {
-    label: 'Domestic Filings',
-    value: config.secSearchIndex
-  },
+  searchIndex: searchIndexs[0],
   startDate: subMonths(startOfMonth(new Date()), 12),
   endDate: endOfMonth(new Date()),
   orderBy: 'desc',
@@ -461,7 +474,8 @@ const getDefaultState = () => {
     isDate: false,
     isFromSideBar: false,
     isFromThemex: false,
-    isNewlySavedSearch: false
+    isNewlySavedSearch: false,
+    topicSearchedComapny: ''
   };
 };
 
@@ -519,7 +533,16 @@ export default function reducer(
           'searchJSON.company_arr',
           searchDefaultState().selectedWatchlistCompanyNames
         ),
-        searchTextWithAnd: get(action.searchObj, 'searchJSON.searchTextWithAnd', searchDefaultState().searchTextWithAnd)
+        searchTextWithAnd: get(
+          action.searchObj,
+          'searchJSON.searchTextWithAnd',
+          searchDefaultState().searchTextWithAnd
+        ),
+        searchIndexLocal: setItemInLocalStorage(
+          'searchIndex',
+          getSearchIndex(get(action.searchObj, 'searchJSON.searchIndex', searchDefaultState().searchIndex)),
+          true
+        )
       };
     case RESET_ALL_SEARCH_PARAMS:
       return {
@@ -636,6 +659,21 @@ export default function reducer(
       return { ...state, isNewlySavedSearch: action.isNewlySavedSearch };
     case SET_SELECTED_COUNTRY:
       return { ...state, selectedCountry: action.selectedCountry };
+    case SET_TOPIC_SEARCH_COMPANY:
+      return { ...state, topicSearchedComapny: action.topicSearchedComapny };
+    case SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER:
+      return {
+        ...state,
+        searchResult: [],
+        searchResultHighlights: [],
+        pageNo: 0
+      };
+    case SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER:
+      return {
+        ...state,
+        selectedSector: null,
+        selectedIndustries: []
+      };
     default:
       break;
   }

@@ -5,12 +5,12 @@ import { ThemeProvider } from '@material-ui/styles';
 import { ClimbingBoxLoader } from 'react-spinners';
 import MuiTheme from './theme';
 import { connect } from 'react-redux';
-
+// import config from './config/config';
 // Layout Blueprints
 import { LeftSidebar, MinimalLayout, PresentationLayout } from './layout-blueprints';
 
 // Example Pages
-
+// import ReactGA from 'react-ga';
 import PagesLogin from './example-pages/PagesLogin';
 import PagesRegister from './components/signIn/UserSignIn';
 import ImpersonateLogin from './components/signIn/ImpersonateSignIn';
@@ -71,6 +71,8 @@ const isLoginRequired = (user, path, location) => {
 
 const Routes = () => {
   const location = useLocation();
+  // ReactGA.initialize(config.googleAnalyticsKey);
+  // ReactGA.pageview(window.location.pathname);
   // if user is not loggedIn then redirect to login page.
   const user = JSON.parse(localStorage.getItem('user'));
   const path = location.pathname;

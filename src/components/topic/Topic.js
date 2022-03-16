@@ -11,9 +11,9 @@ import TopicCurrentSearchDetail from './TopicCurrentSearchDetail';
 import {
   setIsSearchDeleteErr,
   setIsTopicDeleteErr,
-  resetResultsPage,
   cancelExistingHightlightsCalls,
-  setSnackBarActive
+  setSnackBarActive,
+  setTopicHandleSearchCombineReducer
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicTweetsSearchAggregate, fetchTopicsList } from './topicActions';
 import TopicTweetsWorldMap from './TopicTweetsWorldMap';
@@ -21,6 +21,7 @@ import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
 import TopicTweetTable from './TopicTweetsTable';
+import { setItemInLocalStorage } from '../../utils/helpers';
 const Topic = () => {
   const classes = topicStyles();
   const {
@@ -38,7 +39,8 @@ const Topic = () => {
   const dispatch = useDispatch();
 
   const handleSearch = () => {
-    dispatch(resetResultsPage());
+    dispatch(setTopicHandleSearchCombineReducer());
+    setItemInLocalStorage('searchIndex', searchIndex, true);
     dispatch(performTopicSearchAggregate(true, true));
     dispatch(performTopicTweetsSearchAggregate(true, true));
     // cancel existing calls if there are any
@@ -64,7 +66,7 @@ const Topic = () => {
       <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          {searchIndex['value'] === 'tweets' ? null : (
+          {searchIndex['id'] === 4 ? null : (
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <TopicHistoryChart />
@@ -79,7 +81,7 @@ const Topic = () => {
           )}
         </Grid>
         <Grid item xs={12}>
-          {searchIndex['value'] === 'tweets' ? (
+          {searchIndex['id'] === 4 ? (
             <Grid container>
               <Grid item xs={12}>
                 <Grid container>

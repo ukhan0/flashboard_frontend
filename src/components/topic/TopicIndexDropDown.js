@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import { MenuItem, ListItemText } from '@material-ui/core';
+import { setTopicIndexDropDownSearchCombineReducer } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   select: {
     minWidth: 120,
@@ -18,6 +19,8 @@ const TopicIndexDropDown = props => {
   const classes = useStyles();
   const { searchIndex, documentTypes } = useSelector(state => state.Topic);
   const selectionChanged = selectedIndex => {
+    dispatch(setTopicIndexDropDownSearchCombineReducer());
+
     if (selectedIndex.target.value) {
       const index = searchIndexs.find(s => s.value === selectedIndex.target.value);
       if (index) {

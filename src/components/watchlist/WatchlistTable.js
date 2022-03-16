@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
 import countriesCode from '../../config/countriesCode';
 import {
-  parseDateStrMoment,
   parseNumber,
   percentFormater,
   currencyFormater,
   descriptionValueStyler,
   changeWordGetter,
   changeWordFormatter,
-  dateFormaterMoment,
   numberWordComparator,
-  lastReportedState
+  lastReportedState,
+  dateComparator
 } from './WatchlistTableHelpers';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
@@ -26,9 +25,8 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
-import { checkIsFilterActive } from './WatchlistHelpers';
+import { checkIsFilterActive, getWatchlistType } from './WatchlistHelpers';
 import { setIsFilterActive } from '../../reducers/Watchlist';
-import { getPriorityKeyValue } from '../../utils/helpers';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -205,11 +203,10 @@ const colDefs = [
     colId: 'last',
     width: 117,
     sort: lastReportedState,
-    valueGetter: params => parseDateStrMoment(get(params, 'data.last', null)),
-    valueFormatter: params => dateFormaterMoment(params.value),
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    getQuickFilterText: params => dateFormaterMoment(params.value)
+    comparator: dateComparator,
+    getQuickFilterText: params => params.value
   },
   {
     headerName: 'Period Date',
@@ -218,11 +215,10 @@ const colDefs = [
     colId: 'periodDate',
     width: 117,
     sort: lastReportedState,
-    valueGetter: params => parseDateStrMoment(get(params, 'data.periodDate', null)),
-    valueFormatter: params => dateFormaterMoment(params.value),
+    comparator: dateComparator,
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    getQuickFilterText: params => dateFormaterMoment(params.value)
+    getQuickFilterText: params => params.value
   },
   {
     headerName: 'Aggregated Sentiment',
@@ -238,7 +234,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(get(params, 'data.sentiment', null)),
-          word: changeWordGetter(getPriorityKeyValue(params, 'sentimentWord'))
+          word: changeWordGetter(get(params, 'data.sentimentWord', null))
         };
       }
       return sentimentObj;
@@ -264,7 +260,7 @@ const colDefs = [
     valueGetter: params => {
       return {
         number: parseNumber(get(params, 'data.sentiment', null)),
-        word: changeWordGetter(getPriorityKeyValue(params, 'sentimentWord'))
+        word: changeWordGetter(get(params, 'data.sentimentWord'))
       };
     },
     valueFormatter: params => {
@@ -273,7 +269,7 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
-        return getPriorityKeyValue(params, 'sentimentWord');
+        return get(params, 'data.sentimentWord', null);
       }
     },
     cellRenderer: 'WordStatusRenderer'
@@ -292,7 +288,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, 'sentimentChangeWord'))
+          word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
         };
       }
       return sentimentObj;
@@ -321,7 +317,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, 'sentimentChangeWord'))
+          word: changeWordGetter(get(params, 'data.sentimentChangeWord', null))
         };
       }
       return sentimentObj;
@@ -332,7 +328,7 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
-        return getPriorityKeyValue(params, 'sentimentChangeWord');
+        return get(params, 'data.sentimentChangeWord', null);
       }
     },
     cellRenderer: 'WordStatusRenderer'
@@ -351,7 +347,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, 'wordCountChangePercentWord'))
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
         };
       }
       return sentimentObj;
@@ -389,7 +385,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, 'wordCountChangePercentWord'))
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
         };
       }
       return sentimentObj;
@@ -424,7 +420,7 @@ const colDefs = [
       if (sentimentValue) {
         sentimentObj = {
           number: parseNumber(sentimentValue),
-          word: changeWordGetter(getPriorityKeyValue(params, 'wordCountChangePercentWord'))
+          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
         };
       }
       return sentimentObj;
@@ -435,7 +431,7 @@ const colDefs = [
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
-        return getPriorityKeyValue(params, 'wordCountChangePercentWord');
+        return get(params, 'data.wordCountChangePercentWord', null);
       }
     },
     cellRenderer: 'WordStatusRenderer'
@@ -447,14 +443,18 @@ const colDefs = [
     colId: 'countryCode',
     width: 158,
     filter: 'agTextColumnFilter',
+    valueGetter: params => {
+      const filteredWatchlist = countriesCode.filter(c => get(c, 'code') === get(params, 'data.countryCode'));
+      return filteredWatchlist[0]?.name;
+    },
     cellRenderer: 'CountryCodeRenderer'
   }
 ];
 
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const { searchText, selectedMetric, isTickerSelected } = useSelector(state => state.Watchlist);
-  const [gridApi, setGridApi] = useState(null);
+  const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
+  const gridApi = React.useRef(null);
   let getQueryParams = new URLSearchParams(useLocation().search);
   const storeColumnsState = params => {
     const columnState = params.columnApi.getColumnState();
@@ -466,18 +466,25 @@ const WatchlistTable = props => {
   };
 
   React.useEffect(() => {
-    if (!gridApi) {
+    if (!gridApi.current) {
       return;
     }
-    const tickerFilterInstance = gridApi.getFilterInstance('ticker');
+    const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
     if (isTickerSelected) {
       tickerFilterInstance.setModel({
         type: 'equals',
         filter: searchText
       });
     }
-    gridApi.onFilterChanged();
-  }, [isTickerSelected, gridApi, searchText]);
+    gridApi.current.onFilterChanged();
+  }, [isTickerSelected, searchText]);
+
+  useEffect(() => {
+    if (!gridApi.current) {
+      return;
+    }
+    handleColumnHideForSedar(gridApi.current);
+  }, [selectedType]);
 
   const cellClicked = async params => {
     if (params.data) {
@@ -487,7 +494,7 @@ const WatchlistTable = props => {
       dispatch(setSidebarToggle(true));
       dispatch(setSidebarToggleMobile(true));
       props.onColumnClick(params.data, params.column.colId);
-      gridApi.closeToolPanel();
+      gridApi.current.closeToolPanel();
     }
   };
 
@@ -497,9 +504,23 @@ const WatchlistTable = props => {
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
 
+  const handleColumnHideForSedar = gridApiLocal => {
+    const columnDefs = colDefs;
+    columnDefs.forEach(function(colDef) {
+      if (colDef.field === 'mktcap' || colDef.field === 'adv') {
+        if (getWatchlistType() === 'global') {
+          colDef.hide = true;
+        } else {
+          colDef.hide = false;
+        }
+      }
+    });
+    gridApiLocal.setColumnDefs(columnDefs);
+  };
+
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
-    setGridApi(params.api);
+    gridApi.current = params.api;
     const stateKey = 'watchlist::state';
     const currentColumnsState = localStorage.getItem(stateKey);
     let columns = JSON.parse(currentColumnsState);
@@ -522,6 +543,8 @@ const WatchlistTable = props => {
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
+    //Handle column hide for Sedar
+    handleColumnHideForSedar(params.api);
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
@@ -549,14 +572,14 @@ const WatchlistTable = props => {
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
-    const tickerFilterInstance = gridApi.getFilterInstance('ticker');
+    const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
     if (getQueryParams.get('ticker')) {
       tickerFilterInstance.setModel({
         type: 'equals',
         filter: getQueryParams.get('ticker')
       });
     }
-    gridApi.onFilterChanged();
+    gridApi.current.onFilterChanged();
   };
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>

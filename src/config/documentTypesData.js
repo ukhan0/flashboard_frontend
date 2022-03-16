@@ -2,6 +2,7 @@ export default [
   {
     label: 'Earning Calls',
     value: 'FMP-transcript',
+    color: 'rgb(244,91,91)',
     sections: {
       totdoc: ['fmp-transcript.*'],
       mda: [],
@@ -12,6 +13,7 @@ export default [
   {
     label: '10-K',
     value: '10-K',
+    color: 'rgb(128,133,233)',
     sections: {
       totdoc: ['10-k.*'],
       mda: ['10k.p2.i7.*'],
@@ -22,6 +24,7 @@ export default [
   {
     label: '10-Q',
     value: '10-Q',
+    color: 'rgb(247,163,92)',
     sections: {
       totdoc: ['10-q.*'],
       mda: ['10q.p1.i2.*'],
@@ -32,6 +35,7 @@ export default [
   {
     label: '8-K',
     value: '8-K',
+    color: 'rgb(43,144,144)',
     sections: {
       totdoc: ['8-k.*'],
       mda: [],
@@ -42,6 +46,7 @@ export default [
   {
     label: '40-F',
     value: '40-F',
+    color: 'rgb(80,91,144)',
     sections: {
       totdoc: ['40-f.*'],
       mda: [],
@@ -52,6 +57,7 @@ export default [
   {
     label: '20-F',
     value: '20-F',
+    color: 'rgb(200,91,144)',
     sections: {
       totdoc: ['20-f.*'],
       mda: [],
@@ -62,6 +68,7 @@ export default [
   {
     label: '6-K',
     value: '6-K',
+    color: 'rgb(210,91,144)',
     sections: {
       totdoc: ['6-k.*'],
       mda: [],
@@ -82,6 +89,7 @@ export default [
   {
     label: '10-K405',
     value: '10-K405',
+    color: 'rgb(230,91,144)',
     sections: {
       totdoc: ['10-k405.*'],
       mda: [],
@@ -102,6 +110,7 @@ export default [
   {
     label: '10-KT',
     value: '10-KT',
+    color: 'rgb(220,91,144)',
     sections: {
       totdoc: ['10-kt.*'],
       mda: [],
@@ -132,6 +141,7 @@ export default [
   {
     label: '10-QT',
     value: '10-QT',
+    color: 'rgb(240,91,91)',
     sections: {
       totdoc: ['10-qt.*'],
       mda: [],
@@ -152,6 +162,7 @@ export default [
   {
     label: '10QSB',
     value: '10QSB',
+    color: 'rgb(100,91,91)',
     sections: {
       totdoc: ['10qsb.*'],
       mda: [],
@@ -203,6 +214,7 @@ export default [
   {
     label: '8-K12B',
     value: '8-K12B',
+    color: 'rgb(90,91,91)',
     sections: {
       totdoc: ['8-k12b.*'],
       mda: [],
@@ -223,6 +235,7 @@ export default [
   {
     label: '8-K12G3',
     value: '8-K12G3',
+    color: 'rgb(80,91,91)',
     sections: {
       totdoc: ['8-k12g3.*'],
       mda: [],
@@ -243,6 +256,7 @@ export default [
   {
     label: '8-K15D5',
     value: '8-K15D5',
+    color: 'rgb(70,91,91)',
     sections: {
       totdoc: ['8-k15d5.*'],
       mda: [],
@@ -253,6 +267,7 @@ export default [
   {
     label: 'AR',
     value: 'AR',
+    color: 'rgb(00,91,91)',
     sections: {
       totdoc: ['ar.*'],
       mda: [],
@@ -273,6 +288,7 @@ export default [
   {
     label: 'CORR',
     value: 'CORR',
+    color: 'rgb(10,91,91)',
     sections: {
       totdoc: ['corr.*'],
       mda: [],
@@ -283,6 +299,7 @@ export default [
   {
     label: 'DEF 14A',
     value: 'DEF 14A',
+    color: 'rgb(20,91,91)',
     sections: {
       totdoc: ['1def 14a.*'],
       mda: [],
@@ -293,6 +310,7 @@ export default [
   {
     label: 'EP',
     value: 'EP',
+    color: 'rgb(30,91,91)',
     sections: {
       totdoc: ['ep.*'],
       mda: [],
@@ -303,6 +321,7 @@ export default [
   {
     label: 'ER',
     value: 'ER',
+    color: 'rgb(40,91,91)',
     sections: {
       totdoc: ['er.*'],
       mda: [],
@@ -313,6 +332,7 @@ export default [
   {
     label: 'FIN SUPP',
     value: 'FIN SUPP',
+    color: 'rgb(50,91,91)',
     sections: {
       totdoc: ['fin supp.*'],
       mda: [],
@@ -323,6 +343,7 @@ export default [
   {
     label: 'Intierra SR',
     value: 'Intierra SR',
+    color: 'rgb(60,91,91)',
     sections: {
       totdoc: ['intierra sr.*'],
       mda: [],
@@ -333,6 +354,7 @@ export default [
   {
     label: 'Intl Offer',
     value: 'Intl Offer',
+    color: 'rgb(195,91,91)',
     sections: {
       totdoc: ['intl offer.*'],
       mda: [],
@@ -343,6 +365,7 @@ export default [
   {
     label: 'MEG - AR',
     value: 'MEG - AR',
+    color: 'rgb(190,91,91)',
     sections: {
       totdoc: ['meg - ar.*'],
       mda: [],
@@ -353,6 +376,7 @@ export default [
   {
     label: 'NT 10-Q',
     value: 'NT 10-Q',
+    color: 'gb(180,91,91)',
     sections: {
       totdoc: ['nt 10-q.*'],
       mda: [],
@@ -363,6 +387,7 @@ export default [
   {
     label: 'OC',
     value: 'OC',
+    color: 'rgb(170,91,91)',
     sections: {
       totdoc: ['oc.*'],
       mda: [],
@@ -373,6 +398,7 @@ export default [
   {
     label: 'Other Financials',
     value: 'Other Financials',
+    color: 'rgb(248,91,91)',
     sections: {
       totdoc: ['other financials.*'],
       mda: [],
@@ -383,6 +409,7 @@ export default [
   {
     label: 'pdf',
     value: 'pdf',
+    color: 'rgb(160,91,91)',
     sections: {
       totdoc: ['pdf.*'],
       mda: [],
@@ -393,6 +420,7 @@ export default [
   {
     label: 'PR',
     value: 'PR',
+    color: 'rgb(150,91,91)',
     sections: {
       totdoc: ['pr.*'],
       mda: [],
@@ -403,6 +431,7 @@ export default [
   {
     label: 'QR',
     value: 'QR',
+    color: 'rgb(140,91,91)',
     sections: {
       totdoc: ['qr.*'],
       mda: [],
@@ -423,6 +452,7 @@ export default [
   {
     label: 'SR',
     value: 'SR',
+    color: 'rgb(110,91,91',
     sections: {
       totdoc: ['sr.*'],
       mda: [],
@@ -433,6 +463,7 @@ export default [
   {
     label: 'Tanshin',
     value: 'Tanshin',
+    color: 'rgb(120,91,91)',
     sections: {
       totdoc: ['tanshin.*'],
       mda: [],

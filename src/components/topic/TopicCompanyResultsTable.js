@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, InputBase } from '@material-ui/core';
@@ -14,7 +14,7 @@ import { performTopicSearchHighlights } from './topicActions';
 import './TopicTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
-import { setIsFromThemex } from '../../reducers/Topic';
+import { setIsFromThemex, setTopicSearchCompany } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
@@ -83,9 +83,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicCompantResultsTable() {
   const classes = useStyles();
-  const { searchResult, isSearchLoading, searchResultHighlights, selectedCompanyName } = useSelector(
-    state => state.Topic
-  );
+  const {
+    searchResult,
+    isSearchLoading,
+    searchResultHighlights,
+    selectedCompanyName,
+    topicSearchedComapny
+  } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const companyResults = get(searchResult, 'buckets.groupByCompanyTicker', []);
   const finalResult = companyResults.map(v => {
@@ -114,7 +118,7 @@ export default function TopicCompantResultsTable() {
         ticker: params.data.ticker,
         companyId: params.data.companyId
       };
-
+      dispatch(setTopicSearchCompany(''));
       dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(data));
       dispatch(setIsFromfilling(true));
@@ -127,7 +131,7 @@ export default function TopicCompantResultsTable() {
     return valueA.toLowerCase().localeCompare(valueB.toLowerCase());
   };
 
-  const [gridApi, setGridApi] = useState(null);
+  const gridApi = React.useRef(null);
   const columnDefs = [
     {
       headerName: 'COMPANY',
@@ -160,23 +164,29 @@ export default function TopicCompantResultsTable() {
   ];
 
   const onGridReady = params => {
-    setGridApi(params.api);
+    gridApi.current = params.api;
   };
   const onFilterTextChange = e => {
-    gridApi.setQuickFilter(e.target.value);
+    dispatch(setTopicSearchCompany(e.target.value));
   };
 
   useEffect(() => {
-    if (searchResultHighlights.length > 0) {
-      if (gridApi === null) {
-        return;
-      } else {
-        gridApi.forEachNode(function(node) {
-          node.setSelected(node.data.key === selectedCompanyName);
-        });
-      }
+    if (!gridApi.current) {
+      return;
     }
-  }, [searchResultHighlights, gridApi, selectedCompanyName]);
+    gridApi.current.setQuickFilter(topicSearchedComapny);
+  }, [topicSearchedComapny]);
+  useEffect(() => {
+    if (searchResultHighlights.length > 0) {
+      if (!gridApi.current) {
+        return;
+      }
+
+      gridApi.current.forEachNode(function(node) {
+        node.setSelected(node.data.key === selectedCompanyName);
+      });
+    }
+  }, [searchResultHighlights, selectedCompanyName]);
 
   return (
     <>
@@ -193,6 +203,7 @@ export default function TopicCompantResultsTable() {
                 root: classes.inputRoot,
                 input: classes.inputInput
               }}
+              value={topicSearchedComapny}
               inputProps={{ 'aria-label': 'search' }}
               onChange={onFilterTextChange}
             />

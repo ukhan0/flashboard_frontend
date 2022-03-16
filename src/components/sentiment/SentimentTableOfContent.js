@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import SentimentHighlights from './SentimentHighlight';
-import { get } from 'lodash';
+import { get, lowerCase } from 'lodash';
 import { getSentimentHighlights } from './sentimentActions';
 
 import {
@@ -112,6 +112,7 @@ const SentimentTableOfContent = props => {
       canceHighlightsCall.cancel();
     }
   };
+  let signatureIterator = 1
   return (
     <React.Fragment>
       <div className={isPin ? classes.pin : classes.list}>
@@ -149,24 +150,34 @@ const SentimentTableOfContent = props => {
             <BeatLoader color={'var(--primary)'} size={15} />
           </div>
         ) : (
-          props.tableData.map((d, index) =>
-            index !== 0 ? (
-              <div
-                key={index}
-                style={{ paddingLeft: d.lvl * 4 + 4, whiteSpace: 'initial' }}
-                className={clsx(classes.listItem, classes.upper)}
-                onClick={() => {
-                  clickHandle(d.path);
-                }}>
-                {d.lvl === 4
-                  ? upperCase(d.prop)
-                  : d.prop
-                      .toLowerCase()
-                      .replace('data', '')
-                      .replace('ex.data', '')
-                      .replace('*.data', '')}
-              </div>
-            ) : null
+            props.tableData.map((d, index) => {
+              let idVal = (index !== 0 ? d.lvl === 4 ? lowerCase(d.prop) :  lowerCase(d.prop
+                .toLowerCase()
+                .replace('data', '')
+                .replace('ex.data', '')
+                .replace('*.data', '')) : "")
+               if(idVal === "signatures"){
+                  idVal =  idVal+signatureIterator
+                  signatureIterator++
+                }
+              return index !== 0 ? (
+                <div
+                  key={index}
+                  style={{ paddingLeft: d.lvl * 4 + 4, whiteSpace: 'initial' }}
+                  className={clsx(classes.listItem, classes.upper)}
+                  onClick={() => {
+                    clickHandle(idVal);
+                  }}>
+                  {d.lvl === 4
+                    ? upperCase(d.prop)
+                    : d.prop
+                        .toLowerCase()
+                        .replace('data', '')
+                        .replace('ex.data', '')
+                        .replace('*.data', '')}
+                </div>
+              ) : null
+            }
           )
         )}
         {!isLoading && documentId && false ? <SentimentHighlights clickHandle={clickHandle} /> : null}

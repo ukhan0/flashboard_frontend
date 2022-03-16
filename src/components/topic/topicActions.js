@@ -128,7 +128,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         });
       });
     }
-    if (getState().Topic.searchIndex['value'] === 'tweets') {
+    if (getState().Topic.searchIndex['id'] === 4) {
       return;
     }
     try {
@@ -636,7 +636,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         });
       });
     }
-    if (getState().Topic.searchIndex['value'] === 'tweets') {
+    if (getState().Topic.searchIndex['id'] === 4) {
       try {
         const response = await axios.post(
           `${config.apiUrl}/api/dictionary/search_tweets_data`,

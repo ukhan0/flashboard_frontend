@@ -19,10 +19,9 @@ const useStyles = makeStyles(_theme => ({
 
 export default function TopicPieChart(props) {
   const classes = useStyles();
-  const { searchResult, selectedSector, searchIndex } = useSelector(state => state.Topic);
+  const { searchResult, selectedSector } = useSelector(state => state.Topic);
   const [sectorData, setSectorData] = useState([]);
   const dispatch = useDispatch();
-
   useEffect(() => {
     const rawData = get(searchResult, 'buckets.groupBySectorIndustry', []);
     const sectorDataLocal = [];
@@ -53,6 +52,7 @@ export default function TopicPieChart(props) {
     dispatch(setSelectedUniverse('all'));
     props.onChange();
   };
+  let searchIndex = JSON.parse(localStorage.getItem('searchIndex')) || {};
 
   return (
     <>
@@ -60,7 +60,11 @@ export default function TopicPieChart(props) {
         <div className="card-header">
           <div className="card-header--title">
             <span className={'font-weight-bold'}>
-              {searchIndex['label'] === 'Global Filings' ? 'Country' : selectedSector ? selectedSector : 'Sector'}
+              {searchIndex['id'] === 2 || searchIndex['id'] === 3
+                ? 'Country'
+                : selectedSector
+                ? selectedSector
+                : 'Sector'}
             </span>
           </div>
           {selectedSector ? (
@@ -73,9 +77,13 @@ export default function TopicPieChart(props) {
         </div>
         <div className={clsx('mb-2', classes.contentSection)}>
           {sectorData.length === 1 ? (
-            <TopicIndustryChart handleIndustryClick={props.onChange} />
+            <TopicIndustryChart
+              handleIndustryClick={searchIndex['id'] === 2 || searchIndex['id'] === 3 ? () => {} : props.onChange}
+            />
           ) : (
-            <TopicSectorChart handleSectorClick={props.onChange} />
+            <TopicSectorChart
+              handleSectorClick={searchIndex['id'] === 2 || searchIndex['id'] === 3 ? () => {} : props.onChange}
+            />
           )}
         </div>
       </Card>

@@ -3,6 +3,7 @@ import { Grid, Button } from '@material-ui/core';
 import { get, debounce, isArray, cloneDeep } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
+import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
 // import cjson from 'compressed-json';
 import { Box } from '@material-ui/core';
 import {
@@ -21,7 +22,8 @@ import {
   setSelectedTickerSymbol,
   setIsNewWatchlistDataAvailable,
   setIsTickerSelected,
-  setCompleteCompaniesData
+  setCompleteCompaniesData,
+  setCompleteGlobalCompaniesData
 } from '../../reducers/Watchlist';
 import {
   setCompanyFillingData,
@@ -99,7 +101,9 @@ const Watchlist = props => {
 
   const syncCompleteDataOnPage = useCallback(
     newData => {
-      const rawCompleteData = cloneDeep(selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal);
+      const rawCompleteData = cloneDeep(
+        selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal
+      );
       if (!rawCompleteData || !isArray(rawCompleteData)) {
         return;
       }
@@ -107,9 +111,13 @@ const Watchlist = props => {
         const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
         rawCompleteData[tickerIndex] = nd;
       });
-      dispatch(setCompleteCompaniesData(rawCompleteData));
+      if(selectedType === 'domestic'){
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
     },
-    [completeCompaniesData, completeCompaniesDataGlobal , selectedType , dispatch]
+    [completeCompaniesData, completeCompaniesDataGlobal, selectedType, dispatch]
   );
 
   const fetchData = useCallback(async () => {
@@ -158,10 +166,16 @@ const Watchlist = props => {
       const data = {
         ...watchlist,
         ...watchlist[selectedFileType][selectedMetric],
-        last: selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q,
+        last: dateFormaterMoment(
+          parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
+        ),
+
         recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
         oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
-        periodDate: selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'],
+        periodDate: dateFormaterMoment(
+          parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
+        ),
+
         documentType: selectedFileType,
         isColorEnable: isColorEnable
       };
@@ -220,6 +234,7 @@ const Watchlist = props => {
     if (searchText.length >= 2) {
       searchFromCompleteData();
     }
+
     if (isNewWatchListDataAvailable) {
       if (searchText.length === 0) {
         setWatchlistData([]);
@@ -238,15 +253,20 @@ const Watchlist = props => {
     }
   }, [dispatch, history.location.pathname]);
 
-  const updateTickerValue = (rawCompleteData, ticker, isTicker) => {
+  const updateTickerValue = useCallback((rawCompleteData, ticker, isTicker) => {
     let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
     if (updatedTickerDetail !== -1) {
       rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-      dispatch(setCompleteCompaniesData(rawCompleteData));
+      if(selectedType === 'domestic'){
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
     }
-  };
-  const updateChacheData = (ticker, isTicker) => {
-    let rawCompleteData = cloneDeep(completeCompaniesData);
+  }, [dispatch, selectedType]);
+  
+  const updateChacheData = useCallback((ticker, isTicker) => {
+    let rawCompleteData = cloneDeep(selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal);
     if (Array.isArray(ticker)) {
       for (let i = 0; i < ticker.length; i++) {
         let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
@@ -254,16 +274,20 @@ const Watchlist = props => {
           rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
         }
       }
-      dispatch(setCompleteCompaniesData(rawCompleteData));
+      if(selectedType === 'domestic'){
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
     } else {
       updateTickerValue(rawCompleteData, ticker, isTicker);
     }
-  };
+  } , [dispatch, selectedType, completeCompaniesData, completeCompaniesDataGlobal, updateTickerValue] );
 
-  const deleteTicker = async ticker => {
+  const deleteTicker = useCallback(async ticker => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
-      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}`);
+      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`);
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         let isTicker = false;
@@ -280,39 +304,42 @@ const Watchlist = props => {
       setTopicAddingError(true);
       setErrorSnackbar(true);
     }
-  };
+  }, [dataVersion, updateChacheData, selectedType]);
 
-  const handleUpload = async ticker => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    try {
-      setLoading(true);
-      const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
-        user_id: user.id,
-        ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
-        delete_old_values: overwriteCheckBox
-      });
-      const responsePayload = get(response, 'data', null);
-      if (responsePayload && !responsePayload.error) {
-        let isTicker = true;
-        setTopicDialogOpen(false);
-        setLoading(false);
-        const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
-        debouncedSave();
-        updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
-        dispatch(setWatchlistSelectedSymbols([]));
-        dispatch(setOverwriteCheckBox(false));
-        setAddTickersnackbar(true);
-        fetchData();
-      } else {
+  const handleUpload = useCallback( 
+    async (ticker) => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      try {
+        setLoading(true);
+        const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
+          user_id: user.id,
+          ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
+          delete_old_values: overwriteCheckBox,
+          watchlist_type: selectedType
+        });
+        const responsePayload = get(response, 'data', null);
+        if (responsePayload && !responsePayload.error) {
+          let isTicker = true;
+          setTopicDialogOpen(false);
+          setLoading(false);
+          const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
+          debouncedSave();
+          updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
+          dispatch(setWatchlistSelectedSymbols([]));
+          dispatch(setOverwriteCheckBox(false));
+          setAddTickersnackbar(true);
+          fetchData();
+        } else {
+          setTopicAddingError(true);
+          setErrorSnackbar(true);
+          setSnackbarMessage(responsePayload.message);
+        }
+      } catch (error) {
         setTopicAddingError(true);
         setErrorSnackbar(true);
-        setSnackbarMessage(responsePayload.message);
       }
-    } catch (error) {
-      setTopicAddingError(true);
-      setErrorSnackbar(true);
     }
-  };
+    , [dispatch, dataVersion, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]);
 
   const onStoreColumnsState = state => {
     storeColumnsState(state);

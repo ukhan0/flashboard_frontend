@@ -49,261 +49,264 @@ const FilingsCards = () => {
     }
   }, [sidebarToggle, sidebarToggleMobile]);
 
-  let cardArray = [
-    {
-      heading: 'RISK & FACTORS',
-      content: riskSentiment ? riskSentiment : 0,
-      num: risk,
-      percent: 67,
-      options: {
-        chart: {
-          type: 'areaspline',
-          height: cardHeight
-          // width: cardWidth
-        },
-        title: {
-          text: null
-        },
-        credits: {
-          enabled: false
-        },
-        tooltip: {
-          enabled: true,
-          shared: false,
-          valueDecimals: 2
-        },
-        yAxis: {
-          visible: false,
-          labels: {
+  let cardArray = []
+  if(!isEmpty(fillingsGraphData)){
+    cardArray = [
+      {
+        heading: 'RISK & FACTORS',
+        content: riskSentiment ? riskSentiment : 0,
+        num: risk,
+        percent: 67,
+        options: {
+          chart: {
+            type: 'areaspline',
+            height: cardHeight
+            // width: cardWidth
+          },
+          title: {
+            text: null
+          },
+          credits: {
             enabled: false
           },
-          title: {
-            text: null
-          }
-        },
-        xAxis: {
-          categories: dates,
-
-          type: 'datetime',
-          title: {
-            text: null
+          tooltip: {
+            enabled: true,
+            shared: false,
+            valueDecimals: 2
           },
-          labels: {
-            style: {
-              color: '#999999'
+          yAxis: {
+            visible: false,
+            labels: {
+              enabled: false
             },
-            formatter: function() {
-              return Highcharts.dateFormat('%b %y', new Date(this.value));
+            title: {
+              text: null
             }
-          }
-        },
-        plotOptions: {
-          series: {
-            dataLabels: {
-              enabled: false
+          },
+          xAxis: {
+            categories: dates,
+  
+            type: 'datetime',
+            title: {
+              text: null
             },
-            marker: {
-              enabled: false
-            },
-            line: {
-              marker: {
-                enabled: false
+            labels: {
+              style: {
+                color: '#999999'
               },
-              states: {
-                hover: {
-                  enabled: true
-                }
-              },
-              series: {
-                dataLabels: {
-                  enabled: false
-                }
+              formatter: function() {
+                return Highcharts.dateFormat('%b %y', new Date(this.value));
               }
             }
           },
-          areaspline: {
-            fillOpacity: 0.2
-          }
-        },
-        series: [
-          {
-            showInLegend: false,
-            name: 'Sentiment',
-            data: risk,
-            color: '#ff98a4'
-          }
-        ]
-      }
-    },
-    {
-      heading: 'MANAGEMENT & DISCUSSION',
-      content: mdaSentiment ? mdaSentiment : 0,
-      num: mda,
-      percent: 32,
-      options: {
-        chart: {
-          type: 'areaspline',
-          height: cardHeight
-          // width: cardWidth
-        },
-        title: {
-          text: null
-        },
-        credits: {
-          enabled: false
-        },
-        tooltip: {
-          enabled: true,
-          shared: false,
-          valueDecimals: 2
-        },
-        yAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
-          title: {
-            text: null
-          }
-        },
-        xAxis: {
-          categories: dates,
-          type: 'datetime',
-          title: {
-            text: null
-          },
-          labels: {
-            style: {
-              color: '#999999'
-            },
-            formatter: function() {
-              return Highcharts.dateFormat('%b %y', new Date(this.value));
-            }
-          }
-        },
-        plotOptions: {
-          series: {
-            dataLabels: {
-              enabled: false
-            },
-            marker: {
-              enabled: false
-            },
-            line: {
+          plotOptions: {
+            series: {
+              dataLabels: {
+                enabled: false
+              },
               marker: {
                 enabled: false
               },
-              states: {
-                hover: {
-                  enabled: true
-                }
-              },
-              series: {
-                dataLabels: {
+              line: {
+                marker: {
                   enabled: false
+                },
+                states: {
+                  hover: {
+                    enabled: true
+                  }
+                },
+                series: {
+                  dataLabels: {
+                    enabled: false
+                  }
                 }
+              }
+            },
+            areaspline: {
+              fillOpacity: 0.2
+            }
+          },
+          series: [
+            {
+              showInLegend: false,
+              name: 'Sentiment',
+              data: risk,
+              color: '#ff98a4'
+            }
+          ]
+        }
+      },
+      {
+        heading: 'MANAGEMENT & DISCUSSION',
+        content: mdaSentiment ? mdaSentiment : 0,
+        num: mda,
+        percent: 32,
+        options: {
+          chart: {
+            type: 'areaspline',
+            height: cardHeight
+            // width: cardWidth
+          },
+          title: {
+            text: null
+          },
+          credits: {
+            enabled: false
+          },
+          tooltip: {
+            enabled: true,
+            shared: false,
+            valueDecimals: 2
+          },
+          yAxis: {
+            visible: false,
+            labels: {
+              enabled: false
+            },
+            title: {
+              text: null
+            }
+          },
+          xAxis: {
+            categories: dates,
+            type: 'datetime',
+            title: {
+              text: null
+            },
+            labels: {
+              style: {
+                color: '#999999'
+              },
+              formatter: function() {
+                return Highcharts.dateFormat('%b %y', new Date(this.value));
               }
             }
           },
-          areaspline: {
-            fillOpacity: 0.2
-          }
-        },
-        series: [
-          {
-            showInLegend: false,
-            name: 'Sentiment',
-            data: mda,
-            color: '#7fe4a6'
-          }
-        ]
-      }
-    },
-    {
-      heading: 'NOTES TO  FINANCIAL STATEMENT',
-      content: noteSentiment ? noteSentiment : 0,
-      num: notes,
-      percent: 21,
-      options: {
-        chart: {
-          type: 'areaspline',
-          height: cardHeight
-          // width: cardWidth
-        },
-        title: {
-          text: null
-        },
-        credits: {
-          enabled: false
-        },
-        tooltip: {
-          enabled: true,
-          shared: false,
-          valueDecimals: 2
-        },
-        yAxis: {
-          visible: false,
-          labels: {
-            enabled: false
-          },
-          title: {
-            text: null
-          }
-        },
-        xAxis: {
-          categories: dates,
-          type: 'datetime',
-          title: {
-            text: null
-          },
-          labels: {
-            style: {
-              color: '#999999'
-            },
-            formatter: function() {
-              return Highcharts.dateFormat('%b %y', new Date(this.value));
-            }
-          }
-        },
-        plotOptions: {
-          series: {
-            dataLabels: {
-              enabled: false
-            },
-            marker: {
-              enabled: false
-            },
-            line: {
+          plotOptions: {
+            series: {
+              dataLabels: {
+                enabled: false
+              },
               marker: {
                 enabled: false
               },
-              states: {
-                hover: {
-                  enabled: true
-                }
-              },
-              series: {
-                dataLabels: {
+              line: {
+                marker: {
                   enabled: false
+                },
+                states: {
+                  hover: {
+                    enabled: true
+                  }
+                },
+                series: {
+                  dataLabels: {
+                    enabled: false
+                  }
                 }
+              }
+            },
+            areaspline: {
+              fillOpacity: 0.2
+            }
+          },
+          series: [
+            {
+              showInLegend: false,
+              name: 'Sentiment',
+              data: mda,
+              color: '#7fe4a6'
+            }
+          ]
+        }
+      },
+      {
+        heading: 'NOTES TO  FINANCIAL STATEMENT',
+        content: noteSentiment ? noteSentiment : 0,
+        num: notes,
+        percent: 21,
+        options: {
+          chart: {
+            type: 'areaspline',
+            height: cardHeight
+            // width: cardWidth
+          },
+          title: {
+            text: null
+          },
+          credits: {
+            enabled: false
+          },
+          tooltip: {
+            enabled: true,
+            shared: false,
+            valueDecimals: 2
+          },
+          yAxis: {
+            visible: false,
+            labels: {
+              enabled: false
+            },
+            title: {
+              text: null
+            }
+          },
+          xAxis: {
+            categories: dates,
+            type: 'datetime',
+            title: {
+              text: null
+            },
+            labels: {
+              style: {
+                color: '#999999'
+              },
+              formatter: function() {
+                return Highcharts.dateFormat('%b %y', new Date(this.value));
               }
             }
           },
-          areaspline: {
-            fillOpacity: 0.2
-          }
-        },
-        series: [
-          {
-            showInLegend: false,
-            name: 'Sentiment',
-            data: notes,
-            color: '#7fc8fd'
-          }
-        ]
+          plotOptions: {
+            series: {
+              dataLabels: {
+                enabled: false
+              },
+              marker: {
+                enabled: false
+              },
+              line: {
+                marker: {
+                  enabled: false
+                },
+                states: {
+                  hover: {
+                    enabled: true
+                  }
+                },
+                series: {
+                  dataLabels: {
+                    enabled: false
+                  }
+                }
+              }
+            },
+            areaspline: {
+              fillOpacity: 0.2
+            }
+          },
+          series: [
+            {
+              showInLegend: false,
+              name: 'Sentiment',
+              data: notes,
+              color: '#7fc8fd'
+            }
+          ]
+        }
       }
-    }
-  ];
+    ];
+  }
 
   const getCount = data => {
     let count = null;

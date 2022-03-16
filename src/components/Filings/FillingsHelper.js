@@ -1,25 +1,12 @@
+import documentTypesData from '../../config/documentTypesData';
 export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
-  let rawData = completeWatchListData
+  let rawData = completeWatchListData;
   let company = rawData.find(sd => sd.ticker === ticker);
   return company;
 };
-
 export const getColorByDocType = type => {
-  let color = '';
-  if (type === '8-K') {
-    color = 'rgb(43,144,144)';
-  }
-  if (type === '10-K') {
-    color = 'rgb(128,133,233)';
-  }
-  if (type === '10-Q') {
-    color = 'rgb(247,163,92)';
-  }
-
-  if (type === 'FMP-transcript') {
-    color = 'rgb(244,91,91)';
-  }
-  return color;
+  let docType = documentTypesData.find(v => v.value === type);
+  return docType ? docType['color'] : 'rgb(120,91,91)';
 };
 
 export const sectionIds = {

@@ -79,7 +79,8 @@ const TopicFilters = props => {
     isTopicEmailAlertEnable,
     simpleSearchTextArray,
     ignoreSearchTextArray,
-    isSimpleSearch
+    isSimpleSearch,
+    searchTextWithAnd
   } = useSelector(state => state.Topic);
   const handleUpdateSaveSearch = () => {
     dispatch(resetResultsPage());
@@ -139,7 +140,12 @@ const TopicFilters = props => {
     dispatch(setIsUnsavedSearch(true));
   };
   let isButtonActive = true;
-  if (searchText.length > 2 || simpleSearchTextArray.length > 0 || ignoreSearchTextArray.length > 0) {
+  if (
+    searchText.length > 2 ||
+    simpleSearchTextArray.length > 0 ||
+    ignoreSearchTextArray.length > 0 ||
+    searchTextWithAnd.length > 0
+  ) {
     isButtonActive = false;
   }
 
@@ -225,7 +231,6 @@ const TopicFilters = props => {
             </div>
           </div>
         </Grid>
-        <Grid item sm={8} xs={8} md={3} lg={3}></Grid>
       </Grid>
 
       <Grid item xs={12} md={12} lg={12}>

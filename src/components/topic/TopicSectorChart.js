@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, findIndex, trim, cloneDeep } from 'lodash';
 import { setSelectedSector, setSelectedUniverse, setSelectedIndustries } from '../../reducers/Topic';
-
+import countriesCode from '../../config/countriesCode';
 const baseGraphOptions = {
   chart: {
     type: 'pie',
@@ -42,10 +42,9 @@ const baseGraphOptions = {
 };
 
 export default function TopicSectorChart(props) {
-  const { searchResult, searchIndex } = useSelector(state => state.Topic);
+  const { searchResult } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
-
   const handleSectorClick = useCallback(
     sectorName => {
       dispatch(setSelectedUniverse('sector'));
@@ -55,18 +54,28 @@ export default function TopicSectorChart(props) {
     },
     [dispatch, props]
   );
+  const getCountryName = countryCode => {
+    let cName = '';
+    const countryName = countriesCode.find(c => c.code.toLowerCase() === countryCode.toLowerCase());
+    if (countryName) {
+      cName = countryName['name'];
+    }
+    return cName;
+  };
   useEffect(() => {
+    let searchIndex = JSON.parse(localStorage.getItem('searchIndex'))?JSON.parse(localStorage.getItem('searchIndex')):{}
     const rawData =
-      searchIndex['label'] === 'Global Filings'
-        ? get(searchResult, 'buckets.docSector', [])
+      searchIndex['id'] === 2 || searchIndex['id'] === 3
+        ? get(searchResult, 'buckets.countryCode', [])
         : get(searchResult, 'buckets.groupBySectorIndustry', []);
     const sectorData = [];
     const industryData = [];
-
     // see the data format here. https://www.highcharts.com/demo/pie-drilldown
     rawData.forEach(rd => {
       const sectorName =
-        searchIndex['label'] === 'Global Filings' ? trim(get(rd, 'key', null)) : trim(get(rd, 'key.gs', null));
+        searchIndex['id'] === 2 || searchIndex['id'] === 3
+          ? getCountryName(trim(get(rd, 'key', null)))
+          : trim(get(rd, 'key.gs', null));
       const industryName = trim(get(rd, 'key.gi', null));
       const docCount = get(rd, 'doc_count', 0);
       if (!sectorName) {
@@ -92,10 +101,12 @@ export default function TopicSectorChart(props) {
     const newGraphOptions = cloneDeep(baseGraphOptions);
     newGraphOptions.series[0].data = sectorData;
     newGraphOptions.plotOptions.series.events.click = event => {
-      handleSectorClick(event.point.name);
+      if (searchIndex['id'] !== 2 && searchIndex['id'] !== 3) {
+        handleSectorClick(event.point.name);
+      }
     };
     setGraphOptions(newGraphOptions);
-  }, [searchResult, handleSectorClick, searchIndex]);
+  }, [searchResult, handleSectorClick]);
 
   return <HighchartsReact highcharts={Highcharts} options={graphOptions} />;
 }

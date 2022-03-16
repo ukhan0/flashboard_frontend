@@ -71,7 +71,8 @@ function WatchlistCustomColumnsSideBar(props) {
         ) : (
           <FormControl component="fieldset" className={classes.formControl}>
             <FormGroup className={classes.formGroup}>
-              {WatchlistService.getAgGridAColunms().columns.map(item => (
+              {WatchlistService.getAgGridAColunms().columns.map(item => {
+                return !item.hide ? (
                 <FormControlLabel
                   control={<Checkbox checked={dispalyedColumns.indexOf(item.colId) > -1} />}
                   name={item.colId}
@@ -82,7 +83,8 @@ function WatchlistCustomColumnsSideBar(props) {
                     handleColumns(e, v);
                   }}
                 />
-              ))}
+              ) : null
+              })}
             </FormGroup>
           </FormControl>
         )}

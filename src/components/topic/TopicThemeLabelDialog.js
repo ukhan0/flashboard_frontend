@@ -46,7 +46,7 @@ export default function AlertDialog(props) {
               onClick={() => {
                 props.handleUpdateSaveSearch();
               }}>
-              Update
+              Save
             </Button>
           ) : (
             <Button

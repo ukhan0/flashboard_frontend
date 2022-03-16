@@ -156,9 +156,13 @@ export const descriptionValueStyler = params => {
   }
   let value = params.value.word;
   let style = null;
-  if (!isNull(value)) {
+  if (!isNull(value) && value) {
     if (includes(changeStylesValues, value)) {
       style = changedStyles[value];
+    }
+
+    if (!style) {
+      return null;
     }
     return {
       color: style.backgroundColor
@@ -202,3 +206,19 @@ export const getSectorIndustryById = id => {
 };
 
 export const lastReportedState = 'desc';
+
+export const dateComparator = (date1, date2) => {
+  var date1Number = date1 && new Date(date1).getTime();
+  var date2Number = date2 && new Date(date2).getTime();
+  if (date1Number == null && date2Number == null) {
+    return 0;
+  }
+
+  if (date1Number == null) {
+    return -1;
+  } else if (date2Number == null) {
+    return 1;
+  }
+
+  return date1Number - date2Number;
+};

@@ -165,6 +165,11 @@ export const saveUser = user => {
   localStorage.setItem('user', JSON.stringify(user));
 };
 
+export const getWatchlistType = () => {
+  const watchlistSetting = getWatchlistSettings()
+  return watchlistSetting.selectedType
+}
+
 export const getWatchlistSettings = () => {
   const settings = JSON.parse(localStorage.getItem('watchlistSetting'));
 

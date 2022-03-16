@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, TextField, Chip } from '@material-ui/core';
 import useStyles from '../watchlist/watchlistStyles';
-import config from '../../config/config';
-import { debounce, get } from 'lodash';
+import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedWatchlistCompanyNames } from '../../reducers/Topic';
 
@@ -21,13 +19,16 @@ const TopicCustomSearch = props => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [availableCompanyNames, setAvailableCompanyNames] = useState([]);
+  const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
+  const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
+  const availableCompanies = data.map(e => {
+    return { name: e.b, ticker: e.ticker };
+  });
 
   const handleSearchTextChange = debounce(async text => {
     try {
       setLoading(true);
-      const response = await axios.post(`${config.apiUrl}/api/get_wish_list_items`, { q: text });
-      const companies = get(response, 'data.data', []);
-      setAvailableCompanyNames(companies);
+      setAvailableCompanyNames(availableCompanies);
       setLoading(false);
     } catch (error) {
       // log exception here

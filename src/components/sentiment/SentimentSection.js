@@ -5,7 +5,7 @@ import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
 import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { upperCase, get } from 'lodash';
+import { upperCase, get, lowerCase } from 'lodash';
 import Rainbow from './Rainbow';
 const useStyles = makeStyles(theme => ({
   lvl: {
@@ -123,6 +123,7 @@ const SentimentSection = props => {
       return clr;
     }
   };
+  let signatureIterator = 1
   return (
     <div>
       {isLoading ? (
@@ -131,6 +132,11 @@ const SentimentSection = props => {
         </div>
       ) : (
         props.contentData.map((d, index) => {
+          let idVal = lowerCase(d.prop)
+          if(idVal === "signatures"){
+            idVal =  idVal+signatureIterator
+            signatureIterator++
+          }
           return index !== 0 ? (
             <div
               key={`1_${index}`}
@@ -138,7 +144,7 @@ const SentimentSection = props => {
                 paddingLeft: d.lvl * 4 + 4,
                 scrollMarginTop: '210px'
               }}
-              id={d.id}>
+              id={createHash(idVal)}>
               {d.content ? (
                 <div>
                   {get(d, 'newData.elements', null)
@@ -249,7 +255,7 @@ const SentimentSection = props => {
                     classes.searchResultText,
                     classes[`lvl${d.lvl}`],
                     classes.lvl,
-                    selectedHeadingId === d.id ? classes.highlightHeading : null
+                    selectedHeadingId === createHash(idVal) ? classes.highlightHeading : null
                   )}
                   dangerouslySetInnerHTML={{
                     __html:

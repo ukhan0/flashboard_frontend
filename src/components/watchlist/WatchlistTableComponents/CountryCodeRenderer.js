@@ -4,18 +4,18 @@ import { get } from 'lodash';
 const CountryCodeRenderer =  (props) => {
   const [value, setValue] = useState();
   useEffect(() => {
-      if(props.value){
+      if(props.data.countryCode){
         const url = `https://flags.fmcdn.net/data/flags/mini/${
-          props.value?.toLowerCase()
+          props.data.countryCode?.toLowerCase()
         }.png`;
         const flagImage = `<img class="flag" border="0" width="15" height="10" src="${url}">`;
         const filteredWatchlist = props.context
           .filter(c =>
-            get(c, 'code', '') === props.value
+            get(c, 'code', '') === props.data.countryCode
           );
         setValue(`${flagImage} ${filteredWatchlist[0]?.name}`);
       }
-  }, [props.context, props.value]);
+  }, [props.context, props.data.countryCode]);
 
   return <div dangerouslySetInnerHTML={{ __html: value }}></div>;
 };

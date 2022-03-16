@@ -1,7 +1,6 @@
 import { get, forEach, uniq, cloneDeep } from 'lodash';
 import searchHeadingMapping from '../../config/searchHeadingMapping';
 import searchIndexs from 'config/searchIndexs';
-import config from '../../config/config';
 export function getSearchCombinations(suggestions) {
   const quotedCombinations = suggestions.map(c => `"${c}"`);
   return quotedCombinations.join(' OR ');
@@ -88,9 +87,9 @@ export const renameDocumentTypes = type => {
     let selected = type.map(v => {
       if (v.toLowerCase() === 'fmp-transcript') {
         v = 'Earning Call';
-      } else if(v.toLowerCase() === 'fin supp'){
+      } else if (v.toLowerCase() === 'fin supp') {
         v = 'FS';
-      } else if(v.toLowerCase() === 'other financials'){
+      } else if (v.toLowerCase() === 'other financials') {
         v = 'OF';
       }
       return v;
@@ -104,9 +103,9 @@ export const renameDocumentTypes = type => {
 
   if (type.toLowerCase() === 'fmp-transcript') {
     type = 'Earning Call';
-  } else if(type.toLowerCase() === 'fin supp'){
+  } else if (type.toLowerCase() === 'fin supp') {
     type = 'FS';
-  }  else if(type.toLowerCase() === 'other financials'){
+  } else if (type.toLowerCase() === 'other financials') {
     type = 'OF';
   }
   return type;
@@ -190,13 +189,15 @@ export const getSearchIndex = data => {
     if (section) {
       index = section;
     } else {
-      index = {
-        label: 'Domestic Filings',
-        value: config.secSearchIndex
-      };
+      index = searchIndexs[0];
     }
   } else {
-    index = data;
+    const section = searchIndexs.find(sd => sd.value === data['value']);
+    if (section) {
+      index = section;
+    } else {
+      index = searchIndexs[0];
+    }
   }
 
   return index;

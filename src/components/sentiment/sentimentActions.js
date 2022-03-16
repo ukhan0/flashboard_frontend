@@ -46,7 +46,7 @@ export const getSentimentData = () => {
         formData.append('search_term', searchTerm);
       }
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? sentimentSearchIndex : (selectedType === "global") ? 'filling_sentiment_global*' : 'filling_sentiment_sec*'}`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? sentimentSearchIndex : (selectedType === "global") ? 'fillings_*' : 'fillings_*'}`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);

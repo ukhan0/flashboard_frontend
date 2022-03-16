@@ -29,7 +29,8 @@ const useStyles = makeStyles(theme => ({
   },
   companyDetail: {
     top: 50,
-    position: 'sticky'
+    position: 'sticky',
+    zIndex: 100000
   }
 }));
 
@@ -111,14 +112,16 @@ const SentimentContentSection = props => {
           </Button>
         ) : null}
       </div>
-      {sentimentVesion === 'original' ? (
-        <SentimentPdf />
-      ) : (
         <>
-          <SentimentSection contentData={props.contentData} onSelection={handleSelection} />
-          <SentimentDrawer tableData={props.tableData} onSelection={handleSelection} />
+          <div style={{ display: `${sentimentVesion === 'original' ? 'block': 'none'}` }}>
+            <SentimentPdf />
+          </div>
+          { sentimentVesion !== 'original' ? (
+          <>
+            <SentimentSection contentData={props.contentData} onSelection={handleSelection} />
+            <SentimentDrawer tableData={props.tableData} onSelection={handleSelection} />
+          </>) : null}
         </>
-      )}
 
       <div className={classes.goToTopContainer}>
         <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
