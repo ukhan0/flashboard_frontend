@@ -1,9 +1,9 @@
 import React from 'react';
 import HelpNavigation from './HelpNavigation';
-function Navigation() {
+function Navigation(props) {
   return (
     <div>
-      <HelpNavigation />
+      <HelpNavigation onClose={props.onClose} />
     </div>
   );
 }

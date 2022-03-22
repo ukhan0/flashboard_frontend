@@ -21,6 +21,7 @@ const HeaderMenu = props => {
   const { setSidebarToggle } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorHelp, setAnchorHelp] = React.useState(null);
   const dispatch = useDispatch();
   const handleClick = event => {
     let pathname = window.location.pathname;
@@ -28,6 +29,10 @@ const HeaderMenu = props => {
       dispatch(resetAllSearchParams());
       setAnchorEl(anchorEl ? null : event.currentTarget);
     }
+  };
+
+  const handleClickHelp = event => {
+    setAnchorHelp(anchorEl ? null : event.currentTarget);
   };
 
   const goToWatchlist = () => {
@@ -43,9 +48,14 @@ const HeaderMenu = props => {
   const handleClose2 = () => {
     setAnchorEl(null);
   };
+  const handleCloseHelp = () => {
+    setAnchorHelp(null);
+  };
 
   const open = Boolean(anchorEl);
+  const openHelp = Boolean(anchorHelp);
   const id = open ? 'simple-popper' : undefined;
+  const helpId = openHelp ? 'simple-popper' : undefined;
   return (
     <Fragment>
       <div className="app-header-menu">
@@ -91,9 +101,30 @@ const HeaderMenu = props => {
           size="medium"
           color="inherit"
           disabled={false}
+          onClick={handleClickHelp}
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/guideline' ? 'btn-active' : '')}>
-          <Help />
+          Help
         </Button>
+        <Popover
+          id={helpId}
+          open={openHelp}
+          anchorEl={anchorHelp}
+          onClose={handleCloseHelp}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left'
+          }}
+          PaperProps={{
+            style: { width: 'auto' }
+          }}>
+          <div className={classes.paper}>
+            <Help onClose={handleCloseHelp} />
+          </div>
+        </Popover>
       </div>
     </Fragment>
   );
