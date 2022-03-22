@@ -121,11 +121,15 @@ const LivePreviewExample = () => {
         dispatch(setIsWatchlistEmailAlertEnable(userData.data.send_watchlist_alert_email));
         dispatch(setIsColorEnable(userData.data.enable_watchlist_color));
         localStorage.setItem('user', JSON.stringify(userData.data));
+        let token = get(userData, 'auth_token', null);
+        if (token) {
+          localStorage.setItem('auth_token', token);
+        }
         const redirectURLStr = localStorage.getItem('redirect_url');
-        if(redirectURLStr) {
+        if (redirectURLStr) {
           const redirectURLObj = JSON.parse(redirectURLStr);
           const redirectURL = `${redirectURLObj.pathname}${redirectURLObj.search}${redirectURLObj.hash}`;
-          localStorage.removeItem('redirect_url')
+          localStorage.removeItem('redirect_url');
           history.push(redirectURL);
         } else {
           history.push('/watchlist');

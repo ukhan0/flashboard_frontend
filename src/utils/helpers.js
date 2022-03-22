@@ -1,4 +1,6 @@
 import { get } from 'lodash';
+import axios from 'axios';
+import config from '../config/config';
 
 export const priorityMappingObj = (valueKey = false) => {
   let reverseMappingArray = {
@@ -51,4 +53,32 @@ export const setItemInLocalStorage = (v, data, isStringify) => {
 
 export const getItemFromLocalStorage = (v, isJsonParse) => {
   isJsonParse ? JSON.parse(localStorage.getItem(v)) : localStorage.getItem(v);
+};
+
+export const deleteToken = async () => {
+  try {
+    const response = await axios.delete(`${config.apiUrl}/api/users/delete_token`);
+    const data = get(response, 'data', null);
+    if (data) {
+      localStorage.clear();
+      // following code will refresh the page and Context will be reset
+      window.location.href = '/PagesRegister';
+    }
+    return;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const refreshToken = async () => {
+  try {
+    const response = await axios.put(`${config.apiUrl}/api/users/refresh_token`);
+    let token = get(response, 'data.auth_token', null);
+    if (token) {
+      localStorage.setItem('auth_token', token);
+    }
+    return;
+  } catch (error) {
+    console.log(error);
+  }
 };
