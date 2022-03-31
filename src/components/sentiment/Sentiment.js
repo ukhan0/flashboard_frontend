@@ -133,7 +133,6 @@ const Sentiment = () => {
         }
         newDisplayData.push(processedData);
       });
-
       setContentData(cloneDeep(newDisplayData));
     }, 100);
 

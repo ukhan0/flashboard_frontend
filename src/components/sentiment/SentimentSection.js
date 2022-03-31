@@ -170,6 +170,7 @@ const SentimentSection = props => {
                                             }}>
                                             {c.elements
                                               ? c.elements.map((d, e) => {
+                                                const parentAttributes = d.attributes
                                                   return (
                                                     <React.Fragment key={`8_${e}`}>
                                                       {d.type === 'element' ? (
@@ -179,6 +180,22 @@ const SentimentSection = props => {
                                                                 if (g) {
                                                                   yellowTextCount = yellowTextCount + 1;
                                                                 }
+
+                                                                if (g.type === 'element') {
+                                                                    if(g.attributes && g.attributes.class === "yellowColor"){
+                                                                      d.attributes = g.attributes
+                                                                    } else {
+                                                                      d.attributes = parentAttributes
+                                                                    }
+                                                                  if(Array.isArray(g.elements)){
+                                                                    g = g.elements[0];
+                                                                  } else {
+                                                                    d.attributes = parentAttributes
+                                                                  }
+                                                                } else {
+                                                                  d.attributes = parentAttributes
+                                                                }
+                                                                
                                                                 return (
                                                                   <span
                                                                     id={createHash(`#${yellowTextCount}text`)}
@@ -219,7 +236,27 @@ const SentimentSection = props => {
                                                           ) : null}
                                                         </>
                                                       ) : (
-                                                        <React.Fragment key={`8_${e}`}>{d.text}</React.Fragment>
+                                                        <React.Fragment key={`5_${e}`}>
+                                                            { 
+                                                              c.attributes
+                                                                  ? c.attributes.class === 'yellowColor'
+                                                                    ?  <span
+                                                                    id={createHash(`#${yellowTextCount}text`)}
+                                                                    key={`6_${e}`}
+                                                                    style={{
+                                                                      backgroundColor: 'orange',
+                                                                      paddingLeft: 2,
+                                                                      paddingRight: 2,
+                                                                      //borderRadius: 4,
+                                                                      borderRadius: 4,
+                                                                      scrollMarginTop: '300px'
+                                                                    }}>
+                                                                    {d.text ? d.text : d.name === 'br' ? <br /> : ''}
+                                                                  </span>
+                                                                    : d.text
+                                                                  : d.text
+                                                              }
+                                                        </React.Fragment>
                                                       )}
                                                     </React.Fragment>
                                                   );
