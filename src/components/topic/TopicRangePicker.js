@@ -69,7 +69,6 @@ const TopicRangePicker = props => {
       dispatch(isDateSet(true));
     }
   };
-
   return (
     <div>
       <div

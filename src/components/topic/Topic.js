@@ -38,10 +38,10 @@ const Topic = () => {
 
   const dispatch = useDispatch();
 
-  const handleSearch = () => {
+  const handleSearch = historyBy => {
     dispatch(setTopicHandleSearchCombineReducer());
     setItemInLocalStorage('searchIndex', searchIndex, true);
-    dispatch(performTopicSearchAggregate(true, true));
+    dispatch(performTopicSearchAggregate(true, true, historyBy));
     dispatch(performTopicTweetsSearchAggregate(true, true));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
@@ -69,7 +69,7 @@ const Topic = () => {
           {searchIndex['id'] === 4 ? null : (
             <Grid container spacing={1}>
               <Grid item xs={4}>
-                <TopicHistoryChart />
+                <TopicHistoryChart handleSearch={handleSearch} />
               </Grid>
               <Grid item xs={4}>
                 <TopicCompanyResultsTable />

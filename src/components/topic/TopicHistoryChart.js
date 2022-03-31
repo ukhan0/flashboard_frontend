@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { get } from 'lodash';
-import { useSelector } from 'react-redux';
-import { Grid, FormControlLabel, Checkbox, Card } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { Grid, FormControlLabel, Checkbox, Card, Button } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-
+import { setTopicSearchDateRange, isDateSet } from '../../reducers/Topic';
+import moment from 'moment';
 const companyColor = '#4092e5';
 const fileColor = '#359901';
 
@@ -45,13 +46,22 @@ const FileCheckbox = withStyles({
   checked: {}
 })(props => <Checkbox color="default" {...props} />);
 
-const TopicHistoryChart = () => {
+const TopicHistoryChart = props => {
   const classes = useStyles();
-  const { searchResult } = useSelector(state => state.Topic);
+  const dispatch = useDispatch();
+  const { searchResult, startDate, endDate } = useSelector(state => state.Topic);
   const history = get(searchResult, 'buckets.history', []);
   const [isCompaniesSelected, setIsCompaniesSelected] = useState(true);
   const [isFilesSelected, setIsFilesSelected] = useState(true);
-
+  const [isDays, setIsDays] = useState(false);
+  const firstTimeLoad = useRef(false);
+  const [preDate, setPreDate] = useState(null);
+  useEffect(() => {
+    if (!firstTimeLoad.current) {
+      firstTimeLoad.current = true;
+      setPreDate({ startDate: startDate, endDate: endDate });
+    }
+  }, [startDate, endDate]);
   const options = {
     chart: {
       zoomType: 'xy',
@@ -70,8 +80,8 @@ const TopicHistoryChart = () => {
     },
     plotOptions: {
       area: {
-        lineWidth: 2.5,
-        fillOpacity: 0.1,
+        // lineWidth: 2.5,
+        // fillOpacity: 0.1,
         marker: {
           lineColor: '#fff',
           lineWidth: 1,
@@ -85,6 +95,34 @@ const TopicHistoryChart = () => {
         shadow: !1,
         borderWidth: 0,
         groupPadding: 0.05
+      },
+      series: {
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function() {
+              if (this) {
+                const docCount = get(this, 'series.name', null);
+                if (docCount === 'Documents Count') {
+                  const index = get(this, 'index', null);
+                  const docData = get(this, 'series.data', []);
+                  if (docData.length > 0) {
+                    let selectedDate = {
+                      startDate: moment(docData[index].category, 'MM-DD-YYYY')._d,
+                      endDate: isDays
+                        ? moment(docData[index].category, 'MM-DD-YYYY')._d
+                        : moment(docData[index].category, 'MM-DD-YYYY').endOf('month')._d
+                    };
+                    dispatch(setTopicSearchDateRange(selectedDate));
+                    dispatch(isDateSet(true));
+                    props.handleSearch('day');
+                    setIsDays(true);
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     xAxis: [
@@ -104,7 +142,8 @@ const TopicHistoryChart = () => {
             color: '#999999'
           },
           formatter: function() {
-            return Highcharts.dateFormat('%b %Y', new Date(this.value));
+            let date = moment(this.value, 'MM-DD-YYYY');
+            return isDays ? date.format('DD MMM') : date.format('MMM YYYY');
           }
         }
       }
@@ -141,7 +180,7 @@ const TopicHistoryChart = () => {
         data: []
       },
       {
-        type: 'area',
+        type: 'line',
         name: 'Files Count',
         data: []
       }
@@ -167,7 +206,11 @@ const TopicHistoryChart = () => {
   if (isFilesSelected) {
     options.series[1].data = yAxisFilesCounts;
   }
-
+  const handleReset = () => {
+    setIsDays(false);
+    dispatch(setTopicSearchDateRange(preDate));
+    props.handleSearch();
+  };
   return (
     <Card className="card-box mb-4">
       <Grid container direction="row" justify="space-between" alignItems="center" className={classes.topContainer}>
@@ -206,6 +249,11 @@ const TopicHistoryChart = () => {
             }
             label="Files"
           />
+          {isDays ? (
+            <Button className="m-0 p-0 btn text-warning" size="small" onClick={handleReset}>
+              Reset
+            </Button>
+          ) : null}
         </Grid>
       </Grid>
       <HighchartsReact highcharts={Highcharts} options={options} />

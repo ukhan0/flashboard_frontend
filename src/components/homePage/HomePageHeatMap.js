@@ -6,7 +6,7 @@ export default function HomePageHeatMap() {
     window.SMA.HeatmapWidget({
       container: 'sma_widget_container',
       width: '100%',
-      height: '510',
+      height: '600',
       apikey: 'aa0bf3957e823316e5dc18c031c6ddc8074b980d',
       ontology: 'ticker',
       positiveColor: '00ffff',

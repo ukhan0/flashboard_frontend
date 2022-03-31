@@ -50,6 +50,9 @@ export default function FillingCompanyPriceOverlay(props) {
   let latestDate = newData[newData.length - 1];
 
   const options = {
+    chart: {
+      height: props.height ? props.height : ''
+    },
     rangeSelector: {
       selected: 4
     },
@@ -116,6 +119,5 @@ export default function FillingCompanyPriceOverlay(props) {
       }, [400]);
     }
   }, [sidebarToggle, sidebarToggleMobile]);
-  
   return <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={options} />;
 }

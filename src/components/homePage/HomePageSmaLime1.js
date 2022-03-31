@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function HomePageSmaLime() {
+export default function HomePageSmaLime1() {
   React.useEffect(() => {
     window.SMA.SMAWebTopTenSentiment({
       container: 'container',

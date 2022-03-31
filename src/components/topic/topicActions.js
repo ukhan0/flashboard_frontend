@@ -47,7 +47,7 @@ import documentTypesData from '../../config/documentTypesData';
 import { metricsSelection } from '../../config/filterTypes';
 import moment from 'moment';
 
-export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false) => {
+export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false, historyBy = 'month') => {
   return async (dispatch, getState) => {
     const {
       selectedDocumentTypes,
@@ -139,7 +139,8 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         {
           ...createSearchPayload(getState().Topic, freshSearch),
           searchfromArr: searchFroms,
-          searchfrom: undefined
+          searchfrom: undefined,
+          historyBy: historyBy
         },
         {
           cancelToken: cancelTokenSource.token

@@ -180,7 +180,7 @@ export default function HomePageTable() {
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Recent Watchlist Documents</div>
       </div>
-      <div className="ag-theme-alpine" style={{ height: '430px', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: '550px', width: '100%' }}>
         <AgGridReact
           columnDefs={columnDefs}
           rowSelection="single"

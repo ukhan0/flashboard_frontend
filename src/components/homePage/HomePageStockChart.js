@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Grid, Card } from '@material-ui/core';
+import { Card } from '@material-ui/core';
 import HomePageSearchField from './HomePageSearchField';
 import { makeStyles } from '@material-ui/core/styles';
 import { BeatLoader } from 'react-spinners';
@@ -85,18 +85,8 @@ export default function FillingCompanyPriceOverlay() {
         </div>
         <HomePageSearchField />
       </div>
-
-      <Grid container direction="row" justify="space-between" alignItems="center" className={classes.topContainer}>
-        <Grid item>
-          <Grid container spacing={2}>
-            <Grid item>
-            </Grid>
-            <Grid item></Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <div style={{ height: '100%', width: '100%' }}>
-        <CompanyStockChart title={''} chartData={stockChartData} chartPriceData={stockChartPriceData} />
+      <div style={{ height: '530px', width: '100%' }}>
+        <CompanyStockChart height={'530'} title={''} chartData={stockChartData} chartPriceData={stockChartPriceData} />
       </div>
     </Card>
   );

@@ -44,12 +44,14 @@ import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
 // styles
 import useStyles from './watchlistStyles';
-import { isObject } from 'lodash';
+import { isObject, isEmpty } from 'lodash';
 import { getWatchlist } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
+import WatchlistFiltersList from './WatchlistFiltersList';
+import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -82,14 +84,19 @@ const Watchlist = props => {
   const [confirmationClearSortDialog, setConfirmationClearSortDialog] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [addTickersnackbar, setAddTickersnackbar] = React.useState(false);
-  const [removeTickersnackbar, setRemoveTickersnackbar] = React.useState(false);
+  const [successSnackbar, setSuccessSnackBar] = useState(false);
+  const [successSnackbarMessage, setSuccessSnackBarMessage] = useState('');
   const [errorSnackbar, setErrorSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('Unable to Add/Remove Ticker To/From Watchlist');
   const firstTimeLoad = useRef(true);
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
+  const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
+  const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
+  const [filterLabel, setFilterLabel] = useState('');
+  const [savedFiltersList, setSavedFilters] = useState([]);
+  const [severity, setSeverity] = useState('');
 
   const searchFromCompleteData = useCallback(() => {
     const rawData = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
@@ -111,7 +118,7 @@ const Watchlist = props => {
         const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
         rawCompleteData[tickerIndex] = nd;
       });
-      if(selectedType === 'domestic'){
+      if (selectedType === 'domestic') {
         dispatch(setCompleteCompaniesData(rawCompleteData));
       } else {
         dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
@@ -253,61 +260,76 @@ const Watchlist = props => {
     }
   }, [dispatch, history.location.pathname]);
 
-  const updateTickerValue = useCallback((rawCompleteData, ticker, isTicker) => {
-    let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
-    if (updatedTickerDetail !== -1) {
-      rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-      if(selectedType === 'domestic'){
-        dispatch(setCompleteCompaniesData(rawCompleteData));
-      } else {
-        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-      }
-    }
-  }, [dispatch, selectedType]);
-  
-  const updateChacheData = useCallback((ticker, isTicker) => {
-    let rawCompleteData = cloneDeep(selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal);
-    if (Array.isArray(ticker)) {
-      for (let i = 0; i < ticker.length; i++) {
-        let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
-        if (updatedTickerDetail !== -1) {
-          rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
+  const updateTickerValue = useCallback(
+    (rawCompleteData, ticker, isTicker) => {
+      let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
+      if (updatedTickerDetail !== -1) {
+        rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
+        if (selectedType === 'domestic') {
+          dispatch(setCompleteCompaniesData(rawCompleteData));
+        } else {
+          dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
         }
       }
-      if(selectedType === 'domestic'){
-        dispatch(setCompleteCompaniesData(rawCompleteData));
-      } else {
-        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-      }
-    } else {
-      updateTickerValue(rawCompleteData, ticker, isTicker);
-    }
-  } , [dispatch, selectedType, completeCompaniesData, completeCompaniesDataGlobal, updateTickerValue] );
+    },
+    [dispatch, selectedType]
+  );
 
-  const deleteTicker = useCallback(async ticker => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    try {
-      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`);
-      const responsePayload = get(response, 'data', null);
-      if (responsePayload && !responsePayload.error) {
-        let isTicker = false;
-        updateChacheData(ticker, isTicker);
-        setTopicDialogOpen(false);
-        const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
-        debouncedSave();
-        setRemoveTickersnackbar(true);
+  const updateChacheData = useCallback(
+    (ticker, isTicker) => {
+      let rawCompleteData = cloneDeep(
+        selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal
+      );
+      if (Array.isArray(ticker)) {
+        for (let i = 0; i < ticker.length; i++) {
+          let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
+          if (updatedTickerDetail !== -1) {
+            rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
+          }
+        }
+        if (selectedType === 'domestic') {
+          dispatch(setCompleteCompaniesData(rawCompleteData));
+        } else {
+          dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+        }
       } else {
+        updateTickerValue(rawCompleteData, ticker, isTicker);
+      }
+    },
+    [dispatch, selectedType, completeCompaniesData, completeCompaniesDataGlobal, updateTickerValue]
+  );
+
+  const deleteTicker = useCallback(
+    async ticker => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      try {
+        const response = await axios.delete(
+          `${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`
+        );
+        const responsePayload = get(response, 'data', null);
+        if (responsePayload && !responsePayload.error) {
+          let isTicker = false;
+          updateChacheData(ticker, isTicker);
+          setTopicDialogOpen(false);
+          const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
+          debouncedSave();
+          setSuccessSnackBarMessage('Ticker removed from Watchlist');
+          setSuccessSnackBar(true);
+          setSeverity('info');
+        } else {
+          setTopicAddingError(true);
+          setErrorSnackbar(true);
+        }
+      } catch (error) {
         setTopicAddingError(true);
         setErrorSnackbar(true);
       }
-    } catch (error) {
-      setTopicAddingError(true);
-      setErrorSnackbar(true);
-    }
-  }, [dataVersion, updateChacheData, selectedType]);
+    },
+    [dataVersion, updateChacheData, selectedType]
+  );
 
-  const handleUpload = useCallback( 
-    async (ticker) => {
+  const handleUpload = useCallback(
+    async ticker => {
       const user = JSON.parse(localStorage.getItem('user'));
       try {
         setLoading(true);
@@ -327,7 +349,9 @@ const Watchlist = props => {
           updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
           dispatch(setWatchlistSelectedSymbols([]));
           dispatch(setOverwriteCheckBox(false));
-          setAddTickersnackbar(true);
+          setSuccessSnackBar(true);
+          setSuccessSnackBarMessage('Ticker added in Watchlist');
+          setSeverity('success');
           fetchData();
         } else {
           setTopicAddingError(true);
@@ -338,8 +362,9 @@ const Watchlist = props => {
         setTopicAddingError(true);
         setErrorSnackbar(true);
       }
-    }
-    , [dispatch, dataVersion, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]);
+    },
+    [dispatch, dataVersion, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
+  );
 
   const onStoreColumnsState = state => {
     storeColumnsState(state);
@@ -383,10 +408,105 @@ const Watchlist = props => {
     setIsAgGridSideBarOpen(false);
   };
 
+  const getSavedFilters = useCallback(async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        setSavedFilters(get(responsePayload, 'data', []));
+      } else {
+        setSavedFilters([]);
+      }
+    } catch (error) {
+      setSavedFilters([]);
+    }
+  }, []);
+  useEffect(() => {
+    getSavedFilters();
+  }, [getSavedFilters]);
+
+  const saveFilter = async () => {
+    if (!isEmpty(getFilteringState())) {
+      try {
+        const response = await axios.post(`${config.apiUrl}/api/save_watchlist_searches`, {
+          searchJson: getFilteringState(),
+          tableType: selectedType,
+          filterLabel: filterLabel
+        });
+        const responsePayload = get(response, 'data', null);
+        if (responsePayload && !responsePayload.error) {
+          setSuccessSnackBar(true);
+          setSuccessSnackBarMessage('filter saved successfully');
+          setSeverity('success');
+          getSavedFilters();
+
+        } else {
+          setErrorSnackbar(true);
+          setSnackbarMessage('filter not saved');
+        }
+      } catch (error) {
+        setErrorSnackbar(true);
+        setSnackbarMessage('something went wroung');
+      }
+    }
+    setFilterLabel('')
+    setIsFilterLabelOpen(false);
+  };
+
+  const deleteFilter = async id => {
+    try {
+      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist_search?filterId=${id}`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        getSavedFilters();
+        setSuccessSnackBar(true);
+        setSuccessSnackBarMessage('filter deleted successfully');
+        setSeverity('info');
+      } else {
+        setErrorSnackbar(true);
+        setSnackbarMessage('filter not delete');
+      }
+    } catch (error) {
+      setErrorSnackbar(true);
+      setSnackbarMessage('something went wroung');
+    }
+  };
+  const handleOpenAgGridFilterDialog = () => {
+    setIsSavedFilterDialog(true);
+  };
+  const handleCloseAgGridFilterDialog = () => {
+    setIsSavedFilterDialog(false);
+  };
+
+  const handleOpenAgGridFilterLabelDialog = () => {
+    setIsFilterLabelOpen(true);
+  };
+  const handleCloseAgGridFilterLabelDialog = () => {
+    setIsFilterLabelOpen(false);
+  };
+  const hanldeFilterLabel = e => {
+    setFilterLabel(e.target.value);
+  };
+
   const gridData = firstTimeLoad.current ? null : processWatchlistData();
 
   return (
     <>
+      <WatchlistFilterLabelDialog
+        saveFilter={saveFilter}
+        hanldeFilterLabel={hanldeFilterLabel}
+        filterLabel={filterLabel}
+        isFilterLabelOpen={isFilterLabelOpen}
+        handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
+        handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
+      />
+      <WatchlistFiltersList
+        deleteFilter={deleteFilter}
+        savedFiltersList={savedFiltersList}
+        isSavedFilterDialog={isSavedFilterDialog}
+        handleOpenAgGridFilterDialog={handleOpenAgGridFilterDialog}
+        handleCloseAgGridFilterDialog={handleCloseAgGridFilterDialog}
+      />
       {WatchlistService.getAgGridAColunms().columns.length > 0 ? (
         <>
           <WatchlistCustomColumnsSideBar
@@ -406,27 +526,40 @@ const Watchlist = props => {
         </div>
       ) : null}
       <Grid container direction="row" alignItems="flex-end" className={classes.space}>
-        <Grid item xs={10}>
+        <Grid item xs={9}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-end">
             <Grid item>
               <WatchlistFilters />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Box className="d-flex align-items-center">
               {isFilterActive || isFilterActiveOnSearch ? (
-                <Button
-                  color="primary"
-                  className={classes.button}
-                  size="small"
-                  variant="contained"
-                  onClick={() => {
-                    setConfirmationClearFilterDialog(true);
-                  }}>
-                  Clear Filters
-                </Button>
+                <>
+                  <Button
+                    color="primary"
+                    className={classes.button}
+                    size="small"
+                    variant="contained"
+                    onClick={() => {
+                      setConfirmationClearFilterDialog(true);
+                    }}>
+                    Clear Filters
+                  </Button>
+
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    className={classes.button}
+                    size="small"
+                    onClick={() => {
+                      handleOpenAgGridFilterLabelDialog();
+                    }}>
+                    Save Filter
+                  </Button>
+                </>
               ) : null}
             </Box>
             <Grid item>
@@ -472,6 +605,14 @@ const Watchlist = props => {
             }}>
             Actions
           </div>
+          <div
+            className={classes.agButtons}
+            style={{ marginTop: '20px' }}
+            onClick={() => {
+              handleOpenAgGridFilterDialog();
+            }}>
+           Filters
+          </div>
         </div>
       </div>
 
@@ -496,17 +637,12 @@ const Watchlist = props => {
         error={topicAddingError}
       />
       <Snackbar
-        open={addTickersnackbar}
-        onClose={() => setAddTickersnackbar(false)}
-        message="Ticker added in Watchlist"
-        severity="success"
+        open={successSnackbar}
+        onClose={() => setSuccessSnackBar(false)}
+        message={successSnackbarMessage}
+        severity={severity}
       />
-      <Snackbar
-        open={removeTickersnackbar}
-        onClose={() => setRemoveTickersnackbar(false)}
-        message="Ticker removed from Watchlist"
-        severity="info"
-      />
+
       <Snackbar
         open={errorSnackbar}
         onClose={() => setErrorSnackbar(false)}
