@@ -46,7 +46,7 @@ function WatchlistFiltersList(props) {
         <Grid item></Grid>
         <Grid item>
           {' '}
-          <Typography variant="h5">Filter List</Typography>
+          <Typography variant="h5">Filters</Typography>
         </Grid>
         <Grid item>
           {' '}

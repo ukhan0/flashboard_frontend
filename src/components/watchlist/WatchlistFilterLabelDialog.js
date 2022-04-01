@@ -18,7 +18,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AlertDialog(props) {
+  const [filterLabel, setFilterLabel] = React.useState('');
   const classes = useStyles();
+  const hanldeFilterLabel = e => {
+    setFilterLabel(e.target.value);
+  };
   return (
     <div>
       <Dialog
@@ -35,9 +39,9 @@ export default function AlertDialog(props) {
             <TextField
               size="small"
               fullWidth
-              value={props.filterLabel}
+              value={filterLabel}
               onChange={e => {
-                props.hanldeFilterLabel(e);
+                hanldeFilterLabel(e);
               }}
               variant="outlined"
             />
@@ -45,12 +49,13 @@ export default function AlertDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button
-            disabled={props.filterLabel.length > 2 ? false : true}
+            disabled={filterLabel.length > 2 ? false : true}
             style={{ width: '100px' }}
             variant="contained"
             color="primary"
             onClick={() => {
-              props.saveFilter();
+              props.saveFilter(filterLabel);
+              setFilterLabel('');
             }}>
             Save
           </Button>
@@ -61,6 +66,7 @@ export default function AlertDialog(props) {
             color="primary"
             onClick={() => {
               props.handleCloseAgGridFilterLabelDialog();
+              setFilterLabel('');
             }}>
             Cancel
           </Button>

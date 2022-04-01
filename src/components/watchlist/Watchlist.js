@@ -84,19 +84,14 @@ const Watchlist = props => {
   const [confirmationClearSortDialog, setConfirmationClearSortDialog] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [successSnackbar, setSuccessSnackBar] = useState(false);
-  const [successSnackbarMessage, setSuccessSnackBarMessage] = useState('');
-  const [errorSnackbar, setErrorSnackbar] = React.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = React.useState('Unable to Add/Remove Ticker To/From Watchlist');
+  const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const firstTimeLoad = useRef(true);
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
-  const [filterLabel, setFilterLabel] = useState('');
   const [savedFiltersList, setSavedFilters] = useState([]);
-  const [severity, setSeverity] = useState('');
 
   const searchFromCompleteData = useCallback(() => {
     const rawData = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
@@ -313,16 +308,18 @@ const Watchlist = props => {
           setTopicDialogOpen(false);
           const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
           debouncedSave();
-          setSuccessSnackBarMessage('Ticker removed from Watchlist');
-          setSuccessSnackBar(true);
-          setSeverity('info');
+          setSnackBar({ isSnackBar: true, message: 'Ticker removed from Watchlist', severity: 'info' });
         } else {
           setTopicAddingError(true);
-          setErrorSnackbar(true);
+          setSnackBar({
+            isSnackBar: true,
+            message: 'Unable to Add/Remove Ticker To/From Watchlist',
+            severity: 'error'
+          });
         }
       } catch (error) {
         setTopicAddingError(true);
-        setErrorSnackbar(true);
+        setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
       }
     },
     [dataVersion, updateChacheData, selectedType]
@@ -349,18 +346,15 @@ const Watchlist = props => {
           updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
           dispatch(setWatchlistSelectedSymbols([]));
           dispatch(setOverwriteCheckBox(false));
-          setSuccessSnackBar(true);
-          setSuccessSnackBarMessage('Ticker added in Watchlist');
-          setSeverity('success');
+          setSnackBar({ isSnackBar: true, message: 'Ticker added in Watchlist', severity: 'success' });
           fetchData();
         } else {
           setTopicAddingError(true);
-          setErrorSnackbar(true);
-          setSnackbarMessage(responsePayload.message);
+          setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
         }
       } catch (error) {
         setTopicAddingError(true);
-        setErrorSnackbar(true);
+        setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
       }
     },
     [dispatch, dataVersion, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
@@ -425,7 +419,7 @@ const Watchlist = props => {
     getSavedFilters();
   }, [getSavedFilters]);
 
-  const saveFilter = async () => {
+  const saveFilter = async filterLabel => {
     if (!isEmpty(getFilteringState())) {
       try {
         const response = await axios.post(`${config.apiUrl}/api/save_watchlist_searches`, {
@@ -435,21 +429,15 @@ const Watchlist = props => {
         });
         const responsePayload = get(response, 'data', null);
         if (responsePayload && !responsePayload.error) {
-          setSuccessSnackBar(true);
-          setSuccessSnackBarMessage('filter saved successfully');
-          setSeverity('success');
+          setSnackBar({ isSnackBar: true, message: 'filter saved successfully', severity: 'success' });
           getSavedFilters();
-
         } else {
-          setErrorSnackbar(true);
-          setSnackbarMessage('filter not saved');
+          setSnackBar({ isSnackBar: true, message: 'filter not saved', severity: 'error' });
         }
       } catch (error) {
-        setErrorSnackbar(true);
-        setSnackbarMessage('something went wroung');
+        setSnackBar({ isSnackBar: true, message: 'something went wrong', severity: 'error' });
       }
     }
-    setFilterLabel('')
     setIsFilterLabelOpen(false);
   };
 
@@ -459,16 +447,12 @@ const Watchlist = props => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         getSavedFilters();
-        setSuccessSnackBar(true);
-        setSuccessSnackBarMessage('filter deleted successfully');
-        setSeverity('info');
+        setSnackBar({ isSnackBar: true, message: 'filter deleted successfully', severity: 'info' });
       } else {
-        setErrorSnackbar(true);
-        setSnackbarMessage('filter not delete');
+        setSnackBar({ isSnackBar: true, message: 'filter not deleted', severity: 'error' });
       }
     } catch (error) {
-      setErrorSnackbar(true);
-      setSnackbarMessage('something went wroung');
+      setSnackBar({ isSnackBar: true, message: 'something went wroung', severity: 'error' });
     }
   };
   const handleOpenAgGridFilterDialog = () => {
@@ -484,9 +468,6 @@ const Watchlist = props => {
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
-  const hanldeFilterLabel = e => {
-    setFilterLabel(e.target.value);
-  };
 
   const gridData = firstTimeLoad.current ? null : processWatchlistData();
 
@@ -494,8 +475,6 @@ const Watchlist = props => {
     <>
       <WatchlistFilterLabelDialog
         saveFilter={saveFilter}
-        hanldeFilterLabel={hanldeFilterLabel}
-        filterLabel={filterLabel}
         isFilterLabelOpen={isFilterLabelOpen}
         handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
         handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
@@ -611,7 +590,7 @@ const Watchlist = props => {
             onClick={() => {
               handleOpenAgGridFilterDialog();
             }}>
-           Filters
+            Filters
           </div>
         </div>
       </div>
@@ -637,17 +616,16 @@ const Watchlist = props => {
         error={topicAddingError}
       />
       <Snackbar
-        open={successSnackbar}
-        onClose={() => setSuccessSnackBar(false)}
-        message={successSnackbarMessage}
-        severity={severity}
-      />
-
-      <Snackbar
-        open={errorSnackbar}
-        onClose={() => setErrorSnackbar(false)}
-        message={snackbarMessage}
-        severity="error"
+        open={get(snackbar, 'isSnackBar', false)}
+        onClose={() =>
+          setSnackBar({
+            isSnackBar: false,
+            message: get(snackbar, 'message', null),
+            severity: get(snackbar, 'severity', '')
+          })
+        }
+        message={get(snackbar, 'message', null)}
+        severity={get(snackbar, 'severity', '')}
       />
     </>
   );
