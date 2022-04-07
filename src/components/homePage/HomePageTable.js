@@ -13,16 +13,17 @@ import {
   numberWordComparator
 } from '../watchlist/WatchlistTableHelpers';
 import TickerLogo from '../watchlist/WatchlistTableComponents/TickerLogo';
-import { Card } from '@material-ui/core';
+import { Card, ButtonGroup, Button } from '@material-ui/core';
 import clsx from 'clsx';
 import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
-import { useDispatch } from 'react-redux';
-import { setHomePageSelectedItem } from '../../reducers/HomePage';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHomePageSelectedItem, setHomePageSearchIndex, setHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
+import { homePageTypesSelection } from '../../config/filterTypes';
 const frameworkComponents = {
   TickerLogo: TickerLogo
 };
@@ -131,8 +132,9 @@ const columnDefs = [
   }
 ];
 
-export default function HomePageTable() {
+export default function HomePageTable(props) {
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
+  const { homePageSelectedSearchIndex } = useSelector(state => state.HomePage);
   const dispatch = useDispatch();
   const cellClicked = params => {
     if (params.data) {
@@ -143,44 +145,65 @@ export default function HomePageTable() {
     }
   };
 
-  const getRecentCompaniesData = React.useCallback(async () => {
-    try {
-      const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing?order=DESC&limit=100`);
-      const data = get(response, 'data.data', []);
-      if (response) {
-        const recentData = data.map(d => {
-          return {
-            ...d,
-            docType: get(d, 'document_type', null),
-            sentiment: round(get(d, 'sentiment', null), 2),
-            // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
-            docDate: get(d, 'document_date', null),
-            wordCount: round(get(d, 'word_count', null), 2)
-            // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
-          };
-        });
+  const getRecentCompaniesData = React.useCallback(
+    async searchIndex => {
+      dispatch(setHomePageLoader(true));
 
-        setRecentCompaniesData(recentData);
-        dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
-      } else {
+      try {
+        const response = await axios.get(
+          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}`
+        );
+        const data = get(response, 'data.data', []);
+        if (response) {
+          const recentData = data.map(d => {
+            return {
+              ...d,
+              docType: get(d, 'document_type', null),
+              sentiment: round(get(d, 'sentiment', null), 2),
+              // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
+              docDate: get(d, 'document_date', null),
+              wordCount: round(get(d, 'word_count', null), 2)
+              // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
+            };
+          });
+
+          setRecentCompaniesData(recentData);
+          dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
+          dispatch(setHomePageLoader(false));
+        } else {
+          dispatch(setHomePageSelectedItem({}));
+          setRecentCompaniesData([]);
+          dispatch(setHomePageLoader(false));
+        }
+      } catch (error) {
         dispatch(setHomePageSelectedItem({}));
         setRecentCompaniesData([]);
+        dispatch(setHomePageLoader(false));
       }
-    } catch (error) {
-      dispatch(setHomePageSelectedItem({}));
-      setRecentCompaniesData([]);
-    }
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
   useEffect(() => {
-    getRecentCompaniesData();
-  }, [getRecentCompaniesData]);
+    getRecentCompaniesData(homePageSelectedSearchIndex);
+  }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
 
   return (
-    <Card className="card-box mb-4">
+    <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Recent Watchlist Documents</div>
+        <ButtonGroup color="primary">
+          {homePageTypesSelection.map((diff, i) => (
+            <Button
+              size="small"
+              key={`diff_${i}`}
+              onClick={() => dispatch(setHomePageSearchIndex(diff))}
+              variant={diff.key === homePageSelectedSearchIndex.key ? 'contained' : 'outlined'}>
+              {diff.label}
+            </Button>
+          ))}
+        </ButtonGroup>
       </div>
-      <div className="ag-theme-alpine" style={{ height: '550px', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
         <AgGridReact
           columnDefs={columnDefs}
           rowSelection="single"

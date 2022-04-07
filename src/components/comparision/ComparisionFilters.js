@@ -22,7 +22,7 @@ const ComparisionFilters = props => {
                 {diff.label}
               </Button>
             ))}
-          </ButtonGroup>{' '}
+          </ButtonGroup>
         </Grid>
         <Grid item>
           <div className="text-black-50 opacity-6"> Comparison Method</div>

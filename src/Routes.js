@@ -5,12 +5,12 @@ import { ThemeProvider } from '@material-ui/styles';
 import { ClimbingBoxLoader } from 'react-spinners';
 import MuiTheme from './theme';
 import { connect } from 'react-redux';
-// import config from './config/config';
+import config from './config/config';
 // Layout Blueprints
 import { LeftSidebar, MinimalLayout, PresentationLayout } from './layout-blueprints';
 
 // Example Pages
-// import ReactGA from 'react-ga';
+import ReactGA from 'react-ga';
 import PagesLogin from './example-pages/PagesLogin';
 import PagesRegister from './components/signIn/UserSignIn';
 import ImpersonateLogin from './components/signIn/ImpersonateSignIn';
@@ -62,7 +62,13 @@ const SuspenseLoading = () => {
 
 const isLoginRequired = (authToken, path, location) => {
   let loginRequired = false;
-  if (!authToken && path !== '/PagesRegister' && path !== '/LandingPage' && path !== '/' && path !== '/ImpersonateLogin') {
+  if (
+    !authToken &&
+    path !== '/PagesRegister' &&
+    path !== '/LandingPage' &&
+    path !== '/' &&
+    path !== '/ImpersonateLogin'
+  ) {
     loginRequired = true;
     localStorage.setItem('redirect_url', JSON.stringify(location));
   }
@@ -71,8 +77,10 @@ const isLoginRequired = (authToken, path, location) => {
 
 const Routes = () => {
   const location = useLocation();
-  // ReactGA.initialize(config.googleAnalyticsKey);
-  // ReactGA.pageview(window.location.pathname);
+  if (config.googleAnalyticsKey) {
+    ReactGA.pageview(window.location.pathname);
+  }
+
   // if user is not loggedIn then redirect to login page.
   const authToken = localStorage.getItem('auth_token');
   const path = location.pathname;

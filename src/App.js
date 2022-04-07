@@ -10,13 +10,16 @@ import DateFnsUtils from '@date-io/date-fns';
 import './assets/base.scss';
 import CssBaseline from '@material-ui/core/CssBaseline';
 // Ag Grid styles
+import config from './config/config';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
+import ReactGA from 'react-ga';
 import './utils/fortawesomeIcons';
 
 const store = configureStore();
-
+if (config.googleAnalyticsKey) {
+  ReactGA.initialize(config.googleAnalyticsKey);
+}
 class App extends Component {
   render() {
     return (

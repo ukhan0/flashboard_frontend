@@ -50,3 +50,9 @@ export const sentimentVersions = [
   { label: 'Original', key: 'original' },
   { label: 'Flat Text', key: 'flatText' }
 ];
+export const homePageTypesSelection = [
+  { label: 'Watchlist', key: 'fillings_*',type:'Watchlist' },
+  { label: 'SEC', key: 'fillings_sec*' ,type:'SEC'},
+  { label: 'SEDAR', key: 'fillings_sedar*',type:'SEDAR' },
+ 
+];
