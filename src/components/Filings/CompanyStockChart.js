@@ -14,7 +14,6 @@ import { setIsFromThemex } from 'reducers/Topic';
 export default function FillingCompanyPriceOverlay(props) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { sidebarToggle, sidebarToggleMobile } = useSelector(state => state.ThemeOptions);
   const { selectedItem } = useSelector(state => state.Watchlist);
   let data = props.chartPriceData.map(v => {
     return [parseInt(new Date(v.as_of_date).getTime()), parseFloat(v.close_price)];
@@ -60,7 +59,7 @@ export default function FillingCompanyPriceOverlay(props) {
     title: {
       text: `${props.title}`
     },
-    tooltip: { distance: 30 },
+    tooltip: { distance: 30, split: false },
     xAxis: {
       max: latestDate ? latestDate.x : new Date().getTime()
     },
@@ -111,13 +110,5 @@ export default function FillingCompanyPriceOverlay(props) {
       }
     ]
   };
-
-  React.useEffect(() => {
-    if (Highcharts.charts[0]) {
-      setTimeout(() => {
-        Highcharts.charts[0].reflow();
-      }, [400]);
-    }
-  }, [sidebarToggle, sidebarToggleMobile]);
   return <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={options} />;
 }

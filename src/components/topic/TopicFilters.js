@@ -25,7 +25,8 @@ import {
   cancelExistingHightlightsCalls,
   setIsTopicEmailAlertEnable,
   setIsSimpleSearch,
-  setIsUnsavedSearch
+  setIsUnsavedSearch,
+  setIsDays
 } from '../../reducers/Topic';
 import { searchVersionTypes } from '../../config/filterTypes';
 
@@ -112,6 +113,7 @@ const TopicFilters = props => {
     setOpenThemeDialog(false);
   };
   const handleOpenThemeDialog = () => {
+    dispatch(setIsDays(false));
     setOpenThemeDialog(true);
   };
   let selectedSuggestionsArr = [];
@@ -136,6 +138,7 @@ const TopicFilters = props => {
     setOpenThemeDialog(false);
   };
   const handleSearch = () => {
+    dispatch(setIsDays(false));
     props.onSearch();
     dispatch(setIsUnsavedSearch(true));
   };

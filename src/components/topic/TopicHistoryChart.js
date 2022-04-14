@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, FormControlLabel, Checkbox, Card, Button } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { setTopicSearchDateRange, isDateSet } from '../../reducers/Topic';
+import { setTopicSearchDateRange, isDateSet, setIsDays } from '../../reducers/Topic';
 import moment from 'moment';
 const companyColor = '#4092e5';
 const fileColor = '#359901';
@@ -49,11 +49,11 @@ const FileCheckbox = withStyles({
 const TopicHistoryChart = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { searchResult, startDate, endDate } = useSelector(state => state.Topic);
+  const { searchResult, startDate, endDate, isDays } = useSelector(state => state.Topic);
   const history = get(searchResult, 'buckets.history', []);
   const [isCompaniesSelected, setIsCompaniesSelected] = useState(true);
   const [isFilesSelected, setIsFilesSelected] = useState(true);
-  const [isDays, setIsDays] = useState(false);
+
   const firstTimeLoad = useRef(false);
   const [preDate, setPreDate] = useState(null);
   useEffect(() => {
@@ -116,7 +116,8 @@ const TopicHistoryChart = props => {
                     dispatch(setTopicSearchDateRange(selectedDate));
                     dispatch(isDateSet(true));
                     props.handleSearch('day');
-                    setIsDays(true);
+                    dispatch(setIsDays(true));
+                    // setIsDays(true);
                   }
                 }
               }
@@ -207,7 +208,7 @@ const TopicHistoryChart = props => {
     options.series[1].data = yAxisFilesCounts;
   }
   const handleReset = () => {
-    setIsDays(false);
+    dispatch(setIsDays(false));
     dispatch(setTopicSearchDateRange(preDate));
     props.handleSearch();
   };

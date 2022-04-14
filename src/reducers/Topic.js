@@ -67,6 +67,7 @@ export const SET_SELECTED_COUNTRY = 'TOPIC/SET_SELECTED_COUNTRY';
 export const SET_TOPIC_SEARCH_COMPANY = 'TOPIC/SET_TOPIC_SEARCH_COMPANY';
 export const SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER';
 export const SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER';
+export const SET_TOPIC_HISTORY_CHART_IS_DAYS = 'TOPIC/SET_TOPIC_HISTORY_CHART_IS_DAYS';
 
 export const setTopicIndexDropDownSearchCombineReducer = () => ({
   type: SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER
@@ -376,6 +377,11 @@ export const setTopicSearchCompany = topicSearchedComapny => ({
   topicSearchedComapny
 });
 
+export const setIsDays = isDays => ({
+  type: SET_TOPIC_HISTORY_CHART_IS_DAYS,
+  isDays
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
@@ -475,7 +481,8 @@ const getDefaultState = () => {
     isFromSideBar: false,
     isFromThemex: false,
     isNewlySavedSearch: false,
-    topicSearchedComapny: ''
+    topicSearchedComapny: '',
+    isDays: false
   };
 };
 
@@ -661,6 +668,8 @@ export default function reducer(
       return { ...state, selectedCountry: action.selectedCountry };
     case SET_TOPIC_SEARCH_COMPANY:
       return { ...state, topicSearchedComapny: action.topicSearchedComapny };
+    case SET_TOPIC_HISTORY_CHART_IS_DAYS:
+      return { ...state, isDays: action.isDays };
     case SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER:
       return {
         ...state,

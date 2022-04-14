@@ -3,8 +3,13 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, findIndex, trim, cloneDeep } from 'lodash';
-import { setSelectedSector, setSelectedUniverse, setSelectedIndustries } from '../../reducers/Topic';
 import countriesCode from '../../config/countriesCode';
+import {
+  setSelectedSector,
+  setSelectedUniverse,
+  setSelectedIndustries,
+  setSelectedCountry
+} from '../../reducers/Topic';
 const baseGraphOptions = {
   chart: {
     type: 'pie',
@@ -45,6 +50,16 @@ export default function TopicSectorChart(props) {
   const { searchResult } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
+  const handleCountryClick = useCallback(
+    country => {
+      const selectedCountry = countriesCode.find(c => c.name.toLowerCase() === country.toLowerCase());
+      if (selectedCountry) {
+        dispatch(setSelectedCountry(selectedCountry));
+        props.handleSectorClick();
+      }
+    },
+    [dispatch, props]
+  );
   const handleSectorClick = useCallback(
     sectorName => {
       dispatch(setSelectedUniverse('sector'));
@@ -63,7 +78,9 @@ export default function TopicSectorChart(props) {
     return cName;
   };
   useEffect(() => {
-    let searchIndex = JSON.parse(localStorage.getItem('searchIndex'))?JSON.parse(localStorage.getItem('searchIndex')):{}
+    let searchIndex = JSON.parse(localStorage.getItem('searchIndex'))
+      ? JSON.parse(localStorage.getItem('searchIndex'))
+      : {};
     const rawData =
       searchIndex['id'] === 2 || searchIndex['id'] === 3
         ? get(searchResult, 'buckets.countryCode', [])
@@ -101,12 +118,14 @@ export default function TopicSectorChart(props) {
     const newGraphOptions = cloneDeep(baseGraphOptions);
     newGraphOptions.series[0].data = sectorData;
     newGraphOptions.plotOptions.series.events.click = event => {
-      if (searchIndex['id'] !== 2 && searchIndex['id'] !== 3) {
+      if (searchIndex['id'] === 2 || searchIndex['id'] === 3) {
+        handleCountryClick(event.point.name);
+      } else {
         handleSectorClick(event.point.name);
       }
     };
     setGraphOptions(newGraphOptions);
-  }, [searchResult, handleSectorClick]);
+  }, [searchResult, handleSectorClick, handleCountryClick]);
 
   return <HighchartsReact highcharts={Highcharts} options={graphOptions} />;
 }

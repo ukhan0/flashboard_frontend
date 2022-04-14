@@ -6,7 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { get, findIndex } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { setSelectedSector, setSelectedIndustries, setSelectedUniverse } from '../../reducers/Topic';
+import {
+  setSelectedSector,
+  setSelectedIndustries,
+  setSelectedUniverse,
+  setSelectedCountry
+} from '../../reducers/Topic';
 
 const useStyles = makeStyles(_theme => ({
   clickable: {
@@ -19,7 +24,7 @@ const useStyles = makeStyles(_theme => ({
 
 export default function TopicPieChart(props) {
   const classes = useStyles();
-  const { searchResult, selectedSector } = useSelector(state => state.Topic);
+  const { searchResult, selectedSector, selectedCountry } = useSelector(state => state.Topic);
   const [sectorData, setSectorData] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -47,6 +52,7 @@ export default function TopicPieChart(props) {
   }, [searchResult]);
 
   const resetChartSelection = () => {
+    dispatch(setSelectedCountry(null));
     dispatch(setSelectedSector(null));
     dispatch(setSelectedIndustries([]));
     dispatch(setSelectedUniverse('all'));
@@ -67,7 +73,7 @@ export default function TopicPieChart(props) {
                 : 'Sector'}
             </span>
           </div>
-          {selectedSector ? (
+          {selectedSector || selectedCountry ? (
             <div>
               <Button className="m-0 p-0 btn text-warning" size="small" onClick={resetChartSelection}>
                 Reset
@@ -76,14 +82,10 @@ export default function TopicPieChart(props) {
           ) : null}
         </div>
         <div className={clsx('mb-2', classes.contentSection)}>
-          {sectorData.length === 1 ? (
-            <TopicIndustryChart
-              handleIndustryClick={searchIndex['id'] === 2 || searchIndex['id'] === 3 ? () => {} : props.onChange}
-            />
+          {sectorData.length === 1 && searchIndex['id'] !== 2 && searchIndex['id'] !== 3 ? (
+            <TopicIndustryChart handleIndustryClick={props.onChange} />
           ) : (
-            <TopicSectorChart
-              handleSectorClick={searchIndex['id'] === 2 || searchIndex['id'] === 3 ? () => {} : props.onChange}
-            />
+            <TopicSectorChart handleSectorClick={props.onChange} />
           )}
         </div>
       </Card>

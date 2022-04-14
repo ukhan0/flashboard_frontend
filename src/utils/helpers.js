@@ -76,6 +76,7 @@ export const refreshToken = async () => {
     let token = get(response, 'data.auth_token', null);
     if (token) {
       localStorage.setItem('auth_token', token);
+      window.location.reload();
     }
     return;
   } catch (error) {

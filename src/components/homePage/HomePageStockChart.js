@@ -70,14 +70,14 @@ export default function FillingCompanyPriceOverlay(props) {
   }, [homePageSelectedItem, getCompanyHomePageStockData, getCompanyPrice0verlayOnTimeline]);
 
   return (
-    <Card className="card-box mb-4" style={{ height: '600px' }}>
+    <Card className="card-box mb-4" style={{ height: '540px' }}>
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Timeline</div>
         <div className="card-header--title font-weight-bold"></div>
         <HomePageSearchField />
       </div>
-      <div style={{ height: '540px', width: '100%' }}>
-        <CompanyStockChart height={'545'} title={''} chartData={stockChartData} chartPriceData={stockChartPriceData} />
+      <div style={{ height: '480px', width: '100%' }}>
+        <CompanyStockChart height={'480'} title={''} chartData={stockChartData} chartPriceData={stockChartPriceData} />
       </div>
     </Card>
   );
