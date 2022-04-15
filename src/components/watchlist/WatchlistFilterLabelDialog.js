@@ -33,7 +33,7 @@ export default function AlertDialog(props) {
         classes={{ paper: classes.paper }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title">Filter Name</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Screen Name</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TextField

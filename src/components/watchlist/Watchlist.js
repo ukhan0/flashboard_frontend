@@ -536,7 +536,7 @@ const Watchlist = props => {
                     onClick={() => {
                       handleOpenAgGridFilterLabelDialog();
                     }}>
-                    Save Filter
+                    Save Screen
                   </Button>
                 </>
               ) : null}
@@ -590,7 +590,7 @@ const Watchlist = props => {
             onClick={() => {
               handleOpenAgGridFilterDialog();
             }}>
-            Filters
+            Screens
           </div>
         </div>
       </div>
