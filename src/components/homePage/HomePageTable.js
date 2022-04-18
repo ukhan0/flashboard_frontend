@@ -43,6 +43,16 @@ const columnDefs = [
     cellRenderer: 'TickerLogo'
   },
   {
+    headerName: 'Company Name',
+    headerTooltip: 'Company Name',
+    field: 'company_name',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'company_name'
+  },
+  {
     headerName: 'Document Type',
     field: 'docType',
     menuTabs: false,
@@ -190,7 +200,7 @@ export default function HomePageTable(props) {
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
-        <div className="card-header--title font-weight-bold">Recent Watchlist Documents</div>
+        <div className="card-header--title font-weight-bold">Recent Documents</div>
         <ButtonGroup color="primary">
           {homePageTypesSelection.map((diff, i) => (
             <Button

@@ -25,25 +25,25 @@ export default function HomePage() {
     <div>
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
       <Grid container spacing={1}>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
           <HomePageTable />
         </Grid>
-        <Grid item xs={4}>
-          <HomePageHeatMap />
+        <Grid item xs={6}>
+          <StockChart />
         </Grid>
       </Grid>
       <Grid container spacing={1}>
-        <Grid item xs={4}>
-          <StockChart />
+        <Grid item xs={6}>
+          <HomePageHeatMap />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <HomePageSmaLime1 />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
             <div style={{ float: 'left', outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
               <div className="card-header--title font-weight-bold">Social Stream</div>
-              <div style={{ height: '465px', width: '600px', margin: ' 16px' }}>
+              <div style={{ height: '600px', width: '600px', margin: ' 16px' }}>
                 <img style={{ width: '100%' }} alt="..." src={avatar} />
               </div>
             </div>

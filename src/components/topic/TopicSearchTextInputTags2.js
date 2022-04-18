@@ -30,7 +30,7 @@ export default function Tags() {
   const handleKeyDown = event => {
     switch (event.key) {
       case 'Tab':
-        event.preventDefault();
+        // event.preventDefault();
         event.stopPropagation();
         let values = searchTextWithAnd;
         if (event.target.value.length > 0) {
