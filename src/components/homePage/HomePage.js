@@ -33,13 +33,13 @@ export default function HomePage() {
         </Grid>
       </Grid>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <HomePageHeatMap />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <HomePageSmaLime1 />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
             <div style={{ float: 'left', outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
               <div className="card-header--title font-weight-bold">Social Stream</div>
