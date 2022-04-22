@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Grid, Paper, Box } from '@material-ui/core';
+import { Grid, Paper, Box, Switch, Tooltip } from '@material-ui/core';
 import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex, toLower } from 'lodash';
 import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
@@ -91,6 +91,7 @@ const TopicSearchResults = () => {
   const [selectedText, setSelectedText] = useState(''); // hide menu
   const classes = useStyles();
   const resultsSection = useRef(null);
+  const [enableBoxId, setEnableBoxId] = useState(null);
   const history = useHistory();
   const {
     isSearchLoading,
@@ -112,7 +113,7 @@ const TopicSearchResults = () => {
   const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
   const companyResultsDiv = useRef(null);
-
+  let tooltipMessage = 'Enable edit and then drag mouse on words to add them in your search term';
   const handleClick = useCallback(() => (show ? setShow(!show) : null), [show]);
 
   useEffect(() => {
@@ -240,16 +241,14 @@ const TopicSearchResults = () => {
     setX(e.pageX);
     setY(e.pageY);
   };
-  const handleMouseUp = e => {
+  const handleMouseUp = (e, index) => {
     preventParentClick(e);
-
     const delta = 6;
     const diffX = Math.abs(e.pageX - x);
     const diffY = Math.abs(e.pageY - y);
     let c = window.getSelection().toString();
-    if (c) {
+    if (c && enableBoxId === index) {
       setSelectedText(window.getSelection().toString());
-
       setShow(true);
       setAnchorPoint({ x: e.pageX, y: e.pageY });
     }
@@ -281,6 +280,13 @@ const TopicSearchResults = () => {
       dispatch(setTopicSearchText(data));
     }
     dispatch(setOpenTopicSearchDialog(true));
+  };
+  const handleCardEdit = (e, id) => {
+    if (e.target.checked) {
+      setEnableBoxId(id);
+    } else {
+      setEnableBoxId(null);
+    }
   };
   return (
     <div ref={resultsSection}>
@@ -328,9 +334,9 @@ const TopicSearchResults = () => {
           {isSearchLoading && isEmpty(searchResultHighlights) ? (
             <></>
           ) : (
-            companyResults.map((companyResult, index) => {
+            companyResults.map((companyResult, indexx) => {
               return (
-                <Fragment key={`rs${index}`}>
+                <Fragment key={`rs${indexx}`}>
                   <Paper elevation={6} className={classes.margin}>
                     <Box p={4}>
                       <div className={classes.resultSection}>
@@ -346,7 +352,22 @@ const TopicSearchResults = () => {
                               ) : null}
                             </h2>
                           </Grid>
+
                           <Grid item>
+                            <Tooltip title={tooltipMessage}>
+                              <small className="text-black-50 pt-1 pr-2">Edit</small>
+                            </Tooltip>
+                            <Tooltip title={tooltipMessage}>
+                              <Switch
+                                checked={indexx === enableBoxId ? true : false}
+                                onChange={e => {
+                                  handleCardEdit(e, indexx);
+                                }}
+                                color="primary"
+                                name="checkedB"
+                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                              />
+                            </Tooltip>
                             <small className="text-black-50 pt-1 pr-2">
                               Filing ID:{' '}
                               <b className={clsx(classes.clickable, 'text-first')}>{companyResult.summary_id}</b>
@@ -400,8 +421,8 @@ const TopicSearchResults = () => {
                                       )}
                                       dangerouslySetInnerHTML={{ __html: htmlContentToShow }}
                                       onClick={e => goToSentimentScreen(companyResult, result)}
-                                      onMouseUp={e => handleMouseUp(e)}
-                                      onMouseDown={e => handleMouseDown(e)}></p>
+                                      onMouseUp={e => handleMouseUp(e, indexx)}
+                                      onMouseDown={e => handleMouseDown(e, indexx)}></p>
                                   </>
                                 );
                               })}

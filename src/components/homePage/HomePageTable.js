@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -27,14 +27,32 @@ import { homePageTypesSelection } from '../../config/filterTypes';
 const frameworkComponents = {
   TickerLogo: TickerLogo
 };
+const defaultColDef = {
+  resizable: true,
+  headerComponentParams: {
+    template:
+      '<div class="ag-cell-label-container" role="presentation">' +
+      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+      '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
+      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+      '  </div>' +
+      '</div>'
+  }
+};
+//Table headers
 const columnDefs = [
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-    width: 118,
-    minWidth: 118,
+    width: 100,
+    minWidth: 100,
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,
@@ -50,7 +68,8 @@ const columnDefs = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'company_name'
+    colId: 'company_name',
+    minWidth: 150
   },
   {
     headerName: 'Document Type',
@@ -60,6 +79,7 @@ const columnDefs = [
     sortable: true,
     flex: 1,
     colId: 'document_type',
+    minWidth: 100,
     valueFormatter: params => renameDocumentTypes(params.data.document_type)
   },
 
@@ -72,7 +92,9 @@ const columnDefs = [
     valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
     valueFormatter: params => dateFormaterMoment(params.value),
     filter: 'agDateColumnFilter',
-    cellClass: ['center-align-text']
+    cellClass: ['center-align-text'],
+    minWidth: 50,
+    width: 120
   },
   {
     headerName: 'Aggregate Sentiment',
@@ -84,6 +106,7 @@ const columnDefs = [
     colId: 'agrregate_sentiment',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
+    minWidth: 100,
     valueGetter: params => {
       const sentimentValue = get(params, 'data.sentiment', null);
       let sentimentObj = null;
@@ -117,6 +140,7 @@ const columnDefs = [
     colId: 'word_count',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
+    minWidth: 100,
     valueGetter: params => {
       const sentimentValue = get(params, 'data.wordCount', null);
       let sentimentObj = null;
@@ -146,9 +170,11 @@ export default function HomePageTable(props) {
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
   const { homePageSelectedSearchIndex } = useSelector(state => state.HomePage);
   const dispatch = useDispatch();
+  const tableRef = useRef();
   const cellClicked = params => {
     if (params.data) {
-      dispatch(setSelectedWatchlist(params.data));
+      const item = { ...params.data, companyName: params.data.company_name };
+      dispatch(setSelectedWatchlist(item));
       dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
@@ -193,6 +219,7 @@ export default function HomePageTable(props) {
     },
     [dispatch]
   );
+
   useEffect(() => {
     getRecentCompaniesData(homePageSelectedSearchIndex);
   }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
@@ -215,13 +242,16 @@ export default function HomePageTable(props) {
       </div>
       <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
         <AgGridReact
+          ref={tableRef}
+          alwaysShowHorizontalScroll="True"
           columnDefs={columnDefs}
           rowSelection="single"
           rowData={recentCompaniesData}
           suppressCellSelection={true}
           frameworkComponents={frameworkComponents}
           onCellClicked={cellClicked}
-          multiSortKey={'ctrl'}></AgGridReact>
+          multiSortKey={'ctrl'}
+          defaultColDef={defaultColDef}></AgGridReact>
       </div>
     </Card>
   );
