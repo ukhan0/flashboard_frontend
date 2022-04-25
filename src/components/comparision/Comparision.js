@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import config from '../../config/config';
 import { useHistory } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
 import ComparisionFilters from './ComparisionFilters';
 import { getComparisionSettings, saveComparisionSettings, getOldId, getRecentId } from './ComparisionHelper';
 import { get } from 'lodash';
@@ -26,7 +25,9 @@ const Comparision = props => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
-  const { selectedItem, selectedFileType, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
+  const { selectedItem, selectedFileType, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(
+    state => state.Watchlist
+  );
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
@@ -60,11 +61,14 @@ const Comparision = props => {
     history.push('/watchlist');
   }
 
-  const getCompanyByTicker = useCallback(ticker => {
-    let rawData = completeCompaniesData;
-    let company = rawData.find(sd => sd.ticker === ticker);
-    return company;
-  },[completeCompaniesData]);
+  const getCompanyByTicker = useCallback(
+    ticker => {
+      let rawData = completeCompaniesData;
+      let company = rawData.find(sd => sd.ticker === ticker);
+      return company;
+    },
+    [completeCompaniesData]
+  );
 
   useEffect(() => {
     if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
@@ -90,7 +94,6 @@ const Comparision = props => {
 
     saveComparisionSettings(comparisonSetting);
   }, [comparisionDifference, comparisionMethod, comparisionSection]);
-  
   switch (comparisionSection) {
     case 'mda':
       metricQueryParam =
@@ -139,7 +142,7 @@ const Comparision = props => {
         </div>
       ) : null}
       <div style={{ marginTop: '10px' }}>
-        {selectedItem ? (
+        {
           <iframe
             src={`${config.comparisionSite}?f1=${oldId}&f2=${recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
             title="Comparision"
@@ -152,9 +155,7 @@ const Comparision = props => {
               setIsloading(false);
             }}
           />
-        ) : (
-          <Typography variant="h3">No row selected</Typography>
-        )}
+        }
       </div>
     </>
   );
