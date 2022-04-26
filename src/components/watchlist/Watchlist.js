@@ -92,6 +92,7 @@ const Watchlist = props => {
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
+  const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
 
   const searchFromCompleteData = useCallback(() => {
     const rawData = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
@@ -626,6 +627,7 @@ const Watchlist = props => {
         }
         message={get(snackbar, 'message', null)}
         severity={get(snackbar, 'severity', '')}
+        anchorOrigin={anchorOrigin}
       />
     </>
   );

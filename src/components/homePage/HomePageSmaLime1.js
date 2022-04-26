@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Card, ButtonGroup, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import { useSelector, useDispatch } from 'react-redux';
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 const useStyles = makeStyles(theme => ({
   cardcontent: {
     outline: '1px solid gray',
@@ -28,9 +32,19 @@ const tableTypes = [
     container: 'container3'
   }
 ];
-export default function HomePageSmaLime1() {
+export default function HomePageSmaLime1(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [tableType, setTableType] = React.useState(tableTypes[0]);
+  const { completeCompaniesData } = useSelector(state => state.Watchlist);
+  const getCompanyByTicker = useCallback(
+    ticker => {
+      let rawData = completeCompaniesData;
+      let company = rawData.find(sd => sd.ticker === ticker);
+      return company;
+    },
+    [completeCompaniesData]
+  );
   React.useEffect(() => {
     var factorsData = {
       description: { text: 'Company Name' },
@@ -50,9 +64,20 @@ export default function HomePageSmaLime1() {
       order: 'top',
       sort: tableType['sort'],
       factor: factorsData,
-      filters: 'svolume+gt+12,lastclose+gt+5'
+      filters: 'svolume+gt+12,lastclose+gt+5',
+      onItemClick: function(ticker) {
+        let selectedItem = getCompanyByTicker(ticker);
+        if (!selectedItem) {
+          props.handleSnackBar({ isSnackBar: true, message: 'Company Not Found', severity: 'info' });
+          return;
+        }
+        let company = formatComapnyData(selectedItem);
+        dispatch(setSelectedWatchlist(company));
+        dispatch(setSidebarToggle(false));
+        dispatch(setSidebarToggleMobile(false));
+      }
     });
-  }, [tableType]);
+  }, [tableType, getCompanyByTicker, dispatch, props]);
 
   return (
     <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>

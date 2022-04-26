@@ -9,6 +9,8 @@ import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import StockChart from './HomePageStockChart';
+import SnackBar from '../Snackbar';
+import { get } from 'lodash';
 const useStyle = makeStyles({
   loader: {
     position: 'absolute',
@@ -20,7 +22,12 @@ const useStyle = makeStyles({
 });
 export default function HomePage() {
   const classes = useStyle();
+  const [snackbar, setSnackBar] = React.useState(null);
   const { isLoading } = useSelector(state => state.HomePage);
+  const anchorOrigin = { vertical: 'center', horizontal: 'center' };
+  const handleSnackBar = data => {
+    setSnackBar(data);
+  };
   return (
     <div>
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
@@ -37,7 +44,20 @@ export default function HomePage() {
           <HomePageHeatMap />
         </Grid>
         <Grid item xs={4}>
-          <HomePageSmaLime1 />
+          <SnackBar
+            open={get(snackbar, 'isSnackBar', false)}
+            onClose={() =>
+              setSnackBar({
+                isSnackBar: false,
+                message: get(snackbar, 'message', null),
+                severity: get(snackbar, 'severity', '')
+              })
+            }
+            message={get(snackbar, 'message', null)}
+            severity={get(snackbar, 'severity', '')}
+            anchorOrigin={anchorOrigin}
+          />
+          <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
         </Grid>
         <Grid item xs={4}>
           <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
