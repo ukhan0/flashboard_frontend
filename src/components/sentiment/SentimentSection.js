@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
 
 const SentimentSection = props => {
   const classes = useStyles();
-
+  let keywordsArray = {};
   const dispatch = useDispatch();
   const [basicColor] = useState({
     minV: -1,
@@ -72,6 +72,7 @@ const SentimentSection = props => {
   });
   let yellowTextCount = 0;
   const { data, isLoading, selectedHeadingId, sentiment } = useSelector(state => state.Sentiment);
+
   useEffect(() => {
     if (selectedHeadingId && data) {
       setTimeout(() => {
@@ -105,6 +106,22 @@ const SentimentSection = props => {
 
     return clr;
   };
+
+  const updateSentimentHighlightFunct = indexVal => {
+    if (indexVal) {
+      indexVal = indexVal.toLowerCase().replace(' ', '-');
+      if (!keywordsArray[indexVal]) {
+        keywordsArray[indexVal] = []
+      }
+      const hashValue = createHash(`#${indexVal}${keywordsArray[indexVal]}text`)
+      const obj = {[indexVal]: hashValue}
+      keywordsArray[indexVal].push(obj);
+      props.onHandleHighlights(keywordsArray)
+      return hashValue;
+    } else {
+      return '';
+    }
+  };
   const childClr = val => {
     if (val) {
       var pos = parseFloat(((val - basicColor.minV) / (basicColor.maxV - basicColor.minV)) * basicColor.n);
@@ -123,7 +140,9 @@ const SentimentSection = props => {
       return clr;
     }
   };
-  let signatureIterator = 1
+
+  let signatureIterator = 1;
+  // let keywordsArray = []
   return (
     <div>
       {isLoading ? (
@@ -132,10 +151,10 @@ const SentimentSection = props => {
         </div>
       ) : (
         props.contentData.map((d, index) => {
-          let idVal = lowerCase(d.prop)
-          if(idVal === "signatures"){
-            idVal =  idVal+signatureIterator
-            signatureIterator++
+          let idVal = lowerCase(d.prop);
+          if (idVal === 'signatures') {
+            idVal = idVal + signatureIterator;
+            signatureIterator++;
           }
           return index !== 0 ? (
             <div
@@ -170,92 +189,103 @@ const SentimentSection = props => {
                                             }}>
                                             {c.elements
                                               ? c.elements.map((d, e) => {
-                                                const parentAttributes = d.attributes
+                                                  const parentAttributes = d.attributes;
                                                   return (
                                                     <React.Fragment key={`8_${e}`}>
                                                       {d.type === 'element' ? (
                                                         <>
-                                                          {Array.isArray(d.elements)
-                                                            ? d.elements.map((g, k) => {
-                                                                if (g) {
-                                                                  yellowTextCount = yellowTextCount + 1;
-                                                                }
-
-                                                                if (g.type === 'element') {
-                                                                    if(g.attributes && g.attributes.class === "yellowColor"){
-                                                                      d.attributes = g.attributes
-                                                                    } else {
-                                                                      d.attributes = parentAttributes
-                                                                    }
-                                                                  if(Array.isArray(g.elements)){
-                                                                    g = g.elements[0];
-                                                                  } else {
-                                                                    d.attributes = parentAttributes
+                                                            {Array.isArray(d.elements)
+                                                              ? d.elements.map((g, k) => {
+                                                                  if (g) {
+                                                                    yellowTextCount = yellowTextCount + 1;
                                                                   }
-                                                                } else {
-                                                                  d.attributes = parentAttributes
-                                                                }
-                                                                
-                                                                return (
-                                                                  <span
-                                                                    id={createHash(`#${yellowTextCount}text`)}
-                                                                    key={`4_${k}`}
-                                                                    style={{
-                                                                      backgroundColor: `${
-                                                                        d.attributes
-                                                                          ? d.attributes.class === 'yellowColor'
-                                                                            ? 'orange'
+
+                                                                  if (g.type === 'element') {
+                                                                    if (
+                                                                      g.attributes &&
+                                                                      g.attributes.class === 'yellowColor'
+                                                                    ) {
+                                                                      d.attributes = g.attributes;
+                                                                    } else {
+                                                                      d.attributes = parentAttributes;
+                                                                    }
+                                                                    if (Array.isArray(g.elements)) {
+                                                                      g = g.elements[0];
+                                                                    } else {
+                                                                      d.attributes = parentAttributes;
+                                                                    }
+                                                                  } else {
+                                                                    d.attributes = parentAttributes;
+                                                                  }
+
+                                                                  return (
+                                                                    <span
+                                                                      id={updateSentimentHighlightFunct( d.attributes
+                                                                        ? d.attributes.class === 'yellowColor' ? g.text ? g.text : '' : '' : '')}
+                                                                      key={`4_${k}`}
+                                                                      style={{
+                                                                        backgroundColor: `${
+                                                                          d.attributes
+                                                                            ? d.attributes.class === 'yellowColor'
+                                                                              ? 'orange'
+                                                                              : '#' +
+                                                                                childClr(
+                                                                                  d.attributes ? d.attributes.v : 0
+                                                                                )
                                                                             : '#' +
                                                                               childClr(
                                                                                 d.attributes ? d.attributes.v : 0
                                                                               )
-                                                                          : '#' +
-                                                                            childClr(d.attributes ? d.attributes.v : 0)
-                                                                      }`,
-                                                                      paddingLeft: 2,
-                                                                      paddingRight: 2,
-                                                                      //borderRadius: 4,
-                                                                      borderRadius: `${
-                                                                        d.attributes
-                                                                          ? d.attributes.class === 'yellowColor'
-                                                                            ? 4
+                                                                        }`,
+                                                                        paddingLeft: 2,
+                                                                        paddingRight: 2,
+                                                                        //borderRadius: 4,
+                                                                        borderRadius: `${
+                                                                          d.attributes
+                                                                            ? d.attributes.class === 'yellowColor'
+                                                                              ? 4
+                                                                              : 0
                                                                             : 0
-                                                                          : 0
-                                                                      }`,
-                                                                      scrollMarginTop: '300px'
-                                                                    }}>
-                                                                    {g.text ? g.text : g.name === 'br' ? <br /> : ''}
-                                                                  </span>
-                                                                );
-                                                              })
-                                                            : null}
-                                                          {d.name === 'br' ? (
-                                                            <>
-                                                              <br /> <br />{' '}
-                                                            </>
-                                                          ) : null}
+                                                                        }`,
+                                                                        scrollMarginTop: '300px'
+                                                                      }}>
+                                                                      {g.text ? g.text : g.name === 'br' ? <br /> : ''}
+                                                                    </span>
+                                                                  );
+                                                                })
+                                                              : null}
+                                                            {d.name === 'br' ? (
+                                                              <>
+                                                                <br /> <br />{' '}
+                                                              </>
+                                                            ) : null}
+                                                          {/* </span> */}
                                                         </>
                                                       ) : (
                                                         <React.Fragment key={`5_${e}`}>
-                                                            { 
-                                                              c.attributes
-                                                                  ? c.attributes.class === 'yellowColor'
-                                                                    ?  <span
-                                                                    id={createHash(`#${yellowTextCount}text`)}
-                                                                    key={`6_${e}`}
-                                                                    style={{
-                                                                      backgroundColor: 'orange',
-                                                                      paddingLeft: 2,
-                                                                      paddingRight: 2,
-                                                                      //borderRadius: 4,
-                                                                      borderRadius: 4,
-                                                                      scrollMarginTop: '300px'
-                                                                    }}>
-                                                                    {d.text ? d.text : d.name === 'br' ? <br /> : ''}
-                                                                  </span>
-                                                                    : d.text
-                                                                  : d.text
-                                                              }
+                                                          {c.attributes ? (
+                                                            c.attributes.class === 'yellowColor' ? (
+                                                              <span
+                                                                id={
+                                                                  d.text ? updateSentimentHighlightFunct(d.text) : null
+                                                                }
+                                                                key={`6_${e}`}
+                                                                style={{
+                                                                  backgroundColor: 'orange',
+                                                                  paddingLeft: 2,
+                                                                  paddingRight: 2,
+                                                                  //borderRadius: 4,
+                                                                  borderRadius: 4,
+                                                                  scrollMarginTop: '300px'
+                                                                }}>
+                                                                {d.text ? d.text : d.name === 'br' ? <br /> : ''}
+                                                              </span>
+                                                            ) : (
+                                                              d.text
+                                                            )
+                                                          ) : (
+                                                            d.text
+                                                          )}
                                                         </React.Fragment>
                                                       )}
                                                     </React.Fragment>

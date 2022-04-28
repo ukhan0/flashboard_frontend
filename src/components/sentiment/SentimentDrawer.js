@@ -17,7 +17,7 @@ const SentimentDrawer = props => {
   return (
     <React.Fragment>
       <Drawer anchor={'right'} open={isSentimentDrawerOpen} onClose={handleCloseDrawer}>
-        <SentimentTableOfContent tableData={props.tableData} onSelection={props.onSelection} />
+        <SentimentTableOfContent highlightsData={props.highlightsData} tableData={props.tableData} onSelection={props.onSelection} />
       </Drawer>
     </React.Fragment>
   );

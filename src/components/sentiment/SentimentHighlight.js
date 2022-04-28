@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Paper, Box, Grid } from '@material-ui/core';
-import clsx from 'clsx';
-import { useSelector } from 'react-redux';
+import { Paper, Grid } from '@material-ui/core';
+import { get } from 'lodash';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 const useStyles = makeStyles(theme => ({
@@ -61,51 +60,102 @@ const useStyles = makeStyles(theme => ({
     '& sssss': {
       display: 'block'
     }
+  },
+  tagContainer:{
+    paddingLeft:'10px',
+    paddingBottom:'10px',
+  },
+  nextBtnContainer:{
+    paddingTop:'-5px',
+    paddingBottom:'5px',
   }
 }));
 
 const SentimentHighlights = props => {
   const classes = useStyles();
-  const { sentimentHighlights } = useSelector(state => state.Sentiment);
   const [currentTextId, setCurrentTextId] = React.useState(0);
-  const [viewedHighlights, setViewedHighlights] = React.useState(currentTextId);
-  const [totalHighlights, setTotalHighlights] = React.useState(sentimentHighlights.length);
+  const [currentSelectedKeyword, setCurrentSelectedKeyword] = React.useState('');
+  const [viewedHighlights, setViewedHighlights] = React.useState(0);
+  const [highlightsData, setHighlightsData] = useState(props.highlightsData);
+  useEffect(() => {
+    if (props.highlightsData) {
+      setHighlightsData(props.highlightsData);
+    }
+  }, [props.highlightsData]);
 
   useEffect(() => {
-    if(sentimentHighlights){
-      setTotalHighlights(sentimentHighlights.length)
-    }
-  }, [sentimentHighlights])
+    setTimeout(() => {
+      if (document.getElementById('viewedhighlight')) {
+        document.getElementById('viewedhighlight').textContent = viewedHighlights;
+      }
+    }, 100);
+  }, [viewedHighlights, currentSelectedKeyword]);
 
   //   Index as path
-  const clickHandle = index => {
-    props.clickHandle(`#${index + 1}text`);
-    setViewedHighlights(index + 1)
-    setCurrentTextId(index + 1);
+  const clickHandle = (key, index) => {
+    document.getElementById("selectedHighlightText").textContent = key+":"
+    if (props.is_first_iteration.current > 0 && currentSelectedKeyword === key) {
+      handleNext(key);
+    } else {
+      document.getElementById('totalhighlight').textContent = get(highlightsData, `${key}`, []).length;
+      props.clickHandle(get(highlightsData, [`${key}`, index, `${key}`]), true);
+      setCurrentSelectedKeyword(key);
+      setViewedHighlights(index + 1);
+      setCurrentTextId(index + 1);
+      props.newTest(props.is_first_iteration.current + 1);
+    }
   };
 
   const handleNext = () => {
-    if (currentTextId + 1 > sentimentHighlights.length) {
+    if (get(highlightsData, `${currentSelectedKeyword}`, []).length === 1) {
       return;
+    } else if (currentTextId + 1 > get(highlightsData, `${currentSelectedKeyword}`, []).length) {
+      props.newTest(0);
+      // props.is_first_iteration.current = 0;
+      clickHandle(currentSelectedKeyword, 0);
+    } else {
+      props.clickHandle(
+        get(highlightsData, [`${currentSelectedKeyword}`, currentTextId, `${currentSelectedKeyword}`]),
+        true
+      );
+      setViewedHighlights(currentTextId + 1);
+      setCurrentTextId(currentTextId + 1);
     }
-    props.clickHandle(`#${currentTextId + 1}text`);
-    setViewedHighlights(currentTextId + 1)
-    setCurrentTextId(currentTextId + 1);
   };
   const handlePre = () => {
-    if (currentTextId - 1 <= 0) {
+    if (get(highlightsData, `${currentSelectedKeyword}`, []).length === 1) {
       return;
+    } else if (currentTextId - 1 <= 0) {
+      props.newTest(0);
+      // is_first_iteration.current = 0;
+      setCurrentTextId(get(highlightsData, `${currentSelectedKeyword}`, []).length - 1);
+      clickHandle(currentSelectedKeyword, get(highlightsData, `${currentSelectedKeyword}`, []).length - 1);
+    } else {
+      props.clickHandle(
+        get(highlightsData, [`${currentSelectedKeyword}`, currentTextId - 2, `${currentSelectedKeyword}`]),
+        true
+      );
+      setViewedHighlights(currentTextId - 1);
+      setCurrentTextId(currentTextId - 1);
     }
-    props.clickHandle(`#${currentTextId - 1}text`);
-    setViewedHighlights(currentTextId - 1)
-    setCurrentTextId(currentTextId - 1);
   };
+  const keys = Object.keys(highlightsData);
   return (
     <div>
       <PerfectScrollbar>
         <Paper elevation={6} className={classes.margin}>
-          <div>
-            <Grid container direction="row" justify="flex-end" alignItems="flex-end">
+          <Grid item xs={12} style={{ marginRight: '5px' }}>
+              <Grid>
+                <h6
+                style={{marginLeft: '10px',paddingTop:'10px'}}
+                >
+                  Search Terms
+                </h6>
+              </Grid>
+            <Grid container direction="row" justify="flex-end" alignItems="flex-end" className={classes.nextBtnContainer}>
+            <Grid style={{marginRight: '10px'}}>
+                <span id="selectedHighlightText"></span>
+              </Grid>
               <Grid item>
                 <ArrowBackIosIcon
                   fontSize="small"
@@ -115,8 +165,16 @@ const SentimentHighlights = props => {
                   }}
                 />
               </Grid>
-              <Grid item>
-                <span>{viewedHighlights}/{totalHighlights}</span>
+              <Grid item style={{ marginRight: 15 }}>
+                <span>
+                  <span className="viewedHighlightsCls" id="viewedhighlight">
+                    0
+                  </span>
+                  /
+                  <span className="totalHighlightsCls" id="totalhighlight">
+                    0
+                  </span>
+                </span>
               </Grid>
               <Grid item>
                 <ArrowForwardIosIcon
@@ -128,27 +186,32 @@ const SentimentHighlights = props => {
                 />
               </Grid>
             </Grid>
-          </div>
-          <Box p={4}>
-            {sentimentHighlights.map((content, index) => {
+          </Grid>
+          <Grid container spacing={2} className={classes.tagContainer}>
+            {keys.map((key, index) => {
               return (
-                <div key={`rst${index}`}>
-                  <p
-                    key={`rstc${index}`}
-                    className={clsx(
-                      classes.searchResultText,
-                      classes.paragraphHeading,
-                      classes.line,
-                      'font-size-mg mb-2 text-black-50'
-                    )}
+                <div
+                  key={`rst${index}`}
+                  style={{
+                    cursor: 'pointer',
+                    color: '#5383ff',
+                    border: '1px solid #5383ff',
+                    borderRadius: '5px',
+                    padding: '1px 5px',
+                    marginLeft: '10px',
+                    marginTop:'10px',
+                    marginBottom: '5px'
+                  }}>
+                  <div
                     onClick={e => {
-                      clickHandle(index);
-                    }}
-                    dangerouslySetInnerHTML={{ __html: content }}></p>
+                      clickHandle(key, 0);
+                    }}>
+                    {key}
+                  </div>
                 </div>
               );
             })}
-          </Box>
+          </Grid>
         </Paper>
       </PerfectScrollbar>
     </div>

@@ -118,8 +118,8 @@ const SentimentContentSection = props => {
           </div>
           { sentimentVesion !== 'original' ? (
           <>
-            <SentimentSection contentData={props.contentData} onSelection={handleSelection} />
-            <SentimentDrawer tableData={props.tableData} onSelection={handleSelection} />
+            <SentimentSection contentData={props.contentData} onHandleHighlights={props.onHandleHighlights} onSelection={handleSelection} />
+            <SentimentDrawer highlightsData={props.highlightsData}  tableData={props.tableData} onSelection={handleSelection} />
           </>) : null}
         </>
 

@@ -39,6 +39,8 @@ const Sentiment = () => {
   const classes = useStyles();
   const history = useHistory();
   const firstTimeLoad = useRef(false);
+  const firstTimeDataArray = useRef(false)
+  const sentimentHighlightsData = useRef([]);
   const [tableData, setTableData] = useState([]);
   const [contentData, setContentData] = useState([]);
   let hideCards = config.hideCard;
@@ -101,6 +103,13 @@ const Sentiment = () => {
     }, 100);
   };
 
+  const handleHighlights = hightlightsArr => {
+    if (!firstTimeDataArray.current) {
+      firstTimeDataArray.current = true
+      sentimentHighlightsData.current = hightlightsArr
+    }
+  }
+
   useEffect(() => {
     if (!data) {
       return;
@@ -157,17 +166,17 @@ const Sentiment = () => {
         <Grid container spacing={0}>
           <Grid item xs={8}>
             <div className={classes.companyDetail}>
-              <SentimentContentSection contentData={contentData} />
+              <SentimentContentSection contentData={contentData} onHandleHighlights={handleHighlights} />
             </div>
           </Grid>
           <Grid item xs={4}>
             <div className={classes.tableOfContent}>
-              <SentimentTableOfContent tableData={tableData} onSelection={handleSelection} />
+              <SentimentTableOfContent highlightsData={sentimentHighlightsData.current} tableData={tableData} onSelection={handleSelection} />
             </div>
           </Grid>
         </Grid>
       ) : (
-        <SentimentContentSection contentData={contentData} tableData={tableData} />
+        <SentimentContentSection highlightsData={sentimentHighlightsData.current} contentData={contentData} tableData={tableData} onHandleHighlights={handleHighlights} />
       )}
     </>
   );

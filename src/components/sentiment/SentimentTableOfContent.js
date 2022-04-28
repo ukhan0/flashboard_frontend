@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Typography, Button, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
-import { createHash } from '../../utils/helpers';
 import SentimentHighlights from './SentimentHighlight';
 import { get, lowerCase } from 'lodash';
-import { getSentimentHighlights } from './sentimentActions';
+import { createHash } from '../../utils/helpers';
 
 import {
   setSelectedHeadingId,
@@ -77,15 +76,16 @@ const SentimentTableOfContent = props => {
   const dispatch = useDispatch();
   const { isLoading, isPin, canceHighlightsCall } = useSelector(state => state.Sentiment);
   const { selectedItem } = useSelector(state => state.Watchlist);
+  let is_first_iteration = useRef(0);
   const documentId = get(selectedItem, 'documentId', null);
 
-  useEffect(() => {
-    dispatch(getSentimentHighlights());
-  }, [dispatch]);
-
-  const clickHandle = path => {
-    props.onSelection(createHash(path));
-    dispatch(setSelectedHeadingId(createHash(path)));
+  const clickHandle = (path, is_highlight = false) => {
+    if (!is_highlight) {
+      is_first_iteration.current = 0;
+      path = createHash(path);
+    }
+    props.onSelection(path);
+    dispatch(setSelectedHeadingId(path));
   };
 
   const handlePin = () => {
@@ -112,7 +112,12 @@ const SentimentTableOfContent = props => {
       canceHighlightsCall.cancel();
     }
   };
-  let signatureIterator = 1
+
+  const newTest = v => {
+    is_first_iteration.current = v;
+  };
+
+  let signatureIterator = 1;
   return (
     <React.Fragment>
       <div className={isPin ? classes.pin : classes.list}>
@@ -150,37 +155,50 @@ const SentimentTableOfContent = props => {
             <BeatLoader color={'var(--primary)'} size={15} />
           </div>
         ) : (
-            props.tableData.map((d, index) => {
-              let idVal = (index !== 0 ? d.lvl === 4 ? lowerCase(d.prop) :  lowerCase(d.prop
-                .toLowerCase()
-                .replace('data', '')
-                .replace('ex.data', '')
-                .replace('*.data', '')) : "")
-               if(idVal === "signatures"){
-                  idVal =  idVal+signatureIterator
-                  signatureIterator++
-                }
-              return index !== 0 ? (
-                <div
-                  key={index}
-                  style={{ paddingLeft: d.lvl * 4 + 4, whiteSpace: 'initial' }}
-                  className={clsx(classes.listItem, classes.upper)}
-                  onClick={() => {
-                    clickHandle(idVal);
-                  }}>
-                  {d.lvl === 4
-                    ? upperCase(d.prop)
-                    : d.prop
+          props.tableData.map((d, index) => {
+            let idVal =
+              index !== 0
+                ? d.lvl === 4
+                  ? lowerCase(d.prop)
+                  : lowerCase(
+                      d.prop
                         .toLowerCase()
                         .replace('data', '')
                         .replace('ex.data', '')
-                        .replace('*.data', '')}
-                </div>
-              ) : null
+                        .replace('*.data', '')
+                    )
+                : '';
+            if (idVal === 'signatures') {
+              idVal = idVal + signatureIterator;
+              signatureIterator++;
             }
-          )
+            return index !== 0 ? (
+              <div
+                key={index}
+                style={{ paddingLeft: d.lvl * 4 + 4, whiteSpace: 'initial' }}
+                className={clsx(classes.listItem, classes.upper)}
+                onClick={() => {
+                  clickHandle(idVal);
+                }}>
+                {d.lvl === 4
+                  ? upperCase(d.prop)
+                  : d.prop
+                      .toLowerCase()
+                      .replace('data', '')
+                      .replace('ex.data', '')
+                      .replace('*.data', '')}
+              </div>
+            ) : null;
+          })
         )}
-        {!isLoading && documentId && false ? <SentimentHighlights clickHandle={clickHandle} /> : null}
+        {!isLoading && documentId && true ? (
+          <SentimentHighlights
+            highlightsData={props.highlightsData}
+            clickHandle={clickHandle}
+            newTest={newTest}
+            is_first_iteration={is_first_iteration}
+          />
+        ) : null}
         {selectedItem ? (
           <Grid container direction="row" justify="flex-end" alignItems="flex-end">
             <Grid item>
