@@ -17,7 +17,14 @@ const TopicCustomSearch = props => {
   const [loading, setLoading] = useState(false);
   const [availableCompanyNames, setAvailableCompanyNames] = useState([]);
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
-  const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
+  const { searchIndex } = useSelector(state => state.Topic);
+
+  const data =
+    searchIndex.id === 1
+      ? completeCompaniesData.concat(completeCompaniesDataGlobal)
+      : searchIndex.id === 2
+      ? completeCompaniesData
+      : completeCompaniesDataGlobal;
   const availableCompanies = data.map(e => {
     return { name: e.b, ticker: e.ticker };
   });
