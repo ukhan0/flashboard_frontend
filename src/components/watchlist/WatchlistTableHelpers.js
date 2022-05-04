@@ -31,7 +31,7 @@ export const formatExportValue = params => {
     } else if (colId === 'adv') {
       return currencyFormater(params.value, 0, 'USD');
     } else if (colId === 'last') {
-      return dateFormaterMoment(params.value);
+      return params.value;
     } else if (colId === 'sentiment') {
       return percentFormater(params, true);
     } else if (colId === 'sentimentWord') {
