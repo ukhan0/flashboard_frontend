@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { setSentimentResult, setIsLoading, setSentimentHighlights, setCanceHighlightsCall } from '../../reducers/Sentiment';
+import {
+  setSentimentResult,
+  setIsLoading,
+  setSentimentHighlights,
+  setCanceHighlightsCall
+} from '../../reducers/Sentiment';
 
 import { setFillingsSearchText } from '../../reducers/Filings';
 import { get } from 'lodash';
@@ -46,7 +51,9 @@ export const getSentimentData = () => {
         formData.append('search_term', searchTerm);
       }
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=${isFromThemex ? sentimentSearchIndex : (selectedType === "global") ? 'fillings_*' : 'fillings_*'}`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=${
+          isFromThemex ? sentimentSearchIndex : selectedType === 'global' ? 'fillings_*' : 'fillings_*'
+        }`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);

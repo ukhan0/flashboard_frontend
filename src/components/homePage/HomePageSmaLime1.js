@@ -72,6 +72,11 @@ export default function HomePageSmaLime1(props) {
           return;
         }
         let company = formatComapnyData(selectedItem);
+        if (company) {
+          let last10k = new Date(company['last10k']);
+          let last10q = new Date(company['last10q']);
+          company.recentId = last10k > last10q ? company.recentId10k : company.recentId10q;
+        }
         dispatch(setSelectedWatchlist(company));
         dispatch(setSidebarToggle(false));
         dispatch(setSidebarToggleMobile(false));
