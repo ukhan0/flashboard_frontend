@@ -15,6 +15,8 @@ export default function HomePageHeatMap() {
       neutralColor: '999999',
       minPositiveColor: '009900',
       minNegativeColor: '990000',
+      hideHeader: 'true',
+      hideFactors: 'true',
       onWidgetLoaderLoaded: () => {
         setIsLoading(false);
       }
