@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Paper, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { get } from 'lodash';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -24,8 +23,6 @@ const useStyles = makeStyles(theme => ({
   margin: {
     marginTop: '7px',
     background: 'white',
-    marginLeft: '20px',
-    marginRight: '20px',
     marginBottom: '20px'
   },
   documentDate: {
@@ -36,8 +33,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '20px',
     marginLeft: '15px',
     top: 60,
-    position: 'sticky',
-    zIndex: 1
+    position: 'sticky'
   },
   heading: {
     fontSize: '16px',
@@ -61,13 +57,13 @@ const useStyles = makeStyles(theme => ({
       display: 'block'
     }
   },
-  tagContainer:{
-    paddingLeft:'10px',
-    paddingBottom:'10px',
+  tagContainer: {
+    paddingLeft: '10px',
+    paddingBottom: '10px'
   },
-  nextBtnContainer:{
-    paddingTop:'-5px',
-    paddingBottom:'5px',
+  nextBtnContainer: {
+    paddingTop: '-5px',
+    paddingBottom: '5px'
   }
 }));
 
@@ -93,7 +89,7 @@ const SentimentHighlights = props => {
 
   //   Index as path
   const clickHandle = (key, index) => {
-    document.getElementById("selectedHighlightText").textContent = key+":"
+    document.getElementById('selectedHighlightText').textContent = key + ':';
     if (props.is_first_iteration.current > 0 && currentSelectedKeyword === key) {
       handleNext(key);
     } else {
@@ -142,18 +138,19 @@ const SentimentHighlights = props => {
   const keys = Object.keys(highlightsData);
   return (
     <div>
-      <PerfectScrollbar>
-        <Paper elevation={6} className={classes.margin}>
-          <Grid item xs={12} style={{ marginRight: '5px' }}>
-              <Grid>
-                <h6
-                style={{marginLeft: '10px',paddingTop:'10px'}}
-                >
-                  Search Terms
-                </h6>
-              </Grid>
-            <Grid container direction="row" justify="flex-end" alignItems="flex-end" className={classes.nextBtnContainer}>
-            <Grid style={{marginRight: '10px'}}>
+      <Grid item xs={12} style={{ marginRight: '5px' }}>
+        <Grid container direction="row" justify="flex-start" alignItems="center">
+          <Grid item>
+            <label className="text-black-50 d-block">{'Search Terms:'}&nbsp;</label>
+          </Grid>
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              justify="flex-end"
+              alignItems="flex-end"
+              className={classes.nextBtnContainer}>
+              <Grid style={{ marginRight: '10px' }}>
                 <span id="selectedHighlightText"></span>
               </Grid>
               <Grid item>
@@ -187,33 +184,33 @@ const SentimentHighlights = props => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container spacing={2} className={classes.tagContainer}>
-            {keys.map((key, index) => {
-              return (
-                <div
-                  key={`rst${index}`}
-                  style={{
-                    cursor: 'pointer',
-                    color: '#5383ff',
-                    border: '1px solid #5383ff',
-                    borderRadius: '5px',
-                    padding: '1px 5px',
-                    marginLeft: '10px',
-                    marginTop:'10px',
-                    marginBottom: '5px'
-                  }}>
-                  <div
-                    onClick={e => {
-                      clickHandle(key, 0);
-                    }}>
-                    {key}
-                  </div>
-                </div>
-              );
-            })}
-          </Grid>
-        </Paper>
-      </PerfectScrollbar>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} className={classes.tagContainer}>
+        {keys.map((key, index) => {
+          return (
+            <div
+              key={`rst${index}`}
+              style={{
+                cursor: 'pointer',
+                color: '#5383ff',
+                border: '1px solid #5383ff',
+                borderRadius: '5px',
+                padding: '1px 5px',
+                marginLeft: '10px',
+                marginTop: '10px',
+                marginBottom: '5px'
+              }}>
+              <div
+                onClick={e => {
+                  clickHandle(key, 0);
+                }}>
+                {key}
+              </div>
+            </div>
+          );
+        })}
+      </Grid>
     </div>
   );
 };
