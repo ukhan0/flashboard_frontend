@@ -45,130 +45,11 @@ const defaultColDef = {
   }
 };
 //Table headers
-const columnDefs = [
-  {
-    headerName: 'Ticker',
-    headerTooltip: 'Ticker',
-    field: 'ticker',
-    colId: 'ticker',
-    width: 100,
-    minWidth: 100,
-    cellClass: ['center-align-text'],
-    filter: 'agTextColumnFilter',
-    suppressMenu: false,
-    menuTabs: ['generalMenuTab'],
-    pinned: 'left',
-    cellRenderer: 'TickerLogo'
-  },
-  {
-    headerName: 'Company Name',
-    headerTooltip: 'Company Name',
-    field: 'company_name',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'company_name',
-    minWidth: 150
-  },
-  {
-    headerName: 'Document Type',
-    field: 'docType',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'document_type',
-    minWidth: 100,
-    valueFormatter: params => renameDocumentTypes(params.data.document_type)
-  },
-
-  {
-    headerName: 'Document Date',
-    headerTooltip: 'document_date',
-    field: 'document_date',
-    colId: 'document_date',
-    sortable: true,
-    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
-    valueFormatter: params => dateFormaterMoment(params.value),
-    filter: 'agDateColumnFilter',
-    cellClass: ['center-align-text'],
-    minWidth: 50,
-    width: 120
-  },
-  {
-    headerName: 'Aggregate Sentiment',
-    field: 'sentiment',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'agrregate_sentiment',
-    type: 'numericColumn',
-    filter: 'agNumberColumnFilter',
-    minWidth: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.sentiment', null);
-      let sentimentObj = null;
-      if (sentimentValue) {
-        sentimentObj = {
-          number: parseNumber(get(params, 'data.sentiment', null)),
-          word: changeWordGetter(get(params, 'data.sentimentWord', null))
-        };
-      }
-      return sentimentObj;
-    },
-    valueFormatter: params => percentFormater(params, true),
-    comparator: numberWordComparator,
-    filterParams: {
-      valueGetter: params => {
-        const value = get(params, 'data.sentiment', null);
-        return value !== null ? parseNumber(value) : null;
-      }
-    },
-    cellStyle: params => {
-      return descriptionValueStyler(params);
-    }
-  },
-  {
-    headerName: 'Word Change Percentage',
-    field: 'wordCount',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'word_count',
-    type: 'numericColumn',
-    filter: 'agNumberColumnFilter',
-    minWidth: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.wordCount', null);
-      let sentimentObj = null;
-      if (sentimentValue) {
-        sentimentObj = {
-          number: parseNumber(sentimentValue),
-          word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
-        };
-      }
-      return sentimentObj;
-    },
-    valueFormatter: params => percentFormater(params, true),
-    comparator: numberWordComparator,
-    filterParams: {
-      valueGetter: params => {
-        const value = get(params, 'data.wordCount', null);
-        return value !== null ? parseNumber(value) : null;
-      }
-    },
-    cellStyle: params => {
-      return descriptionValueStyler(params);
-    }
-  }
-];
 
 export default function HomePageTable(props) {
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
   const { homePageSelectedSearchIndex } = useSelector(state => state.HomePage);
+  const [cancelToken, setCancelToken] = useState(null);
   const dispatch = useDispatch();
   const tableRef = useRef();
   const cellClicked = params => {
@@ -180,17 +61,143 @@ export default function HomePageTable(props) {
       dispatch(setSidebarToggleMobile(false));
     }
   };
+  const columnDefs = [
+    {
+      headerName: 'Ticker',
+      headerTooltip: 'Ticker',
+      field: 'ticker',
+      colId: 'ticker',
+      width: 100,
+      minWidth: 100,
+      cellClass: ['center-align-text'],
+      filter: 'agTextColumnFilter',
+      suppressMenu: false,
+      menuTabs: ['generalMenuTab'],
+      pinned: 'left',
+      cellRenderer: 'TickerLogo',
+      hide: homePageSelectedSearchIndex.id === 3 ? true : false
+    },
+    {
+      headerName: 'Company Name',
+      headerTooltip: 'Company Name',
+      field: 'company_name',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 1,
+      colId: 'company_name',
+      minWidth: 150
+    },
+    {
+      headerName: 'Document Type',
+      field: 'docType',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 1,
+      colId: 'document_type',
+      minWidth: 100,
+      valueFormatter: params => renameDocumentTypes(params.data.document_type)
+    },
+
+    {
+      headerName: 'Document Date',
+      headerTooltip: 'document_date',
+      field: 'document_date',
+      colId: 'document_date',
+      sortable: true,
+      valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
+      valueFormatter: params => dateFormaterMoment(params.value),
+      filter: 'agDateColumnFilter',
+      cellClass: ['center-align-text'],
+      minWidth: 50,
+      width: 120
+    },
+    {
+      headerName: 'Aggregate Sentiment',
+      field: 'sentiment',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 1,
+      colId: 'agrregate_sentiment',
+      type: 'numericColumn',
+      filter: 'agNumberColumnFilter',
+      minWidth: 100,
+      valueGetter: params => {
+        const sentimentValue = get(params, 'data.sentiment', null);
+        let sentimentObj = null;
+        if (sentimentValue) {
+          sentimentObj = {
+            number: parseNumber(get(params, 'data.sentiment', null)),
+            word: changeWordGetter(get(params, 'data.sentimentWord', null))
+          };
+        }
+        return sentimentObj;
+      },
+      valueFormatter: params => percentFormater(params, true),
+      comparator: numberWordComparator,
+      filterParams: {
+        valueGetter: params => {
+          const value = get(params, 'data.sentiment', null);
+          return value !== null ? parseNumber(value) : null;
+        }
+      },
+      cellStyle: params => {
+        return descriptionValueStyler(params);
+      }
+    },
+    {
+      headerName: 'Word Change Percentage',
+      field: 'wordCount',
+      menuTabs: false,
+      editable: false,
+      sortable: true,
+      flex: 1,
+      colId: 'word_count',
+      type: 'numericColumn',
+      filter: 'agNumberColumnFilter',
+      minWidth: 100,
+      valueGetter: params => {
+        const sentimentValue = get(params, 'data.wordCount', null);
+        let sentimentObj = null;
+        if (sentimentValue) {
+          sentimentObj = {
+            number: parseNumber(sentimentValue),
+            word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
+          };
+        }
+        return sentimentObj;
+      },
+      valueFormatter: params => percentFormater(params, true),
+      comparator: numberWordComparator,
+      filterParams: {
+        valueGetter: params => {
+          const value = get(params, 'data.wordCount', null);
+          return value !== null ? parseNumber(value) : null;
+        }
+      },
+      cellStyle: params => {
+        return descriptionValueStyler(params);
+      }
+    }
+  ];
 
   const getRecentCompaniesData = React.useCallback(
     async searchIndex => {
       dispatch(setHomePageLoader(true));
-
+      const cancelToken = axios.CancelToken.source();
       try {
+        setCancelToken(cancelToken);
         const response = await axios.get(
-          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}`
+          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}`,
+          {
+            cancelToken: cancelToken.token
+          }
         );
         const data = get(response, 'data.data', []);
         if (response) {
+          setCancelToken(null);
           const recentData = data.map(d => {
             return {
               ...d,
@@ -223,6 +230,12 @@ export default function HomePageTable(props) {
   useEffect(() => {
     getRecentCompaniesData(homePageSelectedSearchIndex);
   }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
+  const handleHomePageSearchIndex = diff => {
+    if (cancelToken) {
+      cancelToken.cancel();
+    }
+    dispatch(setHomePageSearchIndex(diff));
+  };
 
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
@@ -233,7 +246,7 @@ export default function HomePageTable(props) {
             <Button
               size="small"
               key={`diff_${i}`}
-              onClick={() => dispatch(setHomePageSearchIndex(diff))}
+              onClick={() => handleHomePageSearchIndex(diff)}
               variant={diff.key === homePageSelectedSearchIndex.key ? 'contained' : 'outlined'}>
               {diff.label}
             </Button>

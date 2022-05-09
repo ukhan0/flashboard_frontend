@@ -51,8 +51,7 @@ export const sentimentVersions = [
   { label: 'Flat Text', key: 'flatText' }
 ];
 export const homePageTypesSelection = [
-  { label: 'Watchlist', key: 'fillings_*',type:'Watchlist' },
-  { label: 'SEC', key: 'fillings_sec*' ,type:'SEC'},
-  { label: 'SEDAR', key: 'fillings_sedar*',type:'SEDAR' },
- 
+  { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 },
+  { label: 'SEC', key: 'fillings_sec*', type: 'SEC', id: 2 },
+  { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR', id: 3 }
 ];
