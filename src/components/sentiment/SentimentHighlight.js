@@ -138,7 +138,7 @@ const SentimentHighlights = props => {
   const keys = Object.keys(highlightsData);
   return (
     <div>
-      <Grid item xs={12} style={{ marginRight: '5px' }}>
+      <Grid item xs={12} style={{ marginRight: '5px', paddingTop: '5px' }}>
         <Grid container direction="row" justify="flex-start" alignItems="center">
           <Grid item>
             <label className="text-black-50 d-block">{'Search Terms:'}&nbsp;</label>

@@ -107,6 +107,7 @@ const SentimentContentSection = props => {
               clickHandle={clickHandle}
               newTest={newTest}
               is_first_iteration={is_first_iteration}
+              sentimentV={sentimentVesion}
             />
           </Box>
         ) : null}

@@ -68,7 +68,7 @@ export default function HomePageSmaLime1(props) {
       onItemClick: function(ticker) {
         let selectedItem = getCompanyByTicker(ticker);
         if (!selectedItem) {
-          props.handleSnackBar({ isSnackBar: true, message: 'Company Not Found', severity: 'info' });
+          // props.handleSnackBar({ isSnackBar: true, message: 'Company Not Found', severity: 'info' });
           return;
         }
         let company = formatComapnyData(selectedItem);

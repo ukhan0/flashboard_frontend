@@ -12,7 +12,6 @@ const SentimentPdf = props => {
     return;
   }
 
-  
   // handle iframe height
   const handleHeightChange = () => {
     setIsloading(false);
@@ -38,7 +37,7 @@ const SentimentPdf = props => {
         samesite="None"
         frameBorder="0"
         id="Sentiments"
-        onLoad={() => handleHeightChange}
+        onLoad={() => handleHeightChange()}
       />
     </>
   );

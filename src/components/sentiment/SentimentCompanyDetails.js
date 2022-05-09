@@ -99,7 +99,7 @@ const SentimentCompanyDetails = props => {
                 <label className="text-black-50 d-block">{'Version:'}&nbsp;</label>
               </Grid>
               <Grid item>
-                <ButtonGroup color="primary">
+                <ButtonGroup color="primary" style={{ paddingLeft: '17px' }}>
                   {sentimentVersions.map((sentimentV, i) => (
                     <Button
                       size="small"
@@ -112,7 +112,7 @@ const SentimentCompanyDetails = props => {
                 </ButtonGroup>
               </Grid>
             </Grid>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
+            <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingTop: '5px' }}>
               <Grid item>
                 <label style={{ marginTop: '6px' }} className="text-black-50 d-block">
                   {'Sentiment:'}&nbsp;
@@ -122,7 +122,7 @@ const SentimentCompanyDetails = props => {
                 <SentimentFilters />
               </Grid>
             </Grid>
-            {!isLoading && documentId && true ? (
+            {!isLoading && documentId && true && props.sentimentV === 'flatText' ? (
               <SentimentHighlights
                 highlightsData={props.highlightsData}
                 clickHandle={props.clickHandle}
