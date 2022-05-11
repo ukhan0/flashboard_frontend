@@ -9,6 +9,7 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import SentimentFilters from './SentimentFiltres';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 import { sentimentVersions } from '../../config/filterTypes';
+import SentimentHighlights from './SentimentHighlight';
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
     display: 'flex',
@@ -31,8 +32,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentCompanyDetails = props => {
-  const { data } = useSelector(state => state.Sentiment);
+  const { data, isLoading } = useSelector(state => state.Sentiment);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
+  const documentId = get(selectedItem, 'documentId', null);
 
   return (
     <Fragment>
@@ -75,26 +78,6 @@ const SentimentCompanyDetails = props => {
             </Grid>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <label className="text-black-50 d-block">{'Version:'}&nbsp;</label>
-              </Grid>
-              <Grid item>
-                <ButtonGroup color="primary">
-                  {sentimentVersions.map((sentimentV, i) => (
-                    <Button
-                      size="small"
-                      key={`sent_${i}`}
-                      onClick={() => props.handleClickSentimentVersion(sentimentV.key)}
-                      variant={props.sentimentVesion === sentimentV.key ? 'contained' : 'outlined'}>
-                      {sentimentV.label}
-                    </Button>
-                  ))}
-                </ButtonGroup>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}>
-            <Grid container direction="row" justify="flex-start" alignItems="center">
-              <Grid item>
                 <label className="text-black-50 d-block">{'Industry:'}&nbsp;</label>
               </Grid>
               <Grid item>
@@ -109,7 +92,27 @@ const SentimentCompanyDetails = props => {
                 <h6>{data ? dateFormaterMoment(parseDateStrMoment(get(data, 'document_date', null))) : null}</h6>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid item>
+                <label className="text-black-50 d-block">{'Version:'}&nbsp;</label>
+              </Grid>
+              <Grid item>
+                <ButtonGroup color="primary" style={{ paddingLeft: '17px' }}>
+                  {sentimentVersions.map((sentimentV, i) => (
+                    <Button
+                      size="small"
+                      key={`sent_${i}`}
+                      onClick={() => props.handleClickSentimentVersion(sentimentV.key)}
+                      variant={props.sentimentVesion === sentimentV.key ? 'contained' : 'outlined'}>
+                      {sentimentV.label}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingTop: '5px' }}>
               <Grid item>
                 <label style={{ marginTop: '6px' }} className="text-black-50 d-block">
                   {'Sentiment:'}&nbsp;
@@ -119,6 +122,14 @@ const SentimentCompanyDetails = props => {
                 <SentimentFilters />
               </Grid>
             </Grid>
+            {!isLoading && documentId && true && props.sentimentV === 'flatText' ? (
+              <SentimentHighlights
+                highlightsData={props.highlightsData}
+                clickHandle={props.clickHandle}
+                newTest={props.newTest}
+                is_first_iteration={props.is_first_iteration}
+              />
+            ) : null}
           </Grid>
         </Grid>
       </Paper>

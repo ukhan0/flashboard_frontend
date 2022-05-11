@@ -8,11 +8,11 @@ import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { useHistory } from 'react-router-dom';
 import SentimentCompanyDetails from './SentimentCompanyDetails';
 import config from '../../config/config';
-import { setSentimentDrawerOpen, setIsPin } from '../../reducers/Sentiment';
+import { setSentimentDrawerOpen, setIsPin, setSelectedHeadingId } from '../../reducers/Sentiment';
 import { useLocation } from 'react-router-dom';
 import SentimentCard from '../Filings/FillingsCardData';
 import SentimentPdf from './SentimentPdf';
-
+import { createHash } from '../../utils/helpers';
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
@@ -40,6 +40,7 @@ const SentimentContentSection = props => {
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
   const [sentimentVesion, setSentimentVersion] = useState('flatText');
   const classes = useStyles();
+  let is_first_iteration = useRef(0);
   const dispatch = useDispatch();
   const contentTopRef = useRef(null);
   let getQueryParams = new URLSearchParams(useLocation().search);
@@ -72,6 +73,17 @@ const SentimentContentSection = props => {
   const handleClickSentimentVersion = v => {
     setSentimentVersion(v);
   };
+  const clickHandle = (path, is_highlight = false) => {
+    if (!is_highlight) {
+      is_first_iteration.current = 0;
+      path = createHash(path);
+    }
+    handleSelection(path);
+    dispatch(setSelectedHeadingId(path));
+  };
+  const newTest = v => {
+    is_first_iteration.current = v;
+  };
 
   return (
     <div ref={contentTopRef}>
@@ -90,6 +102,12 @@ const SentimentContentSection = props => {
             <SentimentCompanyDetails
               handleClickSentimentVersion={handleClickSentimentVersion}
               sentimentVesion={sentimentVesion}
+              onSelection={handleSelection}
+              highlightsData={props.highlightsData}
+              clickHandle={clickHandle}
+              newTest={newTest}
+              is_first_iteration={is_first_iteration}
+              sentimentV={sentimentVesion}
             />
           </Box>
         ) : null}
@@ -112,16 +130,26 @@ const SentimentContentSection = props => {
           </Button>
         ) : null}
       </div>
-        <>
-          <div style={{ display: `${sentimentVesion === 'original' ? 'block': 'none'}` }}>
-            <SentimentPdf />
-          </div>
-          { sentimentVesion !== 'original' ? (
+      <>
+        <div style={{ display: `${sentimentVesion === 'original' ? 'block' : 'none'}` }}>
+          <SentimentPdf />
+        </div>
+        {sentimentVesion !== 'original' ? (
           <>
-            <SentimentSection contentData={props.contentData} onHandleHighlights={props.onHandleHighlights} onSelection={handleSelection} />
-            <SentimentDrawer highlightsData={props.highlightsData}  tableData={props.tableData} onSelection={handleSelection} />
-          </>) : null}
-        </>
+            <SentimentSection
+              contentData={props.contentData}
+              onHandleHighlights={props.onHandleHighlights}
+              onSelection={handleSelection}
+            />
+            <SentimentDrawer
+              highlightsData={props.highlightsData}
+              tableData={props.tableData}
+              onSelection={handleSelection}
+              clickHandle={clickHandle}
+            />
+          </>
+        ) : null}
+      </>
 
       <div className={classes.goToTopContainer}>
         <Fab onClick={() => contentTopRef.current.scrollIntoView()}>

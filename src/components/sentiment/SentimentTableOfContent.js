@@ -1,20 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Typography, Button, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
-import SentimentHighlights from './SentimentHighlight';
-import { get, lowerCase } from 'lodash';
-import { createHash } from '../../utils/helpers';
-
-import {
-  setSelectedHeadingId,
-  setIsPin,
-  setSentimentDrawerOpen,
-  setShowTocButton,
-  setCurrentToc
-} from '../../reducers/Sentiment';
+import { lowerCase } from 'lodash';
+import { setIsPin, setSentimentDrawerOpen, setShowTocButton, setCurrentToc } from '../../reducers/Sentiment';
 import { upperCase } from 'lodash';
 import clsx from 'clsx';
 import pinOpen from '../../assets/images/illustrations/minimize.svg';
@@ -76,17 +67,6 @@ const SentimentTableOfContent = props => {
   const dispatch = useDispatch();
   const { isLoading, isPin, canceHighlightsCall } = useSelector(state => state.Sentiment);
   const { selectedItem } = useSelector(state => state.Watchlist);
-  let is_first_iteration = useRef(0);
-  const documentId = get(selectedItem, 'documentId', null);
-
-  const clickHandle = (path, is_highlight = false) => {
-    if (!is_highlight) {
-      is_first_iteration.current = 0;
-      path = createHash(path);
-    }
-    props.onSelection(path);
-    dispatch(setSelectedHeadingId(path));
-  };
 
   const handlePin = () => {
     if (isPin) {
@@ -111,10 +91,6 @@ const SentimentTableOfContent = props => {
     if (canceHighlightsCall) {
       canceHighlightsCall.cancel();
     }
-  };
-
-  const newTest = v => {
-    is_first_iteration.current = v;
   };
 
   let signatureIterator = 1;
@@ -178,7 +154,7 @@ const SentimentTableOfContent = props => {
                 style={{ paddingLeft: d.lvl * 4 + 4, whiteSpace: 'initial' }}
                 className={clsx(classes.listItem, classes.upper)}
                 onClick={() => {
-                  clickHandle(idVal);
+                  props.clickHandle(idVal);
                 }}>
                 {d.lvl === 4
                   ? upperCase(d.prop)
@@ -191,14 +167,6 @@ const SentimentTableOfContent = props => {
             ) : null;
           })
         )}
-        {!isLoading && documentId && true ? (
-          <SentimentHighlights
-            highlightsData={props.highlightsData}
-            clickHandle={clickHandle}
-            newTest={newTest}
-            is_first_iteration={is_first_iteration}
-          />
-        ) : null}
         {selectedItem ? (
           <Grid container direction="row" justify="flex-end" alignItems="flex-end">
             <Grid item>
