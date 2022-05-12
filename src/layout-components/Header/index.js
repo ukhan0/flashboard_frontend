@@ -7,7 +7,7 @@ import { Hidden, IconButton, AppBar, Box, Tooltip } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import projectLogo from '../../assets/images/logos/sma-logo.svg';
-
+import Notification from '../../components/notification/Notification';
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
 import HeaderMenuSimple from '../../layout-components/HeaderMenuSimple';
@@ -86,16 +86,17 @@ const Header = props => {
             actionName="filter"
           />
 
-        {!isCompleteCompaniesDataLoaded || !isCompleteCompaniesDataGlobalLoaded ? (
-            <div style={{ marginTop: "15px"}}>
+          {!isCompleteCompaniesDataLoaded || !isCompleteCompaniesDataGlobalLoaded ? (
+            <div style={{ marginTop: '15px' }}>
               <span className="m-1 badge">Companies Data Loading...</span>
-            </div>) : null}
+            </div>
+          ) : null}
 
           <Box className="d-flex align-items-center">
             <div style={{ width: '200px' }}>
               <GlobalTickerSearchField />
             </div>
-
+            <Notification />
             <HeaderUserbox />
             <Box className="toggle-sidebar-btn-mobile">
               <Tooltip title="Toggle Sidebar" placement="right">

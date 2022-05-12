@@ -21,9 +21,15 @@ export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_E
 export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_DOCUMENT_TYPE_CALLS';
 export const SET_IS_FILTER_ACTIVE = 'WATCHLIST/SET_IS_FILTER_ACTIVE';
 export const SET_IS_TICKER_SELECTED = 'WATCHLIST/SET_IS_TICKER_SELECTED';
-export const SET_COMPLETE_COMPANIES_DATA = "WATCHLIST/SET_COMPLETE_COMPANIES_DATA";
-export const SET_COMPLETE_COMPANIES_GLOBAL_DATA = "WATCHLIST/SET_COMPLETE_COMPANIES_GLOBAL_DATA";
+export const SET_COMPLETE_COMPANIES_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA';
+export const SET_COMPLETE_COMPANIES_GLOBAL_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_GLOBAL_DATA';
+export const SET_NOTIFICATION_DATA = 'WATCHLIST/SET_NOTIFICATION_DATA';
+export const SET_EMAIL_TEMPLATE = 'WATCHLIST/SET_EMAIL_TEMPLATE';
 
+export const setEmailTemplate = emailTemplate => ({
+  type: SET_EMAIL_TEMPLATE,
+  emailTemplate
+});
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
   overwriteCheckBox
@@ -123,7 +129,6 @@ export const setCompleteCompaniesData = completeCompaniesData => ({
   completeCompaniesData
 });
 
-
 export const setCompleteDataLoadedGlobalFlag = isCompleteCompaniesDataGlobalLoaded => ({
   type: SET_COMPELTE_DATALOADED_GLOBAL_FLAG,
   isCompleteCompaniesDataGlobalLoaded
@@ -134,7 +139,10 @@ export const setCompleteGlobalCompaniesData = completeCompaniesDataGlobal => ({
   completeCompaniesDataGlobal
 });
 
-
+export const setNotificationData = notifications => ({
+  type: SET_NOTIFICATION_DATA,
+  notifications
+});
 
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -147,13 +155,25 @@ const getWatchlistSettings = () => {
 const getDefaultState = () => {
   const user = getUser();
   const watchlistSetting = getWatchlistSettings();
-  const selectedTypeWatchList = !isEmpty(watchlistSetting) ? (watchlistSetting.selectedType) ? watchlistSetting.selectedType : 'domestic' : 'domestic'
-  const selectedFileTypeWatchList = !isEmpty(watchlistSetting) ? (selectedTypeWatchList === "domestic") ? watchlistSetting.selectedFileType : '10k' : '10q'
+  const selectedTypeWatchList = !isEmpty(watchlistSetting)
+    ? watchlistSetting.selectedType
+      ? watchlistSetting.selectedType
+      : 'domestic'
+    : 'domestic';
+  const selectedFileTypeWatchList = !isEmpty(watchlistSetting)
+    ? selectedTypeWatchList === 'domestic'
+      ? watchlistSetting.selectedFileType
+      : '10k'
+    : '10q';
   return {
     selectedType: selectedTypeWatchList,
     selectedFileType: selectedFileTypeWatchList,
     selectedUniverse: !isEmpty(watchlistSetting) ? watchlistSetting.selectedUniverse : 'watchlist',
-    selectedMetric: !isEmpty(watchlistSetting) ? (selectedTypeWatchList === "domestic") ? watchlistSetting.selectedMetric : 'totdoc' : 'totdoc',
+    selectedMetric: !isEmpty(watchlistSetting)
+      ? selectedTypeWatchList === 'domestic'
+        ? watchlistSetting.selectedMetric
+        : 'totdoc'
+      : 'totdoc',
     searchText: '',
     selectedTab: 0,
     count: 0,
@@ -173,6 +193,8 @@ const getDefaultState = () => {
     isCompleteCompaniesDataGlobalLoaded: false,
     completeCompaniesData: [],
     completeCompaniesDataGlobal: [],
+    notifications: [],
+    emailTemplate: {}
   };
 };
 
@@ -191,7 +213,12 @@ export default function reducer(
     case SET_FILE_TYPE:
       return { ...state, selectedFileType: action.fileType };
     case SET_TYPE:
-      return { ...state, selectedType: action.watchlistType , selectedMetric: (action.watchlistType==="global") ? "totdoc" : state.selectedMetric , selectedFileType:  (action.watchlistType==="global") ? "10k" : state.selectedFileType };
+      return {
+        ...state,
+        selectedType: action.watchlistType,
+        selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric,
+        selectedFileType: action.watchlistType === 'global' ? '10k' : state.selectedFileType
+      };
     case SET_UNIVERSE:
       return { ...state, selectedUniverse: action.universe };
     case SET_METRIC:
@@ -229,9 +256,13 @@ export default function reducer(
     case SET_COMPELTE_DATALOADED_GLOBAL_FLAG:
       return { ...state, isCompleteCompaniesDataGlobalLoaded: action.isCompleteCompaniesDataGlobalLoaded };
     case SET_COMPLETE_COMPANIES_DATA:
-      return { ...state, completeCompaniesData: action.completeCompaniesData}
+      return { ...state, completeCompaniesData: action.completeCompaniesData };
     case SET_COMPLETE_COMPANIES_GLOBAL_DATA:
-      return { ...state, completeCompaniesDataGlobal: action.completeCompaniesDataGlobal}
+      return { ...state, completeCompaniesDataGlobal: action.completeCompaniesDataGlobal };
+    case SET_NOTIFICATION_DATA:
+      return { ...state, notifications: action.notifications };
+    case SET_EMAIL_TEMPLATE:
+      return { ...state, emailTemplate: action.emailTemplate };
     default:
       break;
   }

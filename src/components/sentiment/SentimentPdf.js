@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import config from '../../config/config';
 import { BeatLoader } from 'react-spinners';
 const SentimentPdf = props => {
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsloading] = useState(false);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const [height, setHeight] = useState(3000);
   const sentimentIframe = useRef(null);
@@ -15,8 +15,8 @@ const SentimentPdf = props => {
   // handle iframe height
   const handleHeightChange = () => {
     setIsloading(false);
-    const realHeight = sentimentIframe.current.contentHeight;
-    setHeight(realHeight);
+    //const realHeight = sentimentIframe.current.contentHeight;
+    //setHeight(realHeight);
   };
 
   return (

@@ -6,7 +6,8 @@ import {
   setCompleteDataLoadedFlag,
   setCompleteCompaniesData,
   setCompleteDataLoadedGlobalFlag,
-  setCompleteGlobalCompaniesData
+  setCompleteGlobalCompaniesData,
+  setNotificationData
 } from './reducers/Watchlist';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -66,14 +67,34 @@ const Cache = () => {
       });
   }, [dispatch, user]);
 
+  const getNotifications = useCallback(() => {
+    const apiUrl = `${config.apiUrl}/api/email/notification`;
+    axios
+      .get(`${apiUrl}`)
+      .then(response => {
+        let data = get(response, 'data.data', []);
+        if (data) {
+          dispatch(setNotificationData(data));
+        } else {
+          dispatch(setNotificationData([]));
+        }
+      })
+      .catch(function(error) {
+        dispatch(setNotificationData([]));
+        // handle error
+        console.log(error);
+      });
+  }, [dispatch]);
+
   useEffect(() => {
     if (user) {
       dispatch(setCompleteDataLoadedFlag(false));
       dispatch(setCompleteDataLoadedGlobalFlag(false));
       cacheData();
       cacheDataGlobal();
+      getNotifications();
     }
-  }, [cacheData, cacheDataGlobal, user, dispatch]);
+  }, [cacheData, cacheDataGlobal, user, dispatch, getNotifications]);
 
   return <></>;
 };

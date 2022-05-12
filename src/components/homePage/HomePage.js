@@ -8,9 +8,9 @@ import avatar from '../../config/homepic.png';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import StockChart from './HomePageStockChart';
 import SnackBar from '../Snackbar';
 import { get } from 'lodash';
+import HomePageNotification from './HomepageNotification';
 const useStyle = makeStyles({
   loader: {
     position: 'absolute',
@@ -36,7 +36,7 @@ export default function HomePage() {
           <HomePageTable />
         </Grid>
         <Grid item xs={6}>
-          <StockChart />
+          <HomePageNotification />
         </Grid>
       </Grid>
       <Grid container spacing={1}>

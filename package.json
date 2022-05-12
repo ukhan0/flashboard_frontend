@@ -76,6 +76,9 @@
     "react-text-mask": "5.4.3",
     "react-trend": "1.2.5",
     "redux-thunk": "^2.3.0",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1",
+    "socket.io-react": "^1.2.0",
     "xml-js": "^1.6.11"
   },
   "scripts": {

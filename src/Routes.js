@@ -25,7 +25,7 @@ const Filings = lazy(() => import('./components/Filings'));
 const SocialSentiment = lazy(() => import('./components/socialSentiment'));
 const Guideline = lazy(() => import('./components/guidelines'));
 const HomePage = lazy(() => import('./components/homePage'));
-
+const EmailTemplate = lazy(() => import('./components/notification'));
 const pageVariants = {
   initial: {
     opacity: 0,
@@ -145,7 +145,8 @@ const Routes = () => {
                     '/topic',
                     '/socialSentiment',
                     '/guideline',
-                    '/home'
+                    '/home',
+                    '/notification'
                   ]}>
                   <LeftSidebar>
                     <Switch location={location} key={location.pathname}>
@@ -163,6 +164,7 @@ const Routes = () => {
                         <Route path="/socialSentiment" component={SocialSentiment} />
                         <Route path="/guideline" component={Guideline} />
                         <Route path="/home" component={HomePage} />
+                        <Route path="/notification" component={EmailTemplate} />
                       </motion.div>
                     </Switch>
                   </LeftSidebar>
