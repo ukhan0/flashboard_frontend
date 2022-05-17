@@ -40,8 +40,11 @@ function WatchlistCustomColumnsSideBar(props) {
     setTimeout(() => {
       const currentColumnsState = localStorage.getItem(stateKey);
       let columns = JSON.parse(currentColumnsState);
+      if (columns)
+      {
       let displayedColumnsState = columns.filter(v => !v.hide).map(v => v.colId);
       setDispalyedColumns(displayedColumnsState);
+      }
     }, [100]);
   }, [col]);
 

@@ -15,6 +15,7 @@ import {
   lastReportedState,
   dateComparator
 } from './WatchlistTableHelpers';
+
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -113,6 +114,7 @@ const colDefs = [
     width: 118,
     minWidth: 118,
     cellClass: ['center-align-text'],
+    wrapText: false,
     filter: 'agTextColumnFilter',
     suppressMenu: false,
     menuTabs: ['generalMenuTab'],
@@ -134,8 +136,8 @@ const colDefs = [
     headerName: 'Sector',
     headerTooltip: 'Sector',
     field: 'sector',
-    width: 142,
     colId: 'sector',
+    width: 142,
     filter: 'agTextColumnFilter'
   },
   {
@@ -224,8 +226,8 @@ const colDefs = [
     headerName: 'Aggregated Sentiment',
     headerTooltip: `The aggregated sentiment of the parsed text using \n SMA\`s proprietary Financial NLP`,
     field: 'sentiment',
-    width: 112,
     colId: 'sentiment',
+    width: 112,
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
     valueGetter: params => {
@@ -457,6 +459,20 @@ const WatchlistTable = props => {
   const gridApi = React.useRef(null);
   const [isColResizing, setColResizing] = React.useState(0);
   let getQueryParams = new URLSearchParams(useLocation().search);
+
+  const selectTableRow = (data, id, isAutoSelection, rowNode) => {
+    let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
+    comparisionSection.comparisionSection = selectedMetric;
+    saveComparisionSettings(comparisionSection);
+    dispatch(setSidebarToggle(true));
+    dispatch(setSidebarToggleMobile(true));
+    props.onColumnClick(data, id);
+    gridApi.current.closeToolPanel();
+    if (isAutoSelection) {
+      rowNode.setSelected(true, true);
+    }
+  };
+
   const storeColumnsState = params => {
     if (isColResizing > 3) {
       const columnState = params.columnApi.getColumnState();
@@ -492,13 +508,8 @@ const WatchlistTable = props => {
 
   const cellClicked = async params => {
     if (params.data) {
-      let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
-      comparisionSection.comparisionSection = selectedMetric;
-      saveComparisionSettings(comparisionSection);
-      dispatch(setSidebarToggle(true));
-      dispatch(setSidebarToggleMobile(true));
-      props.onColumnClick(params.data, params.column.colId);
-      gridApi.current.closeToolPanel();
+      let rowId = params.column.colId;
+      selectTableRow(params.data, rowId, false, null);
     }
   };
 
@@ -525,30 +536,6 @@ const WatchlistTable = props => {
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
     gridApi.current = params.api;
-    const stateKey = 'watchlist::state';
-    const currentColumnsState = localStorage.getItem(stateKey);
-    let columns = JSON.parse(currentColumnsState);
-    if (columns) {
-      props.storeColumnsState(columns);
-    } else {
-      const columnState = params.columnApi.getColumnState();
-      props.storeColumnsState(columnState);
-    }
-    const columnsState = props.columnsState;
-    const filteringState = props.filteringState;
-
-    if (columnsState && columnsState.length) {
-      params.columnApi.applyColumnState({
-        state: columnsState,
-        applyOrder: true
-      });
-    }
-
-    if (filteringState && !isEmpty(filteringState)) {
-      params.api.setFilterModel(filteringState);
-    }
-    //Handle column hide for Sedar
-    handleColumnHideForSedar(params.api);
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
@@ -559,6 +546,7 @@ const WatchlistTable = props => {
   }
 
   const handleFirstDataRendered = params => {
+    handleColumnHideForSedar(params.api);
     const columnsState = props.columnsState;
     const filteringState = props.filteringState;
     var padding = 40;
@@ -571,6 +559,9 @@ const WatchlistTable = props => {
         state: columnsState,
         applyOrder: true
       });
+    } else {
+      const columnState = params.columnApi.getColumnState();
+      props.storeColumnsState(columnState);
     }
 
     if (filteringState && !isEmpty(filteringState)) {
@@ -584,6 +575,7 @@ const WatchlistTable = props => {
       });
     }
     gridApi.current.onFilterChanged();
+    selectTableRow(params.api.getDisplayedRowAtIndex(0).data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
   };
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
