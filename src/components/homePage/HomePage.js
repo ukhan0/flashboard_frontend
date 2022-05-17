@@ -3,14 +3,13 @@ import { Grid } from '@material-ui/core';
 import HomePageTable from './HomePageTable';
 import HomePageHeatMap from './HomePageHeatMap';
 import HomePageSmaLime1 from './HomePageSmaLime1';
-import { Card } from '@material-ui/core';
-import avatar from '../../config/homepic.png';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import SnackBar from '../Snackbar';
 import { get } from 'lodash';
 import HomePageNotification from './HomepageNotification';
+import HomePageTweets from './HomePageTweets';
 const useStyle = makeStyles({
   loader: {
     position: 'absolute',
@@ -60,14 +59,15 @@ export default function HomePage() {
           <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
         </Grid>
         <Grid item xs={4}>
-          <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
+          <HomePageTweets />
+          {/* <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
             <div style={{ float: 'left', outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
               <div className="card-header--title font-weight-bold">Social Stream</div>
               <div style={{ height: '600px', width: '600px', margin: ' 16px' }}>
                 <img style={{ width: '100%' }} alt="..." src={avatar} />
               </div>
             </div>
-          </Card>
+          </Card> */}
         </Grid>
       </Grid>
     </div>

@@ -15,6 +15,7 @@ const config = {
   sedarSearchIndex: process.env.REACT_APP_SEDAR_FILLING_SEARCH_INDEX,
   fillingApiUrl: process.env.REACT_APP_FILING_URL,
   sentimentIframUrl: process.env.REACT_APP_SENTIMENT_IFRAME_URL,
-  googleAnalyticsKey: process.env.REACT_APP_GOOGLE_ANALYTICS_KEY
+  googleAnalyticsKey: process.env.REACT_APP_GOOGLE_ANALYTICS_KEY,
+  socketUrl: process.env.REACT_APP_SOCKET_URL
 };
 export default config;

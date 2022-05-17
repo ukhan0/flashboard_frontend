@@ -455,14 +455,18 @@ const WatchlistTable = props => {
   const dispatch = useDispatch();
   const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
+  const [isColResizing, setColResizing] = React.useState(0);
   let getQueryParams = new URLSearchParams(useLocation().search);
   const storeColumnsState = params => {
-    const columnState = params.columnApi.getColumnState();
-    props.storeColumnsState(columnState);
-    var padding = 40;
-    var height = headerHeightGetter() + padding;
-    params.api.setHeaderHeight(height);
-    params.api.resetRowHeights();
+    if (isColResizing > 3) {
+      const columnState = params.columnApi.getColumnState();
+      props.storeColumnsState(columnState);
+      var padding = 40;
+      var height = headerHeightGetter() + padding;
+      params.api.setHeaderHeight(height);
+      params.api.resetRowHeights();
+    }
+    setColResizing(isColResizing + 1);
   };
 
   React.useEffect(() => {

@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Hidden, IconButton, Box, Popover, Button } from '@material-ui/core';
 import NotificationsActiveTwoToneIcon from '@material-ui/icons/NotificationsActiveTwoTone';
-// import io from 'socket.io-client';
+// import SocketService from '../../socketService';
 import sound from './Tones.mp3';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,14 +10,6 @@ import { setEmailTemplate } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
 import config from '../../config/config';
 import axios from 'axios';
-// const socket = io.connect('http://localhost:3001');
-// const socket = io.connect('http://localhost:3001', {
-//   withCredentials: true,
-//   extraHeaders: {
-//     'my-custom-header': 'abcd'
-//   }
-// });
-
 const Notification = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -43,7 +35,7 @@ const Notification = () => {
   // const socketNotificationData = useCallback(() => {
   //   try {
   //     console.log('yes');
-  //     socket.on('emailN', payload => {
+  //     SocketService.socket.on('emailN', payload => {
   //       console.log(payload, 'jsdjjjsd');
   //       // setNotification([payload, ...notification]);÷
   //       // if (!payload.is_read) {
