@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, ButtonGroup, Button, Switch, Typography } from '@material-ui/core';
 import {
   setWatchlistFileType,
@@ -11,7 +11,13 @@ import {
 } from '../../reducers/Watchlist';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
-import { fileTypesSelection, fileTypesSelectionGlobal, universeSelection, metricsSelection, typesSelection } from '../../config/filterTypes';
+import {
+  fileTypesSelection,
+  fileTypesSelectionGlobal,
+  universeSelection,
+  metricsSelection,
+  typesSelection
+} from '../../config/filterTypes';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
 import { getUser, saveUser, saveWatchlistSettings } from './WatchlistHelpers';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
@@ -26,18 +32,19 @@ const WatchlistFilters = props => {
     isCompleteCompaniesDataGlobalLoaded,
     cancelExistingDocumentTypeCalls,
     isEmailAlertEnable,
-    selectedItem
+    selectedItem,
+    filterLabel
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
-  const [isGlobalSelected , setIsGlobalSelected] = useState( (selectedType === "global") ? true : false)
+  const [isGlobalSelected, setIsGlobalSelected] = useState(selectedType === 'global' ? true : false);
 
   const canItbeUsed = universeType => {
     let flag = false;
     if (universeType === 'all') {
-      if(selectedType=== "domestic" &&  !isCompleteCompaniesDataLoaded) {
+      if (selectedType === 'domestic' && !isCompleteCompaniesDataLoaded) {
         flag = true;
-      } else if(selectedType=== "global" &&  !isCompleteCompaniesDataGlobalLoaded) {
+      } else if (selectedType === 'global' && !isCompleteCompaniesDataGlobalLoaded) {
         flag = true;
       }
     }
@@ -61,13 +68,13 @@ const WatchlistFilters = props => {
   };
 
   const handleClickType = key => {
-    dispatch(setSelectedWatchlist(null))
+    dispatch(setSelectedWatchlist(null));
     dispatch(setWatchlistType(key));
     dispatch(setIsNewWatchlistDataAvailable(true));
     if (cancelExistingDocumentTypeCalls) {
       cancelExistingDocumentTypeCalls.cancel();
     }
-  }
+  };
 
   const handleChangeEmailAlert = event => {
     if (event.target.checked) {
@@ -94,9 +101,9 @@ const WatchlistFilters = props => {
     saveUser(user);
   };
 
-  const getSelectedFileType = (selectedType , selectedFileType) => {
-    return (selectedType === "global") ? "10k" : selectedFileType
-  }
+  const getSelectedFileType = (selectedType, selectedFileType) => {
+    return selectedType === 'global' ? '10k' : selectedFileType;
+  };
 
   useEffect(() => {
     const setting = {
@@ -106,7 +113,7 @@ const WatchlistFilters = props => {
       selectedMetric: selectedMetric
     };
     saveWatchlistSettings(setting);
-    setIsGlobalSelected((selectedType === "global") ? true : false);
+    setIsGlobalSelected(selectedType === 'global' ? true : false);
   }, [selectedMetric, selectedUniverse, selectedFileType, selectedType]);
 
   return (
@@ -128,9 +135,9 @@ const WatchlistFilters = props => {
       <Grid item>
         <div className="text-black-50 opacity-6">File Type</div>
         <ButtonGroup color="primary">
-          {((isGlobalSelected) ? fileTypesSelectionGlobal : fileTypesSelection).map((fileType, i) => (
+          {(isGlobalSelected ? fileTypesSelectionGlobal : fileTypesSelection).map((fileType, i) => (
             <Button
-              disabled={isGlobalSelected && fileType.key !=="10k" ? true : false} 
+              disabled={isGlobalSelected && fileType.key !== '10k' ? true : false}
               size="small"
               key={`ft_${i}`}
               onClick={() => handleClickFileType(fileType.key)}
@@ -165,7 +172,7 @@ const WatchlistFilters = props => {
         <ButtonGroup color="primary">
           {metricsSelection.map((metric, i) => (
             <Button
-              disabled={selectedType === "global" && metric.key !=="totdoc" ? true : false} 
+              disabled={selectedType === 'global' && metric.key !== 'totdoc' ? true : false}
               size="small"
               key={`met_${i}`}
               onClick={() => handleClickWatchlistMetric(metric.key)}
@@ -191,6 +198,21 @@ const WatchlistFilters = props => {
                 name="checkedB"
                 inputProps={{ 'aria-label': 'primary checkbox' }}
               />
+            </div>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item>
+        <Grid container direction="row" alignItems="center">
+          <Grid item>
+            <Typography style={{ paddingTop: '20px' }} color="primary">
+              Screen Name:
+            </Typography>
+          </Grid>
+          <Grid item>
+            <div style={{ paddingTop: '20px' }}>
+              {/* <span className="m-1 badge badge-success">{filterLabel?filterLabel:"k"}</span> */}
+              <Typography color="primary">{filterLabel}</Typography>
             </div>
           </Grid>
         </Grid>

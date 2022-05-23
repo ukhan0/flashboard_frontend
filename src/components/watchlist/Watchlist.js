@@ -23,7 +23,10 @@ import {
   setIsNewWatchlistDataAvailable,
   setIsTickerSelected,
   setCompleteCompaniesData,
-  setCompleteGlobalCompaniesData
+  setCompleteGlobalCompaniesData,
+  setSelectedFilter,
+  setFilterLabel,
+  setIsFilterUpdate
 } from '../../reducers/Watchlist';
 import {
   setCompanyFillingData,
@@ -75,7 +78,10 @@ const Watchlist = props => {
     isColorEnable,
     overwriteCheckBox,
     completeCompaniesData,
-    completeCompaniesDataGlobal
+    completeCompaniesDataGlobal,
+    filterLabel,
+    selectedFilter,
+    isFilterUpdate
   } = useSelector(state => state.Watchlist);
   const [watchlistData, setWatchlistData] = useState([]);
   const [dataVersion, setDataVersion] = useState(1);
@@ -132,6 +138,9 @@ const Watchlist = props => {
         } else {
           rawData = completeCompaniesDataGlobal;
         }
+        setTimeout(() => {
+          setWatchlistData(formatData(rawData));
+        }, []);
       } else {
         setLoading(true);
         rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
@@ -141,12 +150,13 @@ const Watchlist = props => {
           dispatch(setIsNewWatchlistDataAvailable(false));
         }
       }
-
       if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
         setTopicDialogOpen(true);
         dispatch(setCount(count + 1));
       }
-      setWatchlistData(formatData(rawData));
+      if (selectedUniverse !== 'all') {
+        setWatchlistData(formatData(rawData));
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -376,6 +386,9 @@ const Watchlist = props => {
     dispatch(setWatchlistSearchText(''));
     setIsFilterActiveOnSearch('');
     dispatch(setIsTickerSelected(false));
+    dispatch(setSelectedFilter(null));
+    dispatch(setIsFilterUpdate(false));
+    dispatch(setFilterLabel(''));
   };
 
   useEffect(() => {
@@ -444,7 +457,7 @@ const Watchlist = props => {
 
   const deleteFilter = async id => {
     try {
-      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist_search?filterId=${id}`);
+      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist_search?filterId=${id}`, {});
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         getSavedFilters();
@@ -456,6 +469,30 @@ const Watchlist = props => {
       setSnackBar({ isSnackBar: true, message: 'something went wroung', severity: 'error' });
     }
   };
+
+  const updateFilter = async () => {
+    try {
+      const response = await axios.put(`${config.apiUrl}/api/update_watchlist_search?filterId=${selectedFilter.id}`, {
+        searchJson: getFilteringState(),
+        tableType: selectedType,
+        filterLabel: filterLabel
+      });
+
+      const responsePayload = get(response, 'data', null);
+
+      if (!responsePayload.error) {
+        clearFilterHandler();
+        getSavedFilters();
+        setSnackBar({ isSnackBar: true, message: 'filter updated successfully', severity: 'success' });
+      } else {
+        setSnackBar({ isSnackBar: true, message: 'filter not updated', severity: 'error' });
+      }
+    } catch (error) {
+      setSnackBar({ isSnackBar: true, message: 'something went wroung', severity: 'error' });
+    }
+    setIsFilterLabelOpen(false);
+  };
+
   const handleOpenAgGridFilterDialog = () => {
     setIsSavedFilterDialog(true);
   };
@@ -469,16 +506,16 @@ const Watchlist = props => {
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
-
   const gridData = firstTimeLoad.current ? null : processWatchlistData();
-
   return (
     <>
       <WatchlistFilterLabelDialog
         saveFilter={saveFilter}
+        updateFilter={updateFilter}
         isFilterLabelOpen={isFilterLabelOpen}
         handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
         handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
+        filterLabel={filterLabel}
       />
       <WatchlistFiltersList
         deleteFilter={deleteFilter}
@@ -486,6 +523,8 @@ const Watchlist = props => {
         isSavedFilterDialog={isSavedFilterDialog}
         handleOpenAgGridFilterDialog={handleOpenAgGridFilterDialog}
         handleCloseAgGridFilterDialog={handleCloseAgGridFilterDialog}
+        handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
+        handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
       />
       {WatchlistService.getAgGridAColunms().columns.length > 0 ? (
         <>
@@ -528,17 +567,29 @@ const Watchlist = props => {
                     }}>
                     Clear Filters
                   </Button>
-
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    className={classes.button}
-                    size="small"
-                    onClick={() => {
-                      handleOpenAgGridFilterLabelDialog();
-                    }}>
-                    Save Screen
-                  </Button>
+                  {isFilterUpdate ? (
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      className={classes.button}
+                      size="small"
+                      onClick={() => {
+                        handleOpenAgGridFilterLabelDialog();
+                      }}>
+                      Update Screen
+                    </Button>
+                  ) : (
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      className={classes.button}
+                      size="small"
+                      onClick={() => {
+                        handleOpenAgGridFilterLabelDialog();
+                      }}>
+                      Save Screen
+                    </Button>
+                  )}
                 </>
               ) : null}
             </Box>

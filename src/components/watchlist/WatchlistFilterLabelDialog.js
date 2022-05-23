@@ -7,6 +7,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFilterLabel, setIsFilterUpdate } from '../../reducers/Watchlist';
 const useStyles = makeStyles(theme => ({
   dialog: {
     marginLeft: '20px',
@@ -18,10 +20,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AlertDialog(props) {
-  const [filterLabel, setFilterLabel] = React.useState('');
+  const dispatch = useDispatch();
+  const { filterLabel, isFilterUpdate } = useSelector(state => state.Watchlist);
   const classes = useStyles();
   const hanldeFilterLabel = e => {
-    setFilterLabel(e.target.value);
+    dispatch(setFilterLabel(e.target.value));
   };
   return (
     <div>
@@ -54,8 +57,13 @@ export default function AlertDialog(props) {
             variant="contained"
             color="primary"
             onClick={() => {
-              props.saveFilter(filterLabel);
-              setFilterLabel('');
+              if (isFilterUpdate) {
+                props.updateFilter();
+              } else {
+                props.saveFilter(filterLabel);
+              }
+              dispatch(setFilterLabel(''));
+              dispatch(setIsFilterUpdate(false));
             }}>
             Save
           </Button>
@@ -66,7 +74,9 @@ export default function AlertDialog(props) {
             color="primary"
             onClick={() => {
               props.handleCloseAgGridFilterLabelDialog();
-              setFilterLabel('');
+              if (!isFilterUpdate) {
+                dispatch(setFilterLabel(''));
+              }
             }}>
             Cancel
           </Button>

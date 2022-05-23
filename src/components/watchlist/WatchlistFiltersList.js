@@ -11,10 +11,12 @@ import {
   ListItemSecondaryAction
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-// import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import WatchlistService from './WatchlistService';
+import { setIsFilterUpdate, setSelectedFilter, setFilterLabel } from '../../reducers/Watchlist';
 import { isEmpty } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -28,11 +30,17 @@ const useStyles = makeStyles(theme => ({
 }));
 function WatchlistFiltersList(props) {
   const classes = useStyles();
-  const [selectedFilter, setSelectedFilter] = React.useState('');
-  const setFilters = filter => {
-    setSelectedFilter(filter);
+  const { selectedFilter } = useSelector(state => state.Watchlist);
+  const dispatch = useDispatch();
+  const setFilters = (filter, isUpdate) => {
     if (!isEmpty(filter.search_json)) {
       WatchlistService.agGridAPI.setFilterModel(filter.search_json);
+    }
+    if (isUpdate) {
+      dispatch(setSelectedFilter(filter));
+      dispatch(setIsFilterUpdate(true));
+      dispatch(setFilterLabel(filter.filter_label));
+      props.handleCloseAgGridFilterDialog();
     }
   };
 
@@ -67,7 +75,7 @@ function WatchlistFiltersList(props) {
                   key={index}
                   selected={selectedFilter && selectedFilter.id === f.id}
                   onClick={e => {
-                    setFilters(f);
+                    setFilters(f, true);
                   }}>
                   <ListItemText primary={<p className={classes.label}>{f.filter_label ? f.filter_label : 'no'}</p>} />
                   <ListItemSecondaryAction>
@@ -75,9 +83,9 @@ function WatchlistFiltersList(props) {
                       aria-label="comments"
                       size="small"
                       onClick={e => {
-                        // handleEdit(e, s);
+                        setFilters(f, true);
                       }}>
-                      {/* <EditIcon className={classes.editIcon} /> */}
+                      <EditIcon className={classes.editIcon} />
                     </IconButton>
                     <IconButton
                       aria-label="comments"

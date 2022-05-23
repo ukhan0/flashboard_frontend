@@ -25,7 +25,22 @@ export const SET_COMPLETE_COMPANIES_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_DAT
 export const SET_COMPLETE_COMPANIES_GLOBAL_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_GLOBAL_DATA';
 export const SET_NOTIFICATION_DATA = 'WATCHLIST/SET_NOTIFICATION_DATA';
 export const SET_EMAIL_TEMPLATE = 'WATCHLIST/SET_EMAIL_TEMPLATE';
+export const SET_FILTER_LABEL = 'WATCHLIST/SET_FILTER_LABEL';
+export const SET_SELECTED_FILTER = 'WATCHLIST/SET_SELECTED_FILTER';
+export const SET_IS_FILTER_UPDATE = 'WATCHLIST/SET_IS_FILTER_UPDATE';
 
+export const setIsFilterUpdate = isFilterUpdate => ({
+  type: SET_IS_FILTER_UPDATE,
+  isFilterUpdate
+});
+export const setSelectedFilter = selectedFilter => ({
+  type: SET_SELECTED_FILTER,
+  selectedFilter
+});
+export const setFilterLabel = filterLabel => ({
+  type: SET_FILTER_LABEL,
+  filterLabel
+});
 export const setEmailTemplate = emailTemplate => ({
   type: SET_EMAIL_TEMPLATE,
   emailTemplate
@@ -194,7 +209,10 @@ const getDefaultState = () => {
     completeCompaniesData: [],
     completeCompaniesDataGlobal: [],
     notifications: [],
-    emailTemplate: {}
+    emailTemplate: {},
+    filterLabel: '',
+    selectedFilter: null,
+    isFilterUpdate: false
   };
 };
 
@@ -263,6 +281,12 @@ export default function reducer(
       return { ...state, notifications: action.notifications };
     case SET_EMAIL_TEMPLATE:
       return { ...state, emailTemplate: action.emailTemplate };
+    case SET_FILTER_LABEL:
+      return { ...state, filterLabel: action.filterLabel };
+    case SET_SELECTED_FILTER:
+      return { ...state, selectedFilter: action.selectedFilter };
+    case SET_IS_FILTER_UPDATE:
+      return { ...state, isFilterUpdate: action.isFilterUpdate };
     default:
       break;
   }

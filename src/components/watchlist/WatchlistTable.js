@@ -473,16 +473,23 @@ const WatchlistTable = props => {
     }
   };
 
+  const storeColumnsStateComman = params => {
+    const columnState = params.columnApi.getColumnState();
+    props.storeColumnsState(columnState);
+    var padding = 40;
+    var height = headerHeightGetter() + padding;
+    params.api.setHeaderHeight(height);
+    params.api.resetRowHeights();
+  };
   const storeColumnsState = params => {
     if (isColResizing > 3) {
-      const columnState = params.columnApi.getColumnState();
-      props.storeColumnsState(columnState);
-      var padding = 40;
-      var height = headerHeightGetter() + padding;
-      params.api.setHeaderHeight(height);
-      params.api.resetRowHeights();
+      storeColumnsStateComman(params);
     }
     setColResizing(isColResizing + 1);
+  };
+
+  const storeColumnsStateVisible = params => {
+    storeColumnsStateComman(params);
   };
 
   React.useEffect(() => {
@@ -514,6 +521,7 @@ const WatchlistTable = props => {
   };
 
   const storeFilteringState = params => {
+    console.log('rehans');
     const filteringModel = params.api.getFilterModel();
     props.storeFilteringState(filteringModel);
     dispatch(setIsFilterActive(checkIsFilterActive()));
@@ -575,7 +583,10 @@ const WatchlistTable = props => {
       });
     }
     gridApi.current.onFilterChanged();
-    selectTableRow(params.api.getDisplayedRowAtIndex(0).data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
+    let data = get(params.api.getDisplayedRowAtIndex(0), 'data', null);
+    if (data) {
+      selectTableRow(data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
+    }
   };
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
@@ -599,7 +610,7 @@ const WatchlistTable = props => {
         onCellClicked={cellClicked}
         onColumnResized={storeColumnsState}
         onColumnMoved={storeColumnsState}
-        onColumnVisible={storeColumnsState}
+        onColumnVisible={storeColumnsStateVisible}
         onSortChanged={storeColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}

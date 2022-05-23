@@ -3,15 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { get, round } from 'lodash';
-import {
-  parseDateStrMoment,
-  dateFormaterMoment,
-  descriptionValueStyler,
-  parseNumber,
-  percentFormater,
-  changeWordGetter,
-  numberWordComparator
-} from '../watchlist/WatchlistTableHelpers';
+import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
 import TickerLogo from '../watchlist/WatchlistTableComponents/TickerLogo';
 import { Card, ButtonGroup, Button } from '@material-ui/core';
 import clsx from 'clsx';
@@ -54,7 +46,7 @@ export default function HomePageTable(props) {
   const tableRef = useRef();
   const cellClicked = params => {
     if (params.data) {
-      const item = { ...params.data, companyName: params.data.company_name };
+      const item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
       dispatch(setSelectedWatchlist(item));
       dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
@@ -125,30 +117,12 @@ export default function HomePageTable(props) {
       filter: 'agNumberColumnFilter',
       minWidth: 100,
       valueGetter: params => {
-        const sentimentValue = get(params, 'data.sentiment', null);
-        let sentimentObj = null;
-        if (sentimentValue) {
-          sentimentObj = {
-            number: parseNumber(get(params, 'data.sentiment', null)),
-            word: changeWordGetter(get(params, 'data.sentimentWord', null))
-          };
-        }
-        return sentimentObj;
-      },
-      valueFormatter: params => percentFormater(params, true),
-      comparator: numberWordComparator,
-      filterParams: {
-        valueGetter: params => {
-          const value = get(params, 'data.sentiment', null);
-          return value !== null ? parseNumber(value) : null;
-        }
-      },
-      cellStyle: params => {
-        return descriptionValueStyler(params);
+        const sentimentValue = get(params, 'data.sentiment', 0);
+        return sentimentValue;
       }
     },
     {
-      headerName: 'Word Change Percentage',
+      headerName: 'Word Count',
       field: 'wordCount',
       menuTabs: false,
       editable: false,
@@ -159,26 +133,8 @@ export default function HomePageTable(props) {
       filter: 'agNumberColumnFilter',
       minWidth: 100,
       valueGetter: params => {
-        const sentimentValue = get(params, 'data.wordCount', null);
-        let sentimentObj = null;
-        if (sentimentValue) {
-          sentimentObj = {
-            number: parseNumber(sentimentValue),
-            word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
-          };
-        }
-        return sentimentObj;
-      },
-      valueFormatter: params => percentFormater(params, true),
-      comparator: numberWordComparator,
-      filterParams: {
-        valueGetter: params => {
-          const value = get(params, 'data.wordCount', null);
-          return value !== null ? parseNumber(value) : null;
-        }
-      },
-      cellStyle: params => {
-        return descriptionValueStyler(params);
+        const sentimentValue = get(params, 'data.wordCount', 0);
+        return sentimentValue;
       }
     }
   ];

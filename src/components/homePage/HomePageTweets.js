@@ -104,64 +104,71 @@ const TopicSearchResults = () => {
     };
   }, [renderTime]);
   return (
-    <div>
-      <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
-        <div style={{ float: 'left', outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
-          <div className="card-header--title font-weight-bold">Social Stream</div>
-          <div style={{ height: '600px', width: '600px', margin: ' 16px' }}>
-            {tweets.current.length > 0 ? (
-              <PerfectScrollbar>
-                {uniqBy(tweets.current, 'actor.id').map((v, index) => {
-                  return (
-                    <Fragment key={`rs${index}`}>
-                      <Paper elevation={6} className={classes.margin}>
-                        <Box p={4}>
-                          <div>
-                            <Grid container direction="row" justify="space-between" alignItems="flex-start">
-                              <Grid item>
-                                <Avatar
-                                  alt="TwitterLogo"
-                                  src={`${get(v, 'actor.image', '')}`}
-                                  className="app-sidebar-userbox-avatar"
-                                  style={{ float: 'left' }}
-                                />
-                                <div style={{ float: 'left', paddingLeft: '5px' }}>
-                                  <a
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href={`https://twitter.com/${v.account.name}`}>
-                                    <span className={classes.topic}> {v.account.name}</span>
-                                    &nbsp;
-                                    {v.posting_account}
-                                  </a>
-                                  <br></br>
-                                  <a
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href={`${get(v, 'tweet_json.link', '')}`}>
-                                    <span>{v.source}</span>
-                                  </a>
-                                </div>
-                              </Grid>
-                              <Grid item>
-                                <small className="text-black-50 pt-1 pr-2">
-                                  Posting Account ID:{' '}
-                                  <b className={clsx(classes.clickable, 'text-first')}>{v.account.accountId}</b>
-                                </small>
-                                <small className="text-black-50 pt-1 pr-2">
-                                  Tweet ID: <b className="text-first">{v.account.id}</b>
-                                </small>
-                                <small className="text-black-50 pt-1 pr-2">
-                                  Date Posted:{' '}
-                                  <b className="text-first">
-                                    {v.actor.postedTime
-                                      ? moment(v.actor.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A')
-                                      : ''}
-                                  </b>
-                                </small>
-                              </Grid>
-                            </Grid>
+    <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
+      <div style={{ outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
+        <Grid container direction="row" justify="space-between" alignItems="flex-start">
+          <Grid item>
+            <div className="card-header--title font-weight-bold">Social Stream</div>
+          </Grid>
+          <Grid item>
+            {tweets.current.length < 1 ? (
+              <div>
+                <BeatLoader color={'var(--primary)'} loading={true} size={10} />
+              </div>
+            ) : null}
+          </Grid>
+          <Grid item></Grid>
+        </Grid>
 
+        <div style={{ height: '600px', margin: ' 10px' }}>
+          <PerfectScrollbar>
+            {uniqBy(tweets.current, 'actor.id').map((v, index) => {
+              return (
+                <Fragment key={`rs${index}`}>
+                  <Paper elevation={6} className={classes.margin}>
+                    <Box p={4}>
+                      <div>
+                        <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                          <Grid item>
+                            <Avatar
+                              alt="TwitterLogo"
+                              src={`${get(v, 'actor.image', '')}`}
+                              className="app-sidebar-userbox-avatar"
+                              style={{ float: 'left' }}
+                            />
+                            <div style={{ float: 'left', paddingLeft: '5px' }}>
+                              <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={`https://twitter.com/${v.account.name}`}>
+                                <span className={classes.topic}> {v.account.name}</span>
+                                &nbsp;
+                                {v.posting_account}
+                              </a>
+                              <br></br>
+                              <a target="_blank" rel="noopener noreferrer" href={`${get(v, 'tweet_json.link', '')}`}>
+                                <span>{v.source}</span>
+                              </a>
+                            </div>
+                          </Grid>
+                        </Grid>
+                        <Grid container>
+                          <Grid item xs={8}>
+                            <small className="text-black-50 pt-1 pr-2">
+                              Posting Account ID:{' '}
+                              <b className={clsx(classes.clickable, 'text-first')}>{v.account.accountId}</b>
+                            </small>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <small className="text-black-50 pt-1 pr-2">
+                              Tweet ID: <b className="text-first">{v.account.id}</b>
+                            </small>
+                          </Grid>
+                        </Grid>
+                        <br></br>
+
+                        <Grid container>
+                          <Grid item xs={12}>
                             <p
                               key={`rstc`}
                               className={clsx(
@@ -173,22 +180,30 @@ const TopicSearchResults = () => {
                               )}>
                               {v.actor.summary ? v.actor.summary : v.body}
                             </p>
-                          </div>
-                        </Box>
-                      </Paper>
-                    </Fragment>
-                  );
-                })}
-              </PerfectScrollbar>
-            ) : (
-              <div style={{ textAlign: 'center' }}>
-                <BeatLoader color={'var(--primary)'} loading={true} size={10} />
-              </div>
-            )}
-          </div>
+                          </Grid>
+                        </Grid>
+                        <Grid container>
+                          <Grid item xs={12}>
+                            <small className="text-black-50 pt-1 pr-2">
+                              Date Posted:{' '}
+                              <b className="text-first">
+                                {v.actor.postedTime
+                                  ? moment(v.actor.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A')
+                                  : ''}
+                              </b>
+                            </small>
+                          </Grid>
+                        </Grid>
+                      </div>
+                    </Box>
+                  </Paper>
+                </Fragment>
+              );
+            })}
+          </PerfectScrollbar>
         </div>
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 };
 export default TopicSearchResults;
