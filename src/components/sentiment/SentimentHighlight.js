@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, forEach } from 'lodash';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 const useStyles = makeStyles(theme => ({
@@ -69,15 +69,45 @@ const useStyles = makeStyles(theme => ({
 
 const SentimentHighlights = props => {
   const classes = useStyles();
-  const [currentTextId, setCurrentTextId] = React.useState(0);
   const [currentSelectedKeyword, setCurrentSelectedKeyword] = React.useState('');
   const [viewedHighlights, setViewedHighlights] = React.useState(0);
   const [highlightsData, setHighlightsData] = useState(props.highlightsData);
+  const keys = Object.keys(highlightsData);
+  const refValues = useRef({ count: 0, total: 0, selectedKeyIndex: 0, selectedWordIndex: 0 });
+  const defaultSelect = () => {
+    refValues.current.count = 0;
+    refValues.current.selectedKeyIndex = 0;
+    refValues.current.selectedWordIndex = 0;
+    refValues.current.count++;
+    props.clickHandle(
+      get(highlightsData, [
+        `${keys[refValues.current.selectedKeyIndex]}`,
+        refValues.current.selectedWordIndex,
+        `${keys[refValues.current.selectedKeyIndex]}`
+      ]),
+      true
+    );
+    document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
+    setViewedHighlights(refValues.current.count);
+  };
   useEffect(() => {
     if (props.highlightsData) {
       setHighlightsData(props.highlightsData);
     }
+    document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.highlightsData]);
+
+  useEffect(() => {
+    defaultSelect();
+    var total = 0;
+    forEach(highlightsData, function(key) {
+      total += key.length;
+    });
+    document.getElementById('totalhighlight').textContent = total;
+    refValues.current.total = total;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightsData]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -87,55 +117,66 @@ const SentimentHighlights = props => {
     }, 100);
   }, [viewedHighlights, currentSelectedKeyword]);
 
-  //   Index as path
-  const clickHandle = (key, index) => {
-    document.getElementById('selectedHighlightText').textContent = key + ':';
-    if (props.is_first_iteration.current > 0 && currentSelectedKeyword === key) {
-      handleNext(key);
-    } else {
-      document.getElementById('totalhighlight').textContent = get(highlightsData, `${key}`, []).length;
-      props.clickHandle(get(highlightsData, [`${key}`, index, `${key}`]), true);
-      setCurrentSelectedKeyword(key);
-      setViewedHighlights(index + 1);
-      setCurrentTextId(index + 1);
-      props.newTest(props.is_first_iteration.current + 1);
+  const handleNext = () => {
+    if (refValues.current.count === highlightsData[keys[refValues.current.selectedKeyIndex]].length) {
+      //select next word
+      refValues.current.selectedKeyIndex++;
+      refValues.current.selectedWordIndex = -1;
     }
+    if (refValues.current.count < refValues.current.total) {
+      //select next position of current selected word
+      refValues.current.count++;
+      props.is_first_iteration.current = 0;
+      refValues.current.selectedWordIndex++;
+    } else {
+      //re-select first word after complete cycle
+      refValues.current.count = 1;
+      refValues.current.selectedKeyIndex = 0;
+      refValues.current.selectedWordIndex = 0;
+      props.is_first_iteration.current = 1;
+    }
+    props.clickHandle(
+      get(highlightsData, [
+        `${keys[refValues.current.selectedKeyIndex]}`,
+        refValues.current.selectedWordIndex,
+        `${keys[refValues.current.selectedKeyIndex]}`
+      ]),
+      true
+    );
+    setCurrentSelectedKeyword(keys[refValues.current.selectedKeyIndex]);
+    document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
+    setViewedHighlights(refValues.current.count);
+    props.newTest(props.is_first_iteration.current + 1);
   };
 
-  const handleNext = () => {
-    if (get(highlightsData, `${currentSelectedKeyword}`, []).length === 1) {
-      return;
-    } else if (currentTextId + 1 > get(highlightsData, `${currentSelectedKeyword}`, []).length) {
-      props.newTest(0);
-      // props.is_first_iteration.current = 0;
-      clickHandle(currentSelectedKeyword, 0);
-    } else {
-      props.clickHandle(
-        get(highlightsData, [`${currentSelectedKeyword}`, currentTextId, `${currentSelectedKeyword}`]),
-        true
-      );
-      setViewedHighlights(currentTextId + 1);
-      setCurrentTextId(currentTextId + 1);
-    }
-  };
   const handlePre = () => {
-    if (get(highlightsData, `${currentSelectedKeyword}`, []).length === 1) {
-      return;
-    } else if (currentTextId - 1 <= 0) {
-      props.newTest(0);
-      // is_first_iteration.current = 0;
-      setCurrentTextId(get(highlightsData, `${currentSelectedKeyword}`, []).length - 1);
-      clickHandle(currentSelectedKeyword, get(highlightsData, `${currentSelectedKeyword}`, []).length - 1);
+    if (refValues.current.selectedWordIndex === 0) {
+      if (refValues.current.selectedKeyIndex === 0) {
+        refValues.current.selectedKeyIndex = keys.length - 1;
+      } else {
+        refValues.current.selectedKeyIndex--;
+      }
+      refValues.current.selectedWordIndex = highlightsData[keys[refValues.current.selectedKeyIndex]].length - 1;
     } else {
-      props.clickHandle(
-        get(highlightsData, [`${currentSelectedKeyword}`, currentTextId - 2, `${currentSelectedKeyword}`]),
-        true
-      );
-      setViewedHighlights(currentTextId - 1);
-      setCurrentTextId(currentTextId - 1);
+      refValues.current.selectedWordIndex--;
     }
+    if (refValues.current.count === 1) {
+      refValues.current.count = refValues.current.total;
+    } else {
+      refValues.current.count--;
+    }
+    props.clickHandle(
+      get(highlightsData, [
+        `${keys[refValues.current.selectedKeyIndex]}`,
+        refValues.current.selectedWordIndex,
+        `${keys[refValues.current.selectedKeyIndex]}`
+      ]),
+      true
+    );
+    document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
+    setViewedHighlights(refValues.current.count);
   };
-  const keys = Object.keys(highlightsData);
+
   return (
     <div>
       <Grid item xs={12} style={{ marginRight: '5px', paddingTop: '5px' }}>
@@ -202,9 +243,10 @@ const SentimentHighlights = props => {
                 marginBottom: '5px'
               }}>
               <div
-                onClick={e => {
-                  clickHandle(key, 0);
-                }}>
+              // onClick={e => {
+              //   clickHandle(key, 0);
+              // }}
+              >
                 {key}
               </div>
             </div>

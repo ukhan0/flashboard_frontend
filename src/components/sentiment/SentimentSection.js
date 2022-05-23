@@ -111,12 +111,12 @@ const SentimentSection = props => {
     if (indexVal) {
       indexVal = indexVal.toLowerCase().replace(' ', '-');
       if (!keywordsArray[indexVal]) {
-        keywordsArray[indexVal] = []
+        keywordsArray[indexVal] = [];
       }
-      const hashValue = createHash(`#${indexVal}${keywordsArray[indexVal]}text`)
-      const obj = {[indexVal]: hashValue}
+      const hashValue = createHash(`#${indexVal}${keywordsArray[indexVal]}text`);
+      const obj = { [indexVal]: hashValue };
       keywordsArray[indexVal].push(obj);
-      props.onHandleHighlights(keywordsArray)
+      props.onHandleHighlights(keywordsArray);
       return hashValue;
     } else {
       return '';
@@ -194,71 +194,76 @@ const SentimentSection = props => {
                                                     <React.Fragment key={`8_${e}`}>
                                                       {d.type === 'element' ? (
                                                         <>
-                                                            {Array.isArray(d.elements)
-                                                              ? d.elements.map((g, k) => {
-                                                                  if (g) {
-                                                                    yellowTextCount = yellowTextCount + 1;
-                                                                  }
+                                                          {Array.isArray(d.elements)
+                                                            ? d.elements.map((g, k) => {
+                                                                if (g) {
+                                                                  yellowTextCount = yellowTextCount + 1;
+                                                                }
 
-                                                                  if (g.type === 'element') {
-                                                                    if (
-                                                                      g.attributes &&
-                                                                      g.attributes.class === 'yellowColor'
-                                                                    ) {
-                                                                      d.attributes = g.attributes;
-                                                                    } else {
-                                                                      d.attributes = parentAttributes;
-                                                                    }
-                                                                    if (Array.isArray(g.elements)) {
-                                                                      g = g.elements[0];
-                                                                    } else {
-                                                                      d.attributes = parentAttributes;
-                                                                    }
+                                                                if (g.type === 'element') {
+                                                                  if (
+                                                                    g.attributes &&
+                                                                    g.attributes.class === 'yellowColor'
+                                                                  ) {
+                                                                    d.attributes = g.attributes;
                                                                   } else {
                                                                     d.attributes = parentAttributes;
                                                                   }
+                                                                  if (Array.isArray(g.elements)) {
+                                                                    g = g.elements[0];
+                                                                  } else {
+                                                                    d.attributes = parentAttributes;
+                                                                  }
+                                                                } else {
+                                                                  d.attributes = parentAttributes;
+                                                                }
 
-                                                                  return (
-                                                                    <span
-                                                                      id={updateSentimentHighlightFunct( d.attributes
-                                                                        ? d.attributes.class === 'yellowColor' ? g.text ? g.text : '' : '' : '')}
-                                                                      key={`4_${k}`}
-                                                                      style={{
-                                                                        backgroundColor: `${
-                                                                          d.attributes
-                                                                            ? d.attributes.class === 'yellowColor'
-                                                                              ? 'orange'
-                                                                              : '#' +
-                                                                                childClr(
-                                                                                  d.attributes ? d.attributes.v : 0
-                                                                                )
+                                                                return (
+                                                                  <span
+                                                                    id={updateSentimentHighlightFunct(
+                                                                      d.attributes
+                                                                        ? d.attributes.class === 'yellowColor'
+                                                                          ? g.text
+                                                                            ? g.text
+                                                                            : ''
+                                                                          : ''
+                                                                        : ''
+                                                                    )}
+                                                                    key={`4_${k}`}
+                                                                    style={{
+                                                                      backgroundColor: `${
+                                                                        d.attributes
+                                                                          ? d.attributes.class === 'yellowColor'
+                                                                            ? 'orange'
                                                                             : '#' +
                                                                               childClr(
                                                                                 d.attributes ? d.attributes.v : 0
                                                                               )
-                                                                        }`,
-                                                                        paddingLeft: 2,
-                                                                        paddingRight: 2,
-                                                                        //borderRadius: 4,
-                                                                        borderRadius: `${
-                                                                          d.attributes
-                                                                            ? d.attributes.class === 'yellowColor'
-                                                                              ? 4
-                                                                              : 0
+                                                                          : '#' +
+                                                                            childClr(d.attributes ? d.attributes.v : 0)
+                                                                      }`,
+                                                                      paddingLeft: 2,
+                                                                      paddingRight: 2,
+                                                                      //borderRadius: 4,
+                                                                      borderRadius: `${
+                                                                        d.attributes
+                                                                          ? d.attributes.class === 'yellowColor'
+                                                                            ? 4
                                                                             : 0
-                                                                        }`,
-                                                                        scrollMarginTop: '300px'
-                                                                      }}>
-                                                                      {g.text ? g.text : g.name === 'br' ? <br /> : ''}
-                                                                    </span>
-                                                                  );
-                                                                })
-                                                              : null}
-                                                            {d.name === 'br' ? (
-                                                              <>
-                                                                <br /> <br />{' '}
-                                                              </>
-                                                            ) : null}
+                                                                          : 0
+                                                                      }`,
+                                                                      scrollMarginTop: '300px'
+                                                                    }}>
+                                                                    {g.text ? g.text : g.name === 'br' ? <br /> : ''}
+                                                                  </span>
+                                                                );
+                                                              })
+                                                            : null}
+                                                          {d.name === 'br' ? (
+                                                            <>
+                                                              <br /> <br />{' '}
+                                                            </>
+                                                          ) : null}
                                                           {/* </span> */}
                                                         </>
                                                       ) : (
