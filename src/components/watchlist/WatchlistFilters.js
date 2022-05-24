@@ -33,7 +33,6 @@ const WatchlistFilters = props => {
     cancelExistingDocumentTypeCalls,
     isEmailAlertEnable,
     selectedItem,
-    filterLabel
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
@@ -198,21 +197,6 @@ const WatchlistFilters = props => {
                 name="checkedB"
                 inputProps={{ 'aria-label': 'primary checkbox' }}
               />
-            </div>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item>
-        <Grid container direction="row" alignItems="center">
-          <Grid item>
-            <Typography style={{ paddingTop: '20px' }} color="primary">
-              Screen Name:
-            </Typography>
-          </Grid>
-          <Grid item>
-            <div style={{ paddingTop: '20px' }}>
-              {/* <span className="m-1 badge badge-success">{filterLabel?filterLabel:"k"}</span> */}
-              <Typography color="primary">{filterLabel}</Typography>
             </div>
           </Grid>
         </Grid>

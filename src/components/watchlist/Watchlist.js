@@ -433,13 +433,13 @@ const Watchlist = props => {
     getSavedFilters();
   }, [getSavedFilters]);
 
-  const saveFilter = async filterLabel => {
+  const saveFilter = async text => {
     if (!isEmpty(getFilteringState())) {
       try {
         const response = await axios.post(`${config.apiUrl}/api/save_watchlist_searches`, {
           searchJson: getFilteringState(),
           tableType: selectedType,
-          filterLabel: filterLabel
+          filterLabel: text
         });
         const responsePayload = get(response, 'data', null);
         if (responsePayload && !responsePayload.error) {
@@ -470,12 +470,12 @@ const Watchlist = props => {
     }
   };
 
-  const updateFilter = async () => {
+  const updateFilter = async text => {
     try {
       const response = await axios.put(`${config.apiUrl}/api/update_watchlist_search?filterId=${selectedFilter.id}`, {
         searchJson: getFilteringState(),
         tableType: selectedType,
-        filterLabel: filterLabel
+        filterLabel: text
       });
 
       const responsePayload = get(response, 'data', null);
@@ -545,56 +545,62 @@ const Watchlist = props => {
         </div>
       ) : null}
       <Grid container direction="row" alignItems="flex-end" className={classes.space}>
-        <Grid item xs={9}>
+        <Grid item xs={8}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-end">
             <Grid item>
               <WatchlistFilters />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            <Box className="d-flex align-items-center">
-              {isFilterActive || isFilterActiveOnSearch ? (
-                <>
-                  <Button
-                    color="primary"
-                    className={classes.button}
-                    size="small"
-                    variant="contained"
-                    onClick={() => {
-                      setConfirmationClearFilterDialog(true);
-                    }}>
-                    Clear Filters
-                  </Button>
-                  {isFilterUpdate ? (
+            <Grid item>
+              <div className="text-black-50 opacity-6">{filterLabel}</div>
+              <Box className="d-flex align-items-center">
+                {isFilterActive || isFilterActiveOnSearch ? (
+                  <>
+                    {isFilterUpdate && savedFiltersList.length >= 1 ? (
+                      <>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          className={classes.button}
+                          size="small"
+                          onClick={() => {
+                            handleOpenAgGridFilterLabelDialog();
+                          }}>
+                          Update Screen
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        className={classes.button}
+                        size="small"
+                        onClick={() => {
+                          handleOpenAgGridFilterLabelDialog();
+                        }}>
+                        Save Screen
+                      </Button>
+                    )}
                     <Button
                       color="primary"
-                      variant="contained"
                       className={classes.button}
                       size="small"
-                      onClick={() => {
-                        handleOpenAgGridFilterLabelDialog();
-                      }}>
-                      Update Screen
-                    </Button>
-                  ) : (
-                    <Button
-                      color="primary"
                       variant="contained"
-                      className={classes.button}
-                      size="small"
                       onClick={() => {
-                        handleOpenAgGridFilterLabelDialog();
+                        setConfirmationClearFilterDialog(true);
                       }}>
-                      Save Screen
+                      Clear Filters
                     </Button>
-                  )}
-                </>
-              ) : null}
-            </Box>
+                  </>
+                ) : null}
+              </Box>
+            </Grid>
             <Grid item>
               <Button
+                style={{ marginTop: filterLabel.length > 2 ? '20px' : 0 }}
                 color="primary"
                 variant="contained"
                 className={classes.button}

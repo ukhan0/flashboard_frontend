@@ -11,7 +11,6 @@ import {
   ListItemSecondaryAction
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import WatchlistService from './WatchlistService';
 import { setIsFilterUpdate, setSelectedFilter, setFilterLabel } from '../../reducers/Watchlist';
@@ -79,14 +78,6 @@ function WatchlistFiltersList(props) {
                   }}>
                   <ListItemText primary={<p className={classes.label}>{f.filter_label ? f.filter_label : 'no'}</p>} />
                   <ListItemSecondaryAction>
-                    <IconButton
-                      aria-label="comments"
-                      size="small"
-                      onClick={e => {
-                        setFilters(f, true);
-                      }}>
-                      <EditIcon className={classes.editIcon} />
-                    </IconButton>
                     <IconButton
                       aria-label="comments"
                       size="small"

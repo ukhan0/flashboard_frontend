@@ -21,10 +21,17 @@ const useStyles = makeStyles(theme => ({
 
 export default function AlertDialog(props) {
   const dispatch = useDispatch();
+  const [text, setText] = React.useState('');
   const { filterLabel, isFilterUpdate } = useSelector(state => state.Watchlist);
   const classes = useStyles();
+
+  React.useEffect(() => {
+    setText(filterLabel);
+  }, [filterLabel]);
   const hanldeFilterLabel = e => {
-    dispatch(setFilterLabel(e.target.value));
+    if (text.length <= 30) {
+      setText(e.target.value);
+    }
   };
   return (
     <div>
@@ -42,27 +49,29 @@ export default function AlertDialog(props) {
             <TextField
               size="small"
               fullWidth
-              value={filterLabel}
+              value={text}
               onChange={e => {
                 hanldeFilterLabel(e);
               }}
               variant="outlined"
+              helperText={text.length > 30 ? 'The maximum number of characters is 30' : null}
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
-            disabled={filterLabel.length > 2 ? false : true}
+            disabled={text.length > 2 ? false : true}
             style={{ width: '100px' }}
             variant="contained"
             color="primary"
             onClick={() => {
               if (isFilterUpdate) {
-                props.updateFilter();
+                props.updateFilter(text);
               } else {
-                props.saveFilter(filterLabel);
+                props.saveFilter(text);
               }
               dispatch(setFilterLabel(''));
+              setText('');
               dispatch(setIsFilterUpdate(false));
             }}>
             Save
@@ -75,7 +84,7 @@ export default function AlertDialog(props) {
             onClick={() => {
               props.handleCloseAgGridFilterLabelDialog();
               if (!isFilterUpdate) {
-                dispatch(setFilterLabel(''));
+                setText('');
               }
             }}>
             Cancel
