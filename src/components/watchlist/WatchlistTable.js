@@ -521,12 +521,10 @@ const WatchlistTable = props => {
   };
 
   const storeFilteringState = params => {
-    console.log('rehans');
     const filteringModel = params.api.getFilterModel();
     props.storeFilteringState(filteringModel);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
-
   const handleColumnHideForSedar = gridApiLocal => {
     const columnDefs = colDefs;
     columnDefs.forEach(function(colDef) {

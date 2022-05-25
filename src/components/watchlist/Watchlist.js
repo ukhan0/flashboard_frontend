@@ -432,7 +432,7 @@ const Watchlist = props => {
     } catch (error) {
       setSavedFilters([]);
     }
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     getSavedFilters();
   }, [getSavedFilters]);
