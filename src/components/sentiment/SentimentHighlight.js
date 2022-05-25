@@ -73,20 +73,25 @@ const SentimentHighlights = props => {
   const [viewedHighlights, setViewedHighlights] = React.useState(0);
   const [highlightsData, setHighlightsData] = useState(props.highlightsData);
   const keys = Object.keys(highlightsData);
-  const refValues = useRef({ count: 0, total: 0, selectedKeyIndex: 0, selectedWordIndex: 0 });
+  const refValues = useRef({ count: 0, total: 0, selectedKeyIndex: 0, selectedWordIndex: 0, blueTextId: null });
   const defaultSelect = () => {
     refValues.current.count = 0;
     refValues.current.selectedKeyIndex = 0;
     refValues.current.selectedWordIndex = 0;
     refValues.current.count++;
-    props.clickHandle(
-      get(highlightsData, [
-        `${keys[refValues.current.selectedKeyIndex]}`,
-        refValues.current.selectedWordIndex,
-        `${keys[refValues.current.selectedKeyIndex]}`
-      ]),
-      true
-    );
+    refValues.current.blueTextId = get(highlightsData, [
+      `${keys[refValues.current.selectedKeyIndex]}`,
+      refValues.current.selectedWordIndex,
+      `${keys[refValues.current.selectedKeyIndex]}`
+    ]);
+    props.clickHandle(refValues.current.blueTextId, true);
+    if (document.getElementById(refValues.current.blueTextId)) {
+      document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
+      setTimeout(() => {
+        document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
+      }, [1000]);
+    }
+
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
   };
@@ -118,7 +123,7 @@ const SentimentHighlights = props => {
   }, [viewedHighlights, currentSelectedKeyword]);
 
   const handleNext = () => {
-    if (refValues.current.count === highlightsData[keys[refValues.current.selectedKeyIndex]].length) {
+    if (refValues.current.selectedWordIndex === highlightsData[keys[refValues.current.selectedKeyIndex]].length - 1) {
       //select next word
       refValues.current.selectedKeyIndex++;
       refValues.current.selectedWordIndex = -1;
@@ -135,14 +140,16 @@ const SentimentHighlights = props => {
       refValues.current.selectedWordIndex = 0;
       props.is_first_iteration.current = 1;
     }
-    props.clickHandle(
-      get(highlightsData, [
-        `${keys[refValues.current.selectedKeyIndex]}`,
-        refValues.current.selectedWordIndex,
-        `${keys[refValues.current.selectedKeyIndex]}`
-      ]),
-      true
-    );
+    refValues.current.blueTextId = get(highlightsData, [
+      `${keys[refValues.current.selectedKeyIndex]}`,
+      refValues.current.selectedWordIndex,
+      `${keys[refValues.current.selectedKeyIndex]}`
+    ]);
+    props.clickHandle(refValues.current.blueTextId, true);
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
+    setTimeout(() => {
+      document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
+    }, [1000]);
     setCurrentSelectedKeyword(keys[refValues.current.selectedKeyIndex]);
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
@@ -165,14 +172,16 @@ const SentimentHighlights = props => {
     } else {
       refValues.current.count--;
     }
-    props.clickHandle(
-      get(highlightsData, [
-        `${keys[refValues.current.selectedKeyIndex]}`,
-        refValues.current.selectedWordIndex,
-        `${keys[refValues.current.selectedKeyIndex]}`
-      ]),
-      true
-    );
+    refValues.current.blueTextId = get(highlightsData, [
+      `${keys[refValues.current.selectedKeyIndex]}`,
+      refValues.current.selectedWordIndex,
+      `${keys[refValues.current.selectedKeyIndex]}`
+    ]);
+    props.clickHandle(refValues.current.blueTextId, true);
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
+    setTimeout(() => {
+      document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
+    }, [1000]);
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
   };

@@ -8,7 +8,7 @@ import {
 
 import { setFillingsSearchText } from '../../reducers/Filings';
 import { get } from 'lodash';
-
+// import SentimentDummyData from './dummySentimentData'
 import config from '../../config/config';
 import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers';
 
@@ -57,7 +57,10 @@ export const getSentimentData = () => {
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);
-      if (response) {
+
+      // const data = SentimentDummyData;
+
+      if (data) {
         dispatch(setSentimentResult(data, recentId));
         dispatch(setFillingsSearchText(''));
       } else {

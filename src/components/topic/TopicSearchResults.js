@@ -186,7 +186,7 @@ const TopicSearchResults = () => {
     }
   }, [selectedCompanyName, summaryByCompany]);
 
-  const goToSentimentScreen = (companyDocumentResultData, result) => {
+  const goToSentimentScreen = (companyDocumentResultData, result, indexx) => {
     dispatch(setIsFromfilling(false));
     const actualTitle = result.title.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
@@ -227,7 +227,8 @@ const TopicSearchResults = () => {
         })
       );
     }
-    if (isGoToSentiment) {
+    if (indexx === enableBoxId) {
+    } else {
       dispatch(setSentimentSearchIndex(result.index));
       dispatch(setIsFromThemex(true));
       history.push('/sentiment');
@@ -253,7 +254,6 @@ const TopicSearchResults = () => {
       setAnchorPoint({ x: e.pageX, y: e.pageY });
     }
     if (diffX < delta && diffY < delta) {
-      setIsGotoSentiment(true);
     }
   };
 
@@ -420,7 +420,7 @@ const TopicSearchResults = () => {
                                         'font-size-mg mb-2 text-black-50'
                                       )}
                                       dangerouslySetInnerHTML={{ __html: htmlContentToShow }}
-                                      onClick={e => goToSentimentScreen(companyResult, result)}
+                                      onClick={e => goToSentimentScreen(companyResult, result, indexx)}
                                       onMouseUp={e => handleMouseUp(e, indexx)}
                                       onMouseDown={e => handleMouseDown(e, indexx)}></p>
                                   </>
