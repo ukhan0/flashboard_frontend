@@ -421,7 +421,11 @@ const Watchlist = props => {
       const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
-        setSavedFilters(get(responsePayload, 'data', []));
+        let respData = get(responsePayload, 'data', []);
+        setSavedFilters(respData);
+        if (respData.length < 1) {
+          dispatch(setFilterLabel(''));
+        }
       } else {
         setSavedFilters([]);
       }
@@ -555,7 +559,9 @@ const Watchlist = props => {
         <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Grid item>
-              <div className="text-black-50 opacity-6">{filterLabel}</div>
+              <div className="text-black-50 opacity-6" style={{ paddingLeft: '10px' }}>
+                {filterLabel}
+              </div>
               <Box className="d-flex align-items-center">
                 {isFilterActive || isFilterActiveOnSearch ? (
                   <>
@@ -600,7 +606,7 @@ const Watchlist = props => {
             </Grid>
             <Grid item>
               <Button
-                style={{ marginTop: filterLabel.length > 2 ? '20px' : 0 }}
+                style={{ marginTop: filterLabel.length > 2 ? '20px' : null }}
                 color="primary"
                 variant="contained"
                 className={classes.button}
