@@ -67,11 +67,15 @@ const WatchlistFilters = props => {
   };
 
   const handleClickType = key => {
-    dispatch(setSelectedWatchlist(null));
-    dispatch(setWatchlistType(key));
-    dispatch(setIsNewWatchlistDataAvailable(true));
-    if (cancelExistingDocumentTypeCalls) {
-      cancelExistingDocumentTypeCalls.cancel();
+    if (key != selectedType)
+    {
+      props.clearFilterHandler();
+      dispatch(setSelectedWatchlist(null));
+      dispatch(setWatchlistType(key));
+      dispatch(setIsNewWatchlistDataAvailable(true));
+      if (cancelExistingDocumentTypeCalls) {
+        cancelExistingDocumentTypeCalls.cancel();
+      }
     }
   };
 

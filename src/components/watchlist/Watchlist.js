@@ -552,7 +552,7 @@ const Watchlist = props => {
         <Grid item xs={8}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-end">
             <Grid item>
-              <WatchlistFilters />
+              <WatchlistFilters clearFilterHandler={clearFilterHandler} />
             </Grid>
           </Grid>
         </Grid>
@@ -596,7 +596,8 @@ const Watchlist = props => {
                       size="small"
                       variant="contained"
                       onClick={() => {
-                        setConfirmationClearFilterDialog(true);
+                        // setConfirmationClearFilterDialog(true);
+                        clearFilterHandler();
                       }}>
                       Clear Filters
                     </Button>
