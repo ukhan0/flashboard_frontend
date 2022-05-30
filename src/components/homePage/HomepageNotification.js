@@ -36,8 +36,8 @@ export default function HomepageNotification() {
           apikey: 'c5ceb6f582038248f453e7318e934528'
         }
       });
-      const data = get(response, 'data', []);
-      if (response) {
+      if (response.data.length > 1) {
+        const data = get(response, 'data', []);
         setUpcomingCalls(data);
         dispatch(setHomePageLoader(false));
       }
@@ -85,7 +85,7 @@ export default function HomepageNotification() {
                 </div>
               </div>
             ))}
-            <hr></hr>
+            ;<hr></hr>
             {notifications?.map((data, index) => (
               <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                 <div
