@@ -17,7 +17,6 @@ export default function HomepageNotification() {
   const history = useHistory();
 
   const handleNotificationClick = url => {
-    // window.location.href = url;
     window.open(url, '_blank');
   };
 
@@ -52,11 +51,13 @@ export default function HomepageNotification() {
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Notifications</div>
-        <div className="card-header--title font-weight-bold">Upcoming Earning Calls</div>
       </div>
       <div>
         <div style={{ height: '500px' }}>
           <PerfectScrollbar>
+            <div className="card-header--title font-weight-bold " style={{ textAlign: 'center', padding: '10px' }}>
+              Upcoming Earning Calls
+            </div>
             {notificationData.map((data, index) => (
               <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                 <div
@@ -68,11 +69,13 @@ export default function HomepageNotification() {
                   </div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
-                    <h4 className="timeline-item--label mb-2 font-weight-bold">{data.title}</h4>
-                    <p>Symbol at: {data.symbol}</p>
-                    <p style={{ paddingRight: '20px', textAlign: 'right' }}>
-                      {moment(data.date + 'T' + data.time + ':' + '00').format('DD-MM-YYYY')}
-                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '20px' }}>
+                      <h4 className="timeline-item--label mb-2 ">{data.symbol}</h4>
+                      <h4 className="timeline-item--label mb-2 " style={{ textAlign: 'right' }}>
+                        {moment(data.date + 'T' + data.time + ':' + '00').format('DD-MM-YYYY')}
+                      </h4>
+                    </div>
+                    <p>{data.title}</p>
                   </div>
                 </div>
               </div>
