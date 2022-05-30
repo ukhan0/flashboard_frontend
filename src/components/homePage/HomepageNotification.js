@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { setHomePageLoader } from '../../reducers/HomePage';
 import axios from 'axios';
 import { get } from 'lodash';
+import config from '../../config/config';
 
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
@@ -33,7 +34,7 @@ export default function HomepageNotification() {
         params: {
           from: now.format('YYYY-MM-DD'),
           to: now.add(1, 'M').format('YYYY-MM-DD'),
-          apikey: 'c5ceb6f582038248f453e7318e934528'
+          apikey: config.upcomingEarningCalls
         }
       });
       if (response.data.length > 1) {
