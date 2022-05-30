@@ -12,9 +12,14 @@ import { get } from 'lodash';
 
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
-  const [notificationData, setNotificationData] = React.useState([]);
+  const [upcomingCalls, setUpcomingCalls] = React.useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const handleEmailTemplate = (t, title) => {
+    dispatch(setEmailTemplate({ emailTemplate: t, title: title }));
+    history.push('./notification');
+  };
 
   const handleNotificationClick = url => {
     window.open(url, '_blank');
@@ -33,12 +38,12 @@ export default function HomepageNotification() {
       });
       const data = get(response, 'data', []);
       if (response) {
-        setNotificationData(data);
+        setUpcomingCalls(data);
         dispatch(setHomePageLoader(false));
       }
     } catch (error) {
       console.log(error);
-      setNotificationData([]);
+      setUpcomingCalls([]);
       dispatch(setHomePageLoader(false));
     }
   };
@@ -58,7 +63,7 @@ export default function HomepageNotification() {
             <div className="card-header--title font-weight-bold " style={{ textAlign: 'center', padding: '10px' }}>
               Upcoming Earning Calls
             </div>
-            {notificationData.map((data, index) => (
+            {upcomingCalls?.map((data, index) => (
               <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                 <div
                   className="timeline-item"
@@ -76,6 +81,22 @@ export default function HomepageNotification() {
                       </h4>
                     </div>
                     <p>{data.title}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <hr></hr>
+            {notifications?.map((data, index) => (
+              <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
+                <div
+                  className="timeline-item"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleEmailTemplate(data.emailTemplate, data.title)}>
+                  <div className="timeline-item-offset">{moment(data.created_date).format('LT')}</div>
+                  <div className="timeline-item--content">
+                    <div className="timeline-item--icon"></div>
+                    <h4 className="timeline-item--label mb-2 font-weight-bold">{data.title}</h4>
+                    <p>{data.description}</p>
                   </div>
                 </div>
               </div>
