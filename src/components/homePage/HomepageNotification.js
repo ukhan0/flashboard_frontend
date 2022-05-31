@@ -8,7 +8,7 @@ import { setEmailTemplate } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
 import { setHomePageLoader } from '../../reducers/HomePage';
 import axios from 'axios';
-import { get,reverse } from 'lodash';
+import { forEach, get, reverse } from 'lodash';
 import config from '../../config/config';
 
 export default function HomepageNotification() {
@@ -40,6 +40,15 @@ export default function HomepageNotification() {
       if (response.data.length > 1) {
         const data = get(response, 'data', []);
         reverse(data);
+        //place datetime object in all items
+        forEach(data, function(item) {
+          item['datetime'] = moment(item.date + 'T' + item.time + ':' + '00');
+        });
+        //re-sort data by time in ascending order
+        data.sort(function(a, b) {
+          return a.datetime - b.datetime;
+        });
+
         setUpcomingCalls(data);
         dispatch(setHomePageLoader(false));
       }
