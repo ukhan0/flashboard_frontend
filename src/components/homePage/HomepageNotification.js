@@ -8,7 +8,7 @@ import { setEmailTemplate } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
 import { setHomePageLoader } from '../../reducers/HomePage';
 import axios from 'axios';
-import { get } from 'lodash';
+import { get,reverse } from 'lodash';
 import config from '../../config/config';
 
 export default function HomepageNotification() {
@@ -39,6 +39,7 @@ export default function HomepageNotification() {
       });
       if (response.data.length > 1) {
         const data = get(response, 'data', []);
+        reverse(data);
         setUpcomingCalls(data);
         dispatch(setHomePageLoader(false));
       }
@@ -78,7 +79,7 @@ export default function HomepageNotification() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '20px' }}>
                       <h4 className="timeline-item--label mb-2 ">{data.symbol}</h4>
                       <h4 className="timeline-item--label mb-2 " style={{ textAlign: 'right' }}>
-                        {moment(data.date + 'T' + data.time + ':' + '00').format('DD-MM-YYYY')}
+                        {moment(data.date + 'T' + data.time + ':' + '00').format('MM/DD/YYYY')}
                       </h4>
                     </div>
                     <p>{data.title}</p>
