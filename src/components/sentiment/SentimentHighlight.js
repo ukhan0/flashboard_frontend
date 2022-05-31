@@ -86,10 +86,7 @@ const SentimentHighlights = props => {
     ]);
     props.clickHandle(refValues.current.blueTextId, true);
     if (document.getElementById(refValues.current.blueTextId)) {
-      document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
-      setTimeout(() => {
-        document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
-      }, [1000]);
+      document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#33ffff';
     }
 
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
@@ -140,16 +137,14 @@ const SentimentHighlights = props => {
       refValues.current.selectedWordIndex = 0;
       props.is_first_iteration.current = 1;
     }
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
     refValues.current.blueTextId = get(highlightsData, [
       `${keys[refValues.current.selectedKeyIndex]}`,
       refValues.current.selectedWordIndex,
       `${keys[refValues.current.selectedKeyIndex]}`
     ]);
     props.clickHandle(refValues.current.blueTextId, true);
-    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
-    setTimeout(() => {
-      document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
-    }, [1000]);
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#33ffff';
     setCurrentSelectedKeyword(keys[refValues.current.selectedKeyIndex]);
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
@@ -172,16 +167,14 @@ const SentimentHighlights = props => {
     } else {
       refValues.current.count--;
     }
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
     refValues.current.blueTextId = get(highlightsData, [
       `${keys[refValues.current.selectedKeyIndex]}`,
       refValues.current.selectedWordIndex,
       `${keys[refValues.current.selectedKeyIndex]}`
     ]);
     props.clickHandle(refValues.current.blueTextId, true);
-    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
-    setTimeout(() => {
-      document.getElementById(refValues.current.blueTextId).style.backgroundColor = 'orange';
-    }, [1000]);
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#33ffff';
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
   };
