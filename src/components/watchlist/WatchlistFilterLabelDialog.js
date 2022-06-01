@@ -70,9 +70,9 @@ export default function AlertDialog(props) {
               } else {
                 props.saveFilter(text);
               }
-              dispatch(setFilterLabel(''));
-              setText('');
               dispatch(setIsFilterUpdate(false));
+              dispatch(setFilterLabel(text));
+              setText('');
             }}>
             Save
           </Button>

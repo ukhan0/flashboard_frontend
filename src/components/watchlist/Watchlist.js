@@ -59,7 +59,17 @@ import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
 };
-
+const screenTitle={
+  border:"1px solid LightGray",
+  padding:"5px",
+  marginLeft:"3%",
+  backgroundColor:"white",
+  fontWeight:"bold",
+  position:"relative",
+  top:"12px",
+  zIndex:"1",
+  
+}
 const Watchlist = props => {
   const history = useHistory();
   const classes = useStyles();
@@ -481,11 +491,10 @@ const Watchlist = props => {
         tableType: selectedType,
         filterLabel: text
       });
-
+      
       const responsePayload = get(response, 'data', null);
-
       if (!responsePayload.error) {
-        clearFilterHandler();
+        // clearFilterHandler();
         getSavedFilters();
         setSnackBar({ isSnackBar: true, message: 'filter updated successfully', severity: 'success' });
       } else {
@@ -560,7 +569,7 @@ const Watchlist = props => {
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Grid item>
               <div className="text-black-50 opacity-6" style={{ paddingLeft: '10px' }}>
-                {filterLabel}
+                <span>‎</span>
               </div>
               <Box className="d-flex align-items-center">
                 {isFilterActive || isFilterActiveOnSearch ? (
@@ -623,7 +632,7 @@ const Watchlist = props => {
           </Grid>
         </Grid>
       </Grid>
-
+      <span style={filterLabel?screenTitle:{display:"none"}}>{filterLabel}</span>
       <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
         <WatchlistTable
           data={gridData}
