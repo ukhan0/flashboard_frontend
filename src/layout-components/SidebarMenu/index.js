@@ -8,6 +8,7 @@ import { List, Typography } from '@material-ui/core';
 import useRouter from 'utils/useRouter';
 import SidebarMenuListItem from './SidebarMenuListItem';
 import { useSelector } from 'react-redux';
+import { isActive } from '../../components/watchlist/WatchlistHelpers';
 
 const SidebarMenuList = props => {
   const { pages, ...rest } = props;
@@ -58,7 +59,7 @@ const reduceChildRoutes = props => {
         key={page.label}
         label={page.badge}
         title={page.label}
-        disabled={selectedItem ? (page.label === 'Comparison' && !selectedItem.oldId ? true : page.disabled) : true}
+        disabled={selectedItem ? isActive(page, selectedItem) : true}
       />
     );
   }
