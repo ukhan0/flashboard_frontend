@@ -53,7 +53,7 @@ export default function HomepageNotification() {
         dispatch(setHomePageLoader(false));
       }
     } catch (error) {
-      console.log(error);
+      console.error("Internal server error:",error);
       setUpcomingCalls([]);
       dispatch(setHomePageLoader(false));
     }
