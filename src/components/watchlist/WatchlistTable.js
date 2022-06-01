@@ -22,6 +22,7 @@ import WordStatus from './WatchlistTableComponents/WordStatus';
 import AddRemoveIcon from './WatchlistTableComponents/AddRemoveIcon';
 import TickerLogo from './WatchlistTableComponents/TickerLogo';
 import CountryCodeRenderer from './WatchlistTableComponents/CountryCodeRenderer';
+import TweetsIcon from './WatchlistTableComponents/tweet';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
@@ -33,7 +34,8 @@ const frameworkComponents = {
   AddRemoveIcon: AddRemoveIcon,
   TickerLogo: TickerLogo,
   actions: Action,
-  CountryCodeRenderer: CountryCodeRenderer
+  CountryCodeRenderer: CountryCodeRenderer,
+  TweetIcon: TweetsIcon
 };
 
 const defaultColDef = {
@@ -97,7 +99,7 @@ const colDefs = [
     field: 'isTickerActive',
     colId: 'actions',
     filter: false,
-    cellClass: ['center-align-left', 'no-padding'],
+    cellClass: ['center-align-left'],
     cellRenderer: 'AddRemoveIcon',
     width: 36,
     resizable: false,
@@ -106,6 +108,22 @@ const colDefs = [
     pinned: 'left',
     headerClass: ['actionColumnHeader']
   },
+  {
+    headerName: 'Tweets',
+    headerTooltip: 'Tweets',
+    field: 'flag',
+    colId: 'flag',
+    filter: false,
+    cellClass: ['align-left'],
+    cellRenderer: 'TweetIcon',
+    width: 36,
+    resizable: false,
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
+  },
+ 
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',
