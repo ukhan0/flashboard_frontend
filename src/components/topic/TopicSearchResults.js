@@ -110,7 +110,6 @@ const TopicSearchResults = () => {
   const [summaryByCompany, setSummaryByCompany] = useState([]);
   const [x, setX] = useState('');
   const [y, setY] = useState('');
-  const [isGoToSentiment, setIsGotoSentiment] = useState(false);
   const searchRegex = / data/gi;
   const companyResultsDiv = useRef(null);
   let tooltipMessage = 'Enable edit and then drag mouse on words to add them in your search term';

@@ -9,7 +9,11 @@ import { get, uniqBy } from 'lodash';
 import { BeatLoader } from 'react-spinners';
 import { getWatchlist } from '../watchlist/watchlistApiCalls';
 import SocketService from '../../socketService';
-
+import io from 'socket.io-client';
+import config from 'config/config';
+import { lastTweets } from './HomePageHelpers';
+const socket = io.connect(config.socketUrl);
+SocketService.init(socket);
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -72,7 +76,7 @@ const useStyles = makeStyles(theme => ({
 const TopicSearchResults = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const tweets = useRef([]);
+  const tweets = useRef(lastTweets());
   const [renderTime, setRenderTime] = useState(0);
   const [userWatchlist, setUserWatchlist] = React.useState([]);
   const { selectedFileType, selectedType } = useSelector(state => state.Watchlist);
@@ -82,6 +86,12 @@ const TopicSearchResults = () => {
   }, [dispatch, selectedFileType, selectedType]);
   useEffect(() => {
     getUserWatchlist();
+    const lastTweets = JSON.stringify(tweets.current);
+    return () => {
+      socket.close();
+
+      localStorage.setItem('lastTweets', lastTweets);
+    };
   }, [getUserWatchlist]);
   useEffect(() => {
     for (let i = 0; i < userWatchlist.length; i++) {
@@ -120,7 +130,7 @@ const TopicSearchResults = () => {
           <Grid item></Grid>
         </Grid>
 
-        <div style={{ height: '600px', margin: ' 10px' }}>
+        <div style={{ height: '600px', margin: ' 10px', paddingBottom: '30px' }}>
           <PerfectScrollbar>
             {uniqBy(tweets.current, 'actor.id').map((v, index) => {
               return (

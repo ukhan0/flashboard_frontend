@@ -86,7 +86,7 @@ const SentimentHighlights = props => {
     ]);
     props.clickHandle(refValues.current.blueTextId, true);
     if (document.getElementById(refValues.current.blueTextId)) {
-      document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
+      document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#33ffff';
     }
 
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
@@ -144,7 +144,7 @@ const SentimentHighlights = props => {
       `${keys[refValues.current.selectedKeyIndex]}`
     ]);
     props.clickHandle(refValues.current.blueTextId, true);
-    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#33ffff';
     setCurrentSelectedKeyword(keys[refValues.current.selectedKeyIndex]);
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
@@ -174,7 +174,7 @@ const SentimentHighlights = props => {
       `${keys[refValues.current.selectedKeyIndex]}`
     ]);
     props.clickHandle(refValues.current.blueTextId, true);
-    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#0081cd';
+    document.getElementById(refValues.current.blueTextId).style.backgroundColor = '#33ffff';
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
   };
