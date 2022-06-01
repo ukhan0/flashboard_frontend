@@ -79,10 +79,12 @@ export const formatData = rawDataArr => {
 
 export const formatComapnyData = rawData => {
   return {
-    ticker: get(rawData, "ticker", null),
+    ticker: get(rawData, 'ticker', null),
     companyName: rawData.b,
-    industry: (getSectorIndustryById(rawData.cc).industry) ? getSectorIndustryById(rawData.cc).industry : get(rawData, "d"),
-    sector: (getSectorIndustryById(rawData.cc).sector) ? getSectorIndustryById(rawData.cc).sector : get(rawData, "c") ,
+    industry: getSectorIndustryById(rawData.cc).industry
+      ? getSectorIndustryById(rawData.cc).industry
+      : get(rawData, 'd'),
+    sector: getSectorIndustryById(rawData.cc).sector ? getSectorIndustryById(rawData.cc).sector : get(rawData, 'c'),
     mktcap: rawData.e,
     adv: rawData.f,
     last10k: rawData.last_10k,
@@ -97,10 +99,11 @@ export const formatComapnyData = rawData => {
     periodDate10k: rawData['ca'],
     periodDate10q: rawData['cb'],
     isTickerActive: get(rawData, 'isTickerActive', false),
-    documentId: get(rawData, "document_id", null),
-    cid:  get(rawData, "cid", null),
-    companyId: get(rawData, "cid", null),
-    countryCode: get(rawData, "co", null),
+    documentId: get(rawData, 'document_id', null),
+    cid: get(rawData, 'cid', null),
+    companyId: get(rawData, 'cid', null),
+    countryCode: get(rawData, 'co', null),
+    flag: get(rawData, 'cp', null)
   };
 };
 
@@ -166,9 +169,9 @@ export const saveUser = user => {
 };
 
 export const getWatchlistType = () => {
-  const watchlistSetting = getWatchlistSettings()
-  return watchlistSetting.selectedType
-}
+  const watchlistSetting = getWatchlistSettings();
+  return watchlistSetting.selectedType;
+};
 
 export const getWatchlistSettings = () => {
   const settings = JSON.parse(localStorage.getItem('watchlistSetting'));
@@ -177,4 +180,15 @@ export const getWatchlistSettings = () => {
 };
 export const saveWatchlistSettings = setting => {
   localStorage.setItem('watchlistSetting', JSON.stringify(setting));
+};
+
+export const isActive = (page, selectedItem) => {
+  let status = page.disabled;
+  if (page.label === 'Comparison' && !selectedItem.oldId) {
+    status = true;
+  }
+  if (page.label === 'Social Sentiment' && selectedItem.flag === '0') {
+    status = true;
+  }
+  return status;
 };

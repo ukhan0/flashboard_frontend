@@ -8,12 +8,26 @@ const SocialSentiment = () => {
   if (!selectedItem) {
     history.push('/watchlist');
   }
+
+  const getSentimentUrl = selectedItem => {
+    let url = null;
+    if (selectedItem.flag === '2') {
+      url = `${selectedItem.ticker}?ontology=ticker`;
+    } else if (selectedItem.flag === '6') {
+      url = `QQQ?ontology=etf`;
+    } else {
+      url = `${selectedItem.ticker}.TO?ontology=tsx`;
+    }
+    return url
+  };
   return (
     <div>
       <div>
         {selectedItem ? (
           <iframe
-            src={`https://activetraders.socialmarketanalytics.com/charts/sentiment/${selectedItem.ticker}?ontology=ticker&token=618fe17256f94d64d61ecca43988533e`}
+            src={`https://activetraders.socialmarketanalytics.com/charts/sentiment/${getSentimentUrl(
+              selectedItem
+            )}&token=618fe17256f94d64d61ecca43988533e`}
             title="Social Sentiment"
             width="100%"
             height={`${window.innerHeight - 90}px`}
