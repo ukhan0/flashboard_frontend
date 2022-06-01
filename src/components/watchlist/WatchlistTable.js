@@ -460,6 +460,7 @@ const WatchlistTable = props => {
   const [isColResizing, setColResizing] = React.useState(0);
   let getQueryParams = new URLSearchParams(useLocation().search);
 
+  //this function can be used to select first row on load
   const selectTableRow = (data, id, isAutoSelection, rowNode) => {
     let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
     comparisionSection.comparisionSection = selectedMetric;
@@ -581,10 +582,11 @@ const WatchlistTable = props => {
       });
     }
     gridApi.current.onFilterChanged();
-    let data = get(params.api.getDisplayedRowAtIndex(0), 'data', null);
-    if (data) {
-      selectTableRow(data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
-    }
+    //by default select first row on load
+    // let data = get(params.api.getDisplayedRowAtIndex(0), 'data', null);
+    // if (data) {
+    //   selectTableRow(data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
+    // }
   };
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
