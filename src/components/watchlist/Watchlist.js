@@ -59,17 +59,16 @@ import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
 };
-const screenTitle={
-  border:"1px solid LightGray",
-  padding:"5px",
-  marginLeft:"3%",
-  backgroundColor:"white",
-  fontWeight:"bold",
-  position:"relative",
-  top:"12px",
-  zIndex:"1",
-  
-}
+const screenTitle = {
+  border: '1px solid LightGray',
+  padding: '5px',
+  marginLeft: '3%',
+  backgroundColor: 'white',
+  fontWeight: 'bold',
+  position: 'relative',
+  top: '12px',
+  zIndex: '1'
+};
 const Watchlist = props => {
   const history = useHistory();
   const classes = useStyles();
@@ -217,6 +216,10 @@ const Watchlist = props => {
     dispatch(setCompanyPriceOverlay([]));
     dispatch(setHeadingRedirect(null));
     rowData.documentType = selectedFileType;
+    if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
+      dispatch(setSelectedWatchlist(rowData));
+      history.push('/sentiment');
+    }
     if (columnId === 'actions') {
       let updatedTickerDetailIndex = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
       let watchListDataArr = cloneDeep(watchlistData);
@@ -237,7 +240,6 @@ const Watchlist = props => {
         setWatchlistData(watchListDataArr);
         handleUpload(rowData.ticker);
         dispatch(setSentimentResult(null, null));
-        dispatch(setSelectedWatchlist(rowData));
       }
     } else {
       dispatch(setSentimentResult(null, null));
@@ -491,7 +493,6 @@ const Watchlist = props => {
         tableType: selectedType,
         filterLabel: text
       });
-      
       const responsePayload = get(response, 'data', null);
       if (!responsePayload.error) {
         // clearFilterHandler();
@@ -628,7 +629,7 @@ const Watchlist = props => {
           </Grid>
         </Grid>
       </Grid>
-      <span style={filterLabel?screenTitle:{display:"none"}}>{filterLabel}</span>
+      <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
       <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
         <WatchlistTable
           data={gridData}

@@ -112,7 +112,7 @@ const colDefs = [
     headerName: 'Tweets',
     headerTooltip: 'Tweets',
     field: 'flag',
-    colId: 'flag',
+    colId: 'tweetsFlag',
     filter: false,
     cellClass: ['align-left'],
     cellRenderer: 'TweetIcon',
