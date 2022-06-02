@@ -568,9 +568,6 @@ const Watchlist = props => {
         <Grid item xs={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Grid item>
-              <div className="text-black-50 opacity-6" style={{ paddingLeft: '10px' }}>
-                <span>‎</span>
-              </div>
               <Box className="d-flex align-items-center">
                 {isFilterActive || isFilterActiveOnSearch ? (
                   <>
@@ -616,7 +613,6 @@ const Watchlist = props => {
             </Grid>
             <Grid item>
               <Button
-                style={{ marginTop: filterLabel.length > 2 ? '20px' : null }}
                 color="primary"
                 variant="contained"
                 className={classes.button}
