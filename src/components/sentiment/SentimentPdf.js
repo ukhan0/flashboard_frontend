@@ -5,6 +5,7 @@ import { BeatLoader } from 'react-spinners';
 const SentimentPdf = props => {
   const [isLoading, setIsloading] = useState(false);
   const { selectedItem } = useSelector(state => state.Watchlist);
+  // eslint-disable-next-line
   const [height, setHeight] = useState(3000);
   const sentimentIframe = useRef(null);
 

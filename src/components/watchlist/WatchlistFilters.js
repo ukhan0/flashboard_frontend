@@ -67,7 +67,7 @@ const WatchlistFilters = props => {
   };
 
   const handleClickType = key => {
-    if (key != selectedType)
+    if (key !== selectedType)
     {
       props.clearFilterHandler();
       dispatch(setSelectedWatchlist(null));

@@ -82,7 +82,7 @@ export default function HeaderUserbox() {
         getContentAnchorEl={null}
         open={Boolean(anchorEl)}
         anchorOrigin={{
-          vertical: 'center',
+          vertical: 'top',
           horizontal: 'center'
         }}
         transformOrigin={{

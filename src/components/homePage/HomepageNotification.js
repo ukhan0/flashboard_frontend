@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useCallback} from 'react';
 import { Card } from '@material-ui/core';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -26,7 +26,7 @@ export default function HomepageNotification() {
     window.open(url, '_blank');
   };
 
-  const getNotificationsData = async () => {
+  const getNotificationsData = useCallback( async () => {
     dispatch(setHomePageLoader(true));
     const now = moment();
     try {
@@ -42,7 +42,7 @@ export default function HomepageNotification() {
         reverse(data);
         //place datetime object in all items
         forEach(data, function(item) {
-          item['datetime'] = moment(item.date + 'T' + item.time + ':' + '00');
+          item['datetime'] = moment(`${item.date}T${item.time}:00`);
         });
         //re-sort data by time in ascending order
         data.sort(function(a, b) {
@@ -57,11 +57,11 @@ export default function HomepageNotification() {
       setUpcomingCalls([]);
       dispatch(setHomePageLoader(false));
     }
-  };
+  },[dispatch]);
 
   React.useEffect(() => {
     getNotificationsData();
-  }, []);
+  }, [getNotificationsData]);
 
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
@@ -81,14 +81,14 @@ export default function HomepageNotification() {
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleNotificationClick(data.url)}>
                   <div className="timeline-item-offset">
-                    {moment(data.date + 'T' + data.time + ':' + '00').format('hh:mm A')}
+                    {moment(`${data.date}T${data.time}:00`).format('hh:mm A')}
                   </div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '20px' }}>
                       <h4 className="timeline-item--label mb-2 ">{data.symbol}</h4>
                       <h4 className="timeline-item--label mb-2 " style={{ textAlign: 'right' }}>
-                        {moment(data.date + 'T' + data.time + ':' + '00').format('MM/DD/YYYY')}
+                        {moment(`${data.date}T${data.time}:00`).format('MM/DD/YYYY')}
                       </h4>
                     </div>
                     <p>{data.title}</p>
