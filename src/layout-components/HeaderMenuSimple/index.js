@@ -72,7 +72,7 @@ const HeaderMenu = props => {
             color="inherit"
             onClick={gotToTopic}
             disabled={false}
-            onMouseEnter={handleClick}
+            // onMouseEnter={handleClick}     temporary disabled
             className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/topic' ? 'btn-active' : '')}>
             ThemeX
           </Button>
