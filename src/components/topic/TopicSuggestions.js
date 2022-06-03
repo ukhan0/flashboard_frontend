@@ -2,7 +2,7 @@ import React, { useEffect, Fragment } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { forEach, isEmpty, remove, cloneDeep } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
+import { setSelectedSuggestions, setSimpleSearchTextArray, setSearchTextWithAnd } from '../../reducers/Topic';
 import { findSuggestions } from './topicActions';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -28,9 +28,14 @@ const useStyles = makeStyles(_theme => ({
 }));
 
 export default function TopicSuggestionsDialog(props) {
-  const { suggestions, selectedSuggestions, suggestionsIsLoading, simpleSearchTextArray, isSimpleSearch } = useSelector(
-    state => state.Topic
-  );
+  const {
+    suggestions,
+    selectedSuggestions,
+    suggestionsIsLoading,
+    simpleSearchTextArray,
+    phraseType,
+    searchTextWithAnd
+  } = useSelector(state => state.Topic);
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -47,13 +52,18 @@ export default function TopicSuggestionsDialog(props) {
 
   const handlSuggestionSelection = (value, keyWord) => {
     let simpleSearchTextArrayCopy = simpleSearchTextArray;
+    let searchTextWithAndCopy = searchTextWithAnd;
     const newSelectedSuggestions = cloneDeep(selectedSuggestions);
     if (!isSuggestionChecked(value)) {
       newSelectedSuggestions[keyWord] = [...newSelectedSuggestions[keyWord], value];
       dispatch(setSelectedSuggestions(newSelectedSuggestions));
-      if (isSimpleSearch) {
+      if (phraseType === 'ANY') {
         simpleSearchTextArrayCopy.push(value);
         dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
+      }
+      if (phraseType === 'ALL') {
+        searchTextWithAndCopy.push(value);
+        dispatch(setSearchTextWithAnd(searchTextWithAndCopy));
       }
     } else {
       const newKeyWordSelectedSuggestions = [...selectedSuggestions[keyWord]];
@@ -61,9 +71,13 @@ export default function TopicSuggestionsDialog(props) {
       selectedSuggestions[keyWord] = newKeyWordSelectedSuggestions;
       dispatch(setSelectedSuggestions(selectedSuggestions));
       const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
-      if (isSimpleSearch) {
+      if (phraseType === 'ANY') {
         simpleSearchTextArray.splice(index, 1);
         dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
+      }
+      if (phraseType === 'ALL') {
+        searchTextWithAnd.splice(index, 1);
+        dispatch(setSearchTextWithAnd(searchTextWithAnd));
       }
     }
   };

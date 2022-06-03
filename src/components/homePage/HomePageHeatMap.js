@@ -1,7 +1,7 @@
 import React from 'react';
 import { BeatLoader } from 'react-spinners';
 import { Card } from '@material-ui/core';
-import {useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 export default function HomePageHeatMap() {
   const [isLoading, setIsLoading] = React.useState(true);
   const dispatch = useDispatch();

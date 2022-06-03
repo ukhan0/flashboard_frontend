@@ -123,7 +123,7 @@ const colDefs = [
     pinned: 'left',
     headerClass: ['actionColumnHeader']
   },
- 
+
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',

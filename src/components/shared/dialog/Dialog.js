@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchPhraseType } from '../../../reducers/Topic';
 
 // Material components
 import Dialog from '@material-ui/core/Dialog';
@@ -9,6 +11,8 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 const styles = theme => ({
   root: {
@@ -53,7 +57,16 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent);
 
+const searchPhraseTypes = ['ANY', 'ALL'];
 export default function GenericDialog(props) {
+  const { phraseType } = useSelector(state => state.Topic);
+  const dispatch = useDispatch();
+  const [searchPhraseTypeState, setSearchPhraseTypeState] = useState(phraseType);
+  const selectPhraseType = index => {
+    dispatch(setSearchPhraseType(searchPhraseTypes[index]));
+    setSearchPhraseTypeState(searchPhraseTypes[index]);
+  };
+
   return (
     <div>
       <Dialog
@@ -69,7 +82,28 @@ export default function GenericDialog(props) {
           closeBtnComponent={props.closeBtnComponent}
           titleVariant={props.titleVariant}
           titleColor={props.titleColor}>
-          {props.title}
+          <div style={{ justifyContent: 'flex-start', display: 'flex' }}>
+            <div
+              style={{
+                position: 'relative',
+                top: '8px',
+                fontWeight: 'bold',
+                paddingRight: '10px'
+              }}>
+              {props.title}
+            </div>
+            <ButtonGroup color="primary" size="small">
+              {searchPhraseTypes.map((item, index) => {
+                return (
+                  <Button
+                    variant={item === searchPhraseTypeState ? 'contained' : 'outlined'}
+                    onClick={() => selectPhraseType(index)}>
+                    {item}
+                  </Button>
+                );
+              })}
+            </ButtonGroup>
+          </div>
         </DialogTitle>
 
         <DialogContent dividers>{props.children}</DialogContent>

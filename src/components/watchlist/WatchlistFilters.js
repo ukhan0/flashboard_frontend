@@ -32,7 +32,7 @@ const WatchlistFilters = props => {
     isCompleteCompaniesDataGlobalLoaded,
     cancelExistingDocumentTypeCalls,
     isEmailAlertEnable,
-    selectedItem,
+    selectedItem
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
@@ -67,8 +67,7 @@ const WatchlistFilters = props => {
   };
 
   const handleClickType = key => {
-    if (key !== selectedType)
-    {
+    if (key !== selectedType) {
       props.clearFilterHandler();
       dispatch(setSelectedWatchlist(null));
       dispatch(setWatchlistType(key));

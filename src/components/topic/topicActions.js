@@ -473,8 +473,14 @@ export const deleteSearch = searchId => {
 
 export const findSuggestions = () => {
   return async (dispatch, getState) => {
-    const { searchText, suggestions, selectedSuggestions, isSimpleSearch, simpleSearchTextArray } = getState().Topic;
+    const { searchText, suggestions, selectedSuggestions, isSimpleSearch, simpleSearchTextArray, searchTextWithAnd } = getState().Topic;
     let searchSug = simpleSearchTextArray.length > 0 && isSimpleSearch ? simpleSearchTextArray.join(' ') : searchText;
+    if(searchTextWithAnd.length>0)
+    {
+      forEach(searchTextWithAnd, function(value) {
+        searchSug=`${searchSug} ${value}`;
+      });
+    }
     if (!isEmpty(suggestions) || !searchSug) {
       return;
     }

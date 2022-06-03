@@ -59,8 +59,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const isSearchAllowed = (searchText, simpleSearchTextArray) => {
-  if ((searchText && searchText.length > 2) || simpleSearchTextArray.length > 0) {
+const isSearchAllowed = (searchText, simpleSearchTextArray,searchTextWithAnd) => {
+  //display button to show suggestions on base of which text boxes have values
+  if ((searchText && searchText.length > 2) || simpleSearchTextArray.length > 0 || searchTextWithAnd.length>0) {
     return true;
   }
 };
@@ -191,7 +192,7 @@ const TopicFilters = props => {
                   ))}
                 </div>
               ) : null}
-              {isSearchAllowed(searchText, simpleSearchTextArray) ? (
+              {isSearchAllowed(searchText, simpleSearchTextArray, searchTextWithAnd) ? (
                 <Button color="primary" onClick={props.onShowSuggestions}>
                   Show Suggestions
                 </Button>

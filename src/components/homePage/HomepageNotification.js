@@ -1,4 +1,4 @@
-import React,{useCallback} from 'react';
+import React, { useCallback } from 'react';
 import { Card } from '@material-ui/core';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -26,7 +26,7 @@ export default function HomepageNotification() {
     window.open(url, '_blank');
   };
 
-  const getNotificationsData = useCallback( async () => {
+  const getNotificationsData = useCallback(async () => {
     dispatch(setHomePageLoader(true));
     const now = moment();
     try {
@@ -53,11 +53,11 @@ export default function HomepageNotification() {
         dispatch(setHomePageLoader(false));
       }
     } catch (error) {
-      console.error("Internal server error:",error);
+      console.error('Internal server error:', error);
       setUpcomingCalls([]);
       dispatch(setHomePageLoader(false));
     }
-  },[dispatch]);
+  }, [dispatch]);
 
   React.useEffect(() => {
     getNotificationsData();
@@ -80,9 +80,7 @@ export default function HomepageNotification() {
                   className="timeline-item"
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleNotificationClick(data.url)}>
-                  <div className="timeline-item-offset">
-                    {moment(`${data.date}T${data.time}:00`).format('hh:mm A')}
-                  </div>
+                  <div className="timeline-item-offset">{moment(`${data.date}T${data.time}:00`).format('hh:mm A')}</div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '20px' }}>
@@ -96,7 +94,7 @@ export default function HomepageNotification() {
                 </div>
               </div>
             ))}
-            ;<hr></hr>
+            <hr></hr>
             {notifications?.map((data, index) => (
               <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                 <div
