@@ -35,6 +35,11 @@ const HeaderMenu = props => {
     setAnchorHelp(anchorEl ? null : event.currentTarget);
   };
 
+  const goToDashboard = () => {
+    setSidebarToggle(true);
+    history.push('/home');
+  };
+
   const goToWatchlist = () => {
     setSidebarToggle(true);
     history.push('/watchlist');
@@ -62,9 +67,16 @@ const HeaderMenu = props => {
         <Button
           size="medium"
           color="inherit"
+          onClick={goToDashboard}
+          className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/home' ? 'btn-active' : '')}>
+          Dashboard
+        </Button>
+        <Button
+          size="medium"
+          color="inherit"
           onClick={goToWatchlist}
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/watchlist' ? 'btn-active' : '')}>
-          Home
+          Companies
         </Button>
         <>
           <Button
