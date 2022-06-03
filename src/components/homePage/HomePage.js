@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import HomePageTable from './HomePageTable';
-import HomePageHeatMap from './HomePageHeatMap';
 import HomePageSmaLime1 from './HomePageSmaLime1';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
@@ -39,10 +38,7 @@ export default function HomePage() {
         </Grid>
       </Grid>
       <Grid container spacing={1}>
-        <Grid item xs={4}>
-          <HomePageHeatMap />
-        </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <SnackBar
             open={get(snackbar, 'isSnackBar', false)}
             onClose={() =>
@@ -58,16 +54,8 @@ export default function HomePage() {
           />
           <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <HomePageTweets />
-          {/* <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
-            <div style={{ float: 'left', outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
-              <div className="card-header--title font-weight-bold">Social Stream</div>
-              <div style={{ height: '600px', width: '600px', margin: ' 16px' }}>
-                <img style={{ width: '100%' }} alt="..." src={avatar} />
-              </div>
-            </div>
-          </Card> */}
         </Grid>
       </Grid>
     </div>
