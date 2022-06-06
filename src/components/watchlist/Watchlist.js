@@ -90,8 +90,10 @@ const Watchlist = props => {
     completeCompaniesDataGlobal,
     filterLabel,
     selectedFilter,
-    isFilterUpdate
+    isFilterUpdate,
+    isActiveCompanies
   } = useSelector(state => state.Watchlist);
+
   const [watchlistData, setWatchlistData] = useState([]);
   const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
@@ -185,28 +187,31 @@ const Watchlist = props => {
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
     watchlistData.forEach(watchlist => {
-      const data = {
-        ...watchlist,
-        ...watchlist[selectedFileType][selectedMetric],
-        last: dateFormaterMoment(
-          parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
-        ),
+      let isActiveFlag = get(watchlist, 'isActiveFlag',false);
+      if (isActiveFlag === isActiveCompanies) {
+        const data = {
+          ...watchlist,
+          ...watchlist[selectedFileType][selectedMetric],
+          last: dateFormaterMoment(
+            parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
+          ),
 
-        recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
-        oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
-        periodDate: dateFormaterMoment(
-          parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
-        ),
+          recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
+          oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
+          periodDate: dateFormaterMoment(
+            parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
+          ),
 
-        documentType: selectedFileType,
-        isColorEnable: isColorEnable
-      };
-      delete data['10k'];
-      delete data['10q'];
-      filteredData.push(data);
+          documentType: selectedFileType,
+          isColorEnable: isColorEnable
+        };
+        delete data['10k'];
+        delete data['10q'];
+        filteredData.push(data);
+      }
     });
     return filteredData;
-  }, [selectedFileType, selectedMetric, watchlistData, isColorEnable]);
+  }, [selectedFileType, selectedMetric, watchlistData, isColorEnable, isActiveCompanies]);
 
   const onColumnClick = (rowData, columnId) => {
     dispatch(setIsFromThemex(false));

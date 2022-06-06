@@ -28,6 +28,12 @@ export const SET_EMAIL_TEMPLATE = 'WATCHLIST/SET_EMAIL_TEMPLATE';
 export const SET_FILTER_LABEL = 'WATCHLIST/SET_FILTER_LABEL';
 export const SET_SELECTED_FILTER = 'WATCHLIST/SET_SELECTED_FILTER';
 export const SET_IS_FILTER_UPDATE = 'WATCHLIST/SET_IS_FILTER_UPDATE';
+export const SET_IS_ACTIVE_COMPANIES = 'WATCHLIST/SET_IS_ACTIVE_COMPANIES';
+
+export const setIsActiveCompanies = isActiveCompanies => ({
+  type: SET_IS_ACTIVE_COMPANIES,
+  isActiveCompanies
+});
 
 export const setIsFilterUpdate = isFilterUpdate => ({
   type: SET_IS_FILTER_UPDATE,
@@ -181,6 +187,7 @@ const getDefaultState = () => {
       : '10k'
     : '10q';
   return {
+    isActiveCompanies: true,
     selectedType: selectedTypeWatchList,
     selectedFileType: selectedFileTypeWatchList,
     selectedUniverse: !isEmpty(watchlistSetting) ? watchlistSetting.selectedUniverse : 'watchlist',
@@ -224,6 +231,8 @@ export default function reducer(
 ) {
   switch (action.type) {
     // watchlist
+    case SET_IS_ACTIVE_COMPANIES:
+      return { ...state, isActiveCompanies: action.isActiveCompanies };
     case SET_OVERWRITE_CHECK_BOX:
       return { ...state, overwriteCheckBox: action.overwriteCheckBox };
     case SET_COUNT:

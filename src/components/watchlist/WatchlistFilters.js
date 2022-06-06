@@ -7,7 +7,8 @@ import {
   setIsNewWatchlistDataAvailable,
   setIsWatchlistEmailAlertEnable,
   setWatchlistType,
-  setSelectedWatchlist
+  setSelectedWatchlist,
+  setIsActiveCompanies
 } from '../../reducers/Watchlist';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
@@ -32,7 +33,8 @@ const WatchlistFilters = props => {
     isCompleteCompaniesDataGlobalLoaded,
     cancelExistingDocumentTypeCalls,
     isEmailAlertEnable,
-    selectedItem
+    selectedItem,
+    isActiveCompanies
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
 
@@ -88,6 +90,15 @@ const WatchlistFilters = props => {
     }
     dispatch(updateWatchlistEmailAlertStatus());
   };
+
+  const handleActive = event => {
+    if (event.target.checked) {
+      dispatch(setIsActiveCompanies(true));
+    } else {
+      dispatch(setIsActiveCompanies(false));
+    }
+  };
+
   const handleClickWatchlistMetric = metric => {
     dispatch(setWatchlistMetric(metric));
     if (selectedItem) {
@@ -186,6 +197,23 @@ const WatchlistFilters = props => {
       </Grid>
       <Grid item>
         <Grid container direction="row" alignItems="center">
+          <Grid item>
+            <Typography style={{ paddingTop: '20px' }} color="primary">
+              Active
+            </Typography>
+          </Grid>
+          <Grid item>
+            <div style={{ paddingTop: '20px' }}>
+              <Switch
+                checked={isActiveCompanies}
+                onChange={handleActive}
+                color="primary"
+                name="checkedB"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+              />
+            </div>
+          </Grid>
+
           <Grid item>
             <Typography style={{ paddingTop: '20px' }} color="primary">
               Enable Email Alert

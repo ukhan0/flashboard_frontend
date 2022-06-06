@@ -78,7 +78,9 @@ export const formatData = rawDataArr => {
 };
 
 export const formatComapnyData = rawData => {
+  let isActive = Boolean(parseInt(get(rawData, 'cq', '0')));
   return {
+    isActiveFlag: isActive,
     ticker: get(rawData, 'ticker', null),
     companyName: rawData.b,
     industry: getSectorIndustryById(rawData.cc).industry
