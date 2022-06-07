@@ -82,11 +82,11 @@ const TopicSearchResults = () => {
     const lastTweets = JSON.stringify(tweets.current);
     return () => {
       socket.close();
-
       localStorage.setItem('lastTweets', lastTweets);
     };
   }, [getUserWatchlist]);
   useEffect(() => {
+    socket.connect();
     for (let i = 0; i < userWatchlist.length; i++) {
       SocketService.socket.on(userWatchlist[i].ticker, d => {
         let tweetObj = JSON.parse(d);
@@ -128,7 +128,15 @@ const TopicSearchResults = () => {
             {uniqBy(tweets.current, 'actor.id').map((v, index) => {
               return (
                 <Fragment key={`rs${index}`}>
-                  <Box p={2} elevation={6} style={{ border: '1px solid lightgrey', marginBottom: '5px',borderRadius:"20px",boxShadow: "rgba(0,0,0,0.16) 0px 3px 6px,rgba(0,0,0,0.23) 0px 3px 6px" }}>
+                  <Box
+                    p={2}
+                    elevation={6}
+                    style={{
+                      border: '1px solid lightgrey',
+                      marginBottom: '5px',
+                      borderRadius: '20px',
+                      boxShadow: 'rgba(0,0,0,0.16) 0px 3px 6px,rgba(0,0,0,0.23) 0px 3px 6px'
+                    }}>
                     <div>
                       <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                         <Grid item>
@@ -168,11 +176,11 @@ const TopicSearchResults = () => {
                             }}>
                             {v.actor.summary ? v.actor.summary : v.body}
                           </p>
-                          <p
-                            className="text-black-50 pt-1 pr-2" style={{paddingLeft:"50px"}}>
+                          <p className="text-black-50 pt-1 pr-2" style={{ paddingLeft: '50px' }}>
                             <span>
-                            <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
-                            </span> Powered by Twitter
+                              <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
+                            </span>{' '}
+                            Powered by Twitter
                           </p>
                         </Grid>
                       </Grid>
