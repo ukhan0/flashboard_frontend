@@ -32,20 +32,20 @@ export default {
       },
       function(error) {
         if (get(error, 'response.status', '') === 401) {
-          let res = get(error, 'response.data', '');
-          if (res['invalidToken']) {
+          //let res = get(error, 'response.data', '');
+          //if (res['invalidToken']) {
             localStorage.removeItem('auth_token');
             if (window.location.pathname !== '/PagesRegister') {
               window.location.href = '/PagesRegister';
             }
 
             // redirect to login page
-          }
+          //}
 
-          if (res['TokenExpired']) {
-            refreshToken();
+          //if (res['TokenExpired']) {
+            //refreshToken();
             // refresh user token
-          }
+          //}
         } else {
           return Promise.reject(error);
         }

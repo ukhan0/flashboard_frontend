@@ -76,7 +76,7 @@ const HeaderMenu = props => {
           color="inherit"
           onClick={goToWatchlist}
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/watchlist' ? 'btn-active' : '')}>
-          Companies
+          Grid
         </Button>
         <>
           <Button
