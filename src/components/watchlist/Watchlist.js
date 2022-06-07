@@ -223,7 +223,7 @@ const Watchlist = props => {
     rowData.documentType = selectedFileType;
     if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
       dispatch(setSelectedWatchlist(rowData));
-      history.push('/sentiment');
+      history.push('/socialSentiment');
     }
     if (columnId === 'actions') {
       let updatedTickerDetailIndex = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
