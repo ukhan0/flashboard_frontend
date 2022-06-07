@@ -17,6 +17,7 @@ import convert from 'xml-js';
 import { createHash } from '../../utils/helpers';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { visitOutlineObjTable, visitOutlineObj, removeHeadingTags } from './SentimentHelpers';
+import queryString from 'query-string';
 
 const useStyles = makeStyles(theme => ({
   tableOfContent: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
   loaderSection: {
     textAlign: 'center'
-  },
+  }
 }));
 
 const Sentiment = () => {
@@ -39,58 +40,74 @@ const Sentiment = () => {
   const classes = useStyles();
   const history = useHistory();
   const firstTimeLoad = useRef(false);
-  const firstTimeDataArray = useRef(false)
+  const firstTimeLoadd = useRef(false);
+  const firstTimeDataArray = useRef(false);
   const sentimentHighlightsData = useRef([]);
   const [tableData, setTableData] = useState([]);
   const [contentData, setContentData] = useState([]);
   let hideCards = config.hideCard;
-  let getQueryParams = new URLSearchParams(useLocation().search);
-  if (!getQueryParams.get('recentId') && !selectedItem) {
+  const queryParam = new URLSearchParams(useLocation().search);
+  let getQueryParams = useRef(queryParam);
+
+  if (!getQueryParams.current.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
 
-  const getCompanyByTicker = useCallback(async ticker => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let company = completeCompaniesData.find(sd => sd.ticker === ticker);
-        resolve(cloneDeep(company));
-      }, 100);
-    });
-  },[completeCompaniesData]);
+  const getCompanyByTicker = useCallback(
+    async ticker => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          let company = completeCompaniesData.find(sd => sd.ticker === ticker);
+          resolve(cloneDeep(company));
+        }, 100);
+      });
+    },
+    [completeCompaniesData]
+  );
+  useEffect(() => {
+    firstTimeLoad.current = false;
+    firstTimeLoadd.current = false;
+  }, [history.location.search]);
 
   useEffect(() => {
     if (!firstTimeLoad.current) {
+      let data = queryString.parse(history.location.search);
       firstTimeLoad.current = true;
-      if (getQueryParams.get('recentId')) {
-        let ticker = getQueryParams.get('ticker');
+      if (data.recentId) {
+        let ticker = data.ticker;
         if (completeCompaniesData && !isEmpty(completeCompaniesData)) {
           getCompanyByTicker(ticker).then(localSelectedItem => {
             if (localSelectedItem) {
               let company = formatComapnyData(localSelectedItem);
-              company.recentId = getQueryParams.get('recentId');
+              company.recentId = data.recentId;
               dispatch(setSentimentResult(null, null));
+              firstTimeLoadd.current = false;
               dispatch(setSelectedWatchlist(company));
             }
           });
         } else {
           let company = {};
-          company.recentId = getQueryParams.get('recentId');
-          company.sector = getQueryParams.get('sector');
-          company.industry = getQueryParams.get('industry');
-          company.ticker = getQueryParams.get('ticker');
+          company.recentId = data.recentId;
+          company.sector = data.sector;
+          company.industry = data.industry;
+          company.ticker = data.ticker;
           dispatch(setSentimentResult(null, null));
+          firstTimeLoadd.current = false;
           dispatch(setSelectedWatchlist(company));
         }
       }
     }
-  }, [dispatch, getQueryParams, getCompanyByTicker , completeCompaniesData, isCompleteCompaniesDataLoaded]);
+  }, [dispatch, getCompanyByTicker, completeCompaniesData, isCompleteCompaniesDataLoaded, history.location.search]);
 
   useEffect(() => {
-    const selectedItemRecentId = get(selectedItem, 'recentId', null);
-    if (selectedItem && selectedItemRecentId !== sentimentRecentId) {
-      dispatch(getSentimentData());
-      if (hideCards === 'true') {
-        dispatch(getCompanyFilingGraphData());
+    if (!firstTimeLoadd.current) {
+      const selectedItemRecentId = get(selectedItem, 'recentId', null);
+      if (selectedItem && selectedItemRecentId !== sentimentRecentId) {
+        dispatch(getSentimentData());
+        if (hideCards === 'true') {
+          dispatch(getCompanyFilingGraphData());
+        }
+        firstTimeLoadd.current = true;
       }
     }
   }, [dispatch, selectedItem, hideCards, sentimentRecentId]);
@@ -105,10 +122,10 @@ const Sentiment = () => {
 
   const handleHighlights = hightlightsArr => {
     if (!firstTimeDataArray.current) {
-      firstTimeDataArray.current = true
-      sentimentHighlightsData.current = hightlightsArr
+      firstTimeDataArray.current = true;
+      sentimentHighlightsData.current = hightlightsArr;
     }
-  }
+  };
 
   useEffect(() => {
     if (!data) {
@@ -171,12 +188,21 @@ const Sentiment = () => {
           </Grid>
           <Grid item xs={4}>
             <div className={classes.tableOfContent}>
-              <SentimentTableOfContent highlightsData={sentimentHighlightsData.current} tableData={tableData} onSelection={handleSelection} />
+              <SentimentTableOfContent
+                highlightsData={sentimentHighlightsData.current}
+                tableData={tableData}
+                onSelection={handleSelection}
+              />
             </div>
           </Grid>
         </Grid>
       ) : (
-        <SentimentContentSection highlightsData={sentimentHighlightsData.current} contentData={contentData} tableData={tableData} onHandleHighlights={handleHighlights} />
+        <SentimentContentSection
+          highlightsData={sentimentHighlightsData.current}
+          contentData={contentData}
+          tableData={tableData}
+          onHandleHighlights={handleHighlights}
+        />
       )}
     </>
   );

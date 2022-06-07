@@ -9,8 +9,8 @@ export const saveComparisionSettings = setting => {
 };
 
 export const getOldId = (getQueryParams, selectedFileType, selectedItem) => {
-  return getQueryParams.current.get('oldId')
-    ? getQueryParams.current.get('oldId')
+  return getQueryParams.oldId
+    ? getQueryParams.oldId
     : selectedFileType === '10k'
     ? get(selectedItem, 'oldId10k', null)
       ? get(selectedItem, 'oldId10k', null)
@@ -20,8 +20,8 @@ export const getOldId = (getQueryParams, selectedFileType, selectedItem) => {
     : get(selectedItem, 'oldId10k', null);
 };
 export const getRecentId = (getQueryParams, selectedFileType, selectedItem) => {
-  return getQueryParams.current.get('recentId')
-    ? getQueryParams.current.get('recentId')
+  return getQueryParams.recentId
+    ? getQueryParams.recentId
     : selectedFileType === '10k'
     ? get(selectedItem, 'recentId10k', null)
       ? get(selectedItem, 'recentId10k', null)

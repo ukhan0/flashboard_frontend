@@ -35,7 +35,10 @@ export default {
           let res = get(error, 'response.data', '');
           if (res['invalidToken']) {
             localStorage.removeItem('auth_token');
-            window.location.reload();
+            if (window.location.pathname !== '/PagesRegister') {
+              window.location.href = '/PagesRegister';
+            }
+
             // redirect to login page
           }
 

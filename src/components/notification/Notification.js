@@ -5,14 +5,16 @@ import NotificationsActiveTwoToneIcon from '@material-ui/icons/NotificationsActi
 // import SocketService from '../../socketService';
 import sound from './Tones.mp3';
 import moment from 'moment';
-import { useSelector, useDispatch } from 'react-redux';
-import { setEmailTemplate } from '../../reducers/Watchlist';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import config from '../../config/config';
 import axios from 'axios';
+import { setSearchId } from '../../reducers/Topic';
+import { useDispatch } from 'react-redux';
+import { get } from 'lodash';
 const Notification = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
+  const dispatch = useDispatch();
   const [anchorEl1, setAnchorEl1] = useState(null);
   const [count, setCount] = useState(0);
   const { notifications } = useSelector(state => state.Watchlist);
@@ -63,9 +65,11 @@ const Notification = () => {
     setCount(0);
   };
 
-  const handleEmailTemplate = (t, title) => {
-    dispatch(setEmailTemplate({ emailTemplate: t, title: title }));
-    history.push('./notification');
+  const handleEmailTemplate = (link, id) => {
+    if (id && window.location.pathname === '/topic') {
+      dispatch(setSearchId(id));
+    }
+    history.push(link);
     handleClose1();
   };
   const deleteNotification = async () => {
@@ -80,6 +84,7 @@ const Notification = () => {
     resetCounter();
     deleteNotification();
   };
+  
   return (
     <Fragment>
       <Hidden>
@@ -120,11 +125,11 @@ const Notification = () => {
                       <div
                         className="timeline-item"
                         style={{ cursor: 'pointer' }}
-                        onClick={() => handleEmailTemplate(data.emailTemplate, data.title)}>
+                        onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
                         <div className="timeline-item-offset">{moment(data.created_date).format('LT')}</div>
                         <div className="timeline-item--content">
                           <div className="timeline-item--icon"></div>
-                          <h4 className="timeline-item--label mb-2 font-weight-bold">{data.title}</h4>
+                          <h4 className="timeline-item--label mb-2 font-weight-bold"> {data.title}</h4>
                           <p>{data.description}</p>
                         </div>
                       </div>

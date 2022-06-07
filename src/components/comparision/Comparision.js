@@ -12,7 +12,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import FilingsCompanyDetails from '../Filings/FilingsCompanyDetails';
 import { makeStyles } from '@material-ui/core/styles';
-
+import queryString from 'query-string';
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -39,9 +39,9 @@ const Comparision = props => {
   const [comparisionSection, setComparisionSection] = useState(
     get(getComparisionSettings(), 'comparisionSection', 'totdoc')
   );
-
-  let metricQueryParam = '';
   const history = useHistory();
+  let queryParamsData = queryString.parse(history.location.search);
+  let metricQueryParam = '';
 
   const handleComparisionMethod = method => {
     setComparisionMethod(method);
@@ -56,7 +56,8 @@ const Comparision = props => {
     setIsloading(true);
   };
   const firstTimeLoad = useRef(false);
-  const getQueryParams = useRef(new URLSearchParams(useLocation().search));
+  let data = new URLSearchParams(useLocation().search);
+  let getQueryParams = useRef(data);
   if (!getQueryParams.current.get('recentId') && !selectedItem) {
     history.push('/watchlist');
   }
@@ -69,21 +70,30 @@ const Comparision = props => {
     },
     [completeCompaniesData]
   );
+  useEffect(() => {
+    firstTimeLoad.current = false;
+  }, [history.location.search]);
 
   useEffect(() => {
+    setIsloading(true);
     if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
       firstTimeLoad.current = true;
-      if (getQueryParams.current.get('recentId')) {
-        let ticker = getQueryParams.current.get('ticker');
-        let selectedItem = getCompanyByTicker(ticker);
-        let company = formatComapnyData(selectedItem);
-        company.recentId = getQueryParams.current.get('recentId');
-        company.oldId = getQueryParams.current.get('oldId');
-        dispatch(setSentimentResult(null, null));
-        dispatch(setSelectedWatchlist(company));
-      }
+      setTimeout(() => {
+        let data = queryString.parse(history.location.search);
+        if (data.recentId) {
+          let ticker = data.ticker;
+          let selectedItem = getCompanyByTicker(ticker);
+          if (selectedItem) {
+            let company = formatComapnyData(selectedItem);
+            company.recentId = data.recentId;
+            company.oldId = data.oldId;
+            dispatch(setSentimentResult(null, null));
+            dispatch(setSelectedWatchlist(company));
+          }
+        }
+      }, [400]);
     }
-  }, [dispatch, getCompanyByTicker, isCompleteCompaniesDataLoaded]);
+  }, [dispatch, getCompanyByTicker, isCompleteCompaniesDataLoaded, history.location.search]);
 
   useEffect(() => {
     const comparisonSetting = {
@@ -115,15 +125,20 @@ const Comparision = props => {
       break;
   }
 
-  const oldId = getOldId(getQueryParams, selectedFileType, selectedItem);
+  const oldId = getOldId(queryParamsData, selectedFileType, selectedItem);
+  const recentId = getRecentId(queryParamsData, selectedFileType, selectedItem);
+  const setFileType = useCallback(() => {
+    let id = queryParamsData.recentId
+      ? queryParamsData.recentId
+      : selectedFileType === '10k'
+      ? get(selectedItem, 'recentId10k', null)
+      : get(selectedItem, 'recentId10q', null);
+    return id;
+  }, [queryParamsData, selectedItem, selectedFileType]);
 
-  const recentId = getRecentId(getQueryParams, selectedFileType, selectedItem);
-
-  getQueryParams.current.get('recentId')
-    ? getQueryParams.current.get('recentId')
-    : selectedFileType === '10k'
-    ? get(selectedItem, 'recentId10k', null)
-    : get(selectedItem, 'recentId10q', null);
+  useEffect(() => {
+    setFileType();
+  }, [setFileType]);
   return (
     <>
       <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>

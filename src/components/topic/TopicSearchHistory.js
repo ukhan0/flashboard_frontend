@@ -16,7 +16,8 @@ import {
   setSelectedIndustries,
   resetAllSearchParams,
   setBackDropOnCompanyClick,
-  setIsUnsavedSearch
+  setIsUnsavedSearch,
+  setSearchId
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, deleteSearch, performTopicTweetsSearchAggregate } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
@@ -66,19 +67,14 @@ export default function TopicSearchHistory(props) {
   const classes = useStyles();
   const [isModal, setModal] = React.useState(false);
   const [deleteSearchId, setDeleteSearchId] = React.useState(null);
-  const { cancelTokenSourceHighlights, savedSearches, selectedSearch } = useSelector(state => state.Topic);
+  const { cancelTokenSourceHighlights, savedSearches, selectedSearch, linkSearchId } = useSelector(
+    state => state.Topic
+  );
   const dispatch = useDispatch();
   const sortedSearches = orderBy(savedSearches, [search => search.searchLabel.toLowerCase()], ['asc']);
-  const firstTimeLoad = useRef(false);
-  let getQueryParams = new URLSearchParams(useLocation().search);
-
-  const setSearchParamsEdit = searchObj => {
-    dispatch(setSelectedSearch(searchObj));
-    dispatch(setSuggestions({}));
-    dispatch(setAllSearchParams(searchObj));
-    dispatch(setSearchLabel(searchObj.searchLabel));
-    dispatch(setOpenTopicSearchDialog(true));
-  };
+  let firstTimeLoad = useRef(false);
+  let data = new URLSearchParams(useLocation().search);
+  let getQueryParams = useRef(data);
 
   const setSearchParams = useCallback(
     (searchObj, showLoader = true) => {
@@ -101,10 +97,26 @@ export default function TopicSearchHistory(props) {
     },
     [dispatch, cancelTokenSourceHighlights]
   );
+  useEffect(() => {
+    if (linkSearchId) {
+      let firstSearch = savedSearches.find(savedSearches => savedSearches.searchId === linkSearchId);
+      if (firstSearch) {
+        setSearchParams(firstSearch);
+      }
+      dispatch(setSearchId(null));
+    }
+  }, [dispatch, linkSearchId, setSearchParams, savedSearches]);
+  const setSearchParamsEdit = searchObj => {
+    dispatch(setSelectedSearch(searchObj));
+    dispatch(setSuggestions({}));
+    dispatch(setAllSearchParams(searchObj));
+    dispatch(setSearchLabel(searchObj.searchLabel));
+    dispatch(setOpenTopicSearchDialog(true));
+  };
 
   useEffect(() => {
     if (savedSearches.length > 0 && !firstTimeLoad.current) {
-      if (!getQueryParams.get('topicId')) {
+      if (!getQueryParams.current.get('topicId')) {
         firstTimeLoad.current = true;
         // set first search of first topic as default search
         const sortedSearches = orderBy(savedSearches, [search => search.searchLabel.toLowerCase()], ['asc']);
@@ -114,16 +126,16 @@ export default function TopicSearchHistory(props) {
         }
       } else {
         firstTimeLoad.current = true;
-        let searchId = parseInt(getQueryParams.get('topicId'));
+        let searchId = parseInt(getQueryParams.current.get('topicId'));
         // set first search of from email click topic as default search
-        let searchIndex = savedSearches.findIndex(savedSearches => savedSearches.searchId === searchId);
-        const firstSearch = get(savedSearches, `[${searchIndex}]`, null);
+        let firstSearch = savedSearches.find(savedSearches => savedSearches.searchId === searchId);
+
         if (!selectedSearch && firstSearch) {
           setSearchParams(firstSearch);
         }
       }
     }
-  }, [savedSearches, setSearchParams, selectedSearch, getQueryParams]);
+  }, [savedSearches, setSearchParams, selectedSearch]);
 
   const clickHereHandle = e => {
     preventParentClick(e);

@@ -69,6 +69,12 @@ export const SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_HANDLE_S
 export const SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER';
 export const SET_TOPIC_HISTORY_CHART_IS_DAYS = 'TOPIC/SET_TOPIC_HISTORY_CHART_IS_DAYS';
 export const SET_SEARCH_PHRASE_TYPE = 'TOPIC/SET_SEARCH_PHRASE_TYPE';
+export const SET_SEARCH_ID = 'TOPIC/SET_SEARCH_ID';
+
+export const setSearchId = linkSearchId => ({
+  type: SET_SEARCH_ID,
+  linkSearchId
+});
 
 export const setTopicIndexDropDownSearchCombineReducer = () => ({
   type: SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER
@@ -401,7 +407,7 @@ const searchDefaultState = () => ({
   selectedSuggestions: {},
   tweetsCountryStatesMapData: [],
   tweetsTableData: [],
-  phraseType:"ANY",
+  phraseType: 'ANY',
   selectedDocumentTypes: [
     'FMP-transcript',
     '10-K',
@@ -489,7 +495,8 @@ const getDefaultState = () => {
     isFromThemex: false,
     isNewlySavedSearch: false,
     topicSearchedComapny: '',
-    isDays: false
+    isDays: false,
+    linkSearchId: null
   };
 };
 
@@ -678,7 +685,7 @@ export default function reducer(
     case SET_TOPIC_HISTORY_CHART_IS_DAYS:
       return { ...state, isDays: action.isDays };
     case SET_SEARCH_PHRASE_TYPE:
-      return {...state,phraseType:action.phraseType};
+      return { ...state, phraseType: action.phraseType };
     case SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER:
       return {
         ...state,
@@ -692,6 +699,9 @@ export default function reducer(
         selectedSector: null,
         selectedIndustries: []
       };
+
+    case SET_SEARCH_ID:
+      return { ...state, linkSearchId: action.linkSearchId };
     default:
       break;
   }
