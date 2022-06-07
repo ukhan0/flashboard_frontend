@@ -1,8 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Grid, Paper, Box, Avatar, Card } from '@material-ui/core';
-import clsx from 'clsx';
+import { Grid, Tooltip, Box, Avatar, Card } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { get, uniqBy } from 'lodash';
@@ -12,6 +11,7 @@ import SocketService from '../../socketService';
 import io from 'socket.io-client';
 import config from 'config/config';
 import { lastTweets } from './HomePageHelpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const socket = io.connect(config.socketUrl);
 SocketService.init(socket);
 const useStyles = makeStyles(theme => ({
@@ -25,11 +25,6 @@ const useStyles = makeStyles(theme => ({
       paddingRight: 2,
       borderRadius: 4
     }
-  },
-
-  margin: {
-    marginTop: '12px',
-    background: 'white'
   },
   documentDate: {
     fontSize: '20px'
@@ -65,11 +60,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   topic: {
-    backgroundColor: '#87ceeb',
     paddingLeft: 2,
     paddingRight: 2,
-    borderRadius: 4,
-    color: 'white'
+    fontWeight: 'bold'
   }
 }));
 
@@ -130,83 +123,62 @@ const TopicSearchResults = () => {
           <Grid item></Grid>
         </Grid>
 
-        <div style={{ height: '600px', margin: ' 10px', paddingBottom: '30px' }}>
+        <div style={{ height: '600px', margin: ' 5px', paddingBottom: '50px' }}>
           <PerfectScrollbar>
             {uniqBy(tweets.current, 'actor.id').map((v, index) => {
               return (
                 <Fragment key={`rs${index}`}>
-                  <Paper elevation={6} className={classes.margin}>
-                    <Box p={4}>
-                      <div>
-                        <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-                          <Grid item>
-                            <Avatar
-                              alt="TwitterLogo"
-                              src={`${get(v, 'actor.image', '')}`}
-                              className="app-sidebar-userbox-avatar"
-                              style={{ float: 'left' }}
-                            />
-                            <div style={{ float: 'left', paddingLeft: '5px' }}>
-                              <a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href={`https://twitter.com/${v.account.name}`}>
-                                <span className={classes.topic}> {v.account.name}</span>
-                                &nbsp;
-                                {v.posting_account}
-                              </a>
-                              <br></br>
-                              <a target="_blank" rel="noopener noreferrer" href={`${get(v, 'tweet_json.link', '')}`}>
-                                <span>{v.source}</span>
-                              </a>
-                            </div>
-                          </Grid>
-                        </Grid>
-                        <Grid container>
-                          <Grid item xs={8}>
-                            <small className="text-black-50 pt-1 pr-2">
-                              Posting Account ID:{' '}
-                              <b className={clsx(classes.clickable, 'text-first')}>{v.account.accountId}</b>
-                            </small>
-                          </Grid>
-                          <Grid item xs={4}>
-                            <small className="text-black-50 pt-1 pr-2">
-                              Tweet ID: <b className="text-first">{v.account.id}</b>
-                            </small>
-                          </Grid>
-                        </Grid>
-                        <br></br>
-
-                        <Grid container>
-                          <Grid item xs={12}>
-                            <p
-                              key={`rstc`}
-                              className={clsx(
-                                classes.searchResultText,
-                                classes.paragraphHeading,
-                                classes.clickable,
-                                classes.line,
-                                'font-size-mg mb-2 text-black-50'
-                              )}>
-                              {v.actor.summary ? v.actor.summary : v.body}
-                            </p>
-                          </Grid>
-                        </Grid>
-                        <Grid container>
-                          <Grid item xs={12}>
-                            <small className="text-black-50 pt-1 pr-2">
-                              Date Posted:{' '}
-                              <b className="text-first">
-                                {v.actor.postedTime
+                  <Box p={2} elevation={6} style={{ border: '1px solid lightgrey', marginBottom: '5px',borderRadius:"20px",boxShadow: "rgba(0,0,0,0.16) 0px 3px 6px,rgba(0,0,0,0.23) 0px 3px 6px" }}>
+                    <div>
+                      <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                        <Grid item>
+                          <Avatar
+                            alt="TwitterLogo"
+                            src={`${get(v, 'actor.image', '')}`}
+                            className="app-sidebar-userbox-avatar"
+                            style={{ float: 'left' }}
+                          />
+                          <div style={{ float: 'left', paddingLeft: '5px' }}>
+                            <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${v.account.name}`}>
+                              <span className={classes.topic}>{v.actor.displayName}</span>
+                              <span className="text-black-50 pt-1 pr-2"> @{v.account.name} </span>
+                            </a>
+                            <Tooltip
+                              placement="top"
+                              title={
+                                v.actor.postedTime
                                   ? moment(v.actor.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A')
-                                  : ''}
-                              </b>
-                            </small>
-                          </Grid>
+                                  : ''
+                              }>
+                              <span className="text-black-50 pt-1 pr-2">
+                                . {v.actor.postedTime ? moment(v.actor.postedTime).fromNow() : ''}
+                              </span>
+                            </Tooltip>
+                          </div>
                         </Grid>
-                      </div>
-                    </Box>
-                  </Paper>
+                      </Grid>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <p
+                            key={`rstc`}
+                            style={{
+                              paddingLeft: '50px',
+                              position: 'relative',
+                              bottom: '5px'
+                            }}>
+                            {v.actor.summary ? v.actor.summary : v.body}
+                          </p>
+                          <p
+                            className="text-black-50 pt-1 pr-2" style={{paddingLeft:"50px"}}>
+                            <span>
+                            <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
+                            </span> Powered by Twitter
+                          </p>
+                        </Grid>
+                      </Grid>
+                      <Grid container></Grid>
+                    </div>
+                  </Box>
                 </Fragment>
               );
             })}
