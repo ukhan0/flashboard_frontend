@@ -69,7 +69,7 @@ const HeaderMenu = props => {
           color="inherit"
           onClick={goToDashboard}
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/home' ? 'btn-active' : '')}>
-          Dashboard
+          Home
         </Button>
         <Button
           size="medium"
