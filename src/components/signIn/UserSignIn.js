@@ -132,7 +132,7 @@ const LivePreviewExample = () => {
           localStorage.removeItem('redirect_url');
           history.push(redirectURL);
         } else {
-          history.push('/watchlist');
+          history.push('/home');
         }
       } else {
         setErrorText('Email and Password not matched');

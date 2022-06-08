@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { get } from 'lodash';
-import { refreshToken } from '../utils/helpers';
+// import { refreshToken } from '../utils/helpers';
 export default {
   initalise: () => {
     axios.defaults.baseURL = get(process.env, 'REACT_APP_APIURL', '');
