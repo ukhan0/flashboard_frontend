@@ -103,19 +103,19 @@ export default function HomePageSmaLime1(props) {
       {tableType['container'] === 'container1' ? (
         <div
           className={classes.cardcontent}
-          style={{ height: '600px', width: '600px' }}
+          style={{ height: '100vh'}}
           id={tableType['container']}></div>
       ) : null}
       {tableType['container'] === 'container2' ? (
         <div
           className={classes.cardcontent}
-          style={{ height: '600px', width: '600px' }}
+          style={{ height: '100vh'}}
           id={tableType['container']}></div>
       ) : null}
       {tableType['container'] === 'container3' ? (
         <div
           className={classes.cardcontent}
-          style={{ height: '600px', width: '600px' }}
+          style={{ height: '100vh'}}
           id={tableType['container']}></div>
       ) : null}
     </Card>

@@ -123,7 +123,7 @@ const TopicSearchResults = () => {
           <Grid item></Grid>
         </Grid>
 
-        <div style={{ height: '600px', margin: ' 5px', paddingBottom: '50px' }}>
+        <div style={{ height: '600px', margin: ' 5px', paddingBottom: '60px' }}>
           <PerfectScrollbar>
             {uniqBy(tweets.current, 'actor.id').map((v, index) => {
               return (
@@ -176,12 +176,6 @@ const TopicSearchResults = () => {
                             }}>
                             {v.actor.summary ? v.actor.summary : v.body}
                           </p>
-                          <p className="text-black-50 pt-1 pr-2" style={{ paddingLeft: '50px' }}>
-                            <span>
-                              <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
-                            </span>{' '}
-                            Powered by Twitter
-                          </p>
                         </Grid>
                       </Grid>
                       <Grid container></Grid>
@@ -191,6 +185,12 @@ const TopicSearchResults = () => {
               );
             })}
           </PerfectScrollbar>
+          <p className="text-black-50 pt-1 pr-2" style={{ textAlign:"right",paddingTop: '10px' }}>
+            <span>
+              <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
+            </span>{' '}
+            Powered by Twitter
+          </p>
         </div>
       </div>
     </Card>

@@ -187,8 +187,30 @@ const Watchlist = props => {
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
     watchlistData.forEach(watchlist => {
-      let isActiveFlag = get(watchlist, 'isActiveFlag',false);
-      if (isActiveFlag === isActiveCompanies) {
+      if (isActiveCompanies === true) {
+        let isActiveFlag = get(watchlist, 'isActiveFlag', false);
+        if (isActiveFlag === isActiveCompanies) {
+          const data = {
+            ...watchlist,
+            ...watchlist[selectedFileType][selectedMetric],
+            last: dateFormaterMoment(
+              parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
+            ),
+
+            recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
+            oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
+            periodDate: dateFormaterMoment(
+              parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
+            ),
+
+            documentType: selectedFileType,
+            isColorEnable: isColorEnable
+          };
+          delete data['10k'];
+          delete data['10q'];
+          filteredData.push(data);
+        }
+      } else {
         const data = {
           ...watchlist,
           ...watchlist[selectedFileType][selectedMetric],

@@ -2,13 +2,13 @@ import React from 'react';
 import { ListItem, List, ListItemText, Switch, Grid, Typography } from '@material-ui/core';
 import WatchlistService from '../WatchlistService';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsColorEnable,setIsActiveCompanies } from '../../../reducers/Watchlist';
+import { setIsColorEnable, setIsActiveCompanies } from '../../../reducers/Watchlist';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActionApiCalls';
 import { getUser, saveUser } from '../WatchlistHelpers';
 
 export default function WatchListActions() {
   const dispatch = useDispatch();
-  const { isColorEnable,isActiveCompanies } = useSelector(state => state.Watchlist);  
+  const { isColorEnable, isActiveCompanies } = useSelector(state => state.Watchlist);
   const actions = [
     { key: 'autoSize', label: 'Auto Size Columns' },
     // { key: 'sizeToFit', label: 'Fit Column Size' },
