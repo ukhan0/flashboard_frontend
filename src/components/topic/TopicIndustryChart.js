@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, findIndex, cloneDeep } from 'lodash';
-import { setSelectedIndustries } from '../../reducers/Topic';
+import { setSelectedIndustries, isDateSet } from '../../reducers/Topic';
 
 const baseGraphOptions = {
   chart: {
@@ -42,16 +42,19 @@ const baseGraphOptions = {
 };
 
 export default function TopicIndustryChart(props) {
-  const { searchResult, selectedIndustries } = useSelector(state => state.Topic);
+  const { searchResult, selectedIndustries, isDays } = useSelector(state => state.Topic);
   const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
   const dispatch = useDispatch();
 
   const handleIndustryClick = useCallback(
     industryName => {
       dispatch(setSelectedIndustries([...selectedIndustries, industryName]));
+      if (isDays) {
+        dispatch(isDateSet(true));
+      }
       props.handleIndustryClick();
     },
-    [dispatch, props, selectedIndustries]
+    [dispatch, props, selectedIndustries, isDays]
   );
 
   useEffect(() => {

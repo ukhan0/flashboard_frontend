@@ -109,20 +109,27 @@ const Watchlist = props => {
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
+  let completeCompaniesDatalocal = useRef(completeCompaniesData);
+  let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
 
+  useEffect(() => {
+    completeCompaniesDatalocal.current = completeCompaniesData;
+    completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
+  }, [completeCompaniesData, completeCompaniesDataGlobal]);
   const searchFromCompleteData = useCallback(() => {
-    const rawData = selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal;
+    const rawData =
+      selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current;
     if (rawData) {
       dispatch(setIsNewWatchlistDataAvailable(true));
       setWatchlistData(formatData(rawData));
     }
-  }, [dispatch, completeCompaniesData, completeCompaniesDataGlobal, selectedType]);
+  }, [dispatch, selectedType]);
 
   const syncCompleteDataOnPage = useCallback(
     newData => {
       const rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal
+        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
       );
       if (!rawCompleteData || !isArray(rawCompleteData)) {
         return;
@@ -137,17 +144,20 @@ const Watchlist = props => {
         dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
       }
     },
-    [completeCompaniesData, completeCompaniesDataGlobal, selectedType, dispatch]
+    [selectedType, dispatch]
   );
 
+  useEffect(() => {
+    firstTimeLoad.current = false;
+  }, []);
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
       if (selectedUniverse === 'all') {
         if (selectedType === 'domestic') {
-          rawData = completeCompaniesData;
+          rawData = completeCompaniesDatalocal.current;
         } else {
-          rawData = completeCompaniesDataGlobal;
+          rawData = completeCompaniesDataGloballocal.current;
         }
         setTimeout(() => {
           setWatchlistData(formatData(rawData));
@@ -173,16 +183,7 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [
-    selectedUniverse,
-    completeCompaniesData,
-    completeCompaniesDataGlobal,
-    syncCompleteDataOnPage,
-    selectedFileType,
-    selectedType,
-    count,
-    dispatch
-  ]);
+  }, [selectedUniverse, syncCompleteDataOnPage, selectedFileType, selectedType, count, dispatch]);
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -294,10 +295,6 @@ const Watchlist = props => {
       }
     }
   }, [fetchData, dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
-
-  useEffect(() => {
-    firstTimeLoad.current = false;
-  }, []);
 
   useEffect(() => {
     if (history.location.pathname === '/watchlist') {

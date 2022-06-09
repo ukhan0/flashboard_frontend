@@ -8,7 +8,8 @@ import {
   setSelectedSector,
   setSelectedUniverse,
   setSelectedIndustries,
-  setSelectedCountry
+  setSelectedCountry,
+  isDateSet
 } from '../../reducers/Topic';
 const baseGraphOptions = {
   chart: {
@@ -47,7 +48,7 @@ const baseGraphOptions = {
 };
 
 export default function TopicSectorChart(props) {
-  const { searchResult } = useSelector(state => state.Topic);
+  const { searchResult, isDays } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [graphOptions, setGraphOptions] = useState(cloneDeep(baseGraphOptions));
   const handleCountryClick = useCallback(
@@ -55,19 +56,25 @@ export default function TopicSectorChart(props) {
       const selectedCountry = countriesCode.find(c => c.name.toLowerCase() === country.toLowerCase());
       if (selectedCountry) {
         dispatch(setSelectedCountry(selectedCountry));
+        if (isDays) {
+          dispatch(isDateSet(true));
+        }
         props.handleSectorClick();
       }
     },
-    [dispatch, props]
+    [dispatch, props, isDays]
   );
   const handleSectorClick = useCallback(
     sectorName => {
       dispatch(setSelectedUniverse('sector'));
       dispatch(setSelectedSector(sectorName));
       dispatch(setSelectedIndustries([]));
+      if (isDays) {
+        dispatch(isDateSet(true));
+      }
       props.handleSectorClick();
     },
-    [dispatch, props]
+    [dispatch, props, isDays]
   );
   const getCountryName = countryCode => {
     let cName = '';
