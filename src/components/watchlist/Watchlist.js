@@ -187,50 +187,38 @@ const Watchlist = props => {
 
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
+    function preProcess(watchlist) {
+      const data = {
+        ...watchlist,
+        ...watchlist[selectedFileType][selectedMetric],
+        last: dateFormaterMoment(
+          parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
+        ),
+
+        recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
+        oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
+        periodDate: dateFormaterMoment(
+          parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
+        ),
+
+        documentType: selectedFileType,
+        isColorEnable: isColorEnable
+      };
+      delete data['10k'];
+      delete data['10q'];
+      filteredData.push(data);
+    }
+
     watchlistData.forEach(watchlist => {
       if (isActiveCompanies === true) {
+        //show active companies only
         let isActiveFlag = get(watchlist, 'isActiveFlag', false);
         if (isActiveFlag === isActiveCompanies) {
-          const data = {
-            ...watchlist,
-            ...watchlist[selectedFileType][selectedMetric],
-            last: dateFormaterMoment(
-              parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
-            ),
-
-            recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
-            oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
-            periodDate: dateFormaterMoment(
-              parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
-            ),
-
-            documentType: selectedFileType,
-            isColorEnable: isColorEnable
-          };
-          delete data['10k'];
-          delete data['10q'];
-          filteredData.push(data);
+          preProcess(watchlist);
         }
       } else {
-        const data = {
-          ...watchlist,
-          ...watchlist[selectedFileType][selectedMetric],
-          last: dateFormaterMoment(
-            parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
-          ),
-
-          recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
-          oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
-          periodDate: dateFormaterMoment(
-            parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
-          ),
-
-          documentType: selectedFileType,
-          isColorEnable: isColorEnable
-        };
-        delete data['10k'];
-        delete data['10q'];
-        filteredData.push(data);
+        //show all companies
+        preProcess(watchlist);
       }
     });
     return filteredData;
