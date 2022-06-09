@@ -12,6 +12,8 @@ import io from 'socket.io-client';
 import config from 'config/config';
 import { lastTweets } from './HomePageHelpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Repeat, SmsOutlined, FavoriteBorderOutlined } from '@material-ui/icons';
+
 const socket = io.connect(config.socketUrl);
 SocketService.init(socket);
 const useStyles = makeStyles(theme => ({
@@ -106,6 +108,24 @@ const TopicSearchResults = () => {
       clearInterval(intervalId); //This is important
     };
   }, [renderTime]);
+
+  function goToTweet(tweet_link) {
+    window.open(tweet_link, '_blank');
+  }
+
+  function tweetActions(action, tweet_id) {
+    let id = tweet_id.substring(tweet_id.lastIndexOf(':') + 1, tweet_id.length);
+    console.log(id);
+    if (action === 'REPLY') {
+      window.open(`https://twitter.com/intent/tweet?in_reply_to=${id}`, '_blank');
+    }
+    if (action === 'RETWEET') {
+      window.open(`https://twitter.com/intent/retweet?tweet_id=${id}`, '_blank');
+    }
+    if (action === 'LIKE') {
+      window.open(`https://twitter.com/intent/favorite?tweet_id=${id}`, '_blank');
+    }
+  }
   return (
     <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
       <div style={{ outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
@@ -147,19 +167,17 @@ const TopicSearchResults = () => {
                             style={{ float: 'left' }}
                           />
                           <div style={{ float: 'left', paddingLeft: '5px' }}>
-                            <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${v.account.name}`}>
+                            <a target="_blank" rel="noopener noreferrer" href={v.actor.link}>
                               <span className={classes.topic}>{v.actor.displayName}</span>
                               <span className="text-black-50 pt-1 pr-2"> @{v.account.name} </span>
                             </a>
                             <Tooltip
                               placement="top"
                               title={
-                                v.actor.postedTime
-                                  ? moment(v.actor.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A')
-                                  : ''
+                                v.object ? moment(v.object.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A') : ''
                               }>
                               <span className="text-black-50 pt-1 pr-2">
-                                . {v.actor.postedTime ? moment(v.actor.postedTime).fromNow() : ''}
+                                . {v.object ? moment(v.object.postedTime).fromNow() : ''}
                               </span>
                             </Tooltip>
                           </div>
@@ -168,24 +186,65 @@ const TopicSearchResults = () => {
                       <Grid container>
                         <Grid item xs={12}>
                           <p
+                            onClick={() => {
+                              goToTweet(v.object.link);
+                            }}
                             key={`rstc`}
                             style={{
                               paddingLeft: '50px',
                               position: 'relative',
-                              bottom: '5px'
+                              bottom: '5px',
+                              cursor: 'pointer'
                             }}>
-                            {v.actor.summary ? v.actor.summary : v.body}
+                            {v.long_object ? v.long_object.body : v.body}
                           </p>
                         </Grid>
                       </Grid>
-                      <Grid container></Grid>
+                      <Grid container direction="row" justifyContent="space-around" alignItems="center" spacing={5}>
+                        <Grid
+                          style={{ cursor: 'pointer', textAlign: 'center' }}
+                          item
+                          xs={4}
+                          onClick={() => {
+                            tweetActions('REPLY', v.object.id);
+                          }}
+                          onMouseEnter={(e) => {e.target.style.color="blue"}}
+                          onMouseLeave={(e) => {e.target.style.color="black"}}>
+                          <SmsOutlined />
+                          <span> Reply</span>
+                        </Grid>
+                        <Grid
+                          style={{ cursor: 'pointer', textAlign: 'center' }}
+                          item
+                          xs={4}
+                          onClick={() => {
+                            tweetActions('RETWEET', v.object.id);
+                          }}
+                          onMouseEnter={(e) => {e.target.style.color="blue"}}
+                          onMouseLeave={(e) => {e.target.style.color="black"}}>
+                          <Repeat />
+                          <span> Retweet</span>
+                        </Grid>
+                        <Grid
+                          style={{ cursor: 'pointer', textAlign: 'center' }}
+                          item
+                          xs={4}
+                          onClick={() => {
+                            tweetActions('LIKE', v.object.id);
+                          }}
+                          onMouseEnter={(e) => {e.target.style.color="blue"}}
+                          onMouseLeave={(e) => {e.target.style.color="black"}}>
+                          <FavoriteBorderOutlined />
+                          <span> Like</span>
+                        </Grid>
+                      </Grid>
                     </div>
                   </Box>
                 </Fragment>
               );
             })}
           </PerfectScrollbar>
-          <p className="text-black-50 pt-1 pr-2" style={{ textAlign:"right",paddingTop: '10px' }}>
+          <p className="text-black-50 pt-1 pr-2" style={{ textAlign: 'right', paddingTop: '10px' }}>
             <span>
               <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />
             </span>{' '}
