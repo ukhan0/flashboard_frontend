@@ -14,7 +14,7 @@ import { performTopicSearchHighlights } from './topicActions';
 import './TopicTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
-import { setIsFromThemex, setTopicSearchCompany } from '../../reducers/Topic';
+import { setIsFromThemex, setTopicSearchCompany,isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
@@ -88,7 +88,8 @@ export default function TopicCompantResultsTable() {
     isSearchLoading,
     searchResultHighlights,
     selectedCompanyName,
-    topicSearchedComapny
+    topicSearchedComapny,
+    isDays
   } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const companyResults = get(searchResult, 'buckets.groupByCompanyTicker', []);
@@ -109,6 +110,9 @@ export default function TopicCompantResultsTable() {
     const companyIndex = uniqCompanyNames.indexOf(params.data.key);
     if (companyIndex === -1) {
       // get data for this company
+      if (isDays) {
+        dispatch(isDateSet(true));
+      }
       dispatch(performTopicSearchHighlights(true, params.data.key));
       dispatch(setBackDropOnCompanyClick(true));
     }
