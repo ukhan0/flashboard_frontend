@@ -22,7 +22,7 @@ export default function HomePage() {
   const classes = useStyle();
   const [snackbar, setSnackBar] = React.useState(null);
   const { isLoading } = useSelector(state => state.HomePage);
-  const anchorOrigin = { vertical: 'center', horizontal: 'center' };
+  const anchorOrigin = { vertical: 'top', horizontal: 'center' };
   const handleSnackBar = data => {
     setSnackBar(data);
   };

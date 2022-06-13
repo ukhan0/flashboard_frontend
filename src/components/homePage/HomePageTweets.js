@@ -115,7 +115,6 @@ const TopicSearchResults = () => {
 
   function tweetActions(action, tweet_id) {
     let id = tweet_id.substring(tweet_id.lastIndexOf(':') + 1, tweet_id.length);
-    console.log(id);
     if (action === 'REPLY') {
       window.open(`https://twitter.com/intent/tweet?in_reply_to=${id}`, '_blank');
     }
@@ -200,7 +199,7 @@ const TopicSearchResults = () => {
                           </p>
                         </Grid>
                       </Grid>
-                      <Grid container direction="row" justifyContent="space-around" alignItems="center" spacing={5}>
+                      <Grid container direction="row" justify="space-around" alignItems="center" spacing={5}>
                         <Grid
                           style={{ cursor: 'pointer', textAlign: 'center' }}
                           item

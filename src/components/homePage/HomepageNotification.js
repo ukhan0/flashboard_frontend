@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Card } from '@material-ui/core';
+import { Card, ButtonGroup, Button } from '@material-ui/core';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import moment from 'moment';
@@ -10,23 +10,52 @@ import { setHomePageLoader } from '../../reducers/HomePage';
 import axios from 'axios';
 import { forEach, get, reverse } from 'lodash';
 import config from '../../config/config';
-
+import { earningsCallType } from '../../config/filterTypes';
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
   const [upcomingCalls, setUpcomingCalls] = React.useState([]);
+  const [domesticData, setDomesticData] = React.useState([]);
+  const [globalData, setGlobalData] = React.useState([]);
+  const [upComingCallType, setUpComingCallType] = React.useState('all');
+  const [filterData, setFilterData] = React.useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
-
   const handleEmailTemplate = (t, title) => {
     dispatch(setEmailTemplate({ emailTemplate: t, title: title }));
     history.push('./notification');
   };
 
-  const handleNotificationClick = url => {
-    window.open(url, '_blank');
+  const handleNotificationClick = data => {
+    window.open(data.url, '_blank');
   };
 
-  const getNotificationsData = useCallback(async () => {
+  const fetchUserWatchlist = useCallback(
+    async selectedType => {
+      try {
+        let user = JSON.parse(localStorage.getItem('user'));
+        dispatch(setHomePageLoader(true));
+        const response = await axios.get(
+          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=watchlist&selected_type=${selectedType}&nnn=''`
+        );
+        let data = get(response, 'data.data.content', []);
+        if (selectedType === 'global') {
+          setGlobalData(data);
+        } else {
+          setDomesticData(data);
+        }
+        dispatch(setHomePageLoader(false));
+      } catch (error) {
+        console.log(error);
+        console.error('Internal server error:', error);
+        setDomesticData([]);
+        setGlobalData([]);
+        dispatch(setHomePageLoader(false));
+      }
+    },
+    [dispatch]
+  );
+
+  const getEarningsCalls = useCallback(async () => {
     dispatch(setHomePageLoader(true));
     const now = moment();
     try {
@@ -37,21 +66,19 @@ export default function HomepageNotification() {
           apikey: config.upcomingEarningCalls
         }
       });
-      if (response.data.length > 1) {
-        const data = get(response, 'data', []);
-        reverse(data);
-        //place datetime object in all items
-        forEach(data, function(item) {
-          item['datetime'] = moment(`${item.date}T${item.time}:00`);
-        });
-        //re-sort data by time in ascending order
-        data.sort(function(a, b) {
-          return a.datetime - b.datetime;
-        });
 
-        setUpcomingCalls(data);
-        dispatch(setHomePageLoader(false));
-      }
+      const data = get(response, 'data', []);
+      reverse(data);
+      //place datetime object in all items
+      forEach(data, function(item) {
+        item['datetime'] = moment(`${item.date}T${item.time}:00`);
+      });
+      //re-sort data by time in ascending order
+      data.sort(function(a, b) {
+        return a.datetime - b.datetime;
+      });
+      setUpcomingCalls(data);
+      dispatch(setHomePageLoader(false));
     } catch (error) {
       console.error('Internal server error:', error);
       setUpcomingCalls([]);
@@ -59,27 +86,58 @@ export default function HomepageNotification() {
     }
   }, [dispatch]);
 
-  React.useEffect(() => {
-    getNotificationsData();
-  }, [getNotificationsData]);
+  const getSelectedData = () => {
+    let finalData = [];
+    let watchlist = globalData.concat(domesticData);
+    upcomingCalls.forEach(u => {
+      let ticker = watchlist.find(sd => sd.ticker === u.symbol);
+      if (ticker) {
+        finalData.push(u);
+      }
+    });
+    setFilterData(finalData);
+  };
 
+  React.useEffect(() => {
+    getEarningsCalls();
+    ['domestic', 'global'].forEach(selectedType => {
+      fetchUserWatchlist(selectedType);
+    });
+  }, [getEarningsCalls, fetchUserWatchlist]);
+  const handleUpType = key => {
+    setUpComingCallType(key);
+    if (key === 'watchlist') {
+      getSelectedData();
+    }
+  };
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Notifications</div>
+        <ButtonGroup color="primary">
+          {earningsCallType.map((type, i) => (
+            <Button
+              size="small"
+              key={`diff_${i}`}
+              onClick={() => handleUpType(type.key)}
+              variant={type.key === upComingCallType ? 'contained' : 'outlined'}>
+              {type.label}
+            </Button>
+          ))}
+        </ButtonGroup>
       </div>
       <div>
         <div style={{ height: '500px' }}>
           <PerfectScrollbar>
             <div className="card-header--title font-weight-bold " style={{ textAlign: 'center', padding: '10px' }}>
-              Upcoming Earning Calls
+              Upcoming Calls
             </div>
-            {upcomingCalls?.map((data, index) => (
+            {(upComingCallType === 'all' ? upcomingCalls : filterData).map((data, index) => (
               <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                 <div
                   className="timeline-item"
                   style={{ cursor: 'pointer' }}
-                  onClick={() => handleNotificationClick(data.url)}>
+                  onClick={() => handleNotificationClick(data)}>
                   <div className="timeline-item-offset">{moment(`${data.date}T${data.time}:00`).format('hh:mm A')}</div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
@@ -95,7 +153,7 @@ export default function HomepageNotification() {
               </div>
             ))}
             <hr></hr>
-            {notifications?.map((data, index) => (
+            {notifications.map((data, index) => (
               <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                 <div
                   className="timeline-item"

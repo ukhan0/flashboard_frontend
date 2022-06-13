@@ -55,3 +55,8 @@ export const homePageTypesSelection = [
   { label: 'SEC', key: 'fillings_sec*', type: 'SEC', id: 2 },
   { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR', id: 3 }
 ];
+
+export const earningsCallType = [
+  { label: 'All', key: 'all' },
+  { label: 'Watchlist', key: 'watchlist' }
+];

@@ -29,6 +29,12 @@ export const SET_FILTER_LABEL = 'WATCHLIST/SET_FILTER_LABEL';
 export const SET_SELECTED_FILTER = 'WATCHLIST/SET_SELECTED_FILTER';
 export const SET_IS_FILTER_UPDATE = 'WATCHLIST/SET_IS_FILTER_UPDATE';
 export const SET_IS_ACTIVE_COMPANIES = 'WATCHLIST/SET_IS_ACTIVE_COMPANIES';
+export const SET_USER_WATCHLIST = 'WATCHLIST/SET_USER_WATCHLIST';
+
+export const setUserWatchlist = userWatchlist => ({
+  type: SET_USER_WATCHLIST,
+  userWatchlist
+});
 
 export const setIsActiveCompanies = isActiveCompanies => ({
   type: SET_IS_ACTIVE_COMPANIES,
@@ -219,7 +225,8 @@ const getDefaultState = () => {
     emailTemplate: {},
     filterLabel: '',
     selectedFilter: null,
-    isFilterUpdate: false
+    isFilterUpdate: false,
+    userWatchlist:[]
   };
 };
 
@@ -231,6 +238,8 @@ export default function reducer(
 ) {
   switch (action.type) {
     // watchlist
+    case SET_USER_WATCHLIST:
+      return { ...state, userWatchlist: action.userWatchlist };
     case SET_IS_ACTIVE_COMPANIES:
       return { ...state, isActiveCompanies: action.isActiveCompanies };
     case SET_OVERWRITE_CHECK_BOX:

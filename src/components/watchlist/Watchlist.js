@@ -26,7 +26,8 @@ import {
   setCompleteGlobalCompaniesData,
   setSelectedFilter,
   setFilterLabel,
-  setIsFilterUpdate
+  setIsFilterUpdate,
+  setUserWatchlist
 } from '../../reducers/Watchlist';
 import {
   setCompanyFillingData,
@@ -431,6 +432,14 @@ const Watchlist = props => {
     WatchlistService.clearSort(sortLast);
     setConfirmationClearSortDialog(false);
   };
+
+  useEffect(() => {
+    let tickers = [];
+    watchlistData.forEach(function (value){
+      tickers.push(value.ticker);
+    });
+    dispatch(setUserWatchlist(tickers));
+  }, [watchlistData,dispatch]);
 
   const handleOpenAgGridSideBar = isActions => {
     setIsAgGridActions(isActions);

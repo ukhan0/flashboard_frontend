@@ -92,7 +92,7 @@ const WatchlistTopicSearch = props => {
         className={classes.searchField}
         onChange={selectionChanged}
         options={availableSymbols}
-        value={selectedTickerSymbol}
+        value={selectedTickerSymbol?selectedTickerSymbol:""}
         closeIcon={
           <CloseIcon
             onClick={() => {
