@@ -28,7 +28,12 @@ import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import { checkIsFilterActive, getWatchlistType } from './WatchlistHelpers';
-import { setIsFilterActive } from '../../reducers/Watchlist';
+import {
+  setIsFilterActive,
+  setWatchlistSearchText,
+  setSelectedTickerSymbol,
+  setIsTickerSelected
+} from '../../reducers/Watchlist';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
   AddRemoveIcon: AddRemoveIcon,
@@ -475,8 +480,10 @@ const WatchlistTable = props => {
   const dispatch = useDispatch();
   const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
+  const [isClear, setIsClear] = React.useState(false);
   const [isColResizing, setColResizing] = React.useState(0);
   let getQueryParams = new URLSearchParams(useLocation().search);
+  let isTicker = React.useRef(false);
 
   //this function can be used to select first row on load
   const selectTableRow = (data, id, isAutoSelection, rowNode) => {
@@ -515,8 +522,10 @@ const WatchlistTable = props => {
     if (!gridApi.current) {
       return;
     }
+    isTicker.current = false;
     const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
     if (isTickerSelected) {
+      isTicker.current = true;
       tickerFilterInstance.setModel({
         type: 'equals',
         filter: searchText
@@ -540,6 +549,7 @@ const WatchlistTable = props => {
   };
 
   const storeFilteringState = params => {
+    setIsClear(WatchlistService.getTickerState());
     const filteringModel = params.api.getFilterModel();
     props.storeFilteringState(filteringModel);
     dispatch(setIsFilterActive(checkIsFilterActive()));
@@ -606,6 +616,15 @@ const WatchlistTable = props => {
     //   selectTableRow(data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
     // }
   };
+
+  React.useEffect(() => {
+    if (isClear && isTicker.current) {
+      dispatch(setWatchlistSearchText(''));
+      dispatch(setSelectedTickerSymbol(null));
+      setIsClear(false);
+      dispatch(setIsTickerSelected(false));
+    }
+  }, [isClear, dispatch]);
   return (
     <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
       <AgGridReact

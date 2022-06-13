@@ -1,4 +1,5 @@
 import { formatExportValue } from './WatchlistTableHelpers';
+import { isEmpty } from 'lodash';
 const exportParams = {
   fileName: 'WatchList',
   processCellCallback: formatExportValue
@@ -39,6 +40,16 @@ class WatchListService {
       displayedColumns = this.agGridColumnAPI.getAllDisplayedColumns().map(v => v.colId);
     }
     return { columns: columns, displayedColumns: displayedColumns };
+  };
+
+  getTickerState = () => {
+    let clear = false;
+    const filteringModel = this.agGridAPI.getFilterModel();
+
+    if (isEmpty(filteringModel)) {
+      clear = true;
+    }
+    return clear;
   };
 
   clearSort = sort => {
