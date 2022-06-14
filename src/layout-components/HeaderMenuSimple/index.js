@@ -8,8 +8,8 @@ import { useHistory } from 'react-router-dom';
 import Help from '../../components/navigationBar/Navigation';
 import { makeStyles } from '@material-ui/core/styles';
 import HomePageSearch from '../../components/homePage/HomePageSearch';
-// import { resetAllSearchParams } from '../../reducers/Topic';
-// import { useDispatch } from 'react-redux';
+import { resetAllSearchParams } from '../../reducers/Topic';
+import { useDispatch } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(1)
@@ -22,14 +22,17 @@ const HeaderMenu = props => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorHelp, setAnchorHelp] = React.useState(null);
-  // const dispatch = useDispatch();
-  // const handleClick = event => {
-  //   let pathname = window.location.pathname;
-  //   if (pathname === '/home') {
-  //     dispatch(resetAllSearchParams());
-  //     setAnchorEl(anchorEl ? null : event.currentTarget);
-  //   }
-  // };
+  const dispatch = useDispatch();
+  const handleClick = event => {
+    const { currentTarget } = event;
+    setTimeout(() => {
+      let pathname = window.location.pathname;
+      if (pathname !== '/topic') {
+        dispatch(resetAllSearchParams());
+        setAnchorEl(anchorEl ? null : currentTarget);
+      }
+    }, 2000);
+  };
 
   const handleClickHelp = event => {
     setAnchorHelp(anchorEl ? null : event.currentTarget);
@@ -84,7 +87,7 @@ const HeaderMenu = props => {
             color="inherit"
             onClick={gotToTopic}
             disabled={false}
-            // onMouseEnter={handleClick}     temporary disabled
+            onMouseEnter={handleClick}
             className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/topic' ? 'btn-active' : '')}>
             ThemeX
           </Button>
