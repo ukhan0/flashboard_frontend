@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
-import { setEmailTemplate } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
 import { setHomePageLoader } from '../../reducers/HomePage';
 import axios from 'axios';
 import { forEach, get, reverse } from 'lodash';
 import config from '../../config/config';
 import { earningsCallType } from '../../config/filterTypes';
+import { setSearchId } from '../../reducers/Topic';
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
   const [upcomingCalls, setUpcomingCalls] = React.useState([]);
@@ -20,9 +20,11 @@ export default function HomepageNotification() {
   const [filterData, setFilterData] = React.useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
-  const handleEmailTemplate = (t, title) => {
-    dispatch(setEmailTemplate({ emailTemplate: t, title: title }));
-    history.push('./notification');
+  const handleEmailTemplate = (link, id) => {
+    if (id && window.location.pathname === '/topic') {
+      dispatch(setSearchId(id));
+    }
+    history.push(link);
   };
 
   const handleNotificationClick = data => {
@@ -138,7 +140,9 @@ export default function HomepageNotification() {
                   className="timeline-item"
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleNotificationClick(data)}>
-                  <div className="timeline-item-offset">{moment(`${data.date}T${data.time}:00`).format('hh:mm A')}</div>
+                  <div className="timeline-item-offset" style={{ width: '60px', textAlign: 'center' }}>
+                    {moment(`${data.date}T${data.time}:00`).format('hh:mm A') + '(ET)'}
+                  </div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '20px' }}>
@@ -158,7 +162,7 @@ export default function HomepageNotification() {
                 <div
                   className="timeline-item"
                   style={{ cursor: 'pointer' }}
-                  onClick={() => handleEmailTemplate(data.emailTemplate, data.title)}>
+                  onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
                   <div className="timeline-item-offset">{moment(data.created_date).format('LT')}</div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
