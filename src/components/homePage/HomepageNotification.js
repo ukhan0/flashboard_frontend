@@ -38,7 +38,7 @@ export default function HomepageNotification() {
         let user = JSON.parse(localStorage.getItem('user'));
         dispatch(setHomePageLoader(true));
         const response = await axios.get(
-          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=watchlist&selected_type=${selectedType}&nnn=''`
+          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=watchlist&selected_type=${selectedType}`
         );
         let data = get(response, 'data.data.content', []);
         if (selectedType === 'global') {
@@ -89,7 +89,7 @@ export default function HomepageNotification() {
     }
   }, [dispatch]);
 
-  const getSelectedData = () => {
+  const getSelectedData = useCallback(() => {
     let finalData = [];
     let watchlist = globalData.concat(domesticData);
     upcomingCalls.forEach(u => {
@@ -99,7 +99,7 @@ export default function HomepageNotification() {
       }
     });
     setFilterData(finalData);
-  };
+  }, [globalData, domesticData, upcomingCalls]);
 
   React.useEffect(() => {
     setUpComingCallType(getUpCommingCallsType());
@@ -108,12 +108,13 @@ export default function HomepageNotification() {
       fetchUserWatchlist(selectedType);
     });
   }, [getEarningsCalls, fetchUserWatchlist]);
+
+  React.useEffect(() => {
+    getSelectedData();
+  }, [getSelectedData]);
   const handleUpType = key => {
     storeUpCommingCallsType(key);
     setUpComingCallType(key);
-    if (key === 'watchlist') {
-      getSelectedData();
-    }
   };
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>

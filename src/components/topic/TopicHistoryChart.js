@@ -102,7 +102,7 @@ const TopicHistoryChart = props => {
           events: {
             click: function() {
               if (this) {
-                const docCount = get(this, 'series.name', null);
+                // const docCount = get(this, 'series.name', null);
                 // if (docCount === 'Documents Count') {
                 const index = get(this, 'index', null);
                 const docData = get(this, 'series.data', []);
