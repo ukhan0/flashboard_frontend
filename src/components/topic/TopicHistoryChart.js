@@ -103,23 +103,23 @@ const TopicHistoryChart = props => {
             click: function() {
               if (this) {
                 const docCount = get(this, 'series.name', null);
-                if (docCount === 'Documents Count') {
-                  const index = get(this, 'index', null);
-                  const docData = get(this, 'series.data', []);
-                  if (docData.length > 0) {
-                    let selectedDate = {
-                      startDate: moment(docData[index].category, 'MM-DD-YYYY')._d,
-                      endDate: isDays
-                        ? moment(docData[index].category, 'MM-DD-YYYY')._d
-                        : moment(docData[index].category, 'MM-DD-YYYY').endOf('month')._d
-                    };
-                    dispatch(setTopicSearchDateRange(selectedDate));
-                    dispatch(isDateSet(true));
-                    props.handleSearch('day');
-                    dispatch(setIsDays(true));
-                    // setIsDays(true);
-                  }
+                // if (docCount === 'Documents Count') {
+                const index = get(this, 'index', null);
+                const docData = get(this, 'series.data', []);
+                if (docData.length > 0) {
+                  let selectedDate = {
+                    startDate: moment(docData[index].category, 'MM-DD-YYYY')._d,
+                    endDate: isDays
+                      ? moment(docData[index].category, 'MM-DD-YYYY')._d
+                      : moment(docData[index].category, 'MM-DD-YYYY').endOf('month')._d
+                  };
+                  dispatch(setTopicSearchDateRange(selectedDate));
+                  dispatch(isDateSet(true));
+                  props.handleSearch('day');
+                  dispatch(setIsDays(true));
+                  // setIsDays(true);
                 }
+                // }
               }
             }
           }

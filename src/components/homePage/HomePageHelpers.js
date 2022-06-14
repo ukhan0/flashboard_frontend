@@ -7,3 +7,15 @@ export const lastTweets = () => {
 
   return tweets;
 };
+
+export const storeUpCommingCallsType = type => {
+  localStorage.setItem('upcommingcallstype', type);
+};
+export const getUpCommingCallsType = () => {
+  let type = localStorage.getItem('upcommingcallstype');
+
+  if (!type) {
+    type = 'all';
+  }
+  return type;
+};

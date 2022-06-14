@@ -11,6 +11,7 @@ import { forEach, get, reverse } from 'lodash';
 import config from '../../config/config';
 import { earningsCallType } from '../../config/filterTypes';
 import { setSearchId } from '../../reducers/Topic';
+import { getUpCommingCallsType, storeUpCommingCallsType } from './HomePageHelpers';
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
   const [upcomingCalls, setUpcomingCalls] = React.useState([]);
@@ -101,12 +102,14 @@ export default function HomepageNotification() {
   };
 
   React.useEffect(() => {
+    setUpComingCallType(getUpCommingCallsType());
     getEarningsCalls();
     ['domestic', 'global'].forEach(selectedType => {
       fetchUserWatchlist(selectedType);
     });
   }, [getEarningsCalls, fetchUserWatchlist]);
   const handleUpType = key => {
+    storeUpCommingCallsType(key);
     setUpComingCallType(key);
     if (key === 'watchlist') {
       getSelectedData();
