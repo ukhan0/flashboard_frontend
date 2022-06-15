@@ -93,17 +93,13 @@ const TopicSearchResults = () => {
     for (let i = 0; i < userWatchlist.length; i++) {
       socket.emit('join_room', userWatchlist[i].ticker);
       socket.on(userWatchlist[i].ticker, function(data) {
-        console.log(data);
+        let tweetObj = JSON.parse(data);
+        tweetObj.namx = userWatchlist[i].ticker;
+        if (tweets.current.length > 70) {
+          tweets.current.pop();
+        }
+        tweets.current.unshift(tweetObj);
       });
-
-      // SocketService.socket.on(userWatchlist[i].ticker, d => {
-      //   let tweetObj = JSON.parse(d);
-      //   tweetObj.namx = userWatchlist[i].ticker;
-      //   if (tweets.current.length > 70) {
-      //     tweets.current.pop();
-      //   }
-      //   tweets.current.unshift(tweetObj);
-      // });
     }
   }, [userWatchlist]);
   useEffect(() => {
