@@ -14,7 +14,7 @@ import { lastTweets } from './HomePageHelpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Repeat, SmsOutlined, FavoriteBorderOutlined } from '@material-ui/icons';
 
-const socket = io.connect(config.socketUrl);
+const socket = io.connect('http://127.0.0.1:3400');
 SocketService.init(socket);
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -89,15 +89,21 @@ const TopicSearchResults = () => {
   }, [getUserWatchlist]);
   useEffect(() => {
     socket.connect();
+
     for (let i = 0; i < userWatchlist.length; i++) {
-      SocketService.socket.on(userWatchlist[i].ticker, d => {
-        let tweetObj = JSON.parse(d);
-        tweetObj.namx = userWatchlist[i].ticker;
-        if (tweets.current.length > 70) {
-          tweets.current.pop();
-        }
-        tweets.current.unshift(tweetObj);
+      socket.emit('join_room', userWatchlist[i].ticker);
+      socket.on(userWatchlist[i].ticker, function(data) {
+        console.log(data);
       });
+
+      // SocketService.socket.on(userWatchlist[i].ticker, d => {
+      //   let tweetObj = JSON.parse(d);
+      //   tweetObj.namx = userWatchlist[i].ticker;
+      //   if (tweets.current.length > 70) {
+      //     tweets.current.pop();
+      //   }
+      //   tweets.current.unshift(tweetObj);
+      // });
     }
   }, [userWatchlist]);
   useEffect(() => {
@@ -207,8 +213,12 @@ const TopicSearchResults = () => {
                           onClick={() => {
                             tweetActions('REPLY', v.object.id);
                           }}
-                          onMouseEnter={(e) => {e.target.style.color="blue"}}
-                          onMouseLeave={(e) => {e.target.style.color="black"}}>
+                          onMouseEnter={e => {
+                            e.target.style.color = 'blue';
+                          }}
+                          onMouseLeave={e => {
+                            e.target.style.color = 'black';
+                          }}>
                           <SmsOutlined />
                           <span> Reply</span>
                         </Grid>
@@ -219,8 +229,12 @@ const TopicSearchResults = () => {
                           onClick={() => {
                             tweetActions('RETWEET', v.object.id);
                           }}
-                          onMouseEnter={(e) => {e.target.style.color="blue"}}
-                          onMouseLeave={(e) => {e.target.style.color="black"}}>
+                          onMouseEnter={e => {
+                            e.target.style.color = 'blue';
+                          }}
+                          onMouseLeave={e => {
+                            e.target.style.color = 'black';
+                          }}>
                           <Repeat />
                           <span> Retweet</span>
                         </Grid>
@@ -231,8 +245,12 @@ const TopicSearchResults = () => {
                           onClick={() => {
                             tweetActions('LIKE', v.object.id);
                           }}
-                          onMouseEnter={(e) => {e.target.style.color="blue"}}
-                          onMouseLeave={(e) => {e.target.style.color="black"}}>
+                          onMouseEnter={e => {
+                            e.target.style.color = 'blue';
+                          }}
+                          onMouseLeave={e => {
+                            e.target.style.color = 'black';
+                          }}>
                           <FavoriteBorderOutlined />
                           <span> Like</span>
                         </Grid>
