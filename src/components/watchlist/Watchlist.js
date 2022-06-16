@@ -26,8 +26,7 @@ import {
   setCompleteGlobalCompaniesData,
   setSelectedFilter,
   setFilterLabel,
-  setIsFilterUpdate,
-  setUserWatchlist
+  setIsFilterUpdate
 } from '../../reducers/Watchlist';
 import {
   setCompanyFillingData,
@@ -84,7 +83,7 @@ const Watchlist = props => {
     searchText,
     isFilterActive,
     selectedTickerSymbol,
-    isNewWatchListDataAvailable,
+
     isColorEnable,
     overwriteCheckBox,
     completeCompaniesData,
@@ -110,6 +109,8 @@ const Watchlist = props => {
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
+  const [syncData, setSyncData] = useState([]);
+  const [gridData, setGridData] = useState(null);
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
   let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
@@ -118,14 +119,6 @@ const Watchlist = props => {
     completeCompaniesDatalocal.current = completeCompaniesData;
     completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
   }, [completeCompaniesData, completeCompaniesDataGlobal]);
-  const searchFromCompleteData = useCallback(() => {
-    const rawData =
-      selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current;
-    if (rawData) {
-      dispatch(setIsNewWatchlistDataAvailable(true));
-      setWatchlistData(formatData(rawData));
-    }
-  }, [dispatch, selectedType]);
 
   const syncCompleteDataOnPage = useCallback(
     newData => {
@@ -151,22 +144,31 @@ const Watchlist = props => {
   useEffect(() => {
     firstTimeLoad.current = false;
   }, []);
+
+  useEffect(() => {
+    syncCompleteDataOnPage(syncData);
+  }, [syncData, syncCompleteDataOnPage]);
+
+  useEffect(() => {
+    let rawData = [];
+    if (selectedUniverse === 'all') {
+      if (selectedType === 'domestic') {
+        rawData = completeCompaniesData;
+      } else {
+        rawData = completeCompaniesDataGlobal;
+      }
+      setWatchlistData(formatData(rawData));
+    }
+  }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal]);
   const fetchData = useCallback(async () => {
     try {
       let rawData = [];
-      if (selectedUniverse === 'all') {
-        if (selectedType === 'domestic') {
-          rawData = completeCompaniesDatalocal.current;
-        } else {
-          rawData = completeCompaniesDataGloballocal.current;
-        }
-        setTimeout(() => {
-          setWatchlistData(formatData(rawData));
-        }, []);
-      } else {
+      if (selectedUniverse !== 'all') {
         setLoading(true);
+        setWatchlistData([]);
         rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-        syncCompleteDataOnPage(rawData);
+        setSyncData(rawData);
+        // syncCompleteDataOnPage(rawData);
         // update cached data of all (Complete) watchlist
         if (!firstTimeLoad.current) {
           dispatch(setIsNewWatchlistDataAvailable(false));
@@ -184,11 +186,31 @@ const Watchlist = props => {
       setLoading(false);
       // log exception here
     }
-  }, [selectedUniverse, syncCompleteDataOnPage, selectedFileType, selectedType, count, dispatch]);
+  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
 
-  const processWatchlistData = useCallback(() => {
-    const filteredData = [];
-    function preProcess(watchlist) {
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, dataVersion]);
+
+  useEffect(() => {
+    if (history.location.pathname === '/watchlist') {
+      dispatch(setIsNewWatchlistDataAvailable(true));
+    }
+  }, [dispatch, history.location.pathname]);
+
+  useEffect(() => {
+    setIsFilterActiveOnSearch(searchText);
+  }, [searchText]);
+
+  // useEffect(() => {
+  //   let tickers = [];
+  //   watchlistData.forEach(function(value) {
+  //     tickers.push(value.ticker);
+  //   });
+  //   dispatch(setUserWatchlist(tickers));
+  // }, [watchlistData, dispatch]);
+  const preProcess = useCallback(
+    watchlist => {
       const data = {
         ...watchlist,
         ...watchlist[selectedFileType][selectedMetric],
@@ -207,89 +229,53 @@ const Watchlist = props => {
       };
       delete data['10k'];
       delete data['10q'];
-      filteredData.push(data);
-    }
+
+      return data;
+    },
+    [isColorEnable, selectedFileType, selectedMetric]
+  );
+  const processWatchlistData = useCallback(() => {
+    const filteredData = [];
 
     watchlistData.forEach(watchlist => {
       if (isActiveCompanies === true) {
         //show active companies only
         let isActiveFlag = get(watchlist, 'isActiveFlag', false);
         if (isActiveFlag === isActiveCompanies) {
-          preProcess(watchlist);
+          const data = preProcess(watchlist);
+          filteredData.push(data);
         }
       } else {
+        const data = preProcess(watchlist);
+        filteredData.push(data);
         //show all companies
-        preProcess(watchlist);
       }
     });
+
     return filteredData;
-  }, [selectedFileType, selectedMetric, watchlistData, isColorEnable, isActiveCompanies]);
+  }, [watchlistData, isActiveCompanies, preProcess]);
 
-  const onColumnClick = (rowData, columnId) => {
-    dispatch(setIsFromThemex(false));
-    dispatch(setCompanyFillingData([]));
-    dispatch(setCompanyFillingGraphData([]));
-    dispatch(setCompanyFillingRevenueData([]));
-    dispatch(setCompanyPriceOverlay([]));
-    dispatch(setHeadingRedirect(null));
-    rowData.documentType = selectedFileType;
-    if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
-      dispatch(setSelectedWatchlist(rowData));
-      history.push('/socialSentiment');
-    }
-    if (columnId === 'actions') {
-      let updatedTickerDetailIndex = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
-      let watchListDataArr = cloneDeep(watchlistData);
-      if (rowData.isTickerActive) {
-        if (selectedUniverse === 'watchlist') {
-          watchListDataArr.splice(updatedTickerDetailIndex, 1);
-          setWatchlistData(watchListDataArr);
-        } else {
-          watchListDataArr[updatedTickerDetailIndex].isTickerActive = false;
-          setWatchlistData(watchListDataArr);
+  const getSavedFilters = useCallback(async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        let respData = get(responsePayload, 'data', []);
+        setSavedFilters(respData);
+        if (respData.length < 1) {
+          dispatch(setFilterLabel(''));
         }
-        deleteTicker(rowData.ticker);
-        dispatch(setSentimentResult(null, null));
-        dispatch(setSelectedWatchlist(rowData));
       } else {
-        // add ticker
-        watchListDataArr[updatedTickerDetailIndex].isTickerActive = true;
-        setWatchlistData(watchListDataArr);
-        handleUpload(rowData.ticker);
-        dispatch(setSentimentResult(null, null));
+        setSavedFilters([]);
       }
-    } else {
-      dispatch(setSentimentResult(null, null));
-      dispatch(setSelectedWatchlist(rowData));
-      dispatch(setSidebarDisplay(true));
-      if (
-        columnId === 'wordCountChange' ||
-        columnId === 'wordCountChangePercent' ||
-        columnId === 'wordCountChangePercentWord'
-      ) {
-        history.push('/comparision');
-      }
+    } catch (error) {
+      setSavedFilters([]);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
-    if (searchText.length >= 2) {
-      searchFromCompleteData();
-    }
-
-    if (isNewWatchListDataAvailable) {
-      if (searchText.length === 0) {
-        setWatchlistData([]);
-        fetchData();
-      }
-    }
-  }, [fetchData, dataVersion, searchText, isNewWatchListDataAvailable, searchFromCompleteData]);
-
-  useEffect(() => {
-    if (history.location.pathname === '/watchlist') {
-      dispatch(setIsNewWatchlistDataAvailable(true));
-    }
-  }, [dispatch, history.location.pathname]);
+    getSavedFilters();
+  }, [getSavedFilters]);
 
   const updateTickerValue = useCallback(
     (rawCompleteData, ticker, isTicker) => {
@@ -309,7 +295,7 @@ const Watchlist = props => {
   const updateChacheData = useCallback(
     (ticker, isTicker) => {
       let rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal
+        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
       );
       if (Array.isArray(ticker)) {
         for (let i = 0; i < ticker.length; i++) {
@@ -327,7 +313,7 @@ const Watchlist = props => {
         updateTickerValue(rawCompleteData, ticker, isTicker);
       }
     },
-    [dispatch, selectedType, completeCompaniesData, completeCompaniesDataGlobal, updateTickerValue]
+    [dispatch, selectedType, updateTickerValue]
   );
 
   const deleteTicker = useCallback(
@@ -364,6 +350,7 @@ const Watchlist = props => {
   const handleUpload = useCallback(
     async ticker => {
       const user = JSON.parse(localStorage.getItem('user'));
+
       try {
         setLoading(true);
         const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
@@ -395,80 +382,6 @@ const Watchlist = props => {
     },
     [dispatch, dataVersion, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
   );
-
-  const onStoreColumnsState = state => {
-    storeColumnsState(state);
-  };
-
-  const onStoreFilteringState = state => {
-    storeFilteringState(state);
-  };
-
-  const clearFilterHandler = state => {
-    dispatch(setSelectedTickerSymbol(null));
-    WatchlistService.clearFilter();
-    setConfirmationClearFilterDialog(false);
-    dispatch(setWatchlistSearchText(''));
-    setIsFilterActiveOnSearch('');
-    dispatch(setIsTickerSelected(false));
-    dispatch(setSelectedFilter(null));
-    dispatch(setIsFilterUpdate(false));
-    dispatch(setFilterLabel(''));
-  };
-
-  useEffect(() => {
-    setIsFilterActiveOnSearch(searchText);
-  }, [searchText]);
-
-  const clearSortHandler = state => {
-    const columnState = getColumnState();
-    let sortLast = null;
-    columnState.forEach(elements => {
-      if (elements.colId === 'last') {
-        sortLast = lastReportedState;
-      }
-    });
-
-    WatchlistService.clearSort(sortLast);
-    setConfirmationClearSortDialog(false);
-  };
-
-  useEffect(() => {
-    let tickers = [];
-    watchlistData.forEach(function (value){
-      tickers.push(value.ticker);
-    });
-    dispatch(setUserWatchlist(tickers));
-  }, [watchlistData,dispatch]);
-
-  const handleOpenAgGridSideBar = isActions => {
-    setIsAgGridActions(isActions);
-    setIsAgGridSideBarOpen(true);
-  };
-  const handleCloseAgGridSideBar = () => {
-    setIsAgGridSideBarOpen(false);
-  };
-
-  const getSavedFilters = useCallback(async () => {
-    try {
-      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
-      const responsePayload = get(response, 'data', null);
-      if (responsePayload && !responsePayload.error) {
-        let respData = get(responsePayload, 'data', []);
-        setSavedFilters(respData);
-        if (respData.length < 1) {
-          dispatch(setFilterLabel(''));
-        }
-      } else {
-        setSavedFilters([]);
-      }
-    } catch (error) {
-      setSavedFilters([]);
-    }
-  }, [dispatch]);
-  useEffect(() => {
-    getSavedFilters();
-  }, [getSavedFilters]);
 
   const saveFilter = async text => {
     if (!isEmpty(getFilteringState())) {
@@ -528,6 +441,93 @@ const Watchlist = props => {
     setIsFilterLabelOpen(false);
   };
 
+  const onStoreColumnsState = state => {
+    storeColumnsState(state);
+  };
+
+  const onStoreFilteringState = state => {
+    storeFilteringState(state);
+  };
+
+  const clearFilterHandler = state => {
+    dispatch(setSelectedTickerSymbol(null));
+    WatchlistService.clearFilter();
+    setConfirmationClearFilterDialog(false);
+    dispatch(setWatchlistSearchText(''));
+    setIsFilterActiveOnSearch('');
+    dispatch(setIsTickerSelected(false));
+    dispatch(setSelectedFilter(null));
+    dispatch(setIsFilterUpdate(false));
+    dispatch(setFilterLabel(''));
+  };
+
+  const clearSortHandler = state => {
+    const columnState = getColumnState();
+    let sortLast = null;
+    columnState.forEach(elements => {
+      if (elements.colId === 'last') {
+        sortLast = lastReportedState;
+      }
+    });
+
+    WatchlistService.clearSort(sortLast);
+    setConfirmationClearSortDialog(false);
+  };
+
+  const handleOpenAgGridSideBar = isActions => {
+    setIsAgGridActions(isActions);
+    setIsAgGridSideBarOpen(true);
+  };
+  const handleCloseAgGridSideBar = () => {
+    setIsAgGridSideBarOpen(false);
+  };
+  const onColumnClick = (rowData, columnId) => {
+    dispatch(setIsFromThemex(false));
+    dispatch(setCompanyFillingData([]));
+    dispatch(setCompanyFillingGraphData([]));
+    dispatch(setCompanyFillingRevenueData([]));
+    dispatch(setCompanyPriceOverlay([]));
+    dispatch(setHeadingRedirect(null));
+    rowData.documentType = selectedFileType;
+    if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
+      dispatch(setSelectedWatchlist(rowData));
+      history.push('/socialSentiment');
+    }
+    if (columnId === 'actions') {
+      let updatedTickerDetailIndex = watchlistData.findIndex(d => (d.ticker ? d.ticker === rowData.ticker : null));
+      let watchListDataArr = cloneDeep(watchlistData);
+      if (rowData.isTickerActive) {
+        if (selectedUniverse === 'watchlist') {
+          watchListDataArr.splice(updatedTickerDetailIndex, 1);
+          setWatchlistData(watchListDataArr);
+        } else {
+          watchListDataArr[updatedTickerDetailIndex].isTickerActive = false;
+          setWatchlistData(watchListDataArr);
+        }
+        deleteTicker(rowData.ticker);
+        dispatch(setSentimentResult(null, null));
+        dispatch(setSelectedWatchlist(rowData));
+      } else {
+        // add ticker
+        watchListDataArr[updatedTickerDetailIndex].isTickerActive = true;
+        setWatchlistData(watchListDataArr);
+        handleUpload(rowData.ticker);
+        dispatch(setSentimentResult(null, null));
+      }
+    } else {
+      dispatch(setSentimentResult(null, null));
+      dispatch(setSelectedWatchlist(rowData));
+      dispatch(setSidebarDisplay(true));
+      if (
+        columnId === 'wordCountChange' ||
+        columnId === 'wordCountChangePercent' ||
+        columnId === 'wordCountChangePercentWord'
+      ) {
+        history.push('/comparision');
+      }
+    }
+  };
+
   const handleOpenAgGridFilterDialog = () => {
     setIsSavedFilterDialog(true);
   };
@@ -541,7 +541,11 @@ const Watchlist = props => {
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
-  const gridData = firstTimeLoad.current ? null : processWatchlistData();
+
+  useEffect(() => {
+    firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
+  }, [processWatchlistData, selectedFileType]);
+
   return (
     <>
       <WatchlistFilterLabelDialog
