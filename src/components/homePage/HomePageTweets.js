@@ -14,7 +14,7 @@ import { lastTweets } from './HomePageHelpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Repeat, SmsOutlined, FavoriteBorderOutlined } from '@material-ui/icons';
 
-const socket = io.connect('http://127.0.0.1:3400');
+const socket = io.connect(config.socketUrl);
 SocketService.init(socket);
 const useStyles = makeStyles(theme => ({
   resultHeader: {
