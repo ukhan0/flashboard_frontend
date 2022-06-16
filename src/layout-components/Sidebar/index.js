@@ -14,6 +14,7 @@ import { setIsFromSideBar } from '../../reducers/Topic';
 import { useDispatch } from 'react-redux';
 
 import navItems from './navItems';
+import { hoverTime } from '../../config/appConfig';
 
 import {
   setSidebarToggleMobile,
@@ -38,9 +39,21 @@ const Sidebar = props => {
 
     selectedItem
   } = props;
-
-  const toggleHoverOn = () => setSidebarHover(true);
-  const toggleHoverOff = () => setSidebarHover(false);
+  const [toggleTimer, setToggleTimer] = React.useState(null);
+  const toggleHoverOn = event => {
+    let { currentTarget } = event;
+    currentTarget.style.cursor = 'wait';
+    setToggleTimer(
+      setTimeout(function() {
+        setSidebarHover(true);
+        currentTarget.style.cursor = 'default';
+      }, hoverTime)
+    );
+  };
+  const toggleHoverOff = () => {
+    clearTimeout(toggleTimer);
+    setSidebarHover(false);
+  };
 
   const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
   const handleSearchTerm = () => {
