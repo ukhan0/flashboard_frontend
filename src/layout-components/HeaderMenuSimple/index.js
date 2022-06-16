@@ -9,6 +9,7 @@ import Help from '../../components/navigationBar/Navigation';
 import { makeStyles } from '@material-ui/core/styles';
 import HomePageSearch from '../../components/homePage/HomePageSearch';
 import { resetAllSearchParams } from '../../reducers/Topic';
+import { hoverTime } from '../../config/appConfig';
 import { useDispatch } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -23,17 +24,25 @@ const HeaderMenu = props => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorHelp, setAnchorHelp] = React.useState(null);
   const dispatch = useDispatch();
-  const handleClick = event => {
-    const { currentTarget } = event;
-    setTimeout(() => {
-      let pathname = window.location.pathname;
-      if (pathname !== '/topic') {
-        dispatch(resetAllSearchParams());
-        setAnchorEl(anchorEl ? null : currentTarget);
-      }
-    }, 2000);
-  };
+  const [hoverTimer, setHoverTimer] = React.useState(null);
 
+  const handleMouseEnter = event => {
+    const { currentTarget } = event;
+    let pathname = window.location.pathname;
+    if (pathname !== '/topic') {
+      currentTarget.style.cursor = 'wait';
+      setHoverTimer(
+        setTimeout(() => {
+          dispatch(resetAllSearchParams());
+          setAnchorEl(anchorEl ? null : currentTarget);
+          currentTarget.style.cursor = 'pointer';
+        }, hoverTime)
+      );
+    }
+  };
+  const handleMouseLeave = () => {
+    clearTimeout(hoverTimer);
+  };
   const handleClickHelp = event => {
     setAnchorHelp(anchorEl ? null : event.currentTarget);
   };
@@ -48,7 +57,8 @@ const HeaderMenu = props => {
     history.push('/watchlist');
   };
 
-  const gotToTopic = () => {
+  const gotToTopic = e => {
+    e.currentTarget.style.cursor = 'pointer';
     setSidebarToggle(true);
     history.push('/topic');
   };
@@ -87,7 +97,8 @@ const HeaderMenu = props => {
             color="inherit"
             onClick={gotToTopic}
             disabled={false}
-            onMouseEnter={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/topic' ? 'btn-active' : '')}>
             ThemeX
           </Button>
