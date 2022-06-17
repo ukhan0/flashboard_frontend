@@ -111,6 +111,8 @@ const Watchlist = props => {
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
+  const [sortedCol, setSortedCol] = useState(null);
+  const [filteredCol, setFilteredCol] = useState(null);
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
   let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
@@ -225,14 +227,15 @@ const Watchlist = props => {
         ),
 
         documentType: selectedFileType,
-        isColorEnable: isColorEnable
+        isColorEnable: isColorEnable,
+        ...sortedCol,
+        ...filteredCol
       };
       delete data['10k'];
       delete data['10q'];
-
       return data;
     },
-    [isColorEnable, selectedFileType, selectedMetric]
+    [isColorEnable, selectedFileType, selectedMetric, sortedCol, filteredCol]
   );
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
@@ -442,10 +445,23 @@ const Watchlist = props => {
   };
 
   const onStoreColumnsState = state => {
+    let obj = {};
+    let sortCol = state.filter(v => v.sort);
+    for (const key of sortCol) {
+      obj = { ...obj, [key['colId'] + 'Sort']: true };
+    }
+    setSortedCol(obj);
     storeColumnsState(state);
   };
 
   const onStoreFilteringState = state => {
+    let obj = {};
+
+    let filterCol = Object.keys(state);
+    for (const key of filterCol) {
+      obj = { ...obj, [key + 'Filter']: true };
+    }
+    setFilteredCol(obj);
     storeFilteringState(state);
   };
 
@@ -545,7 +561,6 @@ const Watchlist = props => {
   useEffect(() => {
     firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
   }, [processWatchlistData, selectedFileType]);
-
   return (
     <>
       <WatchlistFilterLabelDialog

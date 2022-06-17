@@ -13,7 +13,8 @@ import {
   changeWordFormatter,
   numberWordComparator,
   lastReportedState,
-  dateComparator
+  dateComparator,
+  getCellStyle
 } from './WatchlistTableHelpers';
 
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
@@ -71,7 +72,6 @@ const defaultColDef = {
 const gridOptions = {
   headerHeight: 80
 };
-
 const sideBarConfiguration = {
   toolPanels: [
     {
@@ -96,7 +96,6 @@ const sideBarConfiguration = {
   position: 'right',
   defaultToolPanel: null
 };
-
 const colDefs = [
   {
     headerName: 'Actions',
@@ -142,7 +141,10 @@ const colDefs = [
     suppressMenu: false,
     menuTabs: ['generalMenuTab'],
     pinned: 'left',
-    cellRenderer: 'TickerLogo'
+    cellRenderer: 'TickerLogo',
+    cellStyle: params => {
+      return getCellStyle(params.data.tickerSort, params.data.tickerFilter, {});
+    }
   },
   {
     headerName: 'Company Name',
@@ -153,7 +155,10 @@ const colDefs = [
     filter: 'agTextColumnFilter',
     menuTabs: ['generalMenuTab'],
     suppressMenu: false,
-    pinned: 'left'
+    pinned: 'left',
+    cellStyle: params => {
+      return getCellStyle(params.data.companyNameSort, params.data.companyNameFilter, {});
+    }
   },
   {
     headerName: 'Sector',
@@ -161,7 +166,10 @@ const colDefs = [
     field: 'sector',
     colId: 'sector',
     width: 142,
-    filter: 'agTextColumnFilter'
+    filter: 'agTextColumnFilter',
+    cellStyle: params => {
+      return getCellStyle(params.data.sectorSort, params.data.sectorFilter, {});
+    }
   },
   {
     headerName: 'Industry',
@@ -169,7 +177,10 @@ const colDefs = [
     field: 'industry',
     colId: 'industry',
     width: 158,
-    filter: 'agTextColumnFilter'
+    filter: 'agTextColumnFilter',
+    cellStyle: params => {
+      return getCellStyle(params.data.industrySort, params.data.industryFilter, {});
+    }
   },
   {
     headerName: 'Market Cap in Millions',
@@ -192,8 +203,9 @@ const colDefs = [
     },
     valueGetter: params => parseNumber(get(params, 'data.mktcap', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
-    cellStyle: () => {
-      return { textAlign: 'right' };
+    cellStyle: params => {
+      let style = { textAlign: 'right' };
+      return getCellStyle(params.data.mktcapSort, params.data.mktcapFilter, style);
     }
   },
   {
@@ -217,8 +229,9 @@ const colDefs = [
     },
     valueGetter: params => parseNumber(get(params, 'data.adv', null)),
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
-    cellStyle: () => {
-      return { textAlign: 'right' };
+    cellStyle: params => {
+      let style = { textAlign: 'right' };
+      return getCellStyle(params.data.advSort, params.data.advFilter, style);
     }
   },
   {
@@ -231,7 +244,10 @@ const colDefs = [
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     comparator: dateComparator,
-    getQuickFilterText: params => params.value
+    getQuickFilterText: params => params.value,
+    cellStyle: params => {
+      return getCellStyle(params.data.lastSort, params.data.lastFilter, {});
+    }
   },
   {
     headerName: 'Period Date',
@@ -243,7 +259,10 @@ const colDefs = [
     comparator: dateComparator,
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    getQuickFilterText: params => params.value
+    getQuickFilterText: params => params.value,
+    cellStyle: params => {
+      return getCellStyle(params.data.periodDateSort, params.data.periodDateFilter, {});
+    }
   },
   {
     headerName: 'Aggregated Sentiment',
@@ -273,7 +292,8 @@ const colDefs = [
       }
     },
     cellStyle: params => {
-      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+      let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
+      return getCellStyle(params.data.sentimentSort, params.data.sentimentFilter, style);
     }
   },
   {
@@ -297,7 +317,10 @@ const colDefs = [
         return get(params, 'data.sentimentWord', null);
       }
     },
-    cellRenderer: 'WordStatusRenderer'
+    cellRenderer: 'WordStatusRenderer',
+    cellStyle: params => {
+      return getCellStyle(params.data.sentimentWordSort, params.data.sentimentWordFilter, {});
+    }
   },
   {
     headerName: 'Sentiment Change',
@@ -327,7 +350,8 @@ const colDefs = [
       }
     },
     cellStyle: params => {
-      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+      let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
+      return getCellStyle(params.data.sentimentChangeSort, params.data.sentimentChangeFilter, style);
     }
   },
   {
@@ -356,7 +380,10 @@ const colDefs = [
         return get(params, 'data.sentimentChangeWord', null);
       }
     },
-    cellRenderer: 'WordStatusRenderer'
+    cellRenderer: 'WordStatusRenderer',
+    cellStyle: params => {
+      return getCellStyle(params.data.sentimentChangeWordSort, params.data.sentimentChangeWordFilter, {});
+    }
   },
   {
     headerName: 'Word Count Change',
@@ -384,15 +411,17 @@ const colDefs = [
       }
       return null;
     },
-    cellStyle: params => {
-      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
-    },
+
     comparator: numberWordComparator,
     filterParams: {
       valueGetter: params => {
         const value = get(params, 'data.wordCountChange', null);
         return value !== null ? parseNumber(value) : null;
       }
+    },
+    cellStyle: params => {
+      let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
+      return getCellStyle(params.data.wordCountChangeSort, params.data.wordCountChangeFilter, style);
     }
   },
   {
@@ -424,7 +453,8 @@ const colDefs = [
       }
     },
     cellStyle: params => {
-      return params.data.isColorEnable ? descriptionValueStyler(params) : null;
+      let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
+      return getCellStyle(params.data.wordCountChangePercentSort, params.data.wordCountChangePercentFilter, style);
     }
   },
   {
@@ -459,7 +489,10 @@ const colDefs = [
         return get(params, 'data.wordCountChangePercentWord', null);
       }
     },
-    cellRenderer: 'WordStatusRenderer'
+    cellRenderer: 'WordStatusRenderer',
+    cellStyle: params => {
+      return getCellStyle(params.data.wordCountChangePercentWordSort, params.data.wordCountChangePercentWordFilter, {});
+    }
   },
   {
     headerName: 'Country',
@@ -472,7 +505,10 @@ const colDefs = [
       const filteredWatchlist = countriesCode.filter(c => get(c, 'code') === get(params, 'data.countryCode'));
       return filteredWatchlist[0]?.name;
     },
-    cellRenderer: 'CountryCodeRenderer'
+    cellRenderer: 'CountryCodeRenderer',
+    cellStyle: params => {
+      return getCellStyle(params.data.countryCodeSort, params.data.countryCodeFilter, {});
+    }
   }
 ];
 
@@ -481,7 +517,6 @@ const WatchlistTable = props => {
   const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
   const [isClear, setIsClear] = React.useState(false);
-  const [isColResizing, setColResizing] = React.useState(0);
   let getQueryParams = new URLSearchParams(useLocation().search);
   let isTicker = React.useRef(false);
 
@@ -508,10 +543,16 @@ const WatchlistTable = props => {
     params.api.resetRowHeights();
   };
   const storeColumnsState = params => {
-    if (isColResizing > 3) {
+    if (params.type === 'sortChanged') {
       storeColumnsStateComman(params);
     }
-    setColResizing(isColResizing + 1);
+    if (params.type === 'columnResized') {
+      storeColumnsStateComman(params);
+    }
+    // if (isColResizing > 3) {
+    //   storeColumnsStateComman(params);
+    // }
+    // setColResizing(isColResizing + 1);
   };
 
   const storeColumnsStateVisible = params => {
@@ -633,7 +674,7 @@ const WatchlistTable = props => {
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
         getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
-        immutableData={true}
+        // immutableData={true}s
         quickFilterText={searchText}
         columnDefs={colDefs}
         defaultColDef={defaultColDef}
