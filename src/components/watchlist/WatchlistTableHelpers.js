@@ -226,7 +226,7 @@ export const dateComparator = (date1, date2) => {
 export const getCellStyle = (sort, filter, currentStyle) => {
   let sortClr = '#ffedd5';
   let filterClr = '#ffe4e6';
-  let style = currentStyle;
+  let style = currentStyle ? currentStyle : {};
   if (sort) {
     style.backgroundColor = sortClr;
   }
