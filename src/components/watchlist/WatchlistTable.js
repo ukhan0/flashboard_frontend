@@ -680,7 +680,7 @@ const WatchlistTable = props => {
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}
-        // pagination={true}
+        pagination={false}
         rowSelection="single"
         gridOptions={gridOptions}
         multiSortKey="ctrl"
