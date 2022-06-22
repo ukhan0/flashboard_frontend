@@ -15,12 +15,14 @@ import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import CloseIcon from '@material-ui/icons/Close';
+import { useHistory } from 'react-router-dom';
 
 const createOptionLabel = option => {
   return `${option.ticker} - ${option.name} ${option.code ? `- ${option.code}` : ''} `;
 };
 
 const WatchlistTopicSearch = props => {
+  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -60,10 +62,10 @@ const WatchlistTopicSearch = props => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
       dispatch(setIsTickerSelected(true));
       dispatch(setSelectedTickerSymbol(newSelectedSymbol));
-      dispatch(setWatchlistType(newSelectedSymbol.type));
-      setTimeout(() => {
-        dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
-      }, [100]);
+      // dispatch(setWatchlistType(newSelectedSymbol.type));
+      // setTimeout(() => {
+      //   dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
+      // }, [100]);
       let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, data);
       let company = formatComapnyData(selectedItem);
       company.recentId = selectedFileType === '10k' ? company.recentId10k : company.recentId10q;
@@ -73,6 +75,7 @@ const WatchlistTopicSearch = props => {
 
       dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
+      history.push('/filings');
     }
   };
 
