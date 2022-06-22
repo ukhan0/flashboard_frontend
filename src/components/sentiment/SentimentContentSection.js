@@ -35,10 +35,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentContentSection = props => {
-  const { selectedItem } = useSelector(state => state.Watchlist);
+  const { selectedItem, selectedType } = useSelector(state => state.Watchlist);
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
-  const [sentimentVesion, setSentimentVersion] = useState('flatText');
+  const [sentimentVesion, setSentimentVersion] = useState(
+    isFromThemex ? 'flatText' : selectedType === 'global' ? 'original' : 'flatText'
+  );
   const classes = useStyles();
   let is_first_iteration = useRef(0);
   const dispatch = useDispatch();
