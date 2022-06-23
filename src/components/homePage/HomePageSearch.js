@@ -11,7 +11,8 @@ import {
   resetResultsPage,
   cancelExistingHightlightsCalls,
   setIsSimpleSearch,
-  setIsUnsavedSearch
+  setIsUnsavedSearch,
+  setSimpleSearchTextArray
 } from '../../reducers/Topic';
 import TopicIndexDropDown from '../topic/TopicIndexDropDown';
 import { useHistory } from 'react-router-dom';
@@ -64,8 +65,9 @@ const TopicFilters = props => {
   });
 
   const handleSearch2 = () => {
-    dispatch(setIsSimpleSearch(false));
     props.onClose();
+    dispatch(setIsSimpleSearch(true));
+    dispatch(setSimpleSearchTextArray([searchText]));
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
     dispatch(performTopicTweetsSearchAggregate(true, true));
@@ -78,11 +80,11 @@ const TopicFilters = props => {
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
     }, 1000);
-
+    
     dispatch(setIsUnsavedSearch(true));
-
-    dispatch(setOpenTopicSearchDialog(true));
+    
     history.push('./topic');
+    dispatch(setOpenTopicSearchDialog(true));
   };
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
 
