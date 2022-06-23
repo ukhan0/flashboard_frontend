@@ -44,13 +44,24 @@
 .ag-row-hover {
   cursor: pointer !important;
 }
-/* .ag-header-cell-sorted-asc {
-  color: blue;
-  font-weight: bold;
+
+.ag-header-cell[aria-sort='descending'] {
+  background-color: rgba(255, 237, 213, 0.5) !important;
+}
+.ag-header-cell[aria-sort='ascending'] {
+  background-color: rgba(255, 237, 213, 0.5) !important;
+}
+.ag-header-cell.ag-header-cell-filtered {
+  background-color: rgba(255, 228, 230, 0.5) !important;
 }
 
-.ag-header-cell-sorted-desc {
-  color: red;
-  font-weight: bold;
+/* .ag-header-cell-filtered .ag-cell-label-container{
+  background-color: rgba(255, 228, 230, 0.5);
 } */
 
+/* .ag-header-cell-sortable:has(.ag-header-cell-sorted-asc) {
+  background-color: red !important;
+}
+.ag-header-cell-sortable:has(.ag-header-cell-sorted-desc) {
+  background-color: red !important;
+} */

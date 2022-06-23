@@ -9,7 +9,6 @@ import { getColorByDocType } from './FillingsHelper';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
-import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 import { setIsFromThemex } from 'reducers/Topic';
 
 export default function FillingCompanyPriceOverlay(props) {
@@ -28,7 +27,7 @@ export default function FillingCompanyPriceOverlay(props) {
 
   useEffect(() => {
     const newData = props.chartData.map(v => {
-      let date = new Date(dateFormaterMoment(parseDateStrMoment(v.document_date.split('.')[0]))).getTime();
+      let date = new Date(v.document_date).getTime();
       let rename = renameDocumentTypes(v.document_type);
       let title = rename;
       if (rename === 'Earning Call') {

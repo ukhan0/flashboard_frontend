@@ -143,7 +143,7 @@ const colDefs = [
     pinned: 'left',
     cellRenderer: 'TickerLogo',
     cellStyle: params => {
-      return getCellStyle(params.data.tickerSort, params.data.tickerFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -157,7 +157,7 @@ const colDefs = [
     suppressMenu: false,
     pinned: 'left',
     cellStyle: params => {
-      return getCellStyle(params.data.companyNameSort, params.data.companyNameFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -168,7 +168,7 @@ const colDefs = [
     width: 142,
     filter: 'agTextColumnFilter',
     cellStyle: params => {
-      return getCellStyle(params.data.sectorSort, params.data.sectorFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -179,7 +179,7 @@ const colDefs = [
     width: 158,
     filter: 'agTextColumnFilter',
     cellStyle: params => {
-      return getCellStyle(params.data.industrySort, params.data.industryFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -205,7 +205,7 @@ const colDefs = [
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
     cellStyle: params => {
       let style = { textAlign: 'right' };
-      return getCellStyle(params.data.mktcapSort, params.data.mktcapFilter, style);
+      return getCellStyle(style);
     }
   },
   {
@@ -231,7 +231,7 @@ const colDefs = [
     valueFormatter: params => currencyFormater(params.value, 0, 'USD'),
     cellStyle: params => {
       let style = { textAlign: 'right' };
-      return getCellStyle(params.data.advSort, params.data.advFilter, style);
+      return getCellStyle(style);
     }
   },
   {
@@ -246,7 +246,7 @@ const colDefs = [
     comparator: dateComparator,
     getQuickFilterText: params => params.value,
     cellStyle: params => {
-      return getCellStyle(params.data.lastSort, params.data.lastFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -261,7 +261,7 @@ const colDefs = [
     cellClass: ['center-align-text'],
     getQuickFilterText: params => params.value,
     cellStyle: params => {
-      return getCellStyle(params.data.periodDateSort, params.data.periodDateFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -293,7 +293,7 @@ const colDefs = [
     },
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
-      return getCellStyle(params.data.sentimentSort, params.data.sentimentFilter, style);
+      return getCellStyle(style);
     }
   },
   {
@@ -319,7 +319,7 @@ const colDefs = [
     },
     cellRenderer: 'WordStatusRenderer',
     cellStyle: params => {
-      return getCellStyle(params.data.sentimentWordSort, params.data.sentimentWordFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -351,7 +351,7 @@ const colDefs = [
     },
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
-      return getCellStyle(params.data.sentimentChangeSort, params.data.sentimentChangeFilter, style);
+      return getCellStyle(style);
     }
   },
   {
@@ -382,7 +382,7 @@ const colDefs = [
     },
     cellRenderer: 'WordStatusRenderer',
     cellStyle: params => {
-      return getCellStyle(params.data.sentimentChangeWordSort, params.data.sentimentChangeWordFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -421,7 +421,7 @@ const colDefs = [
     },
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
-      return getCellStyle(params.data.wordCountChangeSort, params.data.wordCountChangeFilter, style);
+      return getCellStyle(style);
     }
   },
   {
@@ -454,7 +454,7 @@ const colDefs = [
     },
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
-      return getCellStyle(params.data.wordCountChangePercentSort, params.data.wordCountChangePercentFilter, style);
+      return getCellStyle(style);
     }
   },
   {
@@ -491,7 +491,7 @@ const colDefs = [
     },
     cellRenderer: 'WordStatusRenderer',
     cellStyle: params => {
-      return getCellStyle(params.data.wordCountChangePercentWordSort, params.data.wordCountChangePercentWordFilter, {});
+      return getCellStyle({});
     }
   },
   {
@@ -507,7 +507,7 @@ const colDefs = [
     },
     cellRenderer: 'CountryCodeRenderer',
     cellStyle: params => {
-      return getCellStyle(params.data.countryCodeSort, params.data.countryCodeFilter, {});
+      return getCellStyle({});
     }
   }
 ];
@@ -516,6 +516,7 @@ const WatchlistTable = props => {
   const dispatch = useDispatch();
   const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
+  const [isFilterData, setIsFilterData] = React.useState(false);
   const [isClear, setIsClear] = React.useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   let isTicker = React.useRef(false);
@@ -590,6 +591,18 @@ const WatchlistTable = props => {
   };
 
   const storeFilteringState = params => {
+    if (params?.api?.rowModel?.rowsToDisplay) {
+      let data = params?.api?.rowModel?.rowsToDisplay;
+      if (data.length < 1) {
+        setIsFilterData(true);
+        setTimeout(() => {
+          gridApi.current.showNoRowsOverlay();
+        }, [200]);
+      } else {
+        setIsFilterData(false);
+        gridApi.current.hideOverlay();
+      }
+    }
     setIsClear(WatchlistService.getTickerState());
     const filteringModel = params.api.getFilterModel();
     props.storeFilteringState(filteringModel);
@@ -674,7 +687,7 @@ const WatchlistTable = props => {
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
         getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
-        // immutableData={true}s
+        // immutableData={true}
         quickFilterText={searchText}
         columnDefs={colDefs}
         defaultColDef={defaultColDef}
@@ -693,6 +706,7 @@ const WatchlistTable = props => {
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
         context={countriesCode}
+        overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
         onFilterChanged={storeFilteringState}></AgGridReact>
     </div>
   );

@@ -9,7 +9,7 @@ import {
   setSelectedTickerSymbol,
   setSelectedWatchlist,
   setIsTickerSelected,
-  setWatchlistType
+  // setWatchlistType
 } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
