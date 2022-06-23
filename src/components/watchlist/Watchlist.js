@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Grid, Button } from '@material-ui/core';
-import { get, debounce, isArray, cloneDeep } from 'lodash';
+import { get, isArray, cloneDeep } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
