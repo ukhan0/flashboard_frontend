@@ -373,7 +373,7 @@ const Watchlist = props => {
         setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
       }
     },
-    [dispatch, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
+    [dispatch, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
   );
 
   const saveFilter = async text => {
