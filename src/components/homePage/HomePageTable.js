@@ -5,7 +5,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { get, round } from 'lodash';
 import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
 import TickerLogo from '../watchlist/WatchlistTableComponents/TickerLogo';
-import { Card, ButtonGroup, Button } from '@material-ui/core';
+import { Card, ButtonGroup, Button, InputBase } from '@material-ui/core';
 import clsx from 'clsx';
 import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
@@ -16,6 +16,9 @@ import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { homePageTypesSelection } from '../../config/filterTypes';
+import SearchIcon from '@material-ui/icons/Search';
+import { makeStyles, fade } from '@material-ui/core/styles';
+
 const frameworkComponents = {
   TickerLogo: TickerLogo
 };
@@ -38,10 +41,57 @@ const defaultColDef = {
 };
 //Table headers
 
+const useStyles = makeStyles(theme => ({
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    marginRight: theme.spacing(1),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto'
+    }
+  },
+  searchIconContainer: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  searchIcon: {
+    fontSize: '.8rem'
+  },
+  inputRoot: {
+    color: 'inherit',
+    borderBottom: '1px solid #ece1e1'
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch'
+      }
+    }
+  }
+}));
+
 export default function HomePageTable(props) {
+  const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
   const { homePageSelectedSearchIndex } = useSelector(state => state.HomePage);
   const [cancelToken, setCancelToken] = useState(null);
+  const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState(null);
   const dispatch = useDispatch();
   const tableRef = useRef();
   const cellClicked = params => {
@@ -68,7 +118,7 @@ export default function HomePageTable(props) {
       pinned: 'left',
       cellRenderer: 'TickerLogo',
       hide: homePageSelectedSearchIndex.id === 3 ? true : false,
-      sortable: true,
+      sortable: true
     },
     {
       headerName: 'Company Name',
@@ -184,6 +234,10 @@ export default function HomePageTable(props) {
     [dispatch]
   );
 
+  const onSearchTextChange = e => {
+    setRecentDocumentSearchFilter(e.target.value);
+  };
+
   useEffect(() => {
     getRecentCompaniesData(homePageSelectedSearchIndex);
   }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
@@ -191,6 +245,7 @@ export default function HomePageTable(props) {
     if (cancelToken) {
       cancelToken.cancel();
     }
+    setRecentDocumentSearchFilter('');
     dispatch(setHomePageSearchIndex(diff));
   };
 
@@ -198,6 +253,23 @@ export default function HomePageTable(props) {
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold">Recent Documents</div>
+        <>
+          <div className={classes.search}>
+            <div className={classes.searchIconContainer}>
+              <SearchIcon className={classes.searchIcon} />
+            </div>
+            <InputBase
+              placeholder="Search..."
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput
+              }}
+              value={recentDocumentSearchFilter}
+              inputProps={{ 'aria-label': 'search' }}
+              onChange={onSearchTextChange}
+            />
+          </div>
+        </>
         <ButtonGroup color="primary">
           {homePageTypesSelection.map((diff, i) => (
             <Button
@@ -221,6 +293,7 @@ export default function HomePageTable(props) {
           frameworkComponents={frameworkComponents}
           onCellClicked={cellClicked}
           multiSortKey={'ctrl'}
+          quickFilterText={recentDocumentSearchFilter}
           defaultColDef={defaultColDef}></AgGridReact>
       </div>
     </Card>
