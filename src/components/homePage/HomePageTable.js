@@ -67,7 +67,8 @@ export default function HomePageTable(props) {
       menuTabs: ['generalMenuTab'],
       pinned: 'left',
       cellRenderer: 'TickerLogo',
-      hide: homePageSelectedSearchIndex.id === 3 ? true : false
+      hide: homePageSelectedSearchIndex.id === 3 ? true : false,
+      sortable: true,
     },
     {
       headerName: 'Company Name',
