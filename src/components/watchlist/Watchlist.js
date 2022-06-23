@@ -67,7 +67,7 @@ const screenTitle = {
   position: 'relative',
   top: '12px',
   zIndex: '1',
-  textAlign:'center'
+  textAlign: 'center'
 };
 const Watchlist = props => {
   const history = useHistory();
@@ -95,7 +95,6 @@ const Watchlist = props => {
   } = useSelector(state => state.Watchlist);
 
   const [watchlistData, setWatchlistData] = useState([]);
-  const [dataVersion, setDataVersion] = useState(1);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
   const [confirmationClearSortDialog, setConfirmationClearSortDialog] = useState(false);
@@ -190,7 +189,7 @@ const Watchlist = props => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData, dataVersion]);
+  }, [fetchData]);
 
   useEffect(() => {
     if (history.location.pathname === '/watchlist') {
@@ -327,8 +326,6 @@ const Watchlist = props => {
           let isTicker = false;
           updateChacheData(ticker, isTicker);
           setTopicDialogOpen(false);
-          const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
-          debouncedSave();
           setSnackBar({ isSnackBar: true, message: 'Ticker removed from Watchlist', severity: 'info' });
         } else {
           setTopicAddingError(true);
@@ -343,7 +340,7 @@ const Watchlist = props => {
         setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
       }
     },
-    [dataVersion, updateChacheData, selectedType]
+    [updateChacheData, selectedType]
   );
 
   const handleUpload = useCallback(
@@ -363,13 +360,10 @@ const Watchlist = props => {
           let isTicker = true;
           setTopicDialogOpen(false);
           setLoading(false);
-          const debouncedSave = debounce(() => setDataVersion(dataVersion + 1), 3000);
-          debouncedSave();
           updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
           dispatch(setWatchlistSelectedSymbols([]));
           dispatch(setOverwriteCheckBox(false));
           setSnackBar({ isSnackBar: true, message: 'Ticker added in Watchlist', severity: 'success' });
-          fetchData();
         } else {
           setTopicAddingError(true);
           setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
@@ -379,7 +373,7 @@ const Watchlist = props => {
         setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
       }
     },
-    [dispatch, dataVersion, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
+    [dispatch, fetchData, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
   );
 
   const saveFilter = async text => {
