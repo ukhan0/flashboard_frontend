@@ -59,9 +59,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const isSearchAllowed = (searchText, simpleSearchTextArray,searchTextWithAnd) => {
+const isSearchAllowed = (searchText, simpleSearchTextArray, searchTextWithAnd) => {
   //display button to show suggestions on base of which text boxes have values
-  if ((searchText && searchText.length > 2) || simpleSearchTextArray.length > 0 || searchTextWithAnd.length>0) {
+  if ((searchText && searchText.length > 2) || simpleSearchTextArray.length > 0 || searchTextWithAnd.length > 0) {
     return true;
   }
 };
@@ -225,9 +225,14 @@ const TopicFilters = props => {
           </>
         </Grid>
         <Grid item sm={8} xs={8} lg={2} md={2}>
-          <h6>Section</h6>
-          <TopicSectionGroup />
-          <div style={{ marginTop: '25px' }}>
+          {!true ? (
+            <>
+              {' '}
+              <h6>Section</h6>
+              <TopicSectionGroup />{' '}
+            </>
+          ) : null}
+          <div style={{ marginTop: '0px' }}>
             <h6>Search Universe</h6>
             <TopicUniverseGroup />
             <div style={{ marginTop: '25px' }}>
