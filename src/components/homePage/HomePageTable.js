@@ -210,10 +210,10 @@ export default function HomePageTable(props) {
           ))}
         </ButtonGroup>
       </div>
-      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: '90%', width: '100%' }}>
         <AgGridReact
           ref={tableRef}
-          alwaysShowHorizontalScroll="True"
+          alwaysShowHorizontalScroll={true}
           columnDefs={columnDefs}
           rowSelection="single"
           rowData={recentCompaniesData}
