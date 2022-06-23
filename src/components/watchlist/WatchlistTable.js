@@ -190,6 +190,7 @@ const colDefs = [
     width: 117,
     filter: 'agNumberColumnFilter',
     filterParams: {
+      defaultOption: 'greaterThan',
       numberParser: text => {
         if (text === null) {
           text = null;
@@ -206,7 +207,8 @@ const colDefs = [
     cellStyle: params => {
       let style = { textAlign: 'right' };
       return getCellStyle(style);
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Avg Daily $ Value',
@@ -216,6 +218,7 @@ const colDefs = [
     filter: 'agNumberColumnFilter',
     width: 127,
     filterParams: {
+      defaultOption: 'greaterThan',
       numberParser: text => {
         if (text === null) {
           text = null;
@@ -232,7 +235,8 @@ const colDefs = [
     cellStyle: params => {
       let style = { textAlign: 'right' };
       return getCellStyle(style);
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Last Reported',
@@ -247,7 +251,8 @@ const colDefs = [
     getQuickFilterText: params => params.value,
     cellStyle: params => {
       return getCellStyle({});
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Period Date',
@@ -262,7 +267,8 @@ const colDefs = [
     getQuickFilterText: params => params.value,
     cellStyle: params => {
       return getCellStyle({});
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Aggregated Sentiment',
@@ -286,6 +292,7 @@ const colDefs = [
     valueFormatter: params => percentFormater(params, true),
     comparator: numberWordComparator,
     filterParams: {
+      defaultOption: 'greaterThan',
       valueGetter: params => {
         const value = get(params, 'data.sentiment', null);
         return value !== null ? parseNumber(value) : null;
@@ -294,7 +301,8 @@ const colDefs = [
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
       return getCellStyle(style);
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Sentiment Quintile',
@@ -344,6 +352,7 @@ const colDefs = [
     valueFormatter: params => percentFormater(params, true),
     comparator: numberWordComparator,
     filterParams: {
+      defaultOption: 'greaterThan',
       valueGetter: params => {
         const value = get(params, 'data.sentimentChange', null);
         return value !== null ? parseNumber(value) : null;
@@ -352,7 +361,8 @@ const colDefs = [
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
       return getCellStyle(style);
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Sentiment Change Quintile',
@@ -414,6 +424,7 @@ const colDefs = [
 
     comparator: numberWordComparator,
     filterParams: {
+      defaultOption: 'greaterThan',
       valueGetter: params => {
         const value = get(params, 'data.wordCountChange', null);
         return value !== null ? parseNumber(value) : null;
@@ -422,7 +433,8 @@ const colDefs = [
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
       return getCellStyle(style);
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Word Count Change Percentage',
@@ -447,6 +459,7 @@ const colDefs = [
     valueFormatter: params => percentFormater(params, false),
     comparator: numberWordComparator,
     filterParams: {
+      defaultOption: 'greaterThan',
       valueGetter: params => {
         const value = get(params, 'data.wordCountChangePercent', null);
         return value !== null ? parseNumber(value) : null;
@@ -455,7 +468,8 @@ const colDefs = [
     cellStyle: params => {
       let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
       return getCellStyle(style);
-    }
+    },
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Word Count Change Quintile',
