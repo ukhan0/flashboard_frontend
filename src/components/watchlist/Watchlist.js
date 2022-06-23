@@ -60,14 +60,14 @@ const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
 };
 const screenTitle = {
-  border: '1px solid LightGray',
+  border: '1px solid #d1d1d1',
   padding: '5px',
-  marginLeft: '3%',
-  backgroundColor: 'white',
+  backgroundColor: '#ebebeb',
   fontWeight: 'bold',
   position: 'relative',
   top: '12px',
-  zIndex: '1'
+  zIndex: '1',
+  textAlign:'center'
 };
 const Watchlist = props => {
   const history = useHistory();
@@ -652,7 +652,7 @@ const Watchlist = props => {
           </Grid>
         </Grid>
       </Grid>
-      <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
+      <div style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</div>
       <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
         <WatchlistTable
           data={gridData}
