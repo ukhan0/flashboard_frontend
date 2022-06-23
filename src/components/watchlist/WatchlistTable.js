@@ -607,6 +607,7 @@ const WatchlistTable = props => {
   const storeFilteringState = params => {
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params?.api?.rowModel?.rowsToDisplay;
+      props.handleRowCount(data.length);
       if (data.length < 1) {
         setIsFilterData(true);
         setTimeout(() => {
@@ -650,6 +651,10 @@ const WatchlistTable = props => {
 
   const handleFirstDataRendered = params => {
     handleColumnHideForSedar(params.api);
+    if (params?.api?.rowModel?.rowsToDisplay) {
+      let data = params?.api?.rowModel?.rowsToDisplay;
+      props.handleRowCount(data.length);
+    }
     const columnsState = props.columnsState;
     const filteringState = props.filteringState;
     var padding = 40;

@@ -69,6 +69,15 @@ const screenTitle = {
   zIndex: '1',
   textAlign: 'center'
 };
+const tableFooter = {
+  border: '1px solid #d1d1d1',
+  paddingRight: '1.7%',
+  position: 'relative',
+  zIndex: '1',
+  top: 0,
+  textAlign: 'right',
+  width: '99%'
+};
 const Watchlist = props => {
   const history = useHistory();
   const classes = useStyles();
@@ -108,6 +117,7 @@ const Watchlist = props => {
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
@@ -534,6 +544,9 @@ const Watchlist = props => {
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
+  const handleRowCount = count => {
+    setRowCount(count);
+  };
 
   useEffect(() => {
     firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
@@ -647,41 +660,45 @@ const Watchlist = props => {
         </Grid>
       </Grid>
       <div style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</div>
-      <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
-        <WatchlistTable
-          data={gridData}
-          storeColumnsState={onStoreColumnsState}
-          storeFilteringState={onStoreFilteringState}
-          columnsState={getColumnState()}
-          filteringState={getFilteringState()}
-          onColumnClick={onColumnClick}
-        />
-        <div style={{ width: 20, marginTop: 5 }}>
-          <div
-            className={classes.agButtons}
-            onClick={() => {
-              handleOpenAgGridSideBar(false);
-            }}>
-            Columns
-          </div>
-          <br />
-          <div
-            className={classes.agButtons}
-            onClick={() => {
-              handleOpenAgGridSideBar(true);
-            }}>
-            Actions
-          </div>
-          <div
-            className={classes.agButtons}
-            style={{ marginTop: '20px' }}
-            onClick={() => {
-              handleOpenAgGridFilterDialog();
-            }}>
-            Screens
+      <>
+        <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
+          <WatchlistTable
+            data={gridData}
+            storeColumnsState={onStoreColumnsState}
+            storeFilteringState={onStoreFilteringState}
+            columnsState={getColumnState()}
+            filteringState={getFilteringState()}
+            onColumnClick={onColumnClick}
+            handleRowCount={handleRowCount}
+          />
+          <div style={{ width: 20, marginTop: 5 }}>
+            <div
+              className={classes.agButtons}
+              onClick={() => {
+                handleOpenAgGridSideBar(false);
+              }}>
+              Columns
+            </div>
+            <br />
+            <div
+              className={classes.agButtons}
+              onClick={() => {
+                handleOpenAgGridSideBar(true);
+              }}>
+              Actions
+            </div>
+            <div
+              className={classes.agButtons}
+              style={{ marginTop: '20px' }}
+              onClick={() => {
+                handleOpenAgGridFilterDialog();
+              }}>
+              Screens
+            </div>
           </div>
         </div>
-      </div>
+        <div style={tableFooter}>Total Rows : {rowCount}</div>
+      </>
 
       <WatchlistTopicDialog
         open={topicDialogOpen}
