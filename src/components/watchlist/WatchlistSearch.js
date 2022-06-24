@@ -8,7 +8,7 @@ import {
   setWatchlistSearchText,
   setSelectedTickerSymbol,
   setSelectedWatchlist,
-  setIsTickerSelected,
+  setIsTickerSelected
   // setWatchlistType
 } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
@@ -72,10 +72,13 @@ const WatchlistTopicSearch = props => {
       company.oldId = selectedFileType === '10k' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
       dispatch(setSentimentResult(null, null));
-
       dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
-      history.push('/filings');
+      setTimeout(() => {
+        dispatch(setWatchlistSearchText(''));
+        dispatch(setSelectedTickerSymbol(null));
+        history.push('/filings');
+      }, [300]);
     }
   };
 
