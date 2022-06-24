@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import { Tooltip } from '@material-ui/core';
@@ -7,7 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
   star: {
     fontSize: '1rem',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    pointerEvents: 'none'
   }
 }));
 
@@ -23,8 +24,8 @@ function AddRemoveIcon(props) {
   };
 
   useEffect(() => {
-    setFlagStarIcon(props.value)
-  }, [props.value])
+    setFlagStarIcon(props.value);
+  }, [props.value]);
 
   return (
     <Tooltip arrow title={flagStarIcon ? 'Remove from Watchlist' : 'Add to Watchlist'}>
@@ -38,7 +39,7 @@ function AddRemoveIcon(props) {
 }
 
 function areEqual(prevProps, nextProps) {
- return prevProps.value === nextProps.value;
+  return prevProps.value === nextProps.value;
 }
 
-export default React.memo(AddRemoveIcon, areEqual)
+export default React.memo(AddRemoveIcon, areEqual);
