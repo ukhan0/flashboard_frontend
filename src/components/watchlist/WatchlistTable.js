@@ -525,7 +525,14 @@ const colDefs = [
     }
   }
 ];
-
+const tableFooter = {
+  border: '1px solid #d1d1d1',
+  paddingRight: '1.7%',
+  position: 'relative',
+  top: 0,
+  textAlign: 'right',
+  width: '100%'
+};
 const WatchlistTable = props => {
   const dispatch = useDispatch();
   const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
@@ -534,7 +541,7 @@ const WatchlistTable = props => {
   const [isClear, setIsClear] = React.useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   let isTicker = React.useRef(false);
-
+  const [rowCount, setRowCount] = React.useState(0);
   //this function can be used to select first row on load
   const selectTableRow = (data, id, isAutoSelection, rowNode) => {
     let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
@@ -607,7 +614,7 @@ const WatchlistTable = props => {
   const storeFilteringState = params => {
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params?.api?.rowModel?.rowsToDisplay;
-      props.handleRowCount(data.length);
+      setRowCount(data.length);
       if (data.length < 1) {
         setIsFilterData(true);
         setTimeout(() => {
@@ -653,7 +660,7 @@ const WatchlistTable = props => {
     handleColumnHideForSedar(params.api);
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params?.api?.rowModel?.rowsToDisplay;
-      props.handleRowCount(data.length);
+      setRowCount(data.length);
     }
     const columnsState = props.columnsState;
     const filteringState = props.filteringState;
@@ -698,8 +705,20 @@ const WatchlistTable = props => {
       dispatch(setIsTickerSelected(false));
     }
   }, [isClear, dispatch]);
+
+  React.useEffect(() => {
+    if (!gridApi.current) {
+      return;
+    }
+    if (props.data.length > 0) {
+      setTimeout(() => {
+        let data = gridApi.current.rowModel?.rowsToDisplay;
+        setRowCount(data.length);
+      }, [100]);
+    }
+  }, [props]);
   return (
-    <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+    <div className="ag-theme-alpine" style={{ height: '99%', width: '100%' }}>
       <AgGridReact
         sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
@@ -727,6 +746,7 @@ const WatchlistTable = props => {
         context={countriesCode}
         overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
         onFilterChanged={storeFilteringState}></AgGridReact>
+      <div style={tableFooter}>Total Rows : {rowCount}</div>
     </div>
   );
 };
