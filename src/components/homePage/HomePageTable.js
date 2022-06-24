@@ -18,6 +18,7 @@ import { renameDocumentTypes } from '../topic/topicHelpers';
 import { homePageTypesSelection } from '../../config/filterTypes';
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles, fade } from '@material-ui/core/styles';
+import HomePageService from './HomePageService';
 
 const frameworkComponents = {
   TickerLogo: TickerLogo
@@ -41,6 +42,91 @@ const defaultColDef = {
 };
 //Table headers
 
+const columnDefs = [
+  {
+    headerName: 'Ticker',
+    headerTooltip: 'Ticker',
+    field: 'ticker',
+    colId: 'ticker',
+    width: 100,
+    minWidth: 100,
+    cellClass: ['center-align-text'],
+    filter: 'agTextColumnFilter',
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    cellRenderer: 'TickerLogo',
+    sortable: true
+  },
+  {
+    headerName: 'Company Name',
+    headerTooltip: 'Company Name',
+    field: 'company_name',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'company_name',
+    minWidth: 150
+  },
+  {
+    headerName: 'Document Type',
+    field: 'docType',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'document_type',
+    minWidth: 100,
+    valueFormatter: params => renameDocumentTypes(params.data.document_type)
+  },
+
+  {
+    headerName: 'Document Date',
+    headerTooltip: 'document_date',
+    field: 'document_date',
+    colId: 'document_date',
+    sortable: true,
+    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
+    valueFormatter: params => dateFormaterMoment(params.value),
+    filter: 'agDateColumnFilter',
+    cellClass: ['center-align-text'],
+    minWidth: 50,
+    width: 120
+  },
+  {
+    headerName: 'Aggregate Sentiment',
+    field: 'sentiment',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'agrregate_sentiment',
+    type: 'numericColumn',
+    filter: 'agNumberColumnFilter',
+    minWidth: 100,
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.sentiment', 0);
+      return sentimentValue;
+    }
+  },
+  {
+    headerName: 'Word Count',
+    field: 'wordCount',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'word_count',
+    type: 'numericColumn',
+    filter: 'agNumberColumnFilter',
+    minWidth: 100,
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.wordCount', 0);
+      return sentimentValue;
+    }
+  }
+];
 const useStyles = makeStyles(theme => ({
   search: {
     position: 'relative',
@@ -103,92 +189,6 @@ export default function HomePageTable(props) {
       dispatch(setSidebarToggleMobile(false));
     }
   };
-  const columnDefs = [
-    {
-      headerName: 'Ticker',
-      headerTooltip: 'Ticker',
-      field: 'ticker',
-      colId: 'ticker',
-      width: 100,
-      minWidth: 100,
-      cellClass: ['center-align-text'],
-      filter: 'agTextColumnFilter',
-      suppressMenu: false,
-      menuTabs: ['generalMenuTab'],
-      pinned: 'left',
-      cellRenderer: 'TickerLogo',
-      hide: homePageSelectedSearchIndex.id === 3 ? true : false,
-      sortable: true
-    },
-    {
-      headerName: 'Company Name',
-      headerTooltip: 'Company Name',
-      field: 'company_name',
-      menuTabs: false,
-      editable: false,
-      sortable: true,
-      flex: 1,
-      colId: 'company_name',
-      minWidth: 150
-    },
-    {
-      headerName: 'Document Type',
-      field: 'docType',
-      menuTabs: false,
-      editable: false,
-      sortable: true,
-      flex: 1,
-      colId: 'document_type',
-      minWidth: 100,
-      valueFormatter: params => renameDocumentTypes(params.data.document_type)
-    },
-
-    {
-      headerName: 'Document Date',
-      headerTooltip: 'document_date',
-      field: 'document_date',
-      colId: 'document_date',
-      sortable: true,
-      valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
-      valueFormatter: params => dateFormaterMoment(params.value),
-      filter: 'agDateColumnFilter',
-      cellClass: ['center-align-text'],
-      minWidth: 50,
-      width: 120
-    },
-    {
-      headerName: 'Aggregate Sentiment',
-      field: 'sentiment',
-      menuTabs: false,
-      editable: false,
-      sortable: true,
-      flex: 1,
-      colId: 'agrregate_sentiment',
-      type: 'numericColumn',
-      filter: 'agNumberColumnFilter',
-      minWidth: 100,
-      valueGetter: params => {
-        const sentimentValue = get(params, 'data.sentiment', 0);
-        return sentimentValue;
-      }
-    },
-    {
-      headerName: 'Word Count',
-      field: 'wordCount',
-      menuTabs: false,
-      editable: false,
-      sortable: true,
-      flex: 1,
-      colId: 'word_count',
-      type: 'numericColumn',
-      filter: 'agNumberColumnFilter',
-      minWidth: 100,
-      valueGetter: params => {
-        const sentimentValue = get(params, 'data.wordCount', 0);
-        return sentimentValue;
-      }
-    }
-  ];
 
   const getRecentCompaniesData = React.useCallback(
     async searchIndex => {
@@ -241,12 +241,46 @@ export default function HomePageTable(props) {
   useEffect(() => {
     getRecentCompaniesData(homePageSelectedSearchIndex);
   }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
+
   const handleHomePageSearchIndex = diff => {
     if (cancelToken) {
       cancelToken.cancel();
     }
     setRecentDocumentSearchFilter('');
     dispatch(setHomePageSearchIndex(diff));
+  };
+  useEffect(() => {
+    if (HomePageService.agGridColumnAPI) {
+      if (homePageSelectedSearchIndex.id === 3) {
+        HomePageService.mangeAgGridColunms('ticker', false);
+      } else {
+        HomePageService.mangeAgGridColunms('ticker', true);
+      }
+    }
+  }, [homePageSelectedSearchIndex]);
+
+  const handleOnGridReady = params => {
+    HomePageService.init(params.api, params.columnApi);
+    const columnsState = HomePageService.getColumnState();
+    if (columnsState && columnsState.length) {
+      params.columnApi.applyColumnState({
+        state: columnsState,
+        applyOrder: true
+      });
+    } else {
+      const columnState = params.columnApi.getColumnState();
+      HomePageService.storeColumnsState(columnState);
+    }
+  };
+
+  const storeColumnsState = params => {
+    const columnState = params.columnApi.getColumnState();
+    if (params.type === 'columnMoved') {
+      HomePageService.storeColumnsState(columnState);
+    }
+    if (params.type === 'columnResized') {
+      HomePageService.storeColumnsState(columnState);
+    }
   };
 
   return (
@@ -292,6 +326,10 @@ export default function HomePageTable(props) {
           suppressCellSelection={true}
           frameworkComponents={frameworkComponents}
           onCellClicked={cellClicked}
+          onColumnResized={storeColumnsState}
+          onSortChanged={storeColumnsState}
+          onColumnMoved={storeColumnsState}
+          onGridReady={handleOnGridReady}
           multiSortKey={'ctrl'}
           quickFilterText={recentDocumentSearchFilter}
           defaultColDef={defaultColDef}></AgGridReact>

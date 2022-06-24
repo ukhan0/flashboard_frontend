@@ -45,7 +45,6 @@ class WatchListService {
   getTickerState = () => {
     let clear = false;
     const filteringModel = this.agGridAPI.getFilterModel();
-
     if (isEmpty(filteringModel)) {
       clear = true;
     }

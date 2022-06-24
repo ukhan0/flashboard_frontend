@@ -571,6 +571,9 @@ const WatchlistTable = props => {
     if (params.type === 'columnResized') {
       storeColumnsStateComman(params);
     }
+    if (params.type === 'columnMoved') {
+      storeColumnsStateComman(params);
+    }
     // if (isColResizing > 3) {
     //   storeColumnsStateComman(params);
     // }
