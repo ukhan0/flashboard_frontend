@@ -57,7 +57,12 @@ export const getItemFromLocalStorage = (v, isJsonParse) => {
 
 export const deleteToken = async () => {
   try {
-    const response = await axios.delete(`${config.apiUrl}/api/users/delete_token`);
+    const response = await axios.delete(`${config.apiUrl}/api/users/sign_out`, {
+      data: {
+        user_id: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).id : null
+      }
+    });
+
     const data = get(response, 'data', null);
     if (data) {
       localStorage.clear();
