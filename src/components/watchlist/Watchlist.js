@@ -69,15 +69,6 @@ const screenTitle = {
   zIndex: '1',
   textAlign: 'center'
 };
-const tableFooter = {
-  border: '1px solid #d1d1d1',
-  paddingRight: '1.7%',
-  position: 'relative',
-  zIndex: '1',
-  top: 0,
-  textAlign: 'right',
-  width: '99%'
-};
 const Watchlist = props => {
   const history = useHistory();
   const classes = useStyles();
@@ -117,7 +108,6 @@ const Watchlist = props => {
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
-  const [rowCount, setRowCount] = useState(0);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
@@ -544,10 +534,6 @@ const Watchlist = props => {
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
-  const handleRowCount = count => {
-    setRowCount(count);
-  };
-
   useEffect(() => {
     firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
   }, [processWatchlistData, selectedFileType]);
@@ -669,7 +655,6 @@ const Watchlist = props => {
             columnsState={getColumnState()}
             filteringState={getFilteringState()}
             onColumnClick={onColumnClick}
-            handleRowCount={handleRowCount}
           />
           <div style={{ width: 20, marginTop: 5 }}>
             <div
@@ -697,7 +682,6 @@ const Watchlist = props => {
             </div>
           </div>
         </div>
-        <div style={tableFooter}>Total Rows : {rowCount}</div>
       </>
 
       <WatchlistTopicDialog
