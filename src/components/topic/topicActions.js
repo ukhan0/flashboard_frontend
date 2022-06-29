@@ -478,12 +478,11 @@ export const findSuggestions = () => {
       suggestions,
       selectedSuggestions,
       isSimpleSearch,
-      simpleSearchTextArray,
-      searchTextWithAnd
+      simpleSearchTextArray
     } = getState().Topic;
     let searchSug = simpleSearchTextArray.length > 0 && isSimpleSearch ? simpleSearchTextArray.join(' ') : searchText;
-    if (searchTextWithAnd.length > 0) {
-      forEach(searchTextWithAnd, function(value) {
+    if (simpleSearchTextArray.length > 0) {
+      forEach(simpleSearchTextArray, function(value) {
         searchSug = `${searchSug} ${value}`;
       });
     }

@@ -12,12 +12,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
 export default function TopicSuggestionsDialog(props) {
   const classes = useStyles();
   return (
     <Dialog
       size={'md'}
-      title={'Add Smart Synonyms to:'}
+      title={'Smart Synonyms'}
       isOpen={props.isOpen}
       closeBtnComponent={
         <Button className={classes.closeButton} variant="contained" color="primary" onClick={props.handleClose}>

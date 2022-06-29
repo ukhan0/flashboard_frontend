@@ -57,16 +57,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent);
 
-const searchPhraseTypes = ['ANY', 'ALL'];
 export default function GenericDialog(props) {
-  const { phraseType } = useSelector(state => state.Topic);
-  const dispatch = useDispatch();
-  const [searchPhraseTypeState, setSearchPhraseTypeState] = useState(phraseType);
-  const selectPhraseType = index => {
-    dispatch(setSearchPhraseType(searchPhraseTypes[index]));
-    setSearchPhraseTypeState(searchPhraseTypes[index]);
-  };
-
   return (
     <div>
       <Dialog
@@ -82,28 +73,7 @@ export default function GenericDialog(props) {
           closeBtnComponent={props.closeBtnComponent}
           titleVariant={props.titleVariant}
           titleColor={props.titleColor}>
-          <div style={{ justifyContent: 'flex-start', display: 'flex' }}>
-            <div
-              style={{
-                position: 'relative',
-                top: '8px',
-                fontWeight: 'bold',
-                paddingRight: '10px'
-              }}>
-              {props.title}
-            </div>
-            <ButtonGroup color="primary" size="small">
-              {searchPhraseTypes.map((item, index) => {
-                return (
-                  <Button
-                    variant={item === searchPhraseTypeState ? 'contained' : 'outlined'}
-                    onClick={() => selectPhraseType(index)}>
-                    {item}
-                  </Button>
-                );
-              })}
-            </ButtonGroup>
-          </div>
+          {props.title}
         </DialogTitle>
 
         <DialogContent dividers>{props.children}</DialogContent>
@@ -125,3 +95,4 @@ GenericDialog.defaultProps = {
   size: 'lg',
   keepMounted: false
 };
+

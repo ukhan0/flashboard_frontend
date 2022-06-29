@@ -2,7 +2,7 @@ import React, { useEffect, Fragment } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { forEach, isEmpty, remove, cloneDeep } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedSuggestions, setSimpleSearchTextArray, setSearchTextWithAnd } from '../../reducers/Topic';
+import { setSelectedSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
 import { findSuggestions } from './topicActions';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -33,8 +33,7 @@ export default function TopicSuggestionsDialog(props) {
     selectedSuggestions,
     suggestionsIsLoading,
     simpleSearchTextArray,
-    phraseType,
-    searchTextWithAnd
+    isSimpleSearch
   } = useSelector(state => state.Topic);
 
   const classes = useStyles();
@@ -52,33 +51,20 @@ export default function TopicSuggestionsDialog(props) {
 
   const handlSuggestionSelection = (value, keyWord) => {
     let simpleSearchTextArrayCopy = simpleSearchTextArray;
-    let searchTextWithAndCopy = searchTextWithAnd;
     const newSelectedSuggestions = cloneDeep(selectedSuggestions);
     if (!isSuggestionChecked(value)) {
       newSelectedSuggestions[keyWord] = [...newSelectedSuggestions[keyWord], value];
       dispatch(setSelectedSuggestions(newSelectedSuggestions));
-      if (phraseType === 'ANY') {
-        simpleSearchTextArrayCopy.push(value);
-        dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
-      }
-      if (phraseType === 'ALL') {
-        searchTextWithAndCopy.push(value);
-        dispatch(setSearchTextWithAnd(searchTextWithAndCopy));
-      }
+      simpleSearchTextArrayCopy.push(value);
+      dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
     } else {
       const newKeyWordSelectedSuggestions = [...selectedSuggestions[keyWord]];
       remove(newKeyWordSelectedSuggestions, v => v === value); // it mutatues array
       selectedSuggestions[keyWord] = newKeyWordSelectedSuggestions;
       dispatch(setSelectedSuggestions(selectedSuggestions));
       const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
-      if (phraseType === 'ANY') {
-        simpleSearchTextArray.splice(index, 1);
-        dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
-      }
-      if (phraseType === 'ALL') {
-        searchTextWithAnd.splice(index, 1);
-        dispatch(setSearchTextWithAnd(searchTextWithAnd));
-      }
+      simpleSearchTextArray.splice(index, 1);
+      dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
     }
   };
 
