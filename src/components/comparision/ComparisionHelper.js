@@ -9,24 +9,41 @@ export const saveComparisionSettings = setting => {
 };
 
 export const getOldId = (getQueryParams, selectedFileType, selectedItem) => {
-  return getQueryParams.oldId
-    ? getQueryParams.oldId
-    : selectedFileType === '10k'
-    ? get(selectedItem, 'oldId10k', null)
+  let id = null;
+  if (selectedItem.comparisonType) {
+    id = get(selectedItem, 'comparisonType', null);
+    id = id === '10-K' ? get(selectedItem, 'oldId10k') : get(selectedItem, 'oldId10q', null);
+  } else {
+    id = getQueryParams.oldId
+      ? getQueryParams.oldId
+      : selectedFileType === '10k'
       ? get(selectedItem, 'oldId10k', null)
+        ? get(selectedItem, 'oldId10k', null)
+        : get(selectedItem, 'oldId10q', null)
       : get(selectedItem, 'oldId10q', null)
-    : get(selectedItem, 'oldId10q', null)
-    ? get(selectedItem, 'oldId10q', null)
-    : get(selectedItem, 'oldId10k', null);
+      ? get(selectedItem, 'oldId10q', null)
+      : get(selectedItem, 'oldId10k', null);
+  }
+
+  return id;
 };
+
 export const getRecentId = (getQueryParams, selectedFileType, selectedItem) => {
-  return getQueryParams.recentId
-    ? getQueryParams.recentId
-    : selectedFileType === '10k'
-    ? get(selectedItem, 'recentId10k', null)
+  let id = null;
+  if (selectedItem.comparisonType) {
+    id = get(selectedItem, 'comparisonType', null);
+    id = id === '10-K' ? get(selectedItem, 'recentId10k') : get(selectedItem, 'recentId10q', null);
+  } else {
+    id = getQueryParams.oldId
+      ? getQueryParams.oldId
+      : selectedFileType === '10k'
       ? get(selectedItem, 'recentId10k', null)
+        ? get(selectedItem, 'recentId10k', null)
+        : get(selectedItem, 'recentId10q', null)
       : get(selectedItem, 'recentId10q', null)
-    : get(selectedItem, 'recentId10q', null)
-    ? get(selectedItem, 'recentId10q', null)
-    : get(selectedItem, 'recentId10k', null);
+      ? get(selectedItem, 'recentId10q', null)
+      : get(selectedItem, 'recentId10k', null);
+  }
+
+  return id;
 };

@@ -19,7 +19,7 @@ import { homePageTypesSelection } from '../../config/filterTypes';
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import HomePageService from './HomePageService';
-
+import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 const frameworkComponents = {
   TickerLogo: TickerLogo
 };
@@ -178,11 +178,55 @@ export default function HomePageTable(props) {
   const { homePageSelectedSearchIndex } = useSelector(state => state.HomePage);
   const [cancelToken, setCancelToken] = useState(null);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState(null);
+  const [allCompletedCompaniesData, setAllCompletedCompaniesData] = useState([]);
+  const {
+    isCompleteCompaniesDataLoaded,
+    isCompleteCompaniesDataGlobalLoaded,
+    completeCompaniesData,
+    completeCompaniesDataGlobal
+  } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const tableRef = useRef();
+
+  useEffect(() => {
+    setAllCompletedCompaniesData(completeCompaniesData.concat(completeCompaniesDataGlobal));
+  }, [completeCompaniesData, completeCompaniesDataGlobal]);
+
+  const setRecentOldId = (item, company, docType = '10-K') => {
+    if (docType === '10-K') {
+      item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
+      item.oldId10k = company.oldId10k ? company.oldId10k : company.oldId10q;
+      item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
+      item.oldId10q = company.oldId10q ? company.oldId10q : company.oldId10k;
+      item.oldId = company.oldId10k ? company.oldId10k : company.oldId10q;
+      item.recentId = company.recentId10k ? company.recentId10k : company.recentId10q;
+      item.comparisonType = '10-K';
+    } else {
+      item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
+      item.oldId10k = company.oldId10k ? company.oldId10k : company.oldId10q;
+      item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
+      item.oldId10q = company.oldId10q ? company.oldId10q : company.oldId10k;
+      item.oldId = company.oldId10q ? company.oldId10q : company.oldId10k;
+      item.recentId = company.recentId10q ? company.recentId10q : company.recentId10k;
+      item.comparisonType = '10-Q';
+    }
+    return item;
+  };
+
   const cellClicked = params => {
     if (params.data) {
-      const item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
+      let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
+      if (isCompleteCompaniesDataGlobalLoaded && isCompleteCompaniesDataLoaded) {
+        let company = allCompletedCompaniesData.find(item => item.ticker === params.data.ticker);
+        company = formatComapnyData(company);
+        if (params.data.docType === '10-K') {
+          item = setRecentOldId(item, company, '10-K');
+        } else if (params.data.docType === '10-Q') {
+          item = setRecentOldId(item, company, '10-Q');
+        } else {
+          item = setRecentOldId(item, company, '10-K');
+        }
+      }
       dispatch(setSelectedWatchlist(item));
       dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
