@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, forEach } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
 import countriesCode from '../../config/countriesCode';
@@ -650,6 +650,11 @@ const WatchlistTable = props => {
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
     gridApi.current = params.api;
+
+    var inputFilters = document.getElementsByClassName('ag-text-field-input');
+    forEach(inputFilters, function(data) {
+      data.setAttribute('autoComplete', 'off');
+    });
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
