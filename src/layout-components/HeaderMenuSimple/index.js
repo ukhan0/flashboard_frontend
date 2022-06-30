@@ -24,24 +24,22 @@ const HeaderMenu = props => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorHelp, setAnchorHelp] = React.useState(null);
   const dispatch = useDispatch();
-  const [hoverTimer, setHoverTimer] = React.useState(null);
+  const hoverTimer = React.useRef(null);
 
   const handleMouseEnter = event => {
     const { currentTarget } = event;
     let pathname = window.location.pathname;
     if (pathname !== '/topic') {
       currentTarget.style.cursor = 'wait';
-      setHoverTimer(
-        setTimeout(() => {
-          dispatch(resetAllSearchParams());
-          setAnchorEl(anchorEl ? null : currentTarget);
-          currentTarget.style.cursor = 'pointer';
-        }, hoverTime)
-      );
+      hoverTimer.current = setTimeout(() => {
+        dispatch(resetAllSearchParams());
+        setAnchorEl(anchorEl ? null : currentTarget);
+        currentTarget.style.cursor = 'pointer';
+      }, hoverTime);
     }
   };
   const handleMouseLeave = () => {
-    clearTimeout(hoverTimer);
+    clearTimeout(hoverTimer.current);
   };
   const handleClickHelp = event => {
     setAnchorHelp(anchorEl ? null : event.currentTarget);

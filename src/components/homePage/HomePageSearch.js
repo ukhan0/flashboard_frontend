@@ -80,10 +80,11 @@ const TopicFilters = props => {
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
     }, 1000);
-    
+
     dispatch(setIsUnsavedSearch(true));
-    
-    history.push('./topic');
+    setTimeout(() => {
+      history.push('./topic');
+    }, [100]);
     dispatch(setOpenTopicSearchDialog(true));
   };
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);

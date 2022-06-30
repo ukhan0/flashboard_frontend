@@ -24,11 +24,13 @@ export default function HelpNavigation(props) {
   const history = useHistory();
 
   const handleSelection = path => {
+    props.onClose();
+    setTimeout(() => {
+      history.push('/guideline');
+    }, 100);
     setTimeout(() => {
       document.getElementById(path).scrollIntoView();
-    }, 100);
-    history.push('/guideline');
-    props.onClose();
+    }, 150);
   };
   return (
     <Fragment>

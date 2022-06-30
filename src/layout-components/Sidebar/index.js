@@ -39,19 +39,17 @@ const Sidebar = props => {
 
     selectedItem
   } = props;
-  const [toggleTimer, setToggleTimer] = React.useState(null);
+  const toggleTimer = React.useRef(null);
   const toggleHoverOn = event => {
     let { currentTarget } = event;
     currentTarget.style.cursor = 'wait';
-    setToggleTimer(
-      setTimeout(function() {
-        setSidebarHover(true);
-        currentTarget.style.cursor = 'default';
-      }, hoverTime)
-    );
+    toggleTimer.current = setTimeout(function() {
+      setSidebarHover(true);
+      currentTarget.style.cursor = 'default';
+    }, hoverTime);
   };
   const toggleHoverOff = () => {
-    clearTimeout(toggleTimer);
+    clearTimeout(toggleTimer.current);
     setSidebarHover(false);
   };
 
