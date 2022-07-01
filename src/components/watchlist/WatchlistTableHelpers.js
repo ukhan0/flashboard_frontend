@@ -112,7 +112,7 @@ export const percentFormater = (params, flag) => {
   let formatedValue = null;
   if (!isNull(params.value)) {
     if (flag === false) {
-      formatedValue = `${params.value.number.toFixed(2)}%`;
+      formatedValue = params.value.number ? `${params.value.number.toFixed(2)}%` : '';
     } else {
       formatedValue = params.value.number.toFixed(2);
     }
