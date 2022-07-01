@@ -199,7 +199,7 @@ export default function HomePageTable(props) {
       item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
       item.oldId10q = company.oldId10q ? company.oldId10q : company.oldId10k;
       item.oldId = company.oldId10k ? company.oldId10k : company.oldId10q;
-      item.recentId = company.recentId10k ? company.recentId10k : company.recentId10q;
+      // item.recentId = company.recentId10k ? company.recentId10k : company.recentId10q;
       item.comparisonType = '10-K';
     } else {
       item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
@@ -207,7 +207,7 @@ export default function HomePageTable(props) {
       item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
       item.oldId10q = company.oldId10q ? company.oldId10q : company.oldId10k;
       item.oldId = company.oldId10q ? company.oldId10q : company.oldId10k;
-      item.recentId = company.recentId10q ? company.recentId10q : company.recentId10k;
+      // item.recentId = company.recentId10q ? company.recentId10q : company.recentId10k;
       item.comparisonType = '10-Q';
     }
     return item;
