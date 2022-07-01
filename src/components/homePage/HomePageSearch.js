@@ -12,7 +12,9 @@ import {
   cancelExistingHightlightsCalls,
   setIsSimpleSearch,
   setIsUnsavedSearch,
-  setSimpleSearchTextArray
+  setSimpleSearchTextArray,
+  setSearchSuggestionType,
+  setTopicSearchText
 } from '../../reducers/Topic';
 import TopicIndexDropDown from '../topic/TopicIndexDropDown';
 import { useHistory } from 'react-router-dom';
@@ -67,10 +69,12 @@ const TopicFilters = props => {
   const handleSearch2 = () => {
     props.onClose();
     dispatch(setIsSimpleSearch(true));
-    dispatch(setSimpleSearchTextArray([searchText]));
+    dispatch(setSimpleSearchTextArray([searchText, ...simpleSearchTextArray]));
+    dispatch(setSearchSuggestionType('simpleSearchTextArray'));
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
     dispatch(performTopicTweetsSearchAggregate(true, true));
+    dispatch(setTopicSearchText(''));
     // cancel existing calls if there are any
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
@@ -82,6 +86,8 @@ const TopicFilters = props => {
     }, 1000);
 
     dispatch(setIsUnsavedSearch(true));
+    dispatch(setIsSimpleSearch(true));
+
     setTimeout(() => {
       history.push('./topic');
     }, [100]);
@@ -123,7 +129,12 @@ const TopicFilters = props => {
               </div>
             }
             {isSearchAllowed(searchText, simpleSearchTextArray) ? (
-              <Button color="primary" onClick={() => setIsSuggestionsDlgOpen(true)}>
+              <Button
+                color="primary"
+                onClick={() => {
+                  dispatch(setSearchSuggestionType('simpleSearchTextArray'));
+                  setIsSuggestionsDlgOpen(true);
+                }}>
                 Show Suggestions
               </Button>
             ) : null}

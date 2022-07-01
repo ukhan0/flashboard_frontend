@@ -4,8 +4,12 @@ import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-
+import clsx from 'clsx';
+import WbIncandescentOutlinedIcon from '@material-ui/icons/WbIncandescentOutlined';
 const useStyles = makeStyles(theme => ({
+  rootContainer: {
+    position: 'relative'
+  },
   root: {
     '& > * + *': {
       marginTop: theme.spacing(3)
@@ -15,6 +19,13 @@ const useStyles = makeStyles(theme => ({
   chipStyle: {
     borderRadius: 0,
     backgroundColor: '#cde69c'
+  },
+
+  searchSuggestionIcon: {
+    top: '7px',
+    marginTop: 0,
+    position: 'absolute',
+    right: '14px'
   }
 }));
 
@@ -22,7 +33,7 @@ export default function Tags(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={clsx(classes.root, classes.rootContainer)}>
       <Autocomplete
         key={props.key}
         multiple
@@ -62,6 +73,18 @@ export default function Tags(props) {
           );
         }}
       />
+      <span className={classes.searchSuggestionIcon}>
+        <WbIncandescentOutlinedIcon
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (props.values.length > 0) {
+              props.handleOnShowSuggestions(props.searchSuggestionType);
+            }
+          }}
+          variant="outlined"
+          color={props.values.length > 0 ? 'primary' : 'disabled'}
+        />
+      </span>
     </div>
   );
 }

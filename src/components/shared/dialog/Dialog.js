@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { useSelector, useDispatch } from 'react-redux';
-import { setSearchPhraseType } from '../../../reducers/Topic';
 
 // Material components
 import Dialog from '@material-ui/core/Dialog';
@@ -11,8 +9,6 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 const styles = theme => ({
   root: {
@@ -95,4 +91,3 @@ GenericDialog.defaultProps = {
   size: 'lg',
   keepMounted: false
 };
-

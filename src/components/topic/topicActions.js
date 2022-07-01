@@ -478,11 +478,30 @@ export const findSuggestions = () => {
       suggestions,
       selectedSuggestions,
       isSimpleSearch,
-      simpleSearchTextArray
+      simpleSearchTextArray,
+      searchSuggestionType,
+      searchTextWithAnd,
+      ignoreSearchTextArray
     } = getState().Topic;
-    let searchSug = simpleSearchTextArray.length > 0 && isSimpleSearch ? simpleSearchTextArray.join(' ') : searchText;
-    if (simpleSearchTextArray.length > 0) {
-      forEach(simpleSearchTextArray, function(value) {
+
+    let simpleSearchArray = [];
+
+    if (searchSuggestionType === 'searchTextWithAnd') {
+      simpleSearchArray = searchTextWithAnd;
+    } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+      simpleSearchArray = ignoreSearchTextArray;
+    } else {
+      simpleSearchArray = simpleSearchTextArray;
+    }
+
+    let searchSug = '';
+    if (isSimpleSearch === true && searchSuggestionType !== 'simpleSearchTextArray') {
+      searchSug = simpleSearchArray.length > 0 ? simpleSearchArray.join(' ') : [];
+    } else {
+      searchSug = searchText;
+    }
+    if (simpleSearchArray.length > 0) {
+      forEach(simpleSearchArray, function(value) {
         searchSug = `${searchSug} ${value}`;
       });
     }
@@ -503,7 +522,7 @@ export const findSuggestions = () => {
       }
 
       // remove duplicated from suggestions
-      let deleteValues = isSimpleSearch ? simpleSearchTextArray : searchText;
+      let deleteValues = isSimpleSearch ? simpleSearchArray : searchText;
       let deleteKeys = ['or', 'OR', 'and', 'and/or'];
       let newSuggestions = deleteSearchSuggestionsByKey(
         removeDuplicateSuggestions(rawSuggestions),

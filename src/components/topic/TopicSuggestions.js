@@ -2,7 +2,12 @@ import React, { useEffect, Fragment } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { forEach, isEmpty, remove, cloneDeep } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedSuggestions, setSimpleSearchTextArray } from '../../reducers/Topic';
+import {
+  setSelectedSuggestions,
+  setSimpleSearchTextArray,
+  setSearchTextWithAnd,
+  setIgnoreSearchTextArray
+} from '../../reducers/Topic';
 import { findSuggestions } from './topicActions';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -33,7 +38,10 @@ export default function TopicSuggestionsDialog(props) {
     selectedSuggestions,
     suggestionsIsLoading,
     simpleSearchTextArray,
-    isSimpleSearch
+    isSimpleSearch,
+    searchSuggestionType,
+    ignoreSearchTextArray,
+    searchTextWithAnd
   } = useSelector(state => state.Topic);
 
   const classes = useStyles();
@@ -50,13 +58,33 @@ export default function TopicSuggestionsDialog(props) {
   };
 
   const handlSuggestionSelection = (value, keyWord) => {
-    let simpleSearchTextArrayCopy = simpleSearchTextArray;
+    let simpleSearchTextArrayCopy = [];
+    if (searchSuggestionType === 'searchTextWithAnd') {
+      simpleSearchTextArrayCopy = searchTextWithAnd;
+    } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+      simpleSearchTextArrayCopy = ignoreSearchTextArray;
+    }
+    // if(searchSuggestionType === 'simpleSearchTextArray') {
+    else {
+      simpleSearchTextArrayCopy = simpleSearchTextArray;
+    }
+
     const newSelectedSuggestions = cloneDeep(selectedSuggestions);
     if (!isSuggestionChecked(value)) {
       newSelectedSuggestions[keyWord] = [...newSelectedSuggestions[keyWord], value];
-      dispatch(setSelectedSuggestions(newSelectedSuggestions));
       simpleSearchTextArrayCopy.push(value);
-      dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
+      dispatch(setSelectedSuggestions(newSelectedSuggestions));
+      if (isSimpleSearch === true) {
+        if (searchSuggestionType === 'searchTextWithAnd') {
+          dispatch(setSearchTextWithAnd(simpleSearchTextArrayCopy));
+        } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+          dispatch(setIgnoreSearchTextArray(simpleSearchTextArrayCopy));
+        }
+        // if (searchSuggestionType === 'simpleSearchTextArray')
+        else {
+          dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
+        }
+      }
     } else {
       const newKeyWordSelectedSuggestions = [...selectedSuggestions[keyWord]];
       remove(newKeyWordSelectedSuggestions, v => v === value); // it mutatues array
@@ -64,7 +92,17 @@ export default function TopicSuggestionsDialog(props) {
       dispatch(setSelectedSuggestions(selectedSuggestions));
       const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
       simpleSearchTextArray.splice(index, 1);
-      dispatch(setSimpleSearchTextArray(simpleSearchTextArray));
+      if (isSimpleSearch === true) {
+        if (searchSuggestionType === 'searchTextWithAnd') {
+          dispatch(setSearchTextWithAnd(simpleSearchTextArrayCopy));
+        } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+          dispatch(setIgnoreSearchTextArray(simpleSearchTextArrayCopy));
+        }
+        //  else (searchSuggestionType === 'simpleSearchTextArray') {
+        else {
+          dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
+        }
+      }
     }
   };
 

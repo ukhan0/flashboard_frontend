@@ -69,6 +69,7 @@ export const SET_TOPIC_HANDLE_SEARCH_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_HANDLE_S
 export const SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER = 'TOPIC/SET_TOPIC_INDEX_DROP_DOWN_COMBINE_REDUCER';
 export const SET_TOPIC_HISTORY_CHART_IS_DAYS = 'TOPIC/SET_TOPIC_HISTORY_CHART_IS_DAYS';
 export const SET_SEARCH_ID = 'TOPIC/SET_SEARCH_ID';
+export const SET_SEARCH_SUGGESTION_TYPE = 'TOPIC/SET_SEARCH_SUGGESTION_TYPE';
 
 export const setSearchId = linkSearchId => ({
   type: SET_SEARCH_ID,
@@ -388,6 +389,11 @@ export const setIsDays = isDays => ({
   isDays
 });
 
+export const setSearchSuggestionType = searchSuggestionType => ({
+  type: SET_SEARCH_SUGGESTION_TYPE,
+  searchSuggestionType
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
@@ -489,7 +495,8 @@ const getDefaultState = () => {
     isNewlySavedSearch: false,
     topicSearchedComapny: '',
     isDays: false,
-    linkSearchId: null
+    linkSearchId: null,
+    searchSuggestionType: 'simpleSearchTextArray'
   };
 };
 
@@ -693,6 +700,9 @@ export default function reducer(
 
     case SET_SEARCH_ID:
       return { ...state, linkSearchId: action.linkSearchId };
+    case SET_SEARCH_SUGGESTION_TYPE:
+      return { ...state, searchSuggestionType: action.searchSuggestionType };
+
     default:
       break;
   }

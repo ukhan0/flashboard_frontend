@@ -26,7 +26,8 @@ import {
   setIsTopicEmailAlertEnable,
   setIsSimpleSearch,
   setIsUnsavedSearch,
-  setIsDays
+  setIsDays,
+  setSearchSuggestionType
 } from '../../reducers/Topic';
 import { searchVersionTypes } from '../../config/filterTypes';
 
@@ -83,6 +84,7 @@ const TopicFilters = props => {
     isSimpleSearch,
     searchTextWithAnd
   } = useSelector(state => state.Topic);
+
   const handleUpdateSaveSearch = () => {
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
@@ -152,6 +154,12 @@ const TopicFilters = props => {
     isButtonActive = false;
   }
 
+  const handleOnShowSuggestions = type => {
+    dispatch(resetSuggestions());
+    dispatch(setSearchSuggestionType(type));
+    props.onShowSuggestions(true);
+  };
+
   return (
     <Grid spacing={0} container className={classes.topsection}>
       <TopicThemeLabelDialog
@@ -165,15 +173,23 @@ const TopicFilters = props => {
           <div style={{ marginRight: '20px' }}>
             {isSimpleSearch ? (
               <>
-                {' '}
                 <h6>Any of these phrases</h6>
-                <TopicSearchTextTags />
+                <TopicSearchTextTags
+                  handleOnShowSuggestions={handleOnShowSuggestions}
+                  searchSuggestionType={'simpleSearchTextArray'}
+                />
                 <br />
                 <h6>All of these phrases</h6>
-                <TopicSearchTextTags2 />
+                <TopicSearchTextTags2
+                  handleOnShowSuggestions={handleOnShowSuggestions}
+                  searchSuggestionType={'searchTextWithAnd'}
+                />
                 <br />
                 <h6>None of these phrase</h6>
-                <TopicIgnoreSearchText />
+                <TopicIgnoreSearchText
+                  handleOnShowSuggestions={handleOnShowSuggestions}
+                  searchSuggestionType={'ignoreSearchTextArray'}
+                />
               </>
             ) : (
               <>
@@ -183,18 +199,20 @@ const TopicFilters = props => {
             )}
             <div className={classes.suggestionsBtnSection}>
               {!isSimpleSearch ? (
-                <div className={classes.selectedSuggestionsList}>
-                  {selectedSuggestionsArr.map((v, index) => (
-                    <span key={`ssa${index}`} className="text-black-50">{`${v}${
-                      index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
-                    }`}</span>
-                  ))}
-                </div>
-              ) : null}
-              {isSearchAllowed(searchText, simpleSearchTextArray) ? (
-                <Button color="primary" onClick={props.onShowSuggestions}>
-                  Show Suggestions
-                </Button>
+                <>
+                  <div className={classes.selectedSuggestionsList}>
+                    {selectedSuggestionsArr.map((v, index) => (
+                      <span key={`ssa${index}`} className="text-black-50">{`${v}${
+                        index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
+                      }`}</span>
+                    ))}
+                  </div>
+                  {isSearchAllowed(searchText, simpleSearchTextArray) ? (
+                    <Button color="primary" onClick={props.onShowSuggestions}>
+                      Show Suggestions
+                    </Button>
+                  ) : null}
+                </>
               ) : null}
             </div>
             <h6 className={classes.dateRange}>Document Types</h6>
