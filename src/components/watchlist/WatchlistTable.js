@@ -450,7 +450,7 @@ const colDefs = [
       let sentimentObj = null;
       if (sentimentValue) {
         sentimentObj = {
-          number: parseNumber(sentimentValue),
+          number: isNaN(parseNumber(sentimentValue)) ? '' : parseNumber(sentimentValue),
           word: changeWordGetter(get(params, 'data.wordCountChangePercentWord', null))
         };
       }
@@ -726,7 +726,7 @@ const WatchlistTable = props => {
     }
   }, [props]);
   return (
-    <div className="ag-theme-alpine" style={{ height: '99%', width: '100%' }}>
+    <div className="ag-theme-alpine" style={{ height: '98%', width: '100%' }}>
       <AgGridReact
         sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
