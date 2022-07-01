@@ -60,7 +60,7 @@ const LandingPage = () => {
                       <div>
                         {user != null ? (
                           <Button
-                            to="/watchlist"
+                            to="/home"
                             component={Link}
                             size="large"
                             className="py-3 px-5 mt-2"
