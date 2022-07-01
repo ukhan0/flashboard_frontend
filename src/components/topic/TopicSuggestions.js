@@ -10,6 +10,7 @@ import {
 } from '../../reducers/Topic';
 import { findSuggestions } from './topicActions';
 import { makeStyles } from '@material-ui/core/styles';
+import { searchSuggestionTypeConfig } from '../../config/appConfig';
 
 const useStyles = makeStyles(_theme => ({
   loadingSection: {
@@ -59,13 +60,11 @@ export default function TopicSuggestionsDialog(props) {
 
   const handlSuggestionSelection = (value, keyWord) => {
     let simpleSearchTextArrayCopy = [];
-    if (searchSuggestionType === 'searchTextWithAnd') {
+    if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
       simpleSearchTextArrayCopy = searchTextWithAnd;
-    } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+    } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
       simpleSearchTextArrayCopy = ignoreSearchTextArray;
-    }
-    // if(searchSuggestionType === 'simpleSearchTextArray') {
-    else {
+    } else {
       simpleSearchTextArrayCopy = simpleSearchTextArray;
     }
 
@@ -75,13 +74,11 @@ export default function TopicSuggestionsDialog(props) {
       simpleSearchTextArrayCopy.push(value);
       dispatch(setSelectedSuggestions(newSelectedSuggestions));
       if (isSimpleSearch === true) {
-        if (searchSuggestionType === 'searchTextWithAnd') {
+        if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
           dispatch(setSearchTextWithAnd(simpleSearchTextArrayCopy));
-        } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+        } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
           dispatch(setIgnoreSearchTextArray(simpleSearchTextArrayCopy));
-        }
-        // if (searchSuggestionType === 'simpleSearchTextArray')
-        else {
+        } else {
           dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
         }
       }
@@ -93,13 +90,11 @@ export default function TopicSuggestionsDialog(props) {
       const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
       simpleSearchTextArray.splice(index, 1);
       if (isSimpleSearch === true) {
-        if (searchSuggestionType === 'searchTextWithAnd') {
+        if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
           dispatch(setSearchTextWithAnd(simpleSearchTextArrayCopy));
-        } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+        } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
           dispatch(setIgnoreSearchTextArray(simpleSearchTextArrayCopy));
-        }
-        //  else (searchSuggestionType === 'simpleSearchTextArray') {
-        else {
+        } else {
           dispatch(setSimpleSearchTextArray(simpleSearchTextArrayCopy));
         }
       }

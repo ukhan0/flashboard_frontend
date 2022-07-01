@@ -19,6 +19,7 @@ import {
 import TopicIndexDropDown from '../topic/TopicIndexDropDown';
 import { useHistory } from 'react-router-dom';
 import TopicSuggestionsDialog from '../topic/TopicSuggestionsDialog';
+import { searchSuggestionTypeConfig } from '../../config/appConfig';
 const useStyles = makeStyles(theme => ({
   topsection: {
     marginBottom: 15,
@@ -70,7 +71,7 @@ const TopicFilters = props => {
     props.onClose();
     dispatch(setIsSimpleSearch(true));
     dispatch(setSimpleSearchTextArray([searchText, ...simpleSearchTextArray]));
-    dispatch(setSearchSuggestionType('simpleSearchTextArray'));
+    dispatch(setSearchSuggestionType(searchSuggestionTypeConfig.simpleSearchTextArray));
     dispatch(resetResultsPage());
     dispatch(performTopicSearchAggregate(true, true));
     dispatch(performTopicTweetsSearchAggregate(true, true));
@@ -132,7 +133,7 @@ const TopicFilters = props => {
               <Button
                 color="primary"
                 onClick={() => {
-                  dispatch(setSearchSuggestionType('simpleSearchTextArray'));
+                  dispatch(setSearchSuggestionType(searchSuggestionTypeConfig.simpleSearchTextArray));
                   setIsSuggestionsDlgOpen(true);
                 }}>
                 Show Suggestions

@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Tags() {
+export default function Tags(props) {
   const classes = useStyles();
   const inputRef = React.useRef();
   const [key, setKey] = React.useState('');
@@ -67,6 +67,8 @@ export default function Tags() {
         handleSeachTagOnFocusOut={handleSeachTagOnFocusOut}
         handleSearch={handleSearch}
         handleKeyDown={handleKeyDown}
+        handleOnShowSuggestions={props.handleOnShowSuggestions}
+        searchSuggestionType={props.searchSuggestionType}
         key={key}
         values={ignoreSearchTextArray}
         inputRef={inputRef}

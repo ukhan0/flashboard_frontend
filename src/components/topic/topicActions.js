@@ -46,6 +46,7 @@ import { get, isEmpty, isArray, forEach, concat, uniqBy, orderBy } from 'lodash'
 import documentTypesData from '../../config/documentTypesData';
 import { metricsSelection } from '../../config/filterTypes';
 import moment from 'moment';
+import { searchSuggestionTypeConfig } from '../../config/appConfig';
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false, historyBy = 'month') => {
   return async (dispatch, getState) => {
@@ -486,16 +487,16 @@ export const findSuggestions = () => {
 
     let simpleSearchArray = [];
 
-    if (searchSuggestionType === 'searchTextWithAnd') {
+    if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
       simpleSearchArray = searchTextWithAnd;
-    } else if (searchSuggestionType === 'ignoreSearchTextArray') {
+    } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
       simpleSearchArray = ignoreSearchTextArray;
     } else {
       simpleSearchArray = simpleSearchTextArray;
     }
 
     let searchSug = '';
-    if (isSimpleSearch === true && searchSuggestionType !== 'simpleSearchTextArray') {
+    if (isSimpleSearch === true && searchSuggestionType !== searchSuggestionTypeConfig.simpleSearchTextArray) {
       searchSug = simpleSearchArray.length > 0 ? simpleSearchArray.join(' ') : [];
     } else {
       searchSug = searchText;

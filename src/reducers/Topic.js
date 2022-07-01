@@ -4,6 +4,7 @@ import { getSearchIndex } from '../components/topic/topicHelpers';
 import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { get } from 'lodash';
 import { setItemInLocalStorage } from '../utils/helpers';
+import { searchSuggestionTypeConfig } from '../config/appConfig';
 export const SET_SELECTED_DOCUMENT_TYPES = 'TOPIC/SET_SELECTED_DOCUMENT_TYPES';
 export const SET_SEARCH_TEXT = 'TOPIC/SET_SEARCH_TEXT';
 export const SET_DATE_RANGE = 'TOPIC/SET_DATE_RANGE';
@@ -496,7 +497,7 @@ const getDefaultState = () => {
     topicSearchedComapny: '',
     isDays: false,
     linkSearchId: null,
-    searchSuggestionType: 'simpleSearchTextArray'
+    searchSuggestionType: searchSuggestionTypeConfig.simpleSearchTextArray
   };
 };
 

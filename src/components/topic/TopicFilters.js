@@ -35,6 +35,7 @@ import TopicThemeLabelDialog from './TopicThemeLabelDialog';
 import { resetSuggestions } from '../../reducers/Topic';
 import TopicCountryDropDown from './TopicCountryDropDown';
 import TopicIndexDropDown from './TopicIndexDropDown';
+import { searchSuggestionTypeConfig } from '../../config/appConfig';
 const useStyles = makeStyles(theme => ({
   topsection: {
     marginBottom: 15,
@@ -176,19 +177,19 @@ const TopicFilters = props => {
                 <h6>Any of these phrases</h6>
                 <TopicSearchTextTags
                   handleOnShowSuggestions={handleOnShowSuggestions}
-                  searchSuggestionType={'simpleSearchTextArray'}
+                  searchSuggestionType={searchSuggestionTypeConfig.simpleSearchTextArray}
                 />
                 <br />
                 <h6>All of these phrases</h6>
                 <TopicSearchTextTags2
                   handleOnShowSuggestions={handleOnShowSuggestions}
-                  searchSuggestionType={'searchTextWithAnd'}
+                  searchSuggestionType={searchSuggestionTypeConfig.searchTextWithAnd}
                 />
                 <br />
                 <h6>None of these phrase</h6>
                 <TopicIgnoreSearchText
                   handleOnShowSuggestions={handleOnShowSuggestions}
-                  searchSuggestionType={'ignoreSearchTextArray'}
+                  searchSuggestionType={searchSuggestionTypeConfig.ignoreSearchTextArray}
                 />
               </>
             ) : (
