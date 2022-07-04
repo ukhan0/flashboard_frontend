@@ -91,7 +91,7 @@ const TopicFilters = props => {
 
     setTimeout(() => {
       history.push('./topic');
-    }, [100]);
+    }, [400]);
     dispatch(setOpenTopicSearchDialog(true));
   };
   const [isSuggestionsDlgOpen, setIsSuggestionsDlgOpen] = useState(false);
