@@ -242,9 +242,8 @@ const SentimentSection = props => {
                                                                           : '#' +
                                                                             childClr(d.attributes ? d.attributes.v : 0)
                                                                       }`,
-                                                                      paddingLeft: 2,
-                                                                      paddingRight: 2,
-                                                                      marginLeft: 2,
+
+                                                                      marginLeft: 3,
                                                                       //borderRadius: 4,
                                                                       borderRadius: `${
                                                                         d.attributes
@@ -278,9 +277,7 @@ const SentimentSection = props => {
                                                                 key={`6_${e}`}
                                                                 style={{
                                                                   backgroundColor: 'orange',
-                                                                  paddingLeft: 2,
-                                                                  paddingRight: 2,
-                                                                  marginLeft: 2,
+                                                                  marginLeft: 3,
                                                                   //borderRadius: 4,
                                                                   borderRadius: 4,
                                                                   scrollMarginTop: '300px'
