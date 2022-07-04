@@ -145,11 +145,13 @@ export const getSearchText = (
   isSimpleSearch
 ) => {
   const value1 = simpleSearchTextArray.map(value => `"${value}"`).join(' OR ');
-  const value = ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
   const value2 = searchTextWithAnd.map(value => `"${value}"`).join(' AND ');
-  const searchTerm = `(${value1})${value2.length > 0 ? `AND(${value2})` : ''}${
-    value.length > 0 ? `AND(${value})` : ''
-  }`;
+  const value3 = ignoreSearchTextArray.map(value => `-"${value}"`).join(' AND ');
+
+  const searchTerm = `${value1.length > 0 ? `(${value1})` : ''}${
+    value2.length > 0 && value1.length > 0 ? `AND(${value2})` : value2.length > 0 ? `(${value2})` : ''
+  }${(value1.length > 0 || value2.length) && value3 ? `AND(${value3})` : value3.length > 0 ? `(${value3})` : ''}`;
+
   const fullSearchText = onlySuggestionSingleArr.length
     ? `${searchText} OR ${getSearchCombinations(onlySuggestionSingleArr)}`
     : searchText;

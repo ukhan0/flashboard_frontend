@@ -24,7 +24,7 @@ const LeftSidebar = props => {
     } else 
     {
     cancelTokenSource.cancel()
-    cancelTokenSourceHighlights.cancel()
+    // cancelTokenSourceHighlights.cancel()
     dispatch(setSearchBackdrop(null, false))
     dispatch(setSearchBackdropHighlights(null))
    }
