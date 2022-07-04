@@ -1000,5 +1000,18 @@ export default [
       rf: [],
       notes: []
     }
+  },
+  {
+    label: 'TCFD Report',
+    value: 'TCFD Report',
+    color: 'rgb(120,91,208)',
+    globalFlag: 1,
+    documentTypeGroup: 'TCFD Report',
+    sections: {
+      totdoc: ['tcfd report.*'],
+      mda: [],
+      rf: [],
+      notes: []
+    }
   }
 ];
