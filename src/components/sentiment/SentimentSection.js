@@ -244,6 +244,7 @@ const SentimentSection = props => {
                                                                       }`,
                                                                       paddingLeft: 2,
                                                                       paddingRight: 2,
+                                                                      marginLeft: 2,
                                                                       //borderRadius: 4,
                                                                       borderRadius: `${
                                                                         d.attributes
@@ -279,6 +280,7 @@ const SentimentSection = props => {
                                                                   backgroundColor: 'orange',
                                                                   paddingLeft: 2,
                                                                   paddingRight: 2,
+                                                                  marginLeft: 2,
                                                                   //borderRadius: 4,
                                                                   borderRadius: 4,
                                                                   scrollMarginTop: '300px'
