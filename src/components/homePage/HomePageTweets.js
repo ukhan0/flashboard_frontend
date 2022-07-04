@@ -72,24 +72,25 @@ const TopicSearchResults = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const tweets = useRef(lastTweets());
-  const [renderTime, setRenderTime] = useState(0);
+  // const [renderTime, setRenderTime] = useState(0);
   const [userWatchlist, setUserWatchlist] = React.useState([]);
   const { selectedFileType, selectedType } = useSelector(state => state.Watchlist);
+  const lastTweetsData = JSON.stringify(tweets.current);
   const getUserWatchlist = useCallback(async () => {
     const resp = await dispatch(getWatchlist('watchlist', selectedFileType, selectedType));
     setUserWatchlist(resp);
   }, [dispatch, selectedFileType, selectedType]);
   useEffect(() => {
     getUserWatchlist();
-    return () => {
-      const lastTweets = JSON.stringify(tweets.current);
-      socket.close();
-      localStorage.setItem('lastTweets', lastTweets);
-    };
   }, [getUserWatchlist]);
   useEffect(() => {
+    return () => {
+      socket.close();
+      localStorage.setItem('lastTweets', lastTweetsData);
+    };
+  }, [lastTweetsData]);
+  useEffect(() => {
     socket.connect();
-
     for (let i = 0; i < userWatchlist.length; i++) {
       socket.emit('join_room', userWatchlist[i].ticker);
       socket.on(userWatchlist[i].ticker, function(data) {
@@ -102,14 +103,14 @@ const TopicSearchResults = () => {
       });
     }
   }, [userWatchlist]);
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setRenderTime(renderTime + 1);
-    }, [3000]);
-    return () => {
-      clearInterval(intervalId); //This is important
-    };
-  }, [renderTime]);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setRenderTime(renderTime + 1);
+  //   }, [3000]);
+  //   return () => {
+  //     clearInterval(intervalId); //This is important
+  //   };
+  // }, [renderTime]);
 
   function goToTweet(tweet_link) {
     window.open(tweet_link, '_blank');
