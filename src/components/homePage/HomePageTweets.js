@@ -81,8 +81,8 @@ const TopicSearchResults = () => {
   }, [dispatch, selectedFileType, selectedType]);
   useEffect(() => {
     getUserWatchlist();
-    const lastTweets = JSON.stringify(tweets.current);
     return () => {
+      const lastTweets = JSON.stringify(tweets.current);
       socket.close();
       localStorage.setItem('lastTweets', lastTweets);
     };
