@@ -653,7 +653,7 @@ const WatchlistTable = props => {
 
     var inputFilters = document.getElementsByClassName('ag-text-field-input');
     forEach(inputFilters, function(data) {
-      data.setAttribute('autoComplete', 'off');
+      data.setAttribute('autoComplete', 'new-password');
     });
   };
   function headerHeightGetter() {
