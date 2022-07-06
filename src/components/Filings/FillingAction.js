@@ -73,7 +73,7 @@ export const getCompanyFilingRevenueData = () => {
     }
     try {
       const response = await axios.get(
-        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json&v=6`
+        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json&v=2`
       );
 
       const data = get(response, 'data', []);
