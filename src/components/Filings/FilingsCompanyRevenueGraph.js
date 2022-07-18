@@ -19,8 +19,8 @@ export default function FilingsCompanyRevenueGraph() {
   let caculateStrength = filingsRevenueData.map(v => {
     return { ...v, strength: v.newCount - v.oldCount };
   });
-
-  const filterData = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
+  // const filterData = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
+  const filterData = caculateStrength;
 
   let filterDataSorted = orderBy(filterData, ['strength'], ['desc']);
 
