@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 import SentimentCard from '../Filings/FillingsCardData';
 import SentimentPdf from './SentimentPdf';
 import { createHash } from '../../utils/helpers';
+import SentimentHtmlFile from './SentimentHtmlFile';
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
@@ -125,7 +126,9 @@ const SentimentContentSection = props => {
         <Grid item></Grid>
       </Grid>
 
-      <div className={classes.drawerOpener}>
+      <div
+        className={classes.drawerOpener}
+        style={{ display: `${sentimentVesion === 'flatText' && selectedType === 'global' ? 'none' : ''}` }}>
         {isTocButton && sentimentVesion === 'flatText' ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
             Table of contents
@@ -136,21 +139,29 @@ const SentimentContentSection = props => {
         <div style={{ display: `${sentimentVesion === 'original' ? 'block' : 'none'}` }}>
           <SentimentPdf />
         </div>
-        {sentimentVesion !== 'original' ? (
+        {sentimentVesion === 'flatText' && selectedType === 'global' ? (
           <>
-            <SentimentSection
-              contentData={props.contentData}
-              onHandleHighlights={props.onHandleHighlights}
-              onSelection={handleSelection}
-            />
-            <SentimentDrawer
-              highlightsData={props.highlightsData}
-              tableData={props.tableData}
-              onSelection={handleSelection}
-              clickHandle={clickHandle}
-            />
+            <SentimentHtmlFile />
           </>
-        ) : null}
+        ) : (
+          <>
+            {sentimentVesion === 'original' ? null : (
+              <>
+                <SentimentSection
+                  contentData={props.contentData}
+                  onHandleHighlights={props.onHandleHighlights}
+                  onSelection={handleSelection}
+                />
+                <SentimentDrawer
+                  highlightsData={props.highlightsData}
+                  tableData={props.tableData}
+                  onSelection={handleSelection}
+                  clickHandle={clickHandle}
+                />
+              </>
+            )}
+          </>
+        )}
       </>
 
       <div className={classes.goToTopContainer}>

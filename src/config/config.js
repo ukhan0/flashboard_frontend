@@ -17,6 +17,7 @@ const config = {
   sentimentIframUrl: process.env.REACT_APP_SENTIMENT_IFRAME_URL,
   googleAnalyticsKey: process.env.REACT_APP_GOOGLE_ANALYTICS_KEY,
   socketUrl: process.env.REACT_APP_SOCKET_URL,
-  upcomingEarningCalls: process.env.REACT_APP_UPCOMING_EARNING_CALLS
+  upcomingEarningCalls: process.env.REACT_APP_UPCOMING_EARNING_CALLS,
+  sentimentHtmlFileUrl: process.env.REACT_APP_SENTIMENT_HTML_FILE_URL
 };
 export default config;
