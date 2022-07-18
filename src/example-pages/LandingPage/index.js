@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { Grid, Container, Button } from '@material-ui/core';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import projectLogo from '../../assets/images/logos/sma-logo-white.svg';
+import projectLogo from '../../assets/images/logos/ca-logo-white.png';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
