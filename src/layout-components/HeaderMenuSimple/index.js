@@ -74,7 +74,7 @@ const HeaderMenu = props => {
   const helpId = openHelp ? 'simple-popper' : undefined;
   return (
     <Fragment>
-      <div className="app-header-menu">
+      <div className="app-header-menu" style={{display:"flex"}}>
         <Button
           size="medium"
           color="inherit"

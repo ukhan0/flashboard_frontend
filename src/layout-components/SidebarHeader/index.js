@@ -35,14 +35,15 @@ const SidebarHeader = props => {
       <div
         className={clsx('app-sidebar-header', {
           'app-sidebar-header-close': sidebarToggle && !sidebarHover
-        })}>
+        })}
+        style={{width:"100%"}}
+        >
         <Box className="header-logo-wrapper" title="SMA">
           <Link to="/" className="header-logo-wrapper-link">
-            <IconButton color="primary" size="medium">
-              <img className="app-sidebar-logo" alt="SMA" src={projectLogo} />
+            <IconButton color="primary">
+              <img className="app-sidebar-logo" alt="SMA" style={{width:"100px"}} src={projectLogo} />
             </IconButton>
           </Link>
-          <Box className="header-logo-text">SMA</Box>
         </Box>
         <Box
           className={clsx('app-sidebar-header-btn', {

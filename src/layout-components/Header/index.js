@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Hidden, IconButton, AppBar, Box, Tooltip } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
-import projectLogo from '../../assets/images/logos/sma-logo.svg';
+import projectLogo from '../../assets/images/logos/ca-logo-white.png';
 import Notification from '../../components/notification/Notification';
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';
@@ -51,13 +51,12 @@ const Header = props => {
         <Box className="app-header-toolbar">
           <Hidden lgUp>
             <Box className="app-logo-wrapper" title="SMA">
-              <Link to="/" className="app-logo-link">
-                <IconButton color="primary" size="medium" className="app-logo-btn">
-                  <img className="app-logo-img" alt="SMA" src={projectLogo} />
+              <Link to="/" className="header-logo-wrapper-link">
+                <IconButton color="primary" size="medium">
+                  <img className="app-header-logo-img-small" alt="SMA" src={projectLogo} />
                 </IconButton>
               </Link>
               <Hidden smDown>
-                <Box className="app-logo-text">SMA</Box>
                 <HeaderMenuSimple />
               </Hidden>
             </Box>
