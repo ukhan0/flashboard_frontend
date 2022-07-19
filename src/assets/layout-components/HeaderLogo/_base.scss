@@ -10,7 +10,7 @@ body {
 
     display: flex;
     align-items: center;
-    background: rgba(255,255,255,.08);
+    background: none;
     padding-left: ($spacer);
     padding-right: ($spacer);
     justify-content: space-between;
@@ -35,7 +35,7 @@ body {
   }
 
   .app-header-logo-open {
-    background: rgba(255,255,255,.08);
+    background: none
   }
 
   .app-header-logo-img-big {
