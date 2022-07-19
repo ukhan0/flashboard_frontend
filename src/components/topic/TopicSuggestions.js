@@ -60,12 +60,14 @@ export default function TopicSuggestionsDialog(props) {
 
   const handlSuggestionSelection = (value, keyWord) => {
     let simpleSearchTextArrayCopy = [];
-    if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
-      simpleSearchTextArrayCopy = searchTextWithAnd;
-    } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
-      simpleSearchTextArrayCopy = ignoreSearchTextArray;
-    } else {
-      simpleSearchTextArrayCopy = simpleSearchTextArray;
+    if (isSimpleSearch) {
+      if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
+        simpleSearchTextArrayCopy = searchTextWithAnd;
+      } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
+        simpleSearchTextArrayCopy = ignoreSearchTextArray;
+      } else {
+        simpleSearchTextArrayCopy = simpleSearchTextArray;
+      }
     }
 
     const newSelectedSuggestions = cloneDeep(selectedSuggestions);
@@ -73,7 +75,7 @@ export default function TopicSuggestionsDialog(props) {
       newSelectedSuggestions[keyWord] = [...newSelectedSuggestions[keyWord], value];
       simpleSearchTextArrayCopy.push(value);
       dispatch(setSelectedSuggestions(newSelectedSuggestions));
-      if (isSimpleSearch === true) {
+      if (isSimpleSearch) {
         if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
           dispatch(setSearchTextWithAnd(simpleSearchTextArrayCopy));
         } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
@@ -89,7 +91,7 @@ export default function TopicSuggestionsDialog(props) {
       dispatch(setSelectedSuggestions(selectedSuggestions));
       const index = simpleSearchTextArrayCopy.findIndex(sug => sug === value);
       simpleSearchTextArray.splice(index, 1);
-      if (isSimpleSearch === true) {
+      if (isSimpleSearch) {
         if (searchSuggestionType === searchSuggestionTypeConfig.searchTextWithAnd) {
           dispatch(setSearchTextWithAnd(simpleSearchTextArrayCopy));
         } else if (searchSuggestionType === searchSuggestionTypeConfig.ignoreSearchTextArray) {
