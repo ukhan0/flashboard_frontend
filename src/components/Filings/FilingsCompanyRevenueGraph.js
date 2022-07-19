@@ -9,8 +9,9 @@ import Highcharts from 'highcharts';
 import highchartsGantt from 'highcharts/highcharts-more';
 import { setIsFromSideBar, setIsFromThemex } from '../../reducers/Topic';
 import { setFillingsSearchText } from '../../reducers/Filings';
-import { Grid, Card, Divider } from '@material-ui/core';
+import { Grid, Card, Divider, ButtonGroup, Button } from '@material-ui/core';
 import { orderBy } from 'lodash';
+import { entityTypes } from '../../config/filterTypes';
 
 export default function FilingsCompanyRevenueGraph() {
   const history = useHistory();
@@ -131,11 +132,25 @@ export default function FilingsCompanyRevenueGraph() {
       <Card className="mb-4">
         <div className="card-header-alt d-flex justify-content-between p-4">
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <div>
+            <Grid container alignItems="center" xs={12}>
+              <Grid item xs={6}>
                 <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
                 <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
-              </div>
+              </Grid>
+              <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
+                <ButtonGroup color="primary">
+                  {entityTypes.map((type, i) => (
+                    <Button
+                      size="small"
+                      key={`type_${i}`}
+                      // onClick={() => handleEntitiesType(type)}
+                      // variant={type.key === selectedEntityTypes.key ? 'contained' : 'outlined'}
+                      variant="outlined">
+                      {type.label}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Grid>
             </Grid>
           </Grid>
         </div>
