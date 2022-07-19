@@ -7,6 +7,7 @@ import {
 } from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
+import { getOldId, getRecentId } from '../comparision/ComparisionHelper';
 
 export const getCompanyFilingListing = () => {
   return async (dispatch, getState) => {
@@ -66,18 +67,15 @@ export const getCompanyFilingGraphData = () => {
 
 export const getCompanyFilingRevenueData = () => {
   return async (dispatch, getState) => {
-    const { selectedItem } = getState().Watchlist;
-
+    const { selectedItem, selectedFileType } = getState().Watchlist;
+    const oldId = getOldId({}, selectedFileType, selectedItem);
+    const recentId = getRecentId({}, selectedFileType, selectedItem);
     if (!selectedItem) {
       return;
     }
     try {
-      const response = await axios.get(
-        `${config.fillingApiUrl}?f1=${selectedItem.oldId}&f2=${selectedItem.recentId}&output=json&v=2`
-      );
-
+      const response = await axios.get(`${config.fillingApiUrl}?f1=${oldId}&f2=${recentId}&output=json&v=2`);
       const data = get(response, 'data', []);
-
       if (response) {
         dispatch(setCompanyFillingRevenueData(data));
       } else {
