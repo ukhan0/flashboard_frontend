@@ -63,6 +63,6 @@ export const earningsCallType = [
 
 export const entityTypes = [
   { label: ' Emerging', key: 'emerging_entities' },
-  { label: 'Disappearing', key: 'disappearing_entities*' },
-  { label: 'Common', key: 'common_entities*' }
+  { label: 'Disappearing', key: 'disappearing_entities' },
+  { label: 'Common', key: 'common_entities' }
 ];

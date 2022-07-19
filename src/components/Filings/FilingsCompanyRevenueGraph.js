@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -10,29 +10,52 @@ import highchartsGantt from 'highcharts/highcharts-more';
 import { setIsFromSideBar, setIsFromThemex } from '../../reducers/Topic';
 import { setFillingsSearchText } from '../../reducers/Filings';
 import { Grid, Card, Divider, ButtonGroup, Button } from '@material-ui/core';
-import { orderBy } from 'lodash';
+import { orderBy, get } from 'lodash';
 import { entityTypes } from '../../config/filterTypes';
 
 export default function FilingsCompanyRevenueGraph() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [selectedEntityType, setSelectedEntityType] = useState('common_entities');
+  const [entitiesData, setEntitiesData] = useState([]);
   const { filingsRevenueData } = useSelector(state => state.Filings);
-  let caculateStrength = filingsRevenueData.map(v => {
-    return { ...v, strength: v.newCount - v.oldCount };
-  });
-  // const filterData = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
-  const filterData = caculateStrength;
+  const data = useCallback(() => {
+    let data = {};
+    let caculateStrength = filingsRevenueData.map(v => {
+      return { ...v, strength: v.newCount - v.oldCount };
+    });
+    // const filterData = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
+    const filterData = caculateStrength;
+    let filterDataSorted = orderBy(filterData, ['strength'], ['desc']);
+    let finalResult = filterDataSorted;
+    let filingsRevenue1 = finalResult.map(v => {
+      return { name: v.name, low: -v.oldCount, high: 0 };
+    });
+    let filingsRevenue2 = finalResult.map(v => {
+      return { name: v.name, low: 0, high: v.newCount };
+    });
+    let filingsRevenue3 = finalResult.map(v => {
+      return { name: v.name, low: 0, high: 0 };
+    });
+    data.emergingEntities = filingsRevenue2.concat(filingsRevenue3);
+    data.disappearingEntities = filingsRevenue1.concat(filingsRevenue3);
+    data.commonEntities = filingsRevenue1.concat(filingsRevenue2);
+    return data;
+  }, [filingsRevenueData]);
 
-  let filterDataSorted = orderBy(filterData, ['strength'], ['desc']);
-
-  let finalResult = filterDataSorted;
-  let filingsRevenue1 = finalResult.map(v => {
-    return { name: v.name, low: -v.oldCount, high: 0 };
-  });
-  let filingsRevenue2 = finalResult.map(v => {
-    return { name: v.name, low: 0, high: v.newCount };
-  });
-
+  const handleEntitiesType = type => {
+    setSelectedEntityType(type);
+  };
+  useEffect(() => {
+    let entities = data();
+    if (selectedEntityType === 'emerging_entities') {
+      setEntitiesData(get(entities, 'emergingEntities', []));
+    } else if (selectedEntityType === 'disappearing_entities') {
+      setEntitiesData(get(entities, 'disappearingEntities', []));
+    } else {
+      setEntitiesData(get(entities, 'commonEntities', []));
+    }
+  }, [data, selectedEntityType]);
   const options = {
     chart: {
       type: 'columnrange',
@@ -120,7 +143,7 @@ export default function FilingsCompanyRevenueGraph() {
     series: [
       {
         name: 'Mentions',
-        data: filingsRevenue1.concat(filingsRevenue2),
+        data: entitiesData,
         dataLabels: {
           enabled: true
         }
@@ -143,9 +166,8 @@ export default function FilingsCompanyRevenueGraph() {
                     <Button
                       size="small"
                       key={`type_${i}`}
-                      // onClick={() => handleEntitiesType(type)}
-                      // variant={type.key === selectedEntityTypes.key ? 'contained' : 'outlined'}
-                      variant="outlined">
+                      onClick={() => handleEntitiesType(type.key)}
+                      variant={type.key === selectedEntityType ? 'contained' : 'outlined'}>
                       {type.label}
                     </Button>
                   ))}
