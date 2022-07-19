@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchText, resetSuggestions } from '../../reducers/Topic';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TopicHelpPopup from './TopicHelpPopup';
+import { get } from 'lodash';
 const TopicSearchTextField = props => {
   const { searchText } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
@@ -12,7 +13,9 @@ const TopicSearchTextField = props => {
     const value = event.target.value.replaceAll(regex, function(v) {
       return v.toUpperCase();
     });
-
+    if (get(props, 'onChangeStatus', null)) {
+      props.onChange();
+    }
     dispatch(setTopicSearchText(value));
     if (value === null || value === '' || searchText !== value) {
       dispatch(resetSuggestions());

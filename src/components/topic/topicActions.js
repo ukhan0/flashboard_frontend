@@ -496,20 +496,15 @@ export const findSuggestions = () => {
     }
 
     let searchSug = '';
-    if (isSimpleSearch === true && searchSuggestionType !== searchSuggestionTypeConfig.simpleSearchTextArray) {
+
+    if (isSimpleSearch) {
       searchSug = simpleSearchArray.length > 0 ? simpleSearchArray.join(' ') : [];
     } else {
       searchSug = searchText;
     }
-    if (simpleSearchArray.length > 0) {
-      forEach(simpleSearchArray, function(value) {
-        searchSug = `${searchSug} ${value}`;
-      });
-    }
     if (!isEmpty(suggestions) || !searchSug) {
       return;
     }
-
     dispatch(setSuggestionsIsLoading(true));
 
     try {

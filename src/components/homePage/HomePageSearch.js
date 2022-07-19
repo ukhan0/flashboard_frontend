@@ -59,7 +59,8 @@ const TopicFilters = props => {
     selectedSuggestions,
     simpleSearchTextArray,
     ignoreSearchTextArray,
-    cancelTokenSourceHighlights
+    cancelTokenSourceHighlights,
+    isSimpleSearch
   } = useSelector(state => state.Topic);
 
   let selectedSuggestionsArr = [];
@@ -99,6 +100,11 @@ const TopicFilters = props => {
   const handleCloseTopicSuggestionsDialog = () => {
     setIsSuggestionsDlgOpen(false);
   };
+  const handleOnChange = () => {
+    if (isSimpleSearch) {
+      dispatch(setIsSimpleSearch(false));
+    }
+  };
 
   let isButtonActive = true;
   if (searchText.length > 2 || simpleSearchTextArray.length > 0 || ignoreSearchTextArray.length > 0) {
@@ -117,7 +123,7 @@ const TopicFilters = props => {
       <Grid item xs={12}>
         <div style={{ marginRight: '20px' }}>
           <h6>Search Query</h6>
-          <TopicSearchTextField />
+          <TopicSearchTextField onChangeStatus={true} onChange={handleOnChange} />
 
           <div className={classes.suggestionsBtnSection}>
             {
