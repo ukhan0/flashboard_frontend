@@ -24,22 +24,37 @@ export default function FilingsCompanyRevenueGraph() {
     let caculateStrength = filingsRevenueData.map(v => {
       return { ...v, strength: v.newCount - v.oldCount };
     });
-    // const filterData = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
-    const filterData = caculateStrength;
-    let filterDataSorted = orderBy(filterData, ['strength'], ['desc']);
-    let finalResult = filterDataSorted;
-    let filingsRevenue1 = finalResult.map(v => {
+    const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
+    const disappearing = caculateStrength.filter(v => v.oldCount > 0);
+    const emerging = caculateStrength.filter(v => v.newCount > 0);
+    // const filterData = caculateStrength;
+    let filterCommanDataSorted = orderBy(comman, ['strength'], ['desc']);
+    let filterDisappearingDataSorted = orderBy(disappearing, ['strength'], ['desc']);
+    let filterEmergingDataSorted = orderBy(emerging, ['strength'], ['desc']);
+    // let finalResult = filterDataSorted;
+    let filingsRevenueComman1 = filterCommanDataSorted.map(v => {
       return { name: v.name, low: -v.oldCount, high: 0 };
     });
-    let filingsRevenue2 = finalResult.map(v => {
+    let filingsRevenueComman2 = filterCommanDataSorted.map(v => {
       return { name: v.name, low: 0, high: v.newCount };
     });
-    let filingsRevenue3 = finalResult.map(v => {
+    let filingsRevenueEmerging = filterEmergingDataSorted.map(v => {
+      return { name: v.name, low: 0, high: v.newCount };
+    });
+    let filingsRevenueDisappearing = filterDisappearingDataSorted.map(v => {
+      return { name: v.name, low: -v.oldCount, high: 0 };
+    });
+
+    let filingsRevenueEmerging2 = filterEmergingDataSorted.map(v => {
       return { name: v.name, low: 0, high: 0 };
     });
-    data.emergingEntities = filingsRevenue2.concat(filingsRevenue3);
-    data.disappearingEntities = filingsRevenue1.concat(filingsRevenue3);
-    data.commonEntities = filingsRevenue1.concat(filingsRevenue2);
+    let filingsRevenueDisappearing2 = filterDisappearingDataSorted.map(v => {
+      return { name: v.name, low: 0, high: 0 };
+    });
+
+    data.emergingEntities = filingsRevenueEmerging.concat(filingsRevenueEmerging2);
+    data.disappearingEntities = filingsRevenueDisappearing.concat(filingsRevenueDisappearing2);
+    data.commonEntities = filingsRevenueComman1.concat(filingsRevenueComman2);
     return data;
   }, [filingsRevenueData]);
 
