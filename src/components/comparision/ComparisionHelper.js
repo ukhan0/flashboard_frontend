@@ -10,7 +10,7 @@ export const saveComparisionSettings = setting => {
 
 export const getOldId = (getQueryParams, selectedFileType, selectedItem) => {
   let id = null;
-  if (selectedItem.comparisonType) {
+  if (get(selectedItem, 'comparisonType', false)) {
     id = get(selectedItem, 'comparisonType', null);
     id = id === '10-K' ? get(selectedItem, 'oldId10k') : get(selectedItem, 'oldId10q', null);
   } else {
@@ -30,7 +30,7 @@ export const getOldId = (getQueryParams, selectedFileType, selectedItem) => {
 
 export const getRecentId = (getQueryParams, selectedFileType, selectedItem) => {
   let id = null;
-  if (selectedItem.comparisonType) {
+  if (get(selectedItem, 'comparisonType', false)) {
     id = get(selectedItem, 'comparisonType', null);
     id = id === '10-K' ? get(selectedItem, 'recentId10k') : get(selectedItem, 'recentId10q', null);
   } else {

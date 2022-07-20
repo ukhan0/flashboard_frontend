@@ -105,16 +105,19 @@ const FilingsDetailsGraph = props => {
 
     series: [
       {
+        minPointLength: 10,
         name: 'RISK',
         data: risks.filter(e => e),
         color: '#ff98a4'
       },
       {
+        minPointLength: 10,
         name: 'NOTES',
         data: notes.filter(e => e),
         color: '#7fc8fd'
       },
       {
+        minPointLength: 10,
         name: 'MDA',
         data: mdas.filter(e => e),
         color: '#7fe4a6'
