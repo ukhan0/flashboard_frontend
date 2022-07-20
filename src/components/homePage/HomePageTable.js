@@ -330,7 +330,7 @@ export default function HomePageTable(props) {
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
-        <div className="card-header--title font-weight-bold">Recent Documents</div>
+        <div className="card-header--title font-weight-bold">Recent Documents Rehan</div>
         <>
           <div className={classes.search}>
             <div className={classes.searchIconContainer}>

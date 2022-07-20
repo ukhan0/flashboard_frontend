@@ -3,7 +3,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Hidden, IconButton, Box, Popover, Button } from '@material-ui/core';
 import NotificationsActiveTwoToneIcon from '@material-ui/icons/NotificationsActiveTwoTone';
 // import SocketService from '../../socketService';
-import sound from './Tones.mp3';
+// import sound from './Tones.mp3';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -29,10 +29,10 @@ const Notification = () => {
     });
   }, [notifications]);
 
-  const playSound = () => {
-    const audio = new Audio(sound);
-    audio.play();
-  };
+  // const playSound = () => {
+  //   const audio = new Audio(sound);
+  //   audio.play();
+  // };
 
   // const socketNotificationData = useCallback(() => {
   //   try {
