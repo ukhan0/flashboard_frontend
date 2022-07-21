@@ -25,12 +25,12 @@ export default function FilingsCompanyRevenueGraph() {
       return { ...v, strength: v.newCount - v.oldCount };
     });
     const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
-    const disappearing = caculateStrength.filter(v => v.oldCount > 0);
-    const emerging = caculateStrength.filter(v => v.newCount > 0);
+    const disappearing = caculateStrength.filter(v => v.oldCount > 0 && v.newCount === 0);
+    const emerging = caculateStrength.filter(v => v.newCount > 0 && v.oldCount === 0);
     // const filterData = caculateStrength;
     let filterCommanDataSorted = orderBy(comman, ['strength'], ['desc']);
-    let filterDisappearingDataSorted = orderBy(disappearing, ['strength'], ['desc']);
-    let filterEmergingDataSorted = orderBy(emerging, ['strength'], ['desc']);
+    let filterDisappearingDataSorted = orderBy(disappearing, ['oldCount'], ['desc']);
+    let filterEmergingDataSorted = orderBy(emerging, ['newCount'], ['desc']);
     // let finalResult = filterDataSorted;
     let filingsRevenueComman1 = filterCommanDataSorted.map(v => {
       return { name: v.name, low: -v.oldCount, high: 0 };
