@@ -9,6 +9,8 @@ import SnackBar from '../Snackbar';
 import { get } from 'lodash';
 import HomePageNotification from './HomepageNotification';
 import HomePageTweets from './HomePageTweets';
+import { getUserWatchlist } from './HomePageAction';
+import { useDispatch } from 'react-redux';
 const useStyle = makeStyles({
   loader: {
     position: 'absolute',
@@ -20,12 +22,16 @@ const useStyle = makeStyles({
 });
 export default function HomePage() {
   const classes = useStyle();
+  const dispatch = useDispatch();
   const [snackbar, setSnackBar] = React.useState(null);
   const { isLoading } = useSelector(state => state.HomePage);
   const anchorOrigin = { vertical: 'top', horizontal: 'center' };
   const handleSnackBar = data => {
     setSnackBar(data);
   };
+  React.useEffect(() => {
+    dispatch(getUserWatchlist(['domestic', 'global']));
+  }, [dispatch]);
   return (
     <div>
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>

@@ -12,11 +12,11 @@ import config from '../../config/config';
 import { earningsCallType } from '../../config/filterTypes';
 import { setSearchId } from '../../reducers/Topic';
 import { getUpCommingCallsType, storeUpCommingCallsType } from './HomePageHelpers';
+
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
+  const { globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
   const [upcomingCalls, setUpcomingCalls] = React.useState([]);
-  const [domesticData, setDomesticData] = React.useState([]);
-  const [globalData, setGlobalData] = React.useState([]);
   const [upComingCallType, setUpComingCallType] = React.useState('all');
   const [filterData, setFilterData] = React.useState([]);
   const dispatch = useDispatch();
@@ -31,32 +31,6 @@ export default function HomepageNotification() {
   const handleNotificationClick = data => {
     window.open(data.url, '_blank');
   };
-
-  const fetchUserWatchlist = useCallback(
-    async selectedType => {
-      try {
-        let user = JSON.parse(localStorage.getItem('user'));
-        dispatch(setHomePageLoader(true));
-        const response = await axios.get(
-          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=watchlist&selected_type=${selectedType}`
-        );
-        let data = get(response, 'data.data.content', []);
-        if (selectedType === 'global') {
-          setGlobalData(data);
-        } else {
-          setDomesticData(data);
-        }
-        dispatch(setHomePageLoader(false));
-      } catch (error) {
-        console.log(error);
-        console.error('Internal server error:', error);
-        setDomesticData([]);
-        setGlobalData([]);
-        dispatch(setHomePageLoader(false));
-      }
-    },
-    [dispatch]
-  );
 
   const getEarningsCalls = useCallback(async () => {
     dispatch(setHomePageLoader(true));
@@ -91,7 +65,7 @@ export default function HomepageNotification() {
 
   const getSelectedData = useCallback(() => {
     let finalData = [];
-    let watchlist = globalData.concat(domesticData);
+    let watchlist = globalWatchlist.concat(domesticWatchlist);
     upcomingCalls.forEach(u => {
       let ticker = watchlist.find(sd => sd.ticker === u.symbol);
       if (ticker) {
@@ -99,15 +73,12 @@ export default function HomepageNotification() {
       }
     });
     setFilterData(finalData);
-  }, [globalData, domesticData, upcomingCalls]);
+  }, [globalWatchlist, domesticWatchlist, upcomingCalls]);
 
   React.useEffect(() => {
     setUpComingCallType(getUpCommingCallsType());
     getEarningsCalls();
-    ['domestic', 'global'].forEach(selectedType => {
-      fetchUserWatchlist(selectedType);
-    });
-  }, [getEarningsCalls, fetchUserWatchlist]);
+  }, [getEarningsCalls, dispatch]);
 
   React.useEffect(() => {
     getSelectedData();

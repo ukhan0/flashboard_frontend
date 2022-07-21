@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { get, round } from 'lodash';
+import { get, round, cloneDeep } from 'lodash';
 import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
 import TickerLogo from '../watchlist/WatchlistTableComponents/TickerLogo';
 import { Card, ButtonGroup, Button, InputBase } from '@material-ui/core';
@@ -20,8 +20,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import HomePageService from './HomePageService';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import AddRemoveIcon from '../watchlist/WatchlistTableComponents/AddRemoveIcon';
+import Snackbar from '../Snackbar';
+import { getUserWatchlist } from './HomePageAction';
+
 const frameworkComponents = {
-  TickerLogo: TickerLogo
+  TickerLogo: TickerLogo,
+  AddRemoveIcon: AddRemoveIcon
 };
 const defaultColDef = {
   resizable: true,
@@ -43,6 +48,21 @@ const defaultColDef = {
 //Table headers
 
 const columnDefs = [
+  {
+    headerName: 'Actions',
+    headerTooltip: 'Add/Remove Ticker',
+    field: 'isTickerActive',
+    colId: 'actions',
+    filter: false,
+    cellClass: ['center-align-left'],
+    cellRenderer: 'AddRemoveIcon',
+    width: 50,
+    resizable: false,
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
+  },
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',
@@ -172,13 +192,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function HomePageTable(props) {
+export default function HomePageTable() {
   const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
-  const { homePageSelectedSearchIndex } = useSelector(state => state.HomePage);
+  const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
   const [cancelToken, setCancelToken] = useState(null);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState(null);
   const [allCompletedCompaniesData, setAllCompletedCompaniesData] = useState([]);
+  const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
+  const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
+  const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
   const {
     isCompleteCompaniesDataLoaded,
     isCompleteCompaniesDataGlobalLoaded,
@@ -187,7 +210,7 @@ export default function HomePageTable(props) {
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const tableRef = useRef();
-
+  const selectedType = 'domestic';
   useEffect(() => {
     setAllCompletedCompaniesData(completeCompaniesData.concat(completeCompaniesDataGlobal));
   }, [completeCompaniesData, completeCompaniesDataGlobal]);
@@ -213,6 +236,59 @@ export default function HomePageTable(props) {
     return item;
   };
 
+  const addTicker = async ticker => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
+        user_id: user.id,
+        ticker: ticker,
+        delete_old_values: false,
+        watchlist_type: selectedType
+      });
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        setSnackBar({ isSnackBar: true, message: 'Ticker added in Watchlist', severity: 'success' });
+        dispatch(getUserWatchlist(['domestic', 'global']));
+      } else {
+        setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
+      }
+    } catch (error) {
+      console.log(error);
+      setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
+    }
+  };
+
+  const deleteTicker = async ticker => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    try {
+      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        setSnackBar({ isSnackBar: true, message: 'Ticker removed from Watchlist', severity: 'info' });
+        dispatch(getUserWatchlist(['domestic', 'global']));
+      } else {
+        setSnackBar({
+          isSnackBar: true,
+          message: 'Unable to Add/Remove Ticker To/From Watchlist',
+          severity: 'error'
+        });
+      }
+    } catch (error) {
+      setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
+    }
+  };
+
+  const changeTickerStatus = (ticker, tickerStatus) => {
+    let indexs = recentCompaniesDataTable.filter((word, _index, _arr) => {
+      let data = word;
+      if (word.ticker === ticker) {
+        data.isTickerActive = tickerStatus;
+      }
+      return data;
+    });
+    setRecentCompaniesDataTable(indexs);
+  };
   const cellClicked = params => {
     if (params.data) {
       let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
@@ -231,6 +307,17 @@ export default function HomePageTable(props) {
       dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
+    }
+    let rowId = params.column.colId;
+    if (rowId === 'actions') {
+      let ticker = params.data.ticker;
+      if (params.data.isTickerActive) {
+        changeTickerStatus(ticker, false);
+        deleteTicker(ticker);
+      } else {
+        changeTickerStatus(ticker, true);
+        addTicker(ticker);
+      }
     }
   };
 
@@ -256,7 +343,8 @@ export default function HomePageTable(props) {
               sentiment: round(get(d, 'sentiment', null), 2),
               // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
               docDate: get(d, 'document_date', null),
-              wordCount: round(get(d, 'word_count', null), 2)
+              wordCount: round(get(d, 'word_count', null), 2),
+              isTickerActive: false
               // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
             };
           });
@@ -297,8 +385,10 @@ export default function HomePageTable(props) {
     if (HomePageService.agGridColumnAPI) {
       if (homePageSelectedSearchIndex.id === 3) {
         HomePageService.mangeAgGridColunms('ticker', false);
+        HomePageService.mangeAgGridColunms('actions', false);
       } else {
         HomePageService.mangeAgGridColunms('ticker', true);
+        HomePageService.mangeAgGridColunms('actions', true);
       }
     }
   }, [homePageSelectedSearchIndex]);
@@ -327,6 +417,20 @@ export default function HomePageTable(props) {
     }
   };
 
+  useEffect(() => {
+    let userWatchlist = [];
+    let watchlist = globalWatchlist.concat(domesticWatchlist);
+    for (let i = 0; i < recentCompaniesData.length; i++) {
+      let findTicker = watchlist.find(e => e.ticker === recentCompaniesData[i].ticker);
+      if (findTicker) {
+        recentCompaniesData[i].isTickerActive = true;
+      }
+      userWatchlist.push(recentCompaniesData[i]);
+    }
+    setTimeout(() => {
+      setRecentCompaniesDataTable(userWatchlist);
+    }, [100]);
+  }, [globalWatchlist, domesticWatchlist, recentCompaniesData]);
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
@@ -366,7 +470,7 @@ export default function HomePageTable(props) {
           alwaysShowHorizontalScroll={true}
           columnDefs={columnDefs}
           rowSelection="single"
-          rowData={recentCompaniesData}
+          rowData={cloneDeep(recentCompaniesDataTable)}
           suppressCellSelection={true}
           frameworkComponents={frameworkComponents}
           onCellClicked={cellClicked}
@@ -378,6 +482,19 @@ export default function HomePageTable(props) {
           quickFilterText={recentDocumentSearchFilter}
           defaultColDef={defaultColDef}></AgGridReact>
       </div>
+      <Snackbar
+        open={get(snackbar, 'isSnackBar', false)}
+        onClose={() =>
+          setSnackBar({
+            isSnackBar: false,
+            message: get(snackbar, 'message', null),
+            severity: get(snackbar, 'severity', '')
+          })
+        }
+        message={get(snackbar, 'message', null)}
+        severity={get(snackbar, 'severity', '')}
+        anchorOrigin={anchorOrigin}
+      />
     </Card>
   );
 }
