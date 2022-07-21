@@ -16,7 +16,7 @@ import { entityTypes } from '../../config/filterTypes';
 export default function FilingsCompanyRevenueGraph() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [selectedEntityType, setSelectedEntityType] = useState('common_entities');
+  const [selectedEntityType, setSelectedEntityType] = useState('emerging_entities');
   const [entitiesData, setEntitiesData] = useState([]);
   const { filingsRevenueData } = useSelector(state => state.Filings);
   const data = useCallback(() => {
