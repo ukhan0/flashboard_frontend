@@ -26,7 +26,8 @@ const FilingsCompanyRevenueGraph = props => {
       .map(v => {
         return { ...v, strength: v.newCount - v.oldCount };
       })
-      .filter(e => e.name !== selectedItem.companyName);
+      .filter(e => !selectedItem.companyName.toLowerCase().includes(e.name.toLowerCase()));
+
     const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
     const disappearing = caculateStrength.filter(v => v.oldCount > 0 && v.newCount === 0);
     const emerging = caculateStrength.filter(v => v.newCount > 0 && v.oldCount === 0);
