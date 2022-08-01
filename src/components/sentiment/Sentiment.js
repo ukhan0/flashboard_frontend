@@ -101,8 +101,9 @@ const Sentiment = () => {
 
   useEffect(() => {
     if (!firstTimeLoadd.current) {
-      const selectedItemRecentId = get(selectedItem, 'recentId', null);
-      if (selectedItem && selectedItemRecentId !== sentimentRecentId) {
+      // const selectedItemRecentId = get(selectedItem, 'recentId', null);
+      // selectedItem && selectedItemRecentId !== sentimentRecentId
+      if (true) {
         dispatch(getSentimentData());
         if (hideCards === 'true') {
           dispatch(getCompanyFilingGraphData());

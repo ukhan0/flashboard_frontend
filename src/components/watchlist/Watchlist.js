@@ -45,10 +45,11 @@ import Snackbar from '../Snackbar';
 // components
 import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
+import WatchlistTable2 from './WatchlistTable2';
 // styles
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
-import { getWatchlist } from './watchlistApiCalls';
+import { getWatchlist, getWatchlistTable2Data } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
@@ -110,6 +111,7 @@ const Watchlist = props => {
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
+  const [gridData2, setGridData2] = useState([]);
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
   let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
@@ -160,32 +162,46 @@ const Watchlist = props => {
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal]);
   const fetchData = useCallback(async () => {
-    try {
-      let rawData = [];
-      if (selectedUniverse !== 'all') {
-        setLoading(true);
-        setWatchlistData([]);
-        rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-        setSyncData(rawData);
-        // syncCompleteDataOnPage(rawData);
-        // update cached data of all (Complete) watchlist
-        if (!firstTimeLoad.current) {
-          dispatch(setIsNewWatchlistDataAvailable(false));
+    if (selectedFileType === '10q' || selectedFileType === '10k') {
+      try {
+        let rawData = [];
+        if (selectedUniverse !== 'all') {
+          setLoading(true);
+          setWatchlistData([]);
+          rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
+          setSyncData(rawData);
+          // syncCompleteDataOnPage(rawData);
+          // update cached data of all (Complete) watchlist
+          if (!firstTimeLoad.current) {
+            dispatch(setIsNewWatchlistDataAvailable(false));
+          }
         }
+        if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
+          setTopicDialogOpen(true);
+          dispatch(setCount(count + 1));
+        }
+        if (selectedUniverse !== 'all') {
+          setWatchlistData(formatData(rawData));
+        }
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        // log exception here
       }
-      if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
-        setTopicDialogOpen(true);
-        dispatch(setCount(count + 1));
-      }
-      if (selectedUniverse !== 'all') {
-        setWatchlistData(formatData(rawData));
-      }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      // log exception here
     }
   }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
+
+  const getWatchlistTable2Dataa = useCallback(async () => {
+    if (selectedFileType !== '10q' && selectedFileType !== '10k') {
+      setLoading(true);
+      let data = await dispatch(getWatchlistTable2Data('fillings_*', selectedUniverse, selectedFileType, selectedType));
+      setLoading(false);
+      setGridData2(data);
+    }
+  }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
+  useEffect(() => {
+    getWatchlistTable2Dataa();
+  }, [getWatchlistTable2Dataa]);
 
   useEffect(() => {
     fetchData();
@@ -535,7 +551,9 @@ const Watchlist = props => {
     setIsFilterLabelOpen(false);
   };
   useEffect(() => {
-    firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
+    if (selectedFileType === '10q' || selectedFileType === '10k') {
+      firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
+    }
   }, [processWatchlistData, selectedFileType]);
   return (
     <>
@@ -574,15 +592,19 @@ const Watchlist = props => {
           </div>
         </div>
       ) : null}
-      <Grid container direction="row" alignItems="flex-end" className={classes.space}>
-        <Grid item xs={8}>
-          <Grid container direction="row" justify="flex-start" alignItems="flex-end">
-            <Grid item>
-              <WatchlistFilters clearFilterHandler={clearFilterHandler} />
-            </Grid>
-          </Grid>
+      <Grid
+        container
+        sx={{
+          direction: { xs: 'column', md: 'column', lg: 'column', xl: 'row' }
+        }}
+        justify="flex-end"
+        alignItems="center"
+        spacing={1}
+        className={classes.space}>
+        <Grid item xs={12} sm={12} lg={12} xl={8}>
+          <WatchlistFilters clearFilterHandler={clearFilterHandler} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={12} lg={12} xl={4}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Grid item>
               <Box className="d-flex align-items-center">
@@ -645,44 +667,59 @@ const Watchlist = props => {
           </Grid>
         </Grid>
       </Grid>
-      <div style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</div>
-      <>
+      {selectedFileType === '10q' || selectedFileType === '10k' ? (
+        <>
+          <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
+          <div
+            className={classes.watchlistTableContainer}
+            style={{ display: 'flex', height: window.innerHeight - 160 }}>
+            <WatchlistTable
+              data={gridData}
+              storeColumnsState={onStoreColumnsState}
+              storeFilteringState={onStoreFilteringState}
+              columnsState={getColumnState()}
+              filteringState={getFilteringState()}
+              onColumnClick={onColumnClick}
+            />
+            <div style={{ width: 20, marginTop: 5 }}>
+              <div
+                className={classes.agButtons}
+                onClick={() => {
+                  handleOpenAgGridSideBar(false);
+                }}>
+                Columns
+              </div>
+              <br />
+              <div
+                className={classes.agButtons}
+                onClick={() => {
+                  handleOpenAgGridSideBar(true);
+                }}>
+                Actions
+              </div>
+              <div
+                className={classes.agButtons}
+                style={{ marginTop: '20px' }}
+                onClick={() => {
+                  handleOpenAgGridFilterDialog();
+                }}>
+                Screens
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
-          <WatchlistTable
-            data={gridData}
+          <WatchlistTable2
+            data={gridData2}
             storeColumnsState={onStoreColumnsState}
             storeFilteringState={onStoreFilteringState}
             columnsState={getColumnState()}
             filteringState={getFilteringState()}
             onColumnClick={onColumnClick}
           />
-          <div style={{ width: 20, marginTop: 5 }}>
-            <div
-              className={classes.agButtons}
-              onClick={() => {
-                handleOpenAgGridSideBar(false);
-              }}>
-              Columns
-            </div>
-            <br />
-            <div
-              className={classes.agButtons}
-              onClick={() => {
-                handleOpenAgGridSideBar(true);
-              }}>
-              Actions
-            </div>
-            <div
-              className={classes.agButtons}
-              style={{ marginTop: '20px' }}
-              onClick={() => {
-                handleOpenAgGridFilterDialog();
-              }}>
-              Screens
-            </div>
-          </div>
         </div>
-      </>
+      )}
 
       <WatchlistTopicDialog
         open={topicDialogOpen}

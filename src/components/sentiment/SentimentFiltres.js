@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { ButtonGroup, Button } from '@material-ui/core';
 import { sentimentTypes } from '../../config/filterTypes';
 import { useSelector, useDispatch } from 'react-redux';
-import {  saveSentimentSettings } from './SentimentHelpers';
+import { saveSentimentSettings } from './SentimentHelpers';
 import { setSentimentFilters } from '../../reducers/Sentiment';
 
-const SentimentFilters = () => {
+const SentimentFilters = props => {
   const dispatch = useDispatch();
 
   const { sentiment } = useSelector(state => state.Sentiment);
@@ -16,7 +16,6 @@ const SentimentFilters = () => {
   useEffect(() => {
     saveSentimentSettings(sentiment);
   }, [sentiment]);
-
   return (
     <>
       <ButtonGroup color="primary">
@@ -24,6 +23,7 @@ const SentimentFilters = () => {
           <Button
             size="small"
             key={`sent_${i}`}
+            disabled={props.disable}
             onClick={() => handleClickSentimentType(sentimentType.key)}
             variant={sentiment === sentimentType.key ? 'contained' : 'outlined'}>
             {sentimentType.label}

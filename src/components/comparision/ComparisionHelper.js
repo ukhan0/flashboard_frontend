@@ -34,8 +34,8 @@ export const getRecentId = (getQueryParams, selectedFileType, selectedItem) => {
     id = get(selectedItem, 'comparisonType', null);
     id = id === '10-K' ? get(selectedItem, 'recentId10k') : get(selectedItem, 'recentId10q', null);
   } else {
-    id = getQueryParams.oldId
-      ? getQueryParams.oldId
+    id = getQueryParams.recentId
+      ? getQueryParams.recentId
       : selectedFileType === '10k'
       ? get(selectedItem, 'recentId10k', null)
         ? get(selectedItem, 'recentId10k', null)

@@ -13,17 +13,20 @@ import { Grid, Card, Divider, ButtonGroup, Button } from '@material-ui/core';
 import { orderBy, get } from 'lodash';
 import { entityTypes } from '../../config/filterTypes';
 
-export default function FilingsCompanyRevenueGraph() {
+const FilingsCompanyRevenueGraph = props => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [selectedEntityType, setSelectedEntityType] = useState('emerging_entities');
-  const [entitiesData, setEntitiesData] = useState([]);
   const { filingsRevenueData } = useSelector(state => state.Filings);
+  const [entitiesData, setEntitiesData] = useState([]);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const data = useCallback(() => {
     let data = {};
-    let caculateStrength = filingsRevenueData.map(v => {
-      return { ...v, strength: v.newCount - v.oldCount };
-    });
+    let caculateStrength = filingsRevenueData
+      .map(v => {
+        return { ...v, strength: v.newCount - v.oldCount };
+      })
+      .filter(e => e.name !== selectedItem.companyName);
     const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
     const disappearing = caculateStrength.filter(v => v.oldCount > 0 && v.newCount === 0);
     const emerging = caculateStrength.filter(v => v.newCount > 0 && v.oldCount === 0);
@@ -56,27 +59,32 @@ export default function FilingsCompanyRevenueGraph() {
     data.disappearingEntities = filingsRevenueDisappearing.concat(filingsRevenueDisappearing2);
     data.commonEntities = filingsRevenueComman1.concat(filingsRevenueComman2);
     return data;
-  }, [filingsRevenueData]);
+  }, [filingsRevenueData, selectedItem]);
 
   const handleEntitiesType = type => {
     setSelectedEntityType(type);
   };
   useEffect(() => {
     let entities = data();
+    let newData = [];
     if (selectedEntityType === 'emerging_entities') {
-      setEntitiesData(get(entities, 'emergingEntities', []));
+      newData = get(entities, 'emergingEntities', []);
     } else if (selectedEntityType === 'disappearing_entities') {
-      setEntitiesData(get(entities, 'disappearingEntities', []));
+      newData = get(entities, 'disappearingEntities', []);
     } else {
-      setEntitiesData(get(entities, 'commonEntities', []));
+      newData = get(entities, 'commonEntities', []);
     }
+    setEntitiesData(newData);
   }, [data, selectedEntityType]);
   const options = {
     chart: {
       type: 'columnrange',
       inverted: true,
       panning: true,
-      panKey: 'shift'
+      panKey: 'shift',
+      events: {
+        load: function() {}
+      }
     },
 
     legend: {
@@ -165,46 +173,52 @@ export default function FilingsCompanyRevenueGraph() {
       }
     ]
   };
+  const Buttons = () => {
+    return (
+      <ButtonGroup color="primary">
+        {entityTypes.map((type, i) => (
+          <Button
+            size="small"
+            key={`type_${i}`}
+            onClick={() => handleEntitiesType(type.key)}
+            variant={type.key === selectedEntityType ? 'contained' : 'outlined'}>
+            {type.label}
+          </Button>
+        ))}
+      </ButtonGroup>
+    );
+  };
+
   return (
-    <>
-      <Card className="mb-4">
-        <div className="card-header-alt d-flex justify-content-between p-4">
-          <Grid container spacing={3}>
-            <Grid container alignItems="center" xs={12}>
-              <Grid item xs={6}>
-                <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
-                <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
-              </Grid>
-              <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
-                <ButtonGroup color="primary">
-                  {entityTypes.map((type, i) => (
-                    <Button
-                      size="small"
-                      key={`type_${i}`}
-                      onClick={() => handleEntitiesType(type.key)}
-                      variant={type.key === selectedEntityType ? 'contained' : 'outlined'}>
-                      {type.label}
-                    </Button>
-                  ))}
-                </ButtonGroup>
-              </Grid>
+    <Card className="mb-4">
+      <div className="card-header-alt d-flex justify-content-between p-4">
+        <Grid container spacing={3}>
+          <Grid container alignItems="center" xs={12}>
+            <Grid item xs={6}>
+              <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
+              <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
+            </Grid>
+
+            <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
+              {Buttons()}
             </Grid>
           </Grid>
-        </div>
-        <div className="mx-4 divider" />
-        <div className="mx-4 divider" />
-        <div className="p-4">
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={12}>
-              <div style={{ height: '100%', width: '100%' }}>
-                <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
-              </div>
-            </Grid>
+        </Grid>
+      </div>
+      <div className="mx-4 divider" />
+      <div className="mx-4 divider" />
+      <div className="p-4">
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={12}>
+            <div style={{ height: '100%', width: '100%' }}>
+              <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
+            </div>
           </Grid>
-          <Divider />
-          <Divider />
-        </div>
-      </Card>
-    </>
+        </Grid>
+        <Divider />
+        <Divider />
+      </div>
+    </Card>
   );
-}
+};
+export default React.memo(FilingsCompanyRevenueGraph);

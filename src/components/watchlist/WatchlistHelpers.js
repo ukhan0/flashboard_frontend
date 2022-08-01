@@ -82,7 +82,7 @@ export const formatComapnyData = rawData => {
   return {
     isActiveFlag: isActive,
     ticker: get(rawData, 'ticker', null),
-    companyName: rawData.b,
+    companyName: get(rawData, 'b', null),
     industry: getSectorIndustryById(rawData.cc).industry
       ? getSectorIndustryById(rawData.cc).industry
       : get(rawData, 'd'),

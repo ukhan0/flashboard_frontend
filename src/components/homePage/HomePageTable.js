@@ -91,7 +91,7 @@ const columnDefs = [
   },
   {
     headerName: 'Document Type',
-    field: 'docType',
+    field: 'documentType',
     menuTabs: false,
     editable: false,
     sortable: true,
@@ -215,8 +215,8 @@ export default function HomePageTable() {
     setAllCompletedCompaniesData(completeCompaniesData.concat(completeCompaniesDataGlobal));
   }, [completeCompaniesData, completeCompaniesDataGlobal]);
 
-  const setRecentOldId = (item, company, docType = '10-K') => {
-    if (docType === '10-K') {
+  const setRecentOldId = (item, company, documentType = '10-K') => {
+    if (documentType === '10-K') {
       item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
       item.oldId10k = company.oldId10k ? company.oldId10k : company.oldId10q;
       item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
@@ -295,9 +295,9 @@ export default function HomePageTable() {
       if (isCompleteCompaniesDataGlobalLoaded && isCompleteCompaniesDataLoaded) {
         let company = allCompletedCompaniesData.find(item => item.ticker === params.data.ticker);
         company = formatComapnyData(company);
-        if (params.data.docType === '10-K') {
+        if (params.data.documentType === '10-K') {
           item = setRecentOldId(item, company, '10-K');
-        } else if (params.data.docType === '10-Q') {
+        } else if (params.data.documentType === '10-Q') {
           item = setRecentOldId(item, company, '10-Q');
         } else {
           item = setRecentOldId(item, company, '10-K');
@@ -339,7 +339,7 @@ export default function HomePageTable() {
           const recentData = data.map(d => {
             return {
               ...d,
-              docType: get(d, 'document_type', null),
+              documentType: get(d, 'document_type', null),
               sentiment: round(get(d, 'sentiment', null), 2),
               // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
               docDate: get(d, 'document_date', null),

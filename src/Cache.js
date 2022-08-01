@@ -9,12 +9,13 @@ import {
   setCompleteGlobalCompaniesData,
   setNotificationData
 } from './reducers/Watchlist';
+import { setIsNewEmailNotification } from './reducers/User';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 // import dummyData from './dummyData';
 
 const Cache = () => {
-  const { user } = useSelector(state => state.User);
+  const { user, isNewEmailNotification } = useSelector(state => state.User);
   const dispatch = useDispatch();
 
   const cacheData = useCallback(() => {
@@ -67,24 +68,28 @@ const Cache = () => {
       });
   }, [dispatch, user]);
 
-  const getNotifications = useCallback(() => {
-    const apiUrl = `${config.apiUrl}/api/email/notification`;
-    axios
-      .get(`${apiUrl}`)
-      .then(response => {
-        let data = get(response, 'data.data', []);
-        if (data) {
-          dispatch(setNotificationData(data));
-        } else {
+  useEffect(() => {
+    if (isNewEmailNotification) {
+      const apiUrl = `${config.apiUrl}/api/email/notification`;
+      axios
+        .get(`${apiUrl}`)
+        .then(response => {
+          let data = get(response, 'data.data', []);
+          if (data) {
+            dispatch(setNotificationData(data));
+          } else {
+            dispatch(setNotificationData([]));
+          }
+        })
+        .catch(function(error) {
           dispatch(setNotificationData([]));
-        }
-      })
-      .catch(function(error) {
-        dispatch(setNotificationData([]));
-        // handle error
-        console.log(error);
-      });
-  }, [dispatch]);
+          // handle error
+          console.log(error);
+        });
+
+      dispatch(setIsNewEmailNotification(false));
+    }
+  }, [dispatch, isNewEmailNotification]);
 
   useEffect(() => {
     if (user) {
@@ -92,9 +97,8 @@ const Cache = () => {
       dispatch(setCompleteDataLoadedGlobalFlag(false));
       cacheData();
       cacheDataGlobal();
-      getNotifications();
     }
-  }, [cacheData, cacheDataGlobal, user, dispatch, getNotifications]);
+  }, [cacheData, cacheDataGlobal, user, dispatch]);
 
   return <></>;
 };

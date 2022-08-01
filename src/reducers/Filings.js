@@ -3,6 +3,8 @@ export const SET_COMPANY_FILLING_GRAPH_DATA = 'FILLING/SET_COMPANY_FILLING_GRAPH
 export const SET_COMPANY_FILLING_REVENUE_DATA = 'FILLING/SET_COMPANY_FILLING_REVENUE_DATA ';
 export const SET_COMPANY_PRICE_0VERLAY = 'FILLING/SET_COMPANY_PRICE_0VERLAY';
 export const SET_FILLINGS_SEARCH_TEXT = 'FILLING/SET_FILLINGS_SEARCH_TEXT';
+export const SET_IS_ENTITIES_CHART = 'FILLING/SET_IS_ENTITIES_CHART';
+export const SET_IS_WORD_COUNT_CHART = 'FILLING/SET_IS_WORD_COUNT_CHART';
 export const setCompanyFillingData = companyFillingData => ({
   type: SET_COMPANY_FILLING_DATA,
   companyFillingData
@@ -24,6 +26,14 @@ export const setFillingsSearchText = fillingsSearchText => ({
   type: SET_FILLINGS_SEARCH_TEXT,
   fillingsSearchText
 });
+export const setIsWordCountChart = isWordCountChart => ({
+  type: SET_IS_WORD_COUNT_CHART,
+  isWordCountChart
+});
+export const setIsEntitiesChart = isEntitiesChart => ({
+  type: SET_IS_ENTITIES_CHART,
+  isEntitiesChart
+});
 
 const getDefaultState = () => {
   return {
@@ -31,7 +41,9 @@ const getDefaultState = () => {
     fillingsGraphData: [],
     filingsRevenueData: [],
     priceOverlay: [],
-    fillingsSearchText: ''
+    fillingsSearchText: '',
+    isEntitiesChart: false,
+    isWordCountChart: false
   };
 };
 
@@ -52,6 +64,10 @@ export default function reducer(
       return { ...state, priceOverlay: action.priceOverlay };
     case SET_FILLINGS_SEARCH_TEXT:
       return { ...state, fillingsSearchText: action.fillingsSearchText };
+    case SET_IS_ENTITIES_CHART:
+      return { ...state, isEntitiesChart: action.isEntitiesChart };
+    case SET_IS_WORD_COUNT_CHART:
+      return { ...state, isWordCountChart: action.isWordCountChart };
 
     default:
       break;

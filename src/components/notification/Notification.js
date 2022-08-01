@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Hidden, IconButton, Box, Popover, Button } from '@material-ui/core';
+import { Hidden, IconButton, Box, Popover } from '@material-ui/core';
 import NotificationsActiveTwoToneIcon from '@material-ui/icons/NotificationsActiveTwoTone';
 // import SocketService from '../../socketService';
 // import sound from './Tones.mp3';
@@ -10,8 +10,13 @@ import { useHistory } from 'react-router-dom';
 import config from '../../config/config';
 import axios from 'axios';
 import { setSearchId } from '../../reducers/Topic';
+import { setIsNewEmailNotification } from '../../reducers/User';
 import { useDispatch } from 'react-redux';
+import SocketService from '../../socketService';
+import io from 'socket.io-client';
 import { get } from 'lodash';
+const socket = io.connect(config.socketUrl);
+SocketService.init(socket);
 const Notification = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -55,6 +60,16 @@ const Notification = () => {
   useEffect(() => {
     getNotifications();
   }, [getNotifications]);
+  useEffect(() => {
+    socket.connect();
+    const user = JSON.parse(localStorage.getItem('user'));
+    socket.emit('join_room', user.id);
+    socket.on(user.id, function(data) {
+      if (get(data, 'status', false)) {
+        dispatch(setIsNewEmailNotification(true));
+      }
+    });
+  }, [dispatch]);
 
   const open1 = Boolean(anchorEl1);
   const handleClose1 = () => {
@@ -84,7 +99,6 @@ const Notification = () => {
     resetCounter();
     deleteNotification();
   };
-  
   return (
     <Fragment>
       <Hidden>
@@ -126,7 +140,9 @@ const Notification = () => {
                         className="timeline-item"
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
-                        <div className="timeline-item-offset">{moment(data.created_date).format('LT')}</div>
+                        <div className="timeline-item-offset">
+                          {moment(get(data, 'created_date', null)).format('LT')}
+                        </div>
                         <div className="timeline-item--content">
                           <div className="timeline-item--icon"></div>
                           <h4 className="timeline-item--label mb-2 font-weight-bold"> {data.title}</h4>
@@ -137,11 +153,11 @@ const Notification = () => {
                   ))}
                 </PerfectScrollbar>
               </div>
-              <div className="text-center py-3">
+              {/* <div className="text-center py-3">
                 <Button variant="outlined" onClick={() => resetCounter()}>
                   Mark As Read
                 </Button>
-              </div>
+              </div> */}
             </div>
           </Popover>
         </Box>

@@ -11,6 +11,7 @@ import { get } from 'lodash';
 // import SentimentDummyData from './dummySentimentData'
 import config from '../../config/config';
 import { getSelectedSuggestionAsArr, getSearchText } from '../topic/topicHelpers';
+import { getSearchIndex } from '../sentiment/SentimentHelpers';
 
 export const getSentimentData = () => {
   return async (dispatch, getState) => {
@@ -51,9 +52,12 @@ export const getSentimentData = () => {
         formData.append('search_term', searchTerm);
       }
       const response = await axios.post(
-        `${config.sentimentUrl}?id=${recentId}&es_index=${
-          isFromThemex ? sentimentSearchIndex : selectedType === 'global' ? 'fillings_*' : 'fillings_*'
-        }`,
+        `${config.sentimentUrl}?id=${recentId}&es_index=${getSearchIndex(
+          isFromThemex,
+          sentimentSearchIndex,
+          selectedType,
+          selectedItem
+        )}`,
         isFromSideBar ? '' : formData
       );
       const data = get(response, 'data', []);

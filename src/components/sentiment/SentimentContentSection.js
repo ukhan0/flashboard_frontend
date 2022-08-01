@@ -87,7 +87,7 @@ const SentimentContentSection = props => {
   const newTest = v => {
     is_first_iteration.current = v;
   };
-
+  const isSentimentHtmlFile = sentimentVesion === 'flatText' && selectedType === 'global' ? true : false;
   return (
     <div ref={contentTopRef}>
       <Button
@@ -126,9 +126,7 @@ const SentimentContentSection = props => {
         <Grid item></Grid>
       </Grid>
 
-      <div
-        className={classes.drawerOpener}
-        style={{ display: `${sentimentVesion === 'flatText' && selectedType === 'global' ? 'none' : ''}` }}>
+      <div className={classes.drawerOpener} style={{ display: `${isSentimentHtmlFile ? 'none' : ''}` }}>
         {isTocButton && sentimentVesion === 'flatText' ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
             Table of contents
@@ -139,9 +137,9 @@ const SentimentContentSection = props => {
         <div style={{ display: `${sentimentVesion === 'original' ? 'block' : 'none'}` }}>
           <SentimentPdf />
         </div>
-        {sentimentVesion === 'flatText' && selectedType === 'global' ? (
+        {isSentimentHtmlFile ? (
           <>
-            <SentimentHtmlFile />
+            <SentimentHtmlFile disable={isSentimentHtmlFile} />
           </>
         ) : (
           <>

@@ -53,7 +53,6 @@ const Filings = () => {
   if (!selectedItem) {
     history.push('/watchlist');
   }
-
   return selectedItem ? (
     <div>
       <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
@@ -61,7 +60,9 @@ const Filings = () => {
         <FilingsTimelineChartMemo />
       </div>
       <div>{fillingsGraphData.length > 0 ? <FilingsCards /> : null}</div>
-      <div className={classes.filingsDetailsGraph}>{fillingsGraphData.length > 0 ? <FilingsDetailsGraph /> : null}</div>
+      <div className={classes.filingsDetailsGraph}>
+        <FilingsDetailsGraph />
+      </div>
       <div>
         <FillingTable />
       </div>

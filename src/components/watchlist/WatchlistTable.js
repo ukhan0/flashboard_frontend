@@ -299,7 +299,7 @@ const colDefs = [
       }
     },
     cellStyle: params => {
-      let style = params.data.isColorEnable ? descriptionValueStyler(params) : {};
+      let style = get(params.data, 'isColorEnable ', false) ? descriptionValueStyler(params) : {};
       return getCellStyle(style);
     },
     sortingOrder: ['desc', 'asc']

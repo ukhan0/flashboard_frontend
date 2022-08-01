@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 const sortObject = obj => {
   let newObj = [];
   for (let prop in obj) {
@@ -56,8 +57,8 @@ const visitOutlineObjTable = (acc, obj, lvl, path) => {
   lvl += 1;
   obj = sortObject(obj);
   // $i = 0;
-  if(obj["l1-ht"] && obj["l1-ht"].includes(".htm")){
-    obj["l1-ht"] = obj["l1"]
+  if (obj['l1-ht'] && obj['l1-ht'].includes('.htm')) {
+    obj['l1-ht'] = obj['l1'];
   }
   for (let prop in obj) {
     let detectedLevel = detectlevelCurrentObj(obj);
@@ -81,8 +82,8 @@ const visitOutlineObjTable = (acc, obj, lvl, path) => {
       }
     }
     let li = {};
-    if (prop.includes('-ht') || (detectedLevel === "ex" && prop==="l1")) {
-      if(prop.includes('-ht') && detectedLevel === "ex"){
+    if (prop.includes('-ht') || (detectedLevel === 'ex' && prop === 'l1')) {
+      if (prop.includes('-ht') && detectedLevel === 'ex') {
         continue;
       }
       prop = obj[prop];
@@ -90,7 +91,7 @@ const visitOutlineObjTable = (acc, obj, lvl, path) => {
       path = path.toLowerCase();
       var detectlvlHdng = detectlvlHeading(obj);
       if (detectlvlHdng) {
-        if(detectedLevel === "ex"){
+        if (detectedLevel === 'ex') {
           prop = obj[detectlvlHdng];
         } else {
           prop = obj[detectlvlHdng + '-ht'];
@@ -148,8 +149,8 @@ const detectSecTextFromCurrentObj = obj => {
 
 const visitOutlineObj = (acc, obj, lvl, path) => {
   lvl += 1;
-  if(obj["ex"] || (obj["l1-ht"] && obj["l1-ht"].includes(".htm"))){
-    obj["l1-ht"] = obj["l1"]
+  if (obj['ex'] || (obj['l1-ht'] && obj['l1-ht'].includes('.htm'))) {
+    obj['l1-ht'] = obj['l1'];
   }
   for (let prop in obj) {
     let removeHeadingFromContent;
@@ -165,12 +166,13 @@ const visitOutlineObj = (acc, obj, lvl, path) => {
             const removeClass = virtualDiv.replace(' class=', '');
             const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
             const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
-            let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
-              return val.replace(/<\/?heading>/g, '');
-            });
+            console.log(removeHeading);
+            // let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
+            //   return val.replace(/<\/?heading>/g, '');
+            // });
             detectedLevel = extractQuote;
             headingLevelDetected = true;
-            result.forEach(v => {
+            [].forEach(v => {
               removeHeadingFromContent = v;
               obj['l4-ht'] = v;
             });
@@ -254,5 +256,23 @@ const getSentimentSettings = () => {
 const saveSentimentSettings = setting => {
   localStorage.setItem('sentimentSetting', JSON.stringify(setting));
 };
+const getSearchIndex = (isFromThemex, sentimentSearchIndex, selectedType, selectedItem) => {
+  let index = 'fillings_*';
+  let searchedIndex = get(selectedItem, 'index', null);
+  if (searchedIndex) {
+    index = searchedIndex;
+  } else {
+    index = isFromThemex ? sentimentSearchIndex : selectedType === 'global' ? 'fillings_*' : 'fillings_*';
+  }
 
-export { getSentimentSettings, saveSentimentSettings, visitOutlineObjTable, visitOutlineObj, removeHeadingTags };
+  return index;
+};
+
+export {
+  getSentimentSettings,
+  saveSentimentSettings,
+  visitOutlineObjTable,
+  visitOutlineObj,
+  removeHeadingTags,
+  getSearchIndex
+};

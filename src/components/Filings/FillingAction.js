@@ -3,7 +3,9 @@ import {
   setCompanyFillingData,
   setCompanyFillingGraphData,
   setCompanyFillingRevenueData,
-  setCompanyPriceOverlay
+  setCompanyPriceOverlay,
+  setIsEntitiesChart,
+  setIsWordCountChart
 } from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
@@ -41,7 +43,8 @@ export const getCompanyFilingGraphData = () => {
     const { selectedItem } = getState().Watchlist;
     const companyId = get(selectedItem, 'companyId', null);
     const ticker = get(selectedItem, 'ticker', null);
-
+    dispatch(setIsWordCountChart(false));
+    dispatch(setCompanyFillingGraphData([]));
     if (!ticker && !companyId) {
       return;
     }
@@ -59,8 +62,10 @@ export const getCompanyFilingGraphData = () => {
       } else {
         dispatch(setCompanyFillingGraphData([]));
       }
+      dispatch(setIsWordCountChart(true));
     } catch (error) {
       dispatch(setCompanyFillingGraphData([]));
+      dispatch(setIsWordCountChart(true));
     }
   };
 };
@@ -70,7 +75,10 @@ export const getCompanyFilingRevenueData = () => {
     const { selectedItem, selectedFileType } = getState().Watchlist;
     const oldId = getOldId({}, selectedFileType, selectedItem);
     const recentId = getRecentId({}, selectedFileType, selectedItem);
-    if (!selectedItem) {
+    dispatch(setIsEntitiesChart(false));
+    dispatch(setCompanyFillingRevenueData([]));
+    if (!oldId || !recentId) {
+      dispatch(setCompanyFillingRevenueData([]));
       return;
     }
     try {
@@ -81,8 +89,10 @@ export const getCompanyFilingRevenueData = () => {
       } else {
         dispatch(setCompanyFillingRevenueData([]));
       }
+      dispatch(setIsEntitiesChart(true));
     } catch (error) {
       dispatch(setCompanyFillingRevenueData([]));
+      dispatch(setIsEntitiesChart(true));
     }
   };
 };

@@ -40,17 +40,23 @@ const FilingsCards = () => {
     dates = fillingsGraphData.map(d => d.document_date);
   }
   React.useEffect(() => {
-    if (Highcharts.charts[0]) {
+    if (Highcharts.charts) {
       setTimeout(() => {
-        Highcharts.charts[0].reflow();
-        Highcharts.charts[1].reflow();
-        Highcharts.charts[2].reflow();
-      }, [300]);
+        if (Highcharts.charts[0]) {
+          Highcharts.charts[0].reflow();
+        }
+        if (Highcharts.charts[1]) {
+          Highcharts.charts[1].reflow();
+        }
+        if (Highcharts.charts[2]) {
+          Highcharts.charts[2].reflow();
+        }
+      }, [500]);
     }
   }, [sidebarToggle, sidebarToggleMobile]);
 
-  let cardArray = []
-  if(!isEmpty(fillingsGraphData)){
+  let cardArray = [];
+  if (!isEmpty(fillingsGraphData)) {
     cardArray = [
       {
         heading: 'RISK & FACTORS',
@@ -85,7 +91,7 @@ const FilingsCards = () => {
           },
           xAxis: {
             categories: dates,
-  
+
             type: 'datetime',
             title: {
               text: null

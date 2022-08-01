@@ -18,11 +18,18 @@ Highcharts.setOptions({
 });
 
 const FilingsDetailsGraph = props => {
-  const { fillingsGraphData } = useSelector(state => state.Filings);
+  const { fillingsGraphData, filingsRevenueData, isWordCountChart, isEntitiesChart } = useSelector(
+    state => state.Filings
+  );
   const { selectedItem } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const history = useHistory();
   let hideGraphs = config.hideGraph;
+  const isEntities = filingsRevenueData.length > 0 ? true : false;
+  const isGraph = fillingsGraphData.length > 0 ? true : false;
+  const graphSize = hideGraphs === 'false' ? (!isEntities && isGraph ? 12 : 6) : 12;
+  const entitiesGraphSize = !isGraph && isEntities && isWordCountChart ? 12 : 6;
+
   let mdas = [];
   let risks = [];
   let notes = [];
@@ -128,41 +135,43 @@ const FilingsDetailsGraph = props => {
   return (
     <Fragment>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6} lg={6}>
-          {hideGraphs === 'false' ? <FillingRevenueGraph /> : null}
+        <Grid
+          item
+          xs={entitiesGraphSize}
+          md={entitiesGraphSize}
+          lg={entitiesGraphSize}
+          style={{ display: !isEntities && isEntitiesChart ? 'none' : 'block' }}>
+          <div>{hideGraphs === 'false' ? <FillingRevenueGraph /> : null}</div>
         </Grid>
-
-        <Grid item xs={12} md={hideGraphs === 'false' ? 6 : 12} lg={hideGraphs === 'false' ? 6 : 12}>
-          <Card className="mb-4">
-            <div className="card-header-alt d-flex justify-content-between p-4">
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <div>
-                    <h6 className="font-weight-bold font-size-lg mb-1 text-black">Word Count</h6>
-                    <p className="text-black-50 mb-0">Changes in Major items over time</p>
-                  </div>
+        <Grid item xs={12} md={graphSize} lg={graphSize}>
+          {isGraph ? (
+            <Card className="mb-4">
+              <div className="card-header-alt d-flex justify-content-between p-4">
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <div>
+                      <h6 className="font-weight-bold font-size-lg mb-1 text-black">Word Count</h6>
+                      <p className="text-black-50 mb-0">Changes in Major items over time</p>
+                    </div>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </div>
-            <div className="mx-4 divider" />
-            <div className="mx-4 divider" />
-            <div className="p-4">
-              <Grid container spacing={4}>
-                <Grid item xs={12} md={12}>
-                  {!isEmpty(fillingsGraphData) ? (
+              </div>
+              <div className="mx-4 divider" />
+              <div className="mx-4 divider" />
+              <div className="p-4">
+                <Grid container spacing={4}>
+                  <Grid item xs={12} md={12}>
                     <HighchartsReact highcharts={Highcharts} options={options} />
-                  ) : (
-                    'No Data Available'
-                  )}
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Divider />
-              <Divider />
-            </div>
-          </Card>
+                <Divider />
+                <Divider />
+              </div>
+            </Card>
+          ) : null}
         </Grid>
       </Grid>
     </Fragment>
   );
 };
-export default FilingsDetailsGraph;
+export default React.memo(FilingsDetailsGraph);
