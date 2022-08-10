@@ -189,9 +189,12 @@ const getDefaultState = () => {
     : 'domestic';
   const selectedFileTypeWatchList = !isEmpty(watchlistSetting)
     ? selectedTypeWatchList === 'domestic'
-      ? watchlistSetting.selectedFileType
-      : '10k'
-    : '10q';
+      ? '10-K'
+      : 'AR'
+    : selectedTypeWatchList === 'domestic'
+    ? '10-K'
+    : 'AR';
+
   return {
     isActiveCompanies: true,
     selectedType: selectedTypeWatchList,
@@ -226,7 +229,7 @@ const getDefaultState = () => {
     filterLabel: '',
     selectedFilter: null,
     isFilterUpdate: false,
-    userWatchlist:[]
+    userWatchlist: []
   };
 };
 
@@ -253,7 +256,7 @@ export default function reducer(
         ...state,
         selectedType: action.watchlistType,
         selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric,
-        selectedFileType: action.watchlistType === 'global' ? '10k' : state.selectedFileType
+        selectedFileType: action.watchlistType === 'global' ? 'AR' : state.selectedFileType
       };
     case SET_UNIVERSE:
       return { ...state, selectedUniverse: action.universe };

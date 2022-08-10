@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setIsFromThemex } from '../../reducers/Topic';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 const useStyles = makeStyles(theme => ({
   cardcontent: {
@@ -77,6 +78,7 @@ export default function HomePageSmaLime1(props) {
           let last10q = new Date(company['last10q']);
           company.recentId = last10k > last10q ? company.recentId10k : company.recentId10q;
         }
+        dispatch(setIsFromThemex(false));
         dispatch(setSelectedWatchlist(company));
         dispatch(setSidebarToggle(false));
         dispatch(setSidebarToggleMobile(false));
@@ -101,22 +103,13 @@ export default function HomePageSmaLime1(props) {
         </ButtonGroup>
       </div>
       {tableType['container'] === 'container1' ? (
-        <div
-          className={classes.cardcontent}
-          style={{ height: '100vh'}}
-          id={tableType['container']}></div>
+        <div className={classes.cardcontent} style={{ height: '100vh' }} id={tableType['container']}></div>
       ) : null}
       {tableType['container'] === 'container2' ? (
-        <div
-          className={classes.cardcontent}
-          style={{ height: '100vh'}}
-          id={tableType['container']}></div>
+        <div className={classes.cardcontent} style={{ height: '100vh' }} id={tableType['container']}></div>
       ) : null}
       {tableType['container'] === 'container3' ? (
-        <div
-          className={classes.cardcontent}
-          style={{ height: '100vh'}}
-          id={tableType['container']}></div>
+        <div className={classes.cardcontent} style={{ height: '100vh' }} id={tableType['container']}></div>
       ) : null}
     </Card>
   );

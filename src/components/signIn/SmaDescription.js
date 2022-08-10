@@ -7,7 +7,7 @@ import { IconButton, Button, Tooltip } from '@material-ui/core';
 import hero9 from '../../assets/images/hero-bg/hero-9.jpg';
 
 import { NavLink as RouterLink } from 'react-router-dom';
-import smaLogo from '../../assets/images/logos/ca-logo-white.png';
+import smaLogo from '../../assets/images/logos/sma-logo-white.svg';
 const SmaDescription = () => {
   return (
     <>

@@ -56,6 +56,7 @@ import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 import WatchlistFiltersList from './WatchlistFiltersList';
 import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
+import FileTypes from '../../config/watchlistFileTyes';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -162,7 +163,7 @@ const Watchlist = props => {
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal]);
   const fetchData = useCallback(async () => {
-    if (selectedFileType === '10q' || selectedFileType === '10k') {
+    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
       try {
         let rawData = [];
         if (selectedUniverse !== 'all') {
@@ -192,9 +193,15 @@ const Watchlist = props => {
   }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
 
   const getWatchlistTable2Dataa = useCallback(async () => {
-    if (selectedFileType !== '10q' && selectedFileType !== '10k') {
+    if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
       setLoading(true);
-      let data = await dispatch(getWatchlistTable2Data('fillings_*', selectedUniverse, selectedFileType, selectedType));
+      let fileTypes = FileTypes.find(
+        e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+      );
+      fileTypes = get(fileTypes, 'value', []).map(e => e.value);
+      let data = await dispatch(
+        getWatchlistTable2Data('fillings_*', selectedUniverse, fileTypes.join(','), selectedType)
+      );
       setLoading(false);
       setGridData2(data);
     }
@@ -230,20 +237,20 @@ const Watchlist = props => {
         ...watchlist,
         ...watchlist[selectedFileType][selectedMetric],
         last: dateFormaterMoment(
-          parseDateStrMoment(selectedFileType === '10k' ? watchlist.last10k : watchlist.last10q)
+          parseDateStrMoment(selectedFileType === '10-K' ? watchlist.last10k : watchlist.last10q)
         ),
 
-        recentId: selectedFileType === '10k' ? watchlist['recentId10k'] : watchlist['recentId10q'],
-        oldId: selectedFileType === '10k' ? watchlist['oldId10k'] : watchlist['oldId10q'],
+        recentId: selectedFileType === '10-K' ? watchlist['recentId10k'] : watchlist['recentId10q'],
+        oldId: selectedFileType === '10-K' ? watchlist['oldId10k'] : watchlist['oldId10q'],
         periodDate: dateFormaterMoment(
-          parseDateStrMoment(selectedFileType === '10k' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
+          parseDateStrMoment(selectedFileType === '10-K' ? watchlist['periodDate10k'] : watchlist['periodDate10q'])
         ),
 
         documentType: selectedFileType,
         isColorEnable: isColorEnable
       };
-      delete data['10k'];
-      delete data['10q'];
+      delete data['10-K'];
+      delete data['10-Q'];
       return data;
     },
     [isColorEnable, selectedFileType, selectedMetric]
@@ -551,7 +558,7 @@ const Watchlist = props => {
     setIsFilterLabelOpen(false);
   };
   useEffect(() => {
-    if (selectedFileType === '10q' || selectedFileType === '10k') {
+    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
       firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
     }
   }, [processWatchlistData, selectedFileType]);
@@ -667,7 +674,7 @@ const Watchlist = props => {
           </Grid>
         </Grid>
       </Grid>
-      {selectedFileType === '10q' || selectedFileType === '10k' ? (
+      {selectedFileType === '10-Q' || selectedFileType === '10-K' ? (
         <>
           <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
           <div

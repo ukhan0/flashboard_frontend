@@ -57,7 +57,7 @@ const WatchlistFileTypeDropDown = props => {
   }, [selectedType, getFileTypes]);
   const selectionChanged = (e, newSelectedSymbol) => {
     if (newSelectedSymbol) {
-      dispatch(setWatchlistFileType(newSelectedSymbol.value));
+      dispatch(setWatchlistFileType(newSelectedSymbol.documentTypeGroup));
       dispatch(setIsNewWatchlistDataAvailable(true));
       if (cancelExistingDocumentTypeCalls) {
         cancelExistingDocumentTypeCalls.cancel();
@@ -65,7 +65,9 @@ const WatchlistFileTypeDropDown = props => {
     }
   };
   const getSelectedFileTypeLabel = selectedFileType => {
-    let type = getFileTypes().find(v => v.value === selectedFileType);
+    let type = getFileTypes().find(
+      v => v.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+    );
     if (!type) {
       type = null;
     }
@@ -73,7 +75,7 @@ const WatchlistFileTypeDropDown = props => {
   };
 
   return (
-    <FormControl style={{  width: '200px' }}>
+    <FormControl style={{ width: '200px' }}>
       <Autocomplete
         loading={isPending}
         style={{ backgroundColor: 'white', borderRadius: '12px' }}

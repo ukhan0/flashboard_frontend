@@ -16,7 +16,7 @@ export const getOldId = (getQueryParams, selectedFileType, selectedItem) => {
   } else {
     id = getQueryParams.oldId
       ? getQueryParams.oldId
-      : selectedFileType === '10k'
+      : selectedFileType === '10-K'
       ? get(selectedItem, 'oldId10k', null)
         ? get(selectedItem, 'oldId10k', null)
         : get(selectedItem, 'oldId10q', null)
@@ -36,7 +36,7 @@ export const getRecentId = (getQueryParams, selectedFileType, selectedItem) => {
   } else {
     id = getQueryParams.recentId
       ? getQueryParams.recentId
-      : selectedFileType === '10k'
+      : selectedFileType === '10-K'
       ? get(selectedItem, 'recentId10k', null)
         ? get(selectedItem, 'recentId10k', null)
         : get(selectedItem, 'recentId10q', null)

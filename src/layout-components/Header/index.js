@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Hidden, IconButton, AppBar, Box, Tooltip } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
-import projectLogo from '../../assets/images/logos/ca-logo-white.png';
+import projectLogo from '../../assets/images/logos/sma-logo-white.svg';
 import Notification from '../../components/notification/Notification';
 import HeaderLogo from '../../layout-components/HeaderLogo';
 import HeaderUserbox from '../../layout-components/HeaderUserbox';

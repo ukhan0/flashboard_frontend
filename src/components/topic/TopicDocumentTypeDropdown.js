@@ -16,10 +16,8 @@ const TopicDocumentTypeDropdown = props => {
   const classes = useStyles();
   const { documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
-
-  let documentTypeValue = documentTypes.map(e => e.value);
+  let documentTypeValue = documentTypes.map(e => e.documentTypeGroup);
   const isAllSelected = documentTypeValue.length > 0 && selectedDocumentTypes.length === documentTypeValue.length;
-
   const handleSelectionChange = e => {
     const value = e.target.value;
     if (value[value.length - 1] === 'All') {
@@ -56,8 +54,8 @@ const TopicDocumentTypeDropdown = props => {
         <ListItemText classes={{ primary: classes.selectAllText }} primary="Select All" />
       </MenuItem>
       {documentTypes.map(documentType => (
-        <MenuItem key={documentType.value} value={documentType.value}>
-          <Checkbox checked={selectedDocumentTypes.indexOf(documentType.value) > -1} />
+        <MenuItem key={documentType.value} value={documentType.documentTypeGroup}>
+          <Checkbox checked={selectedDocumentTypes.indexOf(documentType.documentTypeGroup) > -1} />
           <ListItemText primary={documentType.label} />
         </MenuItem>
       ))}

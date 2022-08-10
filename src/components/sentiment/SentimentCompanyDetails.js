@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { Paper, Box, Grid, Avatar, ButtonGroup, Button } from '@material-ui/core';
@@ -32,26 +32,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentCompanyDetails = props => {
-  const { data, isLoading } = useSelector(state => state.Sentiment);
+  const { data, isHighLightedText } = useSelector(state => state.Sentiment);
   const { selectedItem } = useSelector(state => state.Watchlist);
-  const [isShow, setIsShow] = useState(false);
   const classes = useStyles();
   // const documentId = get(selectedItem, 'documentId', null);
   const isDisabled = (item, sentimentV) => {
     let status = false;
     status =
-      get(item, 'documentType', null).toLowerCase() === 'FMP-Transcript'.toLowerCase() &&
+      get(item, 'documentType', '').toLowerCase() === 'FMP-Transcript'.toLowerCase() &&
       sentimentV.key === 'original' &&
       props.highlightsData.length > 0
         ? true
         : false;
     return status;
   };
-  React.useEffect(() => {
-    setTimeout(() => {
-      setIsShow(isLoading);
-    }, [200]);
-  }, [isLoading]);
   return (
     <Fragment>
       <Paper className={clsx('app-page-title')}>
@@ -138,7 +132,7 @@ const SentimentCompanyDetails = props => {
                 <SentimentFilters disable={props.disable} />
               </Grid>
             </Grid>
-            {!isShow && props.sentimentV === 'flatText' ? (
+            {isHighLightedText && props.sentimentV === 'flatText' ? (
               <SentimentHighlights
                 highlightsData={props.highlightsData}
                 clickHandle={props.clickHandle}

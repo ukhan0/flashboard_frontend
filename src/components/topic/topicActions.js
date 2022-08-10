@@ -4,7 +4,8 @@ import {
   removeDuplicateSuggestions,
   deleteSearchSuggestionsByKey,
   getSearchText,
-  getCurrentSearchDispaly
+  getCurrentSearchDispaly,
+  getDocTypes
 } from './topicHelpers';
 import {
   setSelectedSearch,
@@ -51,8 +52,8 @@ import { searchSuggestionTypeConfig } from '../../config/appConfig';
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false, historyBy = 'month') => {
   return async (dispatch, getState) => {
     const {
-      selectedDocumentTypes,
-      selectedSection,
+      // selectedDocumentTypes,
+      // selectedSection,
       simpleSearchTextArray,
       ignoreSearchTextArray,
       searchTextWithAnd,
@@ -121,16 +122,18 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
       dispatch(setSearchBackdrop(cancelTokenSource, true));
     }
 
-    const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt));
-    let searchFroms = [];
-    if (!getState().Topic.selectedDocumentTypes.length === getState().Topic.documentTypes.length) {
-      documentTypeObjects.forEach(documentType => {
-        const sections = get(documentType, `sections.${selectedSection}`, []);
-        sections.forEach(section => {
-          searchFroms.push(`sma_data_json.${section}`);
-        });
-      });
-    }
+    // const documentTypeObjects = selectedDocumentTypes.map(sdt =>
+    //   documentTypesData.find(dtd => dtd.documentTypeGroup === sdt)
+    // );
+    // let searchFroms = [];
+    // if (!getState().Topic.selectedDocumentTypes.length === getState().Topic.documentTypes.length) {
+    //   documentTypeObjects.forEach(documentType => {
+    //     const sections = get(documentType, `sections.${selectedSection}`, []);
+    //     sections.forEach(section => {
+    //       searchFroms.push(`sma_data_json.${section}`);
+    //     });
+    //   });
+    // }
     if (getState().Topic.searchIndex['id'] === 4) {
       return;
     }
@@ -139,7 +142,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         `${config.apiUrl}/api/dictionary/search_aggregate`,
         {
           ...createSearchPayload(getState().Topic, freshSearch),
-          searchfromArr: searchFroms,
+          // searchfromArr: searchFroms,
           searchfrom: undefined,
           historyBy: historyBy
         },
@@ -279,7 +282,7 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
       : topicState.isDate
       ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
       : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-    document_types: topicState.selectedDocumentTypes,
+    document_types: getDocTypes(topicState.selectedDocumentTypes, documentTypesData),
     orderBy: topicState.orderBy,
     sortBy: topicState.sortBy,
     page: topicState.pageNo,
@@ -339,16 +342,16 @@ const createSearchSaveMiniPayload = topicState => {
     topicState.selectedSuggestions,
     topicState.searchText
   );
-  const documentTypeObjects = topicState.selectedDocumentTypes.map(sdt =>
-    documentTypesData.find(dtd => dtd.value === sdt)
-  );
+  // const documentTypeObjects = topicState.selectedDocumentTypes.map(sdt =>
+  //   documentTypesData.find(dtd => dtd.value === sdt)
+  // );
   let searchFroms = [];
-  documentTypeObjects.forEach(documentType => {
-    const sections = get(documentType, `sections.${topicState.selectedSection}`, []);
-    sections.forEach(section => {
-      searchFroms.push(`sma_data_json.${section}`);
-    });
-  });
+  // documentTypeObjects.forEach(documentType => {
+  //   const sections = get(documentType, `sections.${topicState.selectedSection}`, []);
+  //   sections.forEach(section => {
+  //     searchFroms.push(`sma_data_json.${section}`);
+  //   });
+  // });
 
   const fullSearchText = suggestionsSingleArr.length ? getSearchCombinations(suggestionsArr) : topicState.searchText;
   return {
@@ -586,8 +589,8 @@ export const findSuggestions = () => {
 export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false) => {
   return async (dispatch, getState) => {
     const {
-      selectedDocumentTypes,
-      selectedSection,
+      // selectedDocumentTypes,
+      // selectedSection,
       simpleSearchTextArray,
       ignoreSearchTextArray,
       searchTextWithAnd,
@@ -655,16 +658,16 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
       dispatch(setSearchBackdrop(cancelTokenSource, true));
     }
 
-    const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt));
-    let searchFroms = [];
-    if (!getState().Topic.selectedDocumentTypes.length === getState().Topic.documentTypes.length) {
-      documentTypeObjects.forEach(documentType => {
-        const sections = get(documentType, `sections.${selectedSection}`, []);
-        sections.forEach(section => {
-          searchFroms.push(`sma_data_json.${section}`);
-        });
-      });
-    }
+    // const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt));
+    // let searchFroms = [];
+    // if (!getState().Topic.selectedDocumentTypes.length === getState().Topic.documentTypes.length) {
+    //   documentTypeObjects.forEach(documentType => {
+    //     const sections = get(documentType, `sections.${selectedSection}`, []);
+    //     sections.forEach(section => {
+    //       searchFroms.push(`sma_data_json.${section}`);
+    //     });
+    //   });
+    // }
     if (getState().Topic.searchIndex['id'] === 4) {
       try {
         const response = await axios.post(

@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
     justifyContent: 'flex-end',
-    top: 170,
+    top: 200,
     position: 'sticky'
   },
   goToTopContainer: {

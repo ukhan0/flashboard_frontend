@@ -25,7 +25,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
   };
 };
 
-export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFileType, selectedType) => {
+export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFileTypes, selectedType) => {
   let rawData = [];
   let limit = 100;
   let tickerStatus = false;
@@ -43,7 +43,7 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_with_file_type?index=${searchIndex}&order=desc&limit=${limit}&subject=${selectedUniverse}&document_type=${selectedFileType}&selected_type=${selectedType}`,
+        `${config.apiUrl}/api/get_companies_with_file_type?index=${searchIndex}&order=desc&limit=${limit}&subject=${selectedUniverse}&document_type=${selectedFileTypes}&selected_type=${selectedType}`,
         {
           cancelToken: cancelToken.token
         }

@@ -99,6 +99,13 @@ const Notification = () => {
     resetCounter();
     deleteNotification();
   };
+  const getTitle = data => {
+    let title = get(data, 'title', '');
+    if (title.toLowerCase() === 'ThemeX Alert'.toLocaleLowerCase()) {
+      title = `ThemeX (${get(data, 'topic', '')})`;
+    }
+    return title;
+  };
   return (
     <Fragment>
       <Hidden>
@@ -145,7 +152,7 @@ const Notification = () => {
                         </div>
                         <div className="timeline-item--content">
                           <div className="timeline-item--icon"></div>
-                          <h4 className="timeline-item--label mb-2 font-weight-bold"> {data.title}</h4>
+                          <h4 className="timeline-item--label mb-2 font-weight-bold"> {getTitle(data)}</h4>
                           <p>{data.description}</p>
                         </div>
                       </div>

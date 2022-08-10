@@ -32,7 +32,7 @@ const WatchlistFilters = props => {
   const dispatch = useDispatch();
   const isSection = (selectedType, metric, selectedFileType) => {
     let status = false;
-    if (selectedFileType === '10q' || selectedFileType === '10k') {
+    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
       status = selectedType === 'global' && metric.key !== 'totdoc' ? true : false;
     } else {
       status = true;
@@ -72,8 +72,12 @@ const WatchlistFilters = props => {
     if (key !== selectedType) {
       props.clearFilterHandler();
       dispatch(setSelectedWatchlist(null));
-      if (selectedFileType !== '10k' && key === 'domestic') {
-        dispatch(setWatchlistFileType('10k'));
+
+      if (selectedFileType !== '10-K' && key === 'domestic') {
+        dispatch(setWatchlistFileType('10-K'));
+      }
+      if (key === 'global') {
+        dispatch(setWatchlistFileType('AR'));
       }
 
       dispatch(setWatchlistType(key));
@@ -111,7 +115,7 @@ const WatchlistFilters = props => {
   };
 
   const getSelectedFileType = (selectedType, selectedFileType) => {
-    return selectedType === 'global' ? '10k' : selectedFileType;
+    return selectedType === 'global' ? '10-K' : selectedFileType;
   };
 
   useEffect(() => {

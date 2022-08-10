@@ -204,3 +204,14 @@ export const getSearchIndex = data => {
 
   return index;
 };
+
+export const getDocTypes = (selectedDocType, documentTypes) => {
+  let docType = [];
+  selectedDocType.forEach(e => {
+    let doc = documentTypes.find(v => v.documentTypeGroup === e);
+    if (doc) {
+      docType.push(doc.value.map(e => e.value));
+    }
+  });
+  return docType.flat();
+};

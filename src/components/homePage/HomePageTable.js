@@ -107,8 +107,8 @@ const columnDefs = [
     field: 'document_date',
     colId: 'document_date',
     sortable: true,
-    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
-    valueFormatter: params => dateFormaterMoment(params.value),
+    valueFormatter: params =>
+      params.data.document_date ? dateFormaterMoment(parseDateStrMoment(params.data.document_date.split('.')[0])) : '',
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     minWidth: 50,

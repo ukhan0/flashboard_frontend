@@ -107,18 +107,18 @@ const Comparision = props => {
   switch (comparisionSection) {
     case 'mda':
       metricQueryParam =
-        selectedFileType === '10k' ? 'partHeadingTag=P2&itemHeadingTag=I7' : 'partHeadingTag=P1&itemHeadingTag=I2';
+        selectedFileType === '10-K' ? 'partHeadingTag=P2&itemHeadingTag=I7' : 'partHeadingTag=P1&itemHeadingTag=I2';
       break;
     case 'rf':
       metricQueryParam =
-        selectedFileType === '10k' ? 'partHeadingTag=P1&itemHeadingTag=I1A' : 'partHeadingTag=P2&itemHeadingTag=I1A';
+        selectedFileType === '10-k' ? 'partHeadingTag=P1&itemHeadingTag=I1A' : 'partHeadingTag=P2&itemHeadingTag=I1A';
       break;
     case 'notes':
       metricQueryParam = 'partHeadingTag=N';
       break;
     case 'fss':
       metricQueryParam =
-        selectedFileType === '10k' ? 'partHeadingTag=P2&itemHeadingTag=I8' : 'partHeadingTag=P1&itemHeadingTag=I1';
+        selectedFileType === '10-K' ? 'partHeadingTag=P2&itemHeadingTag=I8' : 'partHeadingTag=P1&itemHeadingTag=I1';
       break;
     default:
       metricQueryParam = '';
@@ -130,7 +130,7 @@ const Comparision = props => {
   const setFileType = useCallback(() => {
     let id = queryParamsData.recentId
       ? queryParamsData.recentId
-      : selectedFileType === '10k'
+      : selectedFileType === '10-K'
       ? get(selectedItem, 'recentId10k', null)
       : get(selectedItem, 'recentId10q', null);
     return id;

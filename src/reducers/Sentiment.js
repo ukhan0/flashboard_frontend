@@ -14,6 +14,7 @@ export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
 export const SET_IS_FROM_FILLING = 'TOPIC/SET_IS_FROM_FILLING ';
 export const CANCELE_HIGHLIGHT_CALLS = 'TOPIC/CANCELE_HIGHLIGHT_CALLS ';
 export const SET_SENTIMENT_SEARCH_INDEX = 'TOPIC/SET_SENTIMENT_SEARCH_INDEX ';
+export const SET_IS_HIGHLIGHTED_TEXT = 'TOPIC/SET_IS_HIGHLIGHTED_TEXT';
 
 export const setSentimentSearchIndex = sentimentSearchIndex => ({
   type: SET_SENTIMENT_SEARCH_INDEX,
@@ -25,7 +26,6 @@ export const setSentimentResult = (data, recentId) => ({
   data,
   recentId
 });
-
 
 export const setCanceHighlightsCall = canceHighlightsCall => ({
   type: CANCELE_HIGHLIGHT_CALLS,
@@ -91,6 +91,11 @@ export const setIsFromfilling = isFromFilling => ({
   isFromFilling
 });
 
+export const setIsHighlightedText = isHighLightedText => ({
+  type: SET_IS_HIGHLIGHTED_TEXT,
+  isHighLightedText
+});
+
 const getDefaultState = () => {
   return {
     cardGraphData: [
@@ -123,7 +128,8 @@ const getDefaultState = () => {
     sentimentHighlights: [],
     isFromFilling: false,
     canceHighlightsCall: null,
-    sentimentSearchIndex: ''
+    sentimentSearchIndex: '',
+    isHighLightedText: false
   };
 };
 
@@ -165,6 +171,8 @@ export default function reducer(
 
     case CANCELE_HIGHLIGHT_CALLS:
       return { ...state, canceHighlightsCall: action.canceHighlightsCall };
+    case SET_IS_HIGHLIGHTED_TEXT:
+      return { ...state, isHighLightedText: action.isHighLightedText };
 
     default:
       break;

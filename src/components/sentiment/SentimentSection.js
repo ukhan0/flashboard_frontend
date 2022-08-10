@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
-import { setSelectedHeadingId } from '../../reducers/Sentiment';
-import { upperCase, get, lowerCase } from 'lodash';
+import { setSelectedHeadingId, setIsHighlightedText } from '../../reducers/Sentiment';
+import { upperCase, get, lowerCase, isEmpty } from 'lodash';
 import Rainbow from './Rainbow';
 const useStyles = makeStyles(theme => ({
   lvl: {
@@ -71,7 +71,7 @@ const SentimentSection = props => {
     n: 100
   });
   let yellowTextCount = 0;
-  const { data, isLoading, selectedHeadingId, sentiment } = useSelector(state => state.Sentiment);
+  const { data, isLoading, selectedHeadingId, sentiment, isHighLightedText } = useSelector(state => state.Sentiment);
 
   useEffect(() => {
     if (selectedHeadingId && data) {
@@ -116,6 +116,10 @@ const SentimentSection = props => {
       const hashValue = createHash(`#${indexVal}${keywordsArray[indexVal]}text`);
       const obj = { [indexVal]: hashValue };
       keywordsArray[indexVal].push(obj);
+      if (!isEmpty(keywordsArray) && !isHighLightedText) {
+        dispatch(setIsHighlightedText(true));
+      }
+      console.log(keywordsArray);
       props.onHandleHighlights(keywordsArray);
       return hashValue;
     } else {

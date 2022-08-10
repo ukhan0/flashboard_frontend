@@ -15,7 +15,7 @@ import { get, cloneDeep, isEmpty } from 'lodash';
 import config from '../../config/config';
 import convert from 'xml-js';
 import { createHash } from '../../utils/helpers';
-import { setSentimentResult } from '../../reducers/Sentiment';
+import { setSentimentResult, setIsHighlightedText } from '../../reducers/Sentiment';
 import { visitOutlineObjTable, visitOutlineObj, removeHeadingTags } from './SentimentHelpers';
 import queryString from 'query-string';
 
@@ -71,6 +71,7 @@ const Sentiment = () => {
 
   useEffect(() => {
     if (!firstTimeLoad.current) {
+      dispatch(setIsHighlightedText(false));
       let data = queryString.parse(history.location.search);
       firstTimeLoad.current = true;
       if (data.recentId) {
@@ -124,6 +125,7 @@ const Sentiment = () => {
   const handleHighlights = hightlightsArr => {
     if (!firstTimeDataArray.current) {
       firstTimeDataArray.current = true;
+      sentimentHighlightsData.current = [];
       sentimentHighlightsData.current = hightlightsArr;
     }
   };
@@ -165,6 +167,7 @@ const Sentiment = () => {
 
     return () => {
       clearTimeout(setTimeoutRef);
+      firstTimeDataArray.current = false;
     };
   }, [data]);
 
