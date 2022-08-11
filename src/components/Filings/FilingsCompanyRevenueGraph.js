@@ -12,6 +12,7 @@ import { setFillingsSearchText } from '../../reducers/Filings';
 import { Grid, Card, Divider, ButtonGroup, Button } from '@material-ui/core';
 import { orderBy, get } from 'lodash';
 import { entityTypes } from '../../config/filterTypes';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 
 const FilingsCompanyRevenueGraph = props => {
   const history = useHistory();
@@ -157,6 +158,16 @@ const FilingsCompanyRevenueGraph = props => {
                 dispatch(setIsFromSideBar(false));
                 dispatch(setFillingsSearchText(this.name));
                 dispatch(setIsFromThemex(false));
+                if (get(selectedItem, 'isFromHomePage', false)) {
+                  if (get(selectedItem, 'documentType', null) === '10-K') {
+                    dispatch(
+                      setSelectedWatchlist({ ...selectedItem, recentId: get(selectedItem, 'recentId10k', null) })
+                    );
+                  } else {
+                    setSelectedWatchlist({ ...selectedItem, recentId: get(selectedItem, 'recentId10q', null) });
+                  }
+                }
+
                 history.push('/sentiment');
               }
             }

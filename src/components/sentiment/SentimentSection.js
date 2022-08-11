@@ -119,7 +119,6 @@ const SentimentSection = props => {
       if (!isEmpty(keywordsArray) && !isHighLightedText) {
         dispatch(setIsHighlightedText(true));
       }
-      console.log(keywordsArray);
       props.onHandleHighlights(keywordsArray);
       return hashValue;
     } else {

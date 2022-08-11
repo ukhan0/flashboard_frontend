@@ -224,6 +224,7 @@ export default function HomePageTable() {
       item.oldId = company.oldId10k ? company.oldId10k : company.oldId10q;
       // item.recentId = company.recentId10k ? company.recentId10k : company.recentId10q;
       item.comparisonType = '10-K';
+      item.documentType = '10-K';
     } else {
       item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
       item.oldId10k = company.oldId10k ? company.oldId10k : company.oldId10q;
@@ -232,7 +233,9 @@ export default function HomePageTable() {
       item.oldId = company.oldId10q ? company.oldId10q : company.oldId10k;
       // item.recentId = company.recentId10q ? company.recentId10q : company.recentId10k;
       item.comparisonType = '10-Q';
+      item.documentType = '10-Q';
     }
+    item.isFromHomePage = true;
     return item;
   };
 

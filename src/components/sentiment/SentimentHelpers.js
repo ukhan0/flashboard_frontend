@@ -166,7 +166,7 @@ const visitOutlineObj = (acc, obj, lvl, path) => {
             const removeClass = virtualDiv.replace(' class=', '');
             const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
             const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
-            console.log(removeHeading);
+            console.log(removeHeading )
             // let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
             //   return val.replace(/<\/?heading>/g, '');
             // });
