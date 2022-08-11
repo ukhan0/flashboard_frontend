@@ -68,7 +68,7 @@ const WatchlistTopicSearch = props => {
       // }, [100]);
       let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, data);
       let company = formatComapnyData(selectedItem);
-      company.recentId = selectedFileType === '10-k' ? company.recentId10k : company.recentId10q;
+      company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
       dispatch(setSentimentResult(null, null));
