@@ -25,7 +25,7 @@ const TopicIndexDropDown = props => {
       const index = searchIndexs.find(s => s.value === selectedIndex.target.value);
       if (index) {
         dispatch(setSearchIndex(index));
-        let documentTypeValue = documentTypes.map(ee => ee.value);
+        let documentTypeValue = documentTypes.map(ee => ee.documentTypeGroup);
         dispatch(setSelectedDocumentTypes(documentTypeValue));
       }
     }
