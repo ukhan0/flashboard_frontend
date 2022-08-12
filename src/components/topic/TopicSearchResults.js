@@ -113,7 +113,7 @@ const TopicSearchResults = () => {
   const searchRegex = / data/gi;
   const companyResultsDiv = useRef(null);
   let tooltipMessage = 'Enable edit and then drag mouse on words to add them in your search term';
-  const handleClick = useCallback(() => (show ? setShow(!show) : null), [show]);
+  const handleClick = useCallback(() => (show ? setShow(true) : null), [show]);
 
   useEffect(() => {
     if (companyResults.length === 0) {
@@ -237,7 +237,6 @@ const TopicSearchResults = () => {
   const handleMouseDown = e => {
     preventParentClick(e);
     setShow(false);
-
     setX(e.pageX);
     setY(e.pageY);
   };
@@ -267,6 +266,7 @@ const TopicSearchResults = () => {
       dispatch(setTopicSearchText(data));
     }
     dispatch(setOpenTopicSearchDialog(true));
+    setShow(false);
   };
   const removeSelectedTextInSearchTerm = () => {
     if (isSimpleSearch && selectedText) {
@@ -279,6 +279,7 @@ const TopicSearchResults = () => {
       dispatch(setTopicSearchText(data));
     }
     dispatch(setOpenTopicSearchDialog(true));
+    setShow(false);
   };
   const handleCardEdit = (e, id) => {
     if (e.target.checked) {

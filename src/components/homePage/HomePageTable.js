@@ -297,13 +297,15 @@ export default function HomePageTable() {
       let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
       if (isCompleteCompaniesDataGlobalLoaded && isCompleteCompaniesDataLoaded) {
         let company = allCompletedCompaniesData.find(item => item.ticker === params.data.ticker);
-        company = formatComapnyData(company);
-        if (params.data.documentType === '10-K') {
-          item = setRecentOldId(item, company, '10-K');
-        } else if (params.data.documentType === '10-Q') {
-          item = setRecentOldId(item, company, '10-Q');
-        } else {
-          item = setRecentOldId(item, company, '10-K');
+        if (company) {
+          company = formatComapnyData(company);
+          if (params.data.documentType === '10-K') {
+            item = setRecentOldId(item, company, '10-K');
+          } else if (params.data.documentType === '10-Q') {
+            item = setRecentOldId(item, company, '10-Q');
+          } else {
+            item = setRecentOldId(item, company, '10-K');
+          }
         }
       }
       dispatch(setSelectedWatchlist(item));
