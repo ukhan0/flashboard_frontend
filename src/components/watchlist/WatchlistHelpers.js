@@ -234,7 +234,6 @@ export const getCompanyByIndex = (
         }
       }
     }
-    console.log(data, 'da');
     if (data) {
       company = formatComapnyData(data);
     }

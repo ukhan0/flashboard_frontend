@@ -27,7 +27,8 @@ const FilingsCompanyRevenueGraph = props => {
       .map(v => {
         return { ...v, strength: v.newCount - v.oldCount };
       })
-      .filter(e => !selectedItem.companyName.toLowerCase().includes(e.name.toLowerCase()));
+      .filter(e => !selectedItem.companyName.toLowerCase().includes(e.name.toLowerCase()))
+      .filter(t => !t.name.toLowerCase().includes('Delaware'.toLowerCase()));
 
     const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
     const disappearing = caculateStrength.filter(v => v.oldCount > 0 && v.newCount === 0);
@@ -169,7 +170,7 @@ const FilingsCompanyRevenueGraph = props => {
     series: [
       {
         name: 'Mentions',
-        data: get(entitiesData, selectedEntityType, []), 
+        data: get(entitiesData, selectedEntityType, []),
         dataLabels: {
           enabled: true
         }
