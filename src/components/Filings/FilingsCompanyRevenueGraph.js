@@ -57,9 +57,9 @@ const FilingsCompanyRevenueGraph = props => {
       return { name: v.name, low: 0, high: 0 };
     });
 
-    data.emergingEntities = filingsRevenueEmerging.concat(filingsRevenueEmerging2);
-    data.disappearingEntities = filingsRevenueDisappearing.concat(filingsRevenueDisappearing2);
-    data.commonEntities = filingsRevenueComman1.concat(filingsRevenueComman2);
+    data.emerging_entities = filingsRevenueEmerging.concat(filingsRevenueEmerging2);
+    data.disappearing_entities = filingsRevenueDisappearing.concat(filingsRevenueDisappearing2);
+    data.common_entities = filingsRevenueComman1.concat(filingsRevenueComman2);
     return data;
   }, [filingsRevenueData, selectedItem]);
 
@@ -67,17 +67,8 @@ const FilingsCompanyRevenueGraph = props => {
     setSelectedEntityType(type);
   };
   useEffect(() => {
-    let entities = data();
-    let newData = [];
-    if (selectedEntityType === 'emerging_entities') {
-      newData = get(entities, 'emergingEntities', []);
-    } else if (selectedEntityType === 'disappearing_entities') {
-      newData = get(entities, 'disappearingEntities', []);
-    } else {
-      newData = get(entities, 'commonEntities', []);
-    }
-    setEntitiesData(newData);
-  }, [data, selectedEntityType]);
+    setEntitiesData(data());
+  }, [data]);
   const options = {
     chart: {
       type: 'columnrange',
@@ -178,7 +169,7 @@ const FilingsCompanyRevenueGraph = props => {
     series: [
       {
         name: 'Mentions',
-        data: entitiesData,
+        data: get(entitiesData, selectedEntityType, []), 
         dataLabels: {
           enabled: true
         }
@@ -190,6 +181,7 @@ const FilingsCompanyRevenueGraph = props => {
       <ButtonGroup color="primary">
         {entityTypes.map((type, i) => (
           <Button
+            disabled={get(entitiesData, type.key, []).length > 0 ? false : true}
             size="small"
             key={`type_${i}`}
             onClick={() => handleEntitiesType(type.key)}
