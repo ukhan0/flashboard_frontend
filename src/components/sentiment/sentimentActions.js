@@ -36,7 +36,7 @@ export const getSentimentData = () => {
     const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText);
     dispatch(setSentimentResult(null));
     let searchTerm = fillingsSearchText
-      ? fillingsSearchText
+      ? `"${fillingsSearchText}"`
       : getSearchText(
           simpleSearchTextArray,
           ignoreSearchTextArray,

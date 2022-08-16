@@ -19,7 +19,7 @@ import { homePageTypesSelection } from '../../config/filterTypes';
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import HomePageService from './HomePageService';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import AddRemoveIcon from '../watchlist/WatchlistTableComponents/AddRemoveIcon';
 import Snackbar from '../Snackbar';
 import { getUserWatchlist } from './HomePageAction';
@@ -198,7 +198,6 @@ export default function HomePageTable() {
   const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
   const [cancelToken, setCancelToken] = useState(null);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState(null);
-  const [allCompletedCompaniesData, setAllCompletedCompaniesData] = useState([]);
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
@@ -206,14 +205,13 @@ export default function HomePageTable() {
     isCompleteCompaniesDataLoaded,
     isCompleteCompaniesDataGlobalLoaded,
     completeCompaniesData,
-    completeCompaniesDataGlobal
+    completeCompaniesDataGlobal,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const tableRef = useRef();
   const selectedType = 'domestic';
-  useEffect(() => {
-    setAllCompletedCompaniesData(completeCompaniesData.concat(completeCompaniesDataGlobal));
-  }, [completeCompaniesData, completeCompaniesDataGlobal]);
 
   const setRecentOldId = (item, company, documentType = '10-K') => {
     if (documentType === '10-K') {
@@ -295,17 +293,23 @@ export default function HomePageTable() {
   const cellClicked = params => {
     if (params.data) {
       let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
-      if (isCompleteCompaniesDataGlobalLoaded && isCompleteCompaniesDataLoaded) {
-        let company = allCompletedCompaniesData.find(item => item.ticker === params.data.ticker);
-        if (company) {
-          company = formatComapnyData(company);
-          if (params.data.documentType === '10-K') {
-            item = setRecentOldId(item, company, '10-K');
-          } else if (params.data.documentType === '10-Q') {
-            item = setRecentOldId(item, company, '10-Q');
-          } else {
-            item = setRecentOldId(item, company, '10-K');
-          }
+
+      let company = getCompanyByIndex(
+        completeCompaniesDataIndexs,
+        completeCompaniesDataGlobalIndexs,
+        completeCompaniesData,
+        completeCompaniesDataGlobal,
+        params.data.ticker,
+        isCompleteCompaniesDataGlobalLoaded,
+        isCompleteCompaniesDataLoaded
+      );
+      if (company) {
+        if (params.data.documentType === '10-K') {
+          item = setRecentOldId(item, company, '10-K');
+        } else if (params.data.documentType === '10-Q') {
+          item = setRecentOldId(item, company, '10-Q');
+        } else {
+          item = setRecentOldId(item, company, '10-K');
         }
       }
       dispatch(setSelectedWatchlist(item));

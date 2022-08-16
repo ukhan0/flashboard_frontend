@@ -2,13 +2,13 @@ import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react
 import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Grid, Paper, Box, Switch, Tooltip } from '@material-ui/core';
-import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex, toLower } from 'lodash';
+import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex } from 'lodash';
 import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { createResultTitle, preventParentClick, extractResultTitleFromPath } from './topicHelpers';
 import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import TopicComapnyDetails from './TopicCompanyDetails';
 import {
   setIsFromSideBar,
@@ -102,7 +102,14 @@ const TopicSearchResults = () => {
     ignoreSearchTextArray,
     searchText
   } = useSelector(state => state.Topic);
-  const { completeCompaniesData } = useSelector(state => state.Watchlist);
+  const {
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs,
+    completeCompaniesData,
+    completeCompaniesDataGlobal,
+    isCompleteCompaniesDataGlobalLoaded,
+    isCompleteCompaniesDataLoaded
+  } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -202,10 +209,18 @@ const TopicSearchResults = () => {
     const documentDate = get(companyDocumentResultData, 'document_date', null);
     const documentId = get(companyDocumentResultData, 'document_id', null);
     const ticker = get(companyDocumentResultData, 'ticker', null);
-    let company = completeCompaniesData.find(c => toLower(c.ticker) === toLower(ticker));
+    let company = getCompanyByIndex(
+      completeCompaniesDataIndexs,
+      completeCompaniesDataGlobalIndexs,
+      completeCompaniesData,
+      completeCompaniesDataGlobal,
+      ticker,
+      isCompleteCompaniesDataGlobalLoaded,
+      isCompleteCompaniesDataLoaded
+    );
+
     const recentId = fileId.toString().replace('9000', '');
     if (company) {
-      company = formatComapnyData(company);
       company.recentId = recentId;
       company.ticker = ticker;
       company.documentType = documentType;

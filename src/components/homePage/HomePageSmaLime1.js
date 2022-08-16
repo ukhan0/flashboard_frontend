@@ -3,7 +3,7 @@ import { Card, ButtonGroup, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setIsFromThemex } from '../../reducers/Topic';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
@@ -37,15 +37,48 @@ export default function HomePageSmaLime1(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tableType, setTableType] = React.useState(tableTypes[0]);
-  const { completeCompaniesData } = useSelector(state => state.Watchlist);
-  const getCompanyByTicker = useCallback(
+  const {
+    isCompleteCompaniesDataLoaded,
+    isCompleteCompaniesDataGlobalLoaded,
+    completeCompaniesData,
+    completeCompaniesDataGlobal,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs
+  } = useSelector(state => state.Watchlist);
+
+  const setCompany = useCallback(
     ticker => {
-      let rawData = completeCompaniesData;
-      let company = rawData.find(sd => sd.ticker === ticker);
-      return company;
+      let company = getCompanyByIndex(
+        completeCompaniesDataIndexs,
+        completeCompaniesDataGlobalIndexs,
+        completeCompaniesData,
+        completeCompaniesDataGlobal,
+        ticker,
+        isCompleteCompaniesDataGlobalLoaded,
+        isCompleteCompaniesDataLoaded
+      );
+
+      if (company) {
+        let last10k = new Date(company['last10k']);
+        let last10q = new Date(company['last10q']);
+        company.recentId = last10k > last10q ? company.recentId10k : company.recentId10q;
+      }
+      dispatch(setIsFromThemex(false));
+      dispatch(setSelectedWatchlist(company));
+      dispatch(setSidebarToggle(false));
+      dispatch(setSidebarToggleMobile(false));
     },
-    [completeCompaniesData]
+    [
+      completeCompaniesDataIndexs,
+      completeCompaniesDataGlobalIndexs,
+      completeCompaniesData,
+      completeCompaniesDataGlobal,
+      isCompleteCompaniesDataGlobalLoaded,
+      isCompleteCompaniesDataLoaded,
+      dispatch
+    ]
   );
+
   React.useEffect(() => {
     var factorsData = {
       description: { text: 'Company Name' },
@@ -67,24 +100,12 @@ export default function HomePageSmaLime1(props) {
       factor: factorsData,
       filters: 'svolume+gt+12,lastclose+gt+5',
       onItemClick: function(ticker) {
-        let selectedItem = getCompanyByTicker(ticker);
-        if (!selectedItem) {
-          // props.handleSnackBar({ isSnackBar: true, message: 'Company Not Found', severity: 'info' });
-          return;
+        if (ticker) {
+          setCompany(ticker);
         }
-        let company = formatComapnyData(selectedItem);
-        if (company) {
-          let last10k = new Date(company['last10k']);
-          let last10q = new Date(company['last10q']);
-          company.recentId = last10k > last10q ? company.recentId10k : company.recentId10q;
-        }
-        dispatch(setIsFromThemex(false));
-        dispatch(setSelectedWatchlist(company));
-        dispatch(setSidebarToggle(false));
-        dispatch(setSidebarToggleMobile(false));
       }
     });
-  }, [tableType, getCompanyByTicker, dispatch, props]);
+  }, [tableType, setCompany]);
 
   return (
     <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>

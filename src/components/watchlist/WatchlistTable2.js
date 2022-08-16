@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -10,7 +10,7 @@ import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import AddRemoveIcon from '../watchlist/WatchlistTableComponents/AddRemoveIcon';
 const frameworkComponents = {
   TickerLogo: TickerLogo,
@@ -164,14 +164,12 @@ const WatchlistTable2 = props => {
     isCompleteCompaniesDataLoaded,
     isCompleteCompaniesDataGlobalLoaded,
     completeCompaniesData,
-    completeCompaniesDataGlobal
+    completeCompaniesDataGlobal,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs
   } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
   const [rowCount, setRowCount] = React.useState(0);
-  const [allCompletedCompaniesData, setAllCompletedCompaniesData] = useState([]);
-  useEffect(() => {
-    setAllCompletedCompaniesData(completeCompaniesData.concat(completeCompaniesDataGlobal));
-  }, [completeCompaniesData, completeCompaniesDataGlobal]);
   const handleOnGridReady = params => {
     gridApi.current = params.api;
     WatchlistService.initGrid2(params.api, params.columnApi);
@@ -233,17 +231,23 @@ const WatchlistTable2 = props => {
   const cellClicked = params => {
     if (params.data) {
       let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
-      if (isCompleteCompaniesDataGlobalLoaded && isCompleteCompaniesDataLoaded) {
-        let company = allCompletedCompaniesData.find(item => item.ticker === params.data.ticker);
-        if (company) {
-          company = formatComapnyData(company);
-          if (params.data.documentType === '10-K') {
-            item = setRecentOldId(item, company, '10-K');
-          } else if (params.data.documentType === '10-Q') {
-            item = setRecentOldId(item, company, '10-Q');
-          } else {
-            item = setRecentOldId(item, company, '10-K');
-          }
+
+      let company = getCompanyByIndex(
+        completeCompaniesDataIndexs,
+        completeCompaniesDataGlobalIndexs,
+        completeCompaniesData,
+        completeCompaniesDataGlobal,
+        params.data.ticker,
+        isCompleteCompaniesDataGlobalLoaded,
+        isCompleteCompaniesDataLoaded
+      );
+      if (company) {
+        if (params.data.documentType === '10-K') {
+          item = setRecentOldId(item, company, '10-K');
+        } else if (params.data.documentType === '10-Q') {
+          item = setRecentOldId(item, company, '10-Q');
+        } else {
+          item = setRecentOldId(item, company, '10-K');
         }
       }
       dispatch(setSelectedWatchlist(item));

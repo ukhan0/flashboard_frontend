@@ -12,8 +12,7 @@ import {
   // setWatchlistType
 } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
-import { getCompanyByTickerUniverse } from '../Filings/FillingsHelper';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 
@@ -32,8 +31,12 @@ const WatchlistTopicSearch = props => {
     searchText,
     selectedFileType,
     isTickerSelected,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs,
     completeCompaniesData,
-    completeCompaniesDataGlobal
+    completeCompaniesDataGlobal,
+    isCompleteCompaniesDataGlobalLoaded,
+    isCompleteCompaniesDataLoaded
   } = useSelector(state => state.Watchlist);
   const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
   const handleSearchTextChange = debounce(async text => {
@@ -66,8 +69,16 @@ const WatchlistTopicSearch = props => {
       // setTimeout(() => {
       //   dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
       // }, [100]);
-      let selectedItem = getCompanyByTickerUniverse(newSelectedSymbol.ticker, data);
-      let company = formatComapnyData(selectedItem);
+
+      let company = getCompanyByIndex(
+        completeCompaniesDataIndexs,
+        completeCompaniesDataGlobalIndexs,
+        completeCompaniesData,
+        completeCompaniesDataGlobal,
+        newSelectedSymbol.ticker,
+        isCompleteCompaniesDataGlobalLoaded,
+        isCompleteCompaniesDataLoaded
+      );
       company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;

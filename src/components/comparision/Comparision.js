@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import ComparisionFilters from './ComparisionFilters';
 import { getComparisionSettings, saveComparisionSettings, getOldId, getRecentId } from './ComparisionHelper';
 import { get } from 'lodash';
-import { formatComapnyData } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { BeatLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
@@ -25,9 +25,16 @@ const Comparision = props => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
-  const { selectedItem, selectedFileType, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(
-    state => state.Watchlist
-  );
+  const {
+    selectedItem,
+    selectedFileType,
+    completeCompaniesData,
+    isCompleteCompaniesDataLoaded,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs,
+    isCompleteCompaniesDataGlobalLoaded,
+    completeCompaniesDataGlobal
+  } = useSelector(state => state.Watchlist);
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const [comparisionDifference, setComparisionDifference] = useState(
     get(getComparisionSettings(), 'comparisionDifference', 0)
@@ -62,14 +69,6 @@ const Comparision = props => {
     history.push('/watchlist');
   }
 
-  const getCompanyByTicker = useCallback(
-    ticker => {
-      let rawData = completeCompaniesData;
-      let company = rawData.find(sd => sd.ticker === ticker);
-      return company;
-    },
-    [completeCompaniesData]
-  );
   useEffect(() => {
     firstTimeLoad.current = false;
   }, [history.location.search]);
@@ -81,10 +80,17 @@ const Comparision = props => {
       setTimeout(() => {
         let data = queryString.parse(history.location.search);
         if (data.recentId) {
-          let ticker = data.ticker;
-          let selectedItem = getCompanyByTicker(ticker);
-          if (selectedItem) {
-            let company = formatComapnyData(selectedItem);
+          let company = getCompanyByIndex(
+            completeCompaniesDataIndexs,
+            completeCompaniesDataGlobalIndexs,
+            completeCompaniesData,
+            completeCompaniesDataGlobal,
+            data.ticker,
+            isCompleteCompaniesDataGlobalLoaded,
+            isCompleteCompaniesDataLoaded
+          );
+
+          if (company) {
             company.recentId = data.recentId;
             company.oldId = data.oldId;
             dispatch(setSentimentResult(null, null));
@@ -93,7 +99,16 @@ const Comparision = props => {
         }
       }, [400]);
     }
-  }, [dispatch, getCompanyByTicker, isCompleteCompaniesDataLoaded, history.location.search]);
+  }, [
+    dispatch,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs,
+    completeCompaniesData,
+    completeCompaniesDataGlobal,
+    isCompleteCompaniesDataGlobalLoaded,
+    isCompleteCompaniesDataLoaded,
+    history.location.search
+  ]);
 
   useEffect(() => {
     const comparisonSetting = {

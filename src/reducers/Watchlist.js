@@ -30,6 +30,8 @@ export const SET_SELECTED_FILTER = 'WATCHLIST/SET_SELECTED_FILTER';
 export const SET_IS_FILTER_UPDATE = 'WATCHLIST/SET_IS_FILTER_UPDATE';
 export const SET_IS_ACTIVE_COMPANIES = 'WATCHLIST/SET_IS_ACTIVE_COMPANIES';
 export const SET_USER_WATCHLIST = 'WATCHLIST/SET_USER_WATCHLIST';
+export const SET_COMPLETE_COMPANIES_DATA_INDEXS = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA_INDEXS';
+export const SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS';
 
 export const setUserWatchlist = userWatchlist => ({
   type: SET_USER_WATCHLIST,
@@ -171,6 +173,15 @@ export const setNotificationData = notifications => ({
   notifications
 });
 
+export const setCompleteCompaniesDataIndexs = completeCompaniesDataIndexs => ({
+  type: SET_COMPLETE_COMPANIES_DATA_INDEXS,
+  completeCompaniesDataIndexs
+});
+export const setCompleteCompaniesDataGlobalIndex = completeCompaniesDataGlobalIndexs => ({
+  type: SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS,
+  completeCompaniesDataGlobalIndexs
+});
+
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user;
@@ -229,7 +240,9 @@ const getDefaultState = () => {
     filterLabel: '',
     selectedFilter: null,
     isFilterUpdate: false,
-    userWatchlist: []
+    userWatchlist: [],
+    completeCompaniesDataIndexs: {},
+    completeCompaniesDataGlobalIndexs: {}
   };
 };
 
@@ -308,6 +321,11 @@ export default function reducer(
       return { ...state, selectedFilter: action.selectedFilter };
     case SET_IS_FILTER_UPDATE:
       return { ...state, isFilterUpdate: action.isFilterUpdate };
+    case SET_COMPLETE_COMPANIES_DATA_INDEXS:
+      return { ...state, completeCompaniesDataIndexs: action.completeCompaniesDataIndexs };
+    case SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS:
+      return { ...state, completeCompaniesDataGlobalIndexs: action.completeCompaniesDataGlobalIndexs };
+
     default:
       break;
   }

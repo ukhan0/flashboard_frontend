@@ -7,7 +7,9 @@ import {
   setCompleteCompaniesData,
   setCompleteDataLoadedGlobalFlag,
   setCompleteGlobalCompaniesData,
-  setNotificationData
+  setNotificationData,
+  setCompleteCompaniesDataIndexs,
+  setCompleteCompaniesDataGlobalIndex
 } from './reducers/Watchlist';
 import { setIsNewEmailNotification } from './reducers/User';
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,12 +27,18 @@ const Cache = () => {
       .get(`${apiUrl}=all`)
       .then(response => {
         let data = get(response, 'data.data.content', []);
+        let indexs = {};
         let modifiedData = data.map(d => {
           return {
             ...d,
             type: 'domestic'
           };
         });
+        modifiedData.forEach((a, index) => {
+          indexs = { ...indexs, [a.ticker]: { index: index } };
+        });
+
+        dispatch(setCompleteCompaniesDataIndexs(indexs));
         dispatch(setCompleteCompaniesData(modifiedData));
         dispatch(setCompleteDataLoadedFlag(true));
         localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);
@@ -52,12 +60,17 @@ const Cache = () => {
       .get(`${apiUrl}=all`)
       .then(response => {
         let data = get(response, 'data.data.content', []);
+        let indexs = {};
         let modifiedData = data.map(d => {
           return {
             ...d,
             type: 'global'
           };
         });
+        modifiedData.forEach((a, index) => {
+          indexs = { ...indexs, [a.ticker]: { index: index } };
+        });
+        dispatch(setCompleteCompaniesDataGlobalIndex(indexs));
         dispatch(setCompleteGlobalCompaniesData(modifiedData));
         dispatch(setCompleteDataLoadedGlobalFlag(true));
         localStorage.setItem('lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);

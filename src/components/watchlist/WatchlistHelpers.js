@@ -194,3 +194,50 @@ export const isActive = (page, selectedItem) => {
   }
   return status;
 };
+
+export const getCompanyByIndex = (
+  completeCompaniesDataIndexs,
+  completeCompaniesDataGlobalIndexs,
+  completeCompaniesData,
+  completeCompaniesDataGlobal,
+  ticker,
+  isCompleteCompaniesDataGlobalLoaded,
+  isCompleteCompaniesDataLoaded
+) => {
+  let data;
+  let company = {};
+  if (isCompleteCompaniesDataGlobalLoaded || isCompleteCompaniesDataLoaded) {
+    if (isCompleteCompaniesDataLoaded) {
+      let index = completeCompaniesDataIndexs[ticker];
+      if (index) {
+        data = completeCompaniesData[index.index];
+      } else {
+        if (isCompleteCompaniesDataGlobalLoaded) {
+          let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
+          if (globalIndex) {
+            data = completeCompaniesDataGlobal[globalIndex.index];
+          }
+        }
+      }
+    } else {
+      if (isCompleteCompaniesDataGlobalLoaded) {
+        let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
+        if (globalIndex) {
+          data = completeCompaniesDataGlobal[globalIndex.index];
+        } else {
+          if (isCompleteCompaniesDataLoaded) {
+            let index = completeCompaniesDataIndexs[ticker];
+            if (index) {
+              data = completeCompaniesData[index.index];
+            }
+          }
+        }
+      }
+    }
+    console.log(data, 'da');
+    if (data) {
+      company = formatComapnyData(data);
+    }
+  }
+  return company;
+};
