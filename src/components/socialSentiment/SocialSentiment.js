@@ -30,7 +30,7 @@ const SocialSentiment = () => {
             )}&token=618fe17256f94d64d61ecca43988533e`}
             title="Social Sentiment"
             width="100%"
-            height={`${window.innerHeight - 90}px`}
+            height={`${window.innerHeight - 190}px`}
             samesite="None"
             frameBorder="0"
           />
