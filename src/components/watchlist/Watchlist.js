@@ -49,7 +49,7 @@ import WatchlistTable2 from './WatchlistTable2';
 // styles
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
-import { getWatchlist, getWatchlistTable2Data } from './watchlistApiCalls';
+import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
@@ -142,6 +142,10 @@ const Watchlist = props => {
     },
     [selectedType, dispatch]
   );
+
+  useEffect(() => {
+    dispatch(getWatchlistFileTypeEmailAlertStatus());
+  }, [dispatch]);
 
   useEffect(() => {
     firstTimeLoad.current = false;

@@ -1,7 +1,7 @@
 import config from '../../config/config';
 import { get, round } from 'lodash';
 import axios from 'axios';
-import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
+import { setCancelExistingDocumentTypeCalls, setWatchlistFileTypesEmailAlertStatus } from './../../reducers/Watchlist';
 
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
@@ -68,5 +68,28 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
     });
 
     return rawData;
+  };
+};
+
+export const getWatchlistFileTypeEmailAlertStatus = () => {
+  const cancelToken = axios.CancelToken.source();
+  return async dispatch => {
+    try {
+      dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
+      const response = await axios.get(`${config.apiUrl}/api/get_doc_type_email_status`, {
+        cancelToken: cancelToken.token
+      });
+      const responseData = get(response, 'data.data', []);
+      const fileTypesEmailStatus = responseData.map(document => {
+        return {
+          filetype: get(document, 'doc_type', '').toUpperCase(),
+          isEmailEnable: document.send_email === 1
+        };
+      });
+      dispatch(setWatchlistFileTypesEmailAlertStatus(fileTypesEmailStatus));
+      dispatch(setCancelExistingDocumentTypeCalls(null));
+    } catch (e) {
+      console.log(e);
+    }
   };
 };
