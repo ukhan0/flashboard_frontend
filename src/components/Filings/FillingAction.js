@@ -78,6 +78,7 @@ export const getCompanyFilingRevenueData = () => {
     dispatch(setIsEntitiesChart(false));
     dispatch(setCompanyFillingRevenueData([]));
     if (!oldId || !recentId) {
+      dispatch(setIsEntitiesChart(true));
       dispatch(setCompanyFillingRevenueData([]));
       return;
     }
