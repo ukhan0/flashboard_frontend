@@ -1,34 +1,39 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import config from '../../config/config';
-import { BeatLoader } from 'react-spinners';
+
 const SentimentPdf = props => {
-  const [isLoading, setIsloading] = useState(false);
+  const { innerHeight } = window;
   const { selectedItem } = useSelector(state => state.Watchlist);
-  // eslint-disable-next-line
-  const [height, setHeight] = useState(3000);
+  const [height, setHeight] = useState(innerHeight);
   const sentimentIframe = useRef(null);
+  const [yHeight, setYHeight] = useState(0);
+
+  useEffect(() => {
+      const handleScroll = event => {
+        const currentYheight = window.scrollY;
+        if (currentYheight > yHeight) {
+          setYHeight(currentYheight);
+          setHeight(window.scrollY + innerHeight);
+        }
+      };
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+  }, [innerHeight, yHeight]);
 
   if (!selectedItem) {
     return;
   }
 
-  // handle iframe height
-  const handleHeightChange = () => {
-    setIsloading(false);
-    //const realHeight = sentimentIframe.current.contentHeight;
-    //setHeight(realHeight);
+  const onLoadComplete = () => {
+    // window.removeEventListener('scroll', () => {});
   };
 
   return (
     <>
-      {isLoading ? (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
-          {' '}
-          <BeatLoader color={'var(--primary)'} loading={true} size={10} />
-        </div>
-      ) : null}
-
       <iframe
         ref={sentimentIframe}
         src={`${config.sentimentIframUrl}?filling_id=${selectedItem.recentId}`}
@@ -38,7 +43,8 @@ const SentimentPdf = props => {
         samesite="None"
         frameBorder="0"
         id="Sentiments"
-        onLoad={() => handleHeightChange()}
+        onLoad={onLoadComplete}
+        scrolling="no"
       />
     </>
   );
