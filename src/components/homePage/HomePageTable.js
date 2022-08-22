@@ -197,6 +197,7 @@ export default function HomePageTable() {
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
   const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
   const [cancelToken, setCancelToken] = useState(null);
+  const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState(null);
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
@@ -337,7 +338,7 @@ export default function HomePageTable() {
       try {
         setCancelToken(cancelToken);
         const response = await axios.get(
-          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}`,
+          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}&from=${rowsOfRecentDocumentsTable}`,
           {
             cancelToken: cancelToken.token
           }
@@ -358,21 +359,22 @@ export default function HomePageTable() {
             };
           });
 
-          setRecentCompaniesData(recentData);
+          setRecentCompaniesData(prevState => [...prevState, ...recentData]);
           dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
-          dispatch(setHomePageLoader(false));
         } else {
           dispatch(setHomePageSelectedItem({}));
           setRecentCompaniesData([]);
-          dispatch(setHomePageLoader(false));
+          setRowsOfRecentDocumentsTable(0);
         }
       } catch (error) {
         dispatch(setHomePageSelectedItem({}));
         setRecentCompaniesData([]);
+        setRowsOfRecentDocumentsTable(0);
+      } finally {
         dispatch(setHomePageLoader(false));
       }
     },
-    [dispatch]
+    [dispatch, rowsOfRecentDocumentsTable]
   );
 
   const onSearchTextChange = e => {
@@ -388,6 +390,8 @@ export default function HomePageTable() {
       cancelToken.cancel();
     }
     setRecentDocumentSearchFilter('');
+    setRecentCompaniesData([])
+    setRowsOfRecentDocumentsTable(0)
     dispatch(setHomePageSearchIndex(diff));
   };
   useEffect(() => {
@@ -423,6 +427,14 @@ export default function HomePageTable() {
     }
     if (params.type === 'columnResized') {
       HomePageService.storeColumnsState(columnState);
+    }
+  };
+
+  const handleOnViewportChanged = event => {
+    if (event.lastRow && event.lastRow !== -1) {
+      if (event.lastRow + 1 === rowsOfRecentDocumentsTable + 100) {
+        setRowsOfRecentDocumentsTable(rowsOfRecentDocumentsTable + 100);
+      }
     }
   };
 
@@ -473,7 +485,7 @@ export default function HomePageTable() {
           ))}
         </ButtonGroup>
       </div>
-      <div className="ag-theme-alpine" style={{ height: '90%', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: '90.5%', width: '100%' }}>
         <AgGridReact
           ref={tableRef}
           alwaysShowHorizontalScroll={true}
@@ -489,7 +501,9 @@ export default function HomePageTable() {
           onGridReady={handleOnGridReady}
           multiSortKey={'ctrl'}
           quickFilterText={recentDocumentSearchFilter}
-          defaultColDef={defaultColDef}></AgGridReact>
+          defaultColDef={defaultColDef}
+          suppressScrollOnNewData={true}
+          onViewportChanged={handleOnViewportChanged}></AgGridReact>
       </div>
       <Snackbar
         open={get(snackbar, 'isSnackBar', false)}
