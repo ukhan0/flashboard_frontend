@@ -10,7 +10,6 @@ import {} from '../Filings/FillingsHelper';
 import {} from '../watchlist/WatchlistHelpers';
 import axios from 'axios';
 import config from '../../config/config';
-import { getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
 import { setWatchlistFileTypesEmailAlertStatus } from './../../reducers/Watchlist';
 import { cloneDeep } from 'lodash';
 
