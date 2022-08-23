@@ -49,9 +49,6 @@ const WatchlistFileTypeDropDown = props => {
       c =>
         get(c, 'label', '')
           .toLowerCase()
-          .includes(searchabletext) ||
-        get(c, 'value', '')
-          .toLowerCase()
           .includes(searchabletext)
     );
     startTransition(() => {
@@ -95,7 +92,7 @@ const WatchlistFileTypeDropDown = props => {
         });
       }
       dispatch(setWatchlistFileTypesEmailAlertStatus(fileTypesInfoObj));
-      
+
       const response = await axios.post(`${config.apiUrl}/api/update_doc_email_status`, {
         doc_type,
         send_email
