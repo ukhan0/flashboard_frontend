@@ -28,14 +28,11 @@ const Cache = () => {
       .then(response => {
         let data = get(response, 'data.data.content', []);
         let indexs = {};
-        let modifiedData = data.map(d => {
-          return {
-            ...d,
-            type: 'domestic'
-          };
-        });
-        modifiedData.forEach((a, index) => {
-          indexs = { ...indexs, [a.ticker]: { index: index } };
+        let modifiedData = [];
+
+        data.forEach((a, index) => {
+          modifiedData.push({ ...a, type: 'domestic' });
+          indexs[a.ticker] = { index: index };
         });
 
         dispatch(setCompleteCompaniesDataIndexs(indexs));
@@ -61,14 +58,11 @@ const Cache = () => {
       .then(response => {
         let data = get(response, 'data.data.content', []);
         let indexs = {};
-        let modifiedData = data.map(d => {
-          return {
-            ...d,
-            type: 'global'
-          };
-        });
-        modifiedData.forEach((a, index) => {
-          indexs = { ...indexs, [a.ticker]: { index: index } };
+        let modifiedData = [];
+
+        data.forEach((a, index) => {
+          modifiedData.push({ ...a, type: 'global' });
+          indexs[a.ticker] = { index: index };
         });
         dispatch(setCompleteCompaniesDataGlobalIndex(indexs));
         dispatch(setCompleteGlobalCompaniesData(modifiedData));
