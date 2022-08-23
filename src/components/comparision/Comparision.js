@@ -13,6 +13,7 @@ import { setSentimentResult } from '../../reducers/Sentiment';
 import FilingsCompanyDetails from '../Filings/FilingsCompanyDetails';
 import { makeStyles } from '@material-ui/core/styles';
 import queryString from 'query-string';
+
 const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
@@ -22,9 +23,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 const Comparision = props => {
+  const iframeRef = useRef(null);
+  const { innerHeight } = window;
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
+  const [height, setHeight] = useState(innerHeight);
+  const [yHeight, setYHeight] = useState(0);
   const {
     selectedItem,
     selectedFileType,
@@ -154,6 +159,21 @@ const Comparision = props => {
   useEffect(() => {
     setFileType();
   }, [setFileType]);
+
+  useEffect(() => {
+    const handleScroll = event => {
+      const currentYheight = window.scrollY;
+      if (currentYheight > yHeight) {
+        setYHeight(currentYheight);
+        setHeight(window.scrollY + innerHeight);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [innerHeight, yHeight]);
+
   return (
     <>
       <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
@@ -174,13 +194,15 @@ const Comparision = props => {
       <div style={{ marginTop: '10px' }}>
         {
           <iframe
+            ref={iframeRef}
             src={`${config.comparisionSite}?f1=${oldId}&f2=${recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
             title="Comparision"
             width="100%"
-            height={`${window.innerHeight - 90}px`}
+            height={`${height}px`}
             samesite="None"
             frameBorder="0"
             id="comparisionResult"
+            scrolling="no"
             onLoad={() => {
               setIsloading(false);
             }}
