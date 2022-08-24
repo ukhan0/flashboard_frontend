@@ -70,6 +70,35 @@ const FilingsCompanyRevenueGraph = props => {
   useEffect(() => {
     setEntitiesData(data());
   }, [data]);
+  const setId = (item, event, type) => {
+    let id = null;
+    let oldId = null;
+    if (get(item, 'documentType', null) === '10-K') {
+      oldId = get(item, 'oldId10k', null);
+      id = get(item, 'recentId10k', null);
+    } else {
+      oldId = get(item, 'oldId10q', null);
+      id = get(item, 'recentId10q', null);
+    }
+
+    switch (type) {
+      case 'emerging_entities':
+        dispatch(setSelectedWatchlist({ ...item, recentId: id }));
+        // code block
+        break;
+      case 'disappearing_entities':
+        dispatch(setSelectedWatchlist({ ...item, recentId: oldId }));
+        // code block
+        break;
+      default:
+        if (event.color === 'red') {
+          dispatch(setSelectedWatchlist({ ...item, recentId: oldId }));
+        } else {
+          dispatch(setSelectedWatchlist({ ...item, recentId: id }));
+        }
+    }
+  };
+
   const options = {
     chart: {
       type: 'columnrange',
@@ -150,15 +179,8 @@ const FilingsCompanyRevenueGraph = props => {
                 dispatch(setIsFromSideBar(false));
                 dispatch(setFillingsSearchText(this.name));
                 dispatch(setIsFromThemex(false));
-                if (get(selectedItem, 'isFromHomePage', false)) {
-                  if (get(selectedItem, 'documentType', null) === '10-K') {
-                    dispatch(
-                      setSelectedWatchlist({ ...selectedItem, recentId: get(selectedItem, 'recentId10k', null) })
-                    );
-                  } else {
-                    setSelectedWatchlist({ ...selectedItem, recentId: get(selectedItem, 'recentId10q', null) });
-                  }
-                }
+
+                setId(selectedItem, this, selectedEntityType);
 
                 history.push('/sentiment');
               }
