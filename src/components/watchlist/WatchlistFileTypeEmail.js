@@ -87,7 +87,7 @@ const WatchlistFileTypeEmail = () => {
         {FileTypes.map((file, index) => {
           const isEnable = getEmailStatus(file.label);
           return (
-            <MenuItem key={index}>
+            <MenuItem key={index} onClick={(e)=>{onEmailStatusChange(e, !isEnable, file.label)}}>
               <Grid style={{ width: '160px' }} container direction="row" justify="space-between" alignItems="center">
                 <Grid item>
                   <Typography>{file.label}</Typography>
@@ -95,7 +95,6 @@ const WatchlistFileTypeEmail = () => {
                 <Grid item>
                   <Switch
                     checked={isEnable}
-                    onClick={e => onEmailStatusChange(e, !isEnable, file.label)}
                     color="primary"
                     name="checkedB"
                     inputProps={{ 'aria-label': 'primary checkbox' }}
