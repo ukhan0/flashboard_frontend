@@ -36,26 +36,33 @@ const WatchlistTopicSearch = props => {
     completeCompaniesData,
     completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
-  const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
-  const handleSearchTextChange = debounce(async text => {
-    // free text search for Watchlist table
-    if (!text || text.length < 1) {
-      return;
-    }
-    const searchabletext = text.toLowerCase();
-    setLoading(true);
-    const filteredWatchlist = data
+
+  const getSearchFilteredData = (dataArray, textToSearch) => {
+    textToSearch = textToSearch.toLowerCase();
+    return dataArray
       .filter(
         c =>
           get(c, 'b', '')
             .toLowerCase()
-            .includes(searchabletext) ||
+            .includes(textToSearch) ||
           get(c, 'ticker', '')
             .toLowerCase()
-            .includes(searchabletext)
+            .includes(textToSearch)
       )
       .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+  };
+
+  const handleSearchTextChange = debounce(async text => {
+    if (!text || text.length < 1) {
+      return;
+    }
+    setLoading(true);
+    let filteredWatchlist = getSearchFilteredData(completeCompaniesData, text);
+    if (filteredWatchlist.length < 1) {
+      filteredWatchlist = getSearchFilteredData(completeCompaniesDataGlobal, text);
+    }
     setAvailableSymbols(filteredWatchlist);
+
     setLoading(false);
   }, 500);
 
@@ -88,6 +95,16 @@ const WatchlistTopicSearch = props => {
       }, [300]);
     }
   };
+
+  useEffect(() => {
+    const filteredWatchlist = completeCompaniesData
+      .concat(completeCompaniesDataGlobal)
+      .slice(0, 100)
+      .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
+      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+
+    setAvailableSymbols(filteredWatchlist);
+  }, [completeCompaniesData, completeCompaniesDataGlobal]);
 
   useEffect(() => {
     if (!searchText) {
