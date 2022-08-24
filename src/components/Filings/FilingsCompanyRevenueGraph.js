@@ -198,7 +198,7 @@ const FilingsCompanyRevenueGraph = props => {
     <Card className="mb-4">
       <div className="card-header-alt d-flex justify-content-between p-4">
         <Grid container spacing={3}>
-          <Grid container alignItems="center" xs={12}>
+          <Grid container alignItems="center">
             <Grid item xs={6}>
               <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
               <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>

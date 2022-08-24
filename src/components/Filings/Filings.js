@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
     position: 'sticky',
-    padding: 15,
+    padding: '0 15px',
     zIndex: 1
   },
   filingsDetailsGraph: {
@@ -55,7 +55,11 @@ const Filings = () => {
   }
   return selectedItem ? (
     <div>
-      <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
+      {sidebarToggle && (
+        <div className={classes.companyDetail}>
+          <FilingsCompanyDetails />
+        </div>
+      )}
       <div className={classes.companyTimelineChart}>
         <FilingsTimelineChartMemo />
       </div>

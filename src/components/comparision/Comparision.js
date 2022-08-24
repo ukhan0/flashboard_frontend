@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   companyDetail: {
     top: 60,
     position: 'sticky',
-    padding: 15,
+    padding: '0 15px',
     zIndex: 1
   }
 }));
@@ -175,7 +175,11 @@ const Comparision = props => {
 
   return (
     <>
-      <div className={classes.companyDetail}>{sidebarToggle ? <FilingsCompanyDetails /> : null}</div>
+      {sidebarToggle && (
+        <div className={classes.companyDetail}>
+          <FilingsCompanyDetails />
+        </div>
+      )}
       <ComparisionFilters
         handleComparisionDifference={handleComparisionDifference}
         handleComparisionMethod={handleComparisionMethod}
