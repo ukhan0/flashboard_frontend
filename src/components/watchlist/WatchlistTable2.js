@@ -161,8 +161,6 @@ const tableFooter = {
 const WatchlistTable2 = props => {
   const dispatch = useDispatch();
   const {
-    isCompleteCompaniesDataLoaded,
-    isCompleteCompaniesDataGlobalLoaded,
     completeCompaniesData,
     completeCompaniesDataGlobal,
     completeCompaniesDataIndexs,
@@ -237,9 +235,7 @@ const WatchlistTable2 = props => {
         completeCompaniesDataGlobalIndexs,
         completeCompaniesData,
         completeCompaniesDataGlobal,
-        params.data.ticker,
-        isCompleteCompaniesDataGlobalLoaded,
-        isCompleteCompaniesDataLoaded
+        params.data.ticker
       );
       if (company) {
         if (params.data.documentType === '10-K') {

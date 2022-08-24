@@ -91,8 +91,7 @@ const Comparision = props => {
             completeCompaniesData,
             completeCompaniesDataGlobal,
             data.ticker,
-            isCompleteCompaniesDataGlobalLoaded,
-            isCompleteCompaniesDataLoaded
+           
           );
 
           if (company) {

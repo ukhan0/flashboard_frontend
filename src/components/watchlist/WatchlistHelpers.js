@@ -200,43 +200,55 @@ export const getCompanyByIndex = (
   completeCompaniesDataGlobalIndexs,
   completeCompaniesData,
   completeCompaniesDataGlobal,
-  ticker,
-  isCompleteCompaniesDataGlobalLoaded,
-  isCompleteCompaniesDataLoaded
+  ticker
 ) => {
   let data;
   let company = {};
-  if (isCompleteCompaniesDataGlobalLoaded || isCompleteCompaniesDataLoaded) {
-    if (isCompleteCompaniesDataLoaded) {
-      let index = completeCompaniesDataIndexs[ticker];
-      if (index) {
-        data = completeCompaniesData[index.index];
-      } else {
-        if (isCompleteCompaniesDataGlobalLoaded) {
-          let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
-          if (globalIndex) {
-            data = completeCompaniesDataGlobal[globalIndex.index];
-          }
-        }
-      }
-    } else {
-      if (isCompleteCompaniesDataGlobalLoaded) {
-        let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
-        if (globalIndex) {
-          data = completeCompaniesDataGlobal[globalIndex.index];
-        } else {
-          if (isCompleteCompaniesDataLoaded) {
-            let index = completeCompaniesDataIndexs[ticker];
-            if (index) {
-              data = completeCompaniesData[index.index];
-            }
-          }
-        }
-      }
-    }
+
+  let index = completeCompaniesDataIndexs[ticker];
+  if (index) {
+    data = completeCompaniesData[index.index];
+    return formatComapnyData(data);
+  }
+  let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
+  if (globalIndex) {
+    data = completeCompaniesDataGlobal[globalIndex.index];
     if (data) {
-      company = formatComapnyData(data);
+      return formatComapnyData(data);
     }
   }
+
+  // if (isCompleteCompaniesDataGlobalLoaded || isCompleteCompaniesDataLoaded) {
+  //   if (isCompleteCompaniesDataLoaded) {
+  //     let index = completeCompaniesDataIndexs[ticker];
+  //     if (index) {
+  //       data = completeCompaniesData[index.index];
+  //     } else {
+  //       if (isCompleteCompaniesDataGlobalLoaded) {
+  //         let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
+  //         if (globalIndex) {
+  //           data = completeCompaniesDataGlobal[globalIndex.index];
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     if (isCompleteCompaniesDataGlobalLoaded) {
+  //       let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
+  //       if (globalIndex) {
+  //         data = completeCompaniesDataGlobal[globalIndex.index];
+  //       } else {
+  //         if (isCompleteCompaniesDataLoaded) {
+  //           let index = completeCompaniesDataIndexs[ticker];
+  //           if (index) {
+  //             data = completeCompaniesData[index.index];
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   if (data) {
+  //     company = formatComapnyData(data);
+  //   }
+  // }
   return company;
 };

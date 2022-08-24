@@ -34,9 +34,7 @@ const WatchlistTopicSearch = props => {
     completeCompaniesDataIndexs,
     completeCompaniesDataGlobalIndexs,
     completeCompaniesData,
-    completeCompaniesDataGlobal,
-    isCompleteCompaniesDataGlobalLoaded,
-    isCompleteCompaniesDataLoaded
+    completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
   const data = completeCompaniesData.concat(completeCompaniesDataGlobal);
   const handleSearchTextChange = debounce(async text => {
@@ -75,9 +73,7 @@ const WatchlistTopicSearch = props => {
         completeCompaniesDataGlobalIndexs,
         completeCompaniesData,
         completeCompaniesDataGlobal,
-        newSelectedSymbol.ticker,
-        isCompleteCompaniesDataGlobalLoaded,
-        isCompleteCompaniesDataLoaded
+        newSelectedSymbol.ticker
       );
       company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;

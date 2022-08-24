@@ -203,8 +203,7 @@ export default function HomePageTable() {
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
   const {
-    isCompleteCompaniesDataLoaded,
-    isCompleteCompaniesDataGlobalLoaded,
+   
     completeCompaniesData,
     completeCompaniesDataGlobal,
     completeCompaniesDataIndexs,
@@ -301,8 +300,7 @@ export default function HomePageTable() {
         completeCompaniesData,
         completeCompaniesDataGlobal,
         params.data.ticker,
-        isCompleteCompaniesDataGlobalLoaded,
-        isCompleteCompaniesDataLoaded
+        
       );
       if (company) {
         if (params.data.documentType === '10-K') {

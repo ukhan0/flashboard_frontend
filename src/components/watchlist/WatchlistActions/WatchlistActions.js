@@ -10,7 +10,6 @@ import config from '../../../config/config';
 import { setWatchlistFileTypesEmailAlertStatus } from './../../../reducers/Watchlist';
 import { cloneDeep, get } from 'lodash';
 import axios from 'axios';
-
 export default function WatchListActions() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -170,11 +169,11 @@ export default function WatchListActions() {
         style={{ height: '80%' }}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right'
+          horizontal: 'center',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'center',
         }}>
         {FileTypes.map((file, index) => {
           const isEnable = getEmailStatus(file.label);

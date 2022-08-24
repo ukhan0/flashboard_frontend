@@ -38,8 +38,6 @@ export default function HomePageSmaLime1(props) {
   const dispatch = useDispatch();
   const [tableType, setTableType] = React.useState(tableTypes[0]);
   const {
-    isCompleteCompaniesDataLoaded,
-    isCompleteCompaniesDataGlobalLoaded,
     completeCompaniesData,
     completeCompaniesDataGlobal,
     completeCompaniesDataIndexs,
@@ -53,9 +51,7 @@ export default function HomePageSmaLime1(props) {
         completeCompaniesDataGlobalIndexs,
         completeCompaniesData,
         completeCompaniesDataGlobal,
-        ticker,
-        isCompleteCompaniesDataGlobalLoaded,
-        isCompleteCompaniesDataLoaded
+        ticker
       );
 
       if (company) {
@@ -73,8 +69,6 @@ export default function HomePageSmaLime1(props) {
       completeCompaniesDataGlobalIndexs,
       completeCompaniesData,
       completeCompaniesDataGlobal,
-      isCompleteCompaniesDataGlobalLoaded,
-      isCompleteCompaniesDataLoaded,
       dispatch
     ]
   );

@@ -107,8 +107,7 @@ const TopicSearchResults = () => {
     completeCompaniesDataGlobalIndexs,
     completeCompaniesData,
     completeCompaniesDataGlobal,
-    isCompleteCompaniesDataGlobalLoaded,
-    isCompleteCompaniesDataLoaded
+   
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
@@ -215,8 +214,7 @@ const TopicSearchResults = () => {
       completeCompaniesData,
       completeCompaniesDataGlobal,
       ticker,
-      isCompleteCompaniesDataGlobalLoaded,
-      isCompleteCompaniesDataLoaded
+    
     );
 
     const recentId = fileId.toString().replace('9000', '');
