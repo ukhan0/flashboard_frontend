@@ -14,7 +14,7 @@ import { setIsNewEmailNotification } from '../../reducers/User';
 import { useDispatch } from 'react-redux';
 import SocketService from '../../socketService';
 import io from 'socket.io-client';
-import { get } from 'lodash';
+import { get, orderBy } from 'lodash';
 const socket = io.connect(config.socketUrl);
 SocketService.init(socket);
 const Notification = () => {
@@ -61,10 +61,12 @@ const Notification = () => {
     getNotifications();
   }, [getNotifications]);
   useEffect(() => {
-    socket.connect();
     const user = JSON.parse(localStorage.getItem('user'));
-    socket.emit('join_room', user.id);
-    socket.on(user.id, function(data) {
+    if (user) {
+      SocketService.socket.connect();
+    }
+    SocketService.socket.emit('join_room', user.id);
+    SocketService.socket.on(user.id, function(data) {
       if (get(data, 'status', false)) {
         dispatch(setIsNewEmailNotification(true));
       }
@@ -106,6 +108,10 @@ const Notification = () => {
     }
     return title;
   };
+
+  const getTime = (v) => {
+   return moment.unix(v).format("hh:mm A");
+  };
   return (
     <Fragment>
       <Hidden>
@@ -141,15 +147,13 @@ const Notification = () => {
               </div>
               <div className="height-280">
                 <PerfectScrollbar>
-                  {notifications.map((data, index) => (
+                  {orderBy(notifications, ['email_time'], ['desc']).map((data, index) => (
                     <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                       <div
                         className="timeline-item"
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
-                        <div className="timeline-item-offset">
-                          {moment(get(data, 'created_date', null)).format('LT')}
-                        </div>
+                        <div className="timeline-item-offset">{getTime(get(data, 'email_time', null))}</div>
                         <div className="timeline-item--content">
                           <div className="timeline-item--icon"></div>
                           <h4 className="timeline-item--label mb-2 font-weight-bold"> {getTitle(data)}</h4>

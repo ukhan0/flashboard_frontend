@@ -76,7 +76,7 @@ const Cache = () => {
   }, [dispatch, user]);
 
   useEffect(() => {
-    if (isNewEmailNotification) {
+    if (isNewEmailNotification && user) {
       const apiUrl = `${config.apiUrl}/api/email/notification`;
       axios
         .get(`${apiUrl}`)
@@ -96,7 +96,7 @@ const Cache = () => {
 
       dispatch(setIsNewEmailNotification(false));
     }
-  }, [dispatch, isNewEmailNotification]);
+  }, [dispatch, isNewEmailNotification, user]);
 
   useEffect(() => {
     if (user) {

@@ -59,7 +59,7 @@ export const deleteToken = async () => {
   try {
     const response = await axios.delete(`${config.apiUrl}/api/users/sign_out`, {
       data: {
-        user_id: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).id : null
+        user_id: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : null
       }
     });
 
@@ -67,7 +67,7 @@ export const deleteToken = async () => {
     if (data) {
       localStorage.clear();
       // following code will refresh the page and Context will be reset
-      window.location.href = '/PagesRegister';
+      // window.location.href = '/PagesRegister';
     }
     return;
   } catch (error) {

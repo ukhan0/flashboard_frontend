@@ -5,7 +5,7 @@ import { Avatar, Box, Badge, Menu, Button, List, ListItem, Divider } from '@mate
 import avatar4 from '../../assets/images/avatars/avatar8.png';
 import { withStyles } from '@material-ui/core/styles';
 import { deleteToken } from '../../utils/helpers';
-
+import SocketService from '../../socketService';
 const StyledBadge = withStyles({
   badge: {
     backgroundColor: 'var(--success)',
@@ -47,7 +47,10 @@ export default function HeaderUserbox() {
   };
 
   const signout = () => {
+    SocketService.socket.close();
     deleteToken();
+    localStorage.clear();
+    window.location.href = '/PagesRegister';
   };
 
   return (
