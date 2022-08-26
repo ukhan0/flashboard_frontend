@@ -113,19 +113,19 @@ const Watchlist = props => {
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
-  let completeCompaniesDatalocal = useRef(completeCompaniesData);
-  let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
+  // let completeCompaniesDatalocal = useRef(completeCompaniesData);
+  // let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
 
-  useEffect(() => {
-    completeCompaniesDatalocal.current = completeCompaniesData;
-    completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
-  }, [completeCompaniesData, completeCompaniesDataGlobal]);
+  // useEffect(() => {
+  //   completeCompaniesDatalocal.current = completeCompaniesData;
+  //   completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
+  // }, [completeCompaniesData, completeCompaniesDataGlobal]);
 
   const syncCompleteDataOnPage = useCallback(
     newData => {
       const rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
+        selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal
       );
       if (!rawCompleteData || !isArray(rawCompleteData)) {
         return;
@@ -140,7 +140,7 @@ const Watchlist = props => {
         dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
       }
     },
-    [selectedType, dispatch]
+    [selectedType, dispatch, completeCompaniesData, completeCompaniesDataGlobal]
   );
 
   useEffect(() => {
@@ -320,7 +320,7 @@ const Watchlist = props => {
   const updateChacheData = useCallback(
     (ticker, isTicker) => {
       let rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
+        selectedType === 'domestic' ? completeCompaniesData : completeCompaniesDataGlobal
       );
       if (Array.isArray(ticker)) {
         for (let i = 0; i < ticker.length; i++) {
@@ -338,7 +338,7 @@ const Watchlist = props => {
         updateTickerValue(rawCompleteData, ticker, isTicker);
       }
     },
-    [dispatch, selectedType, updateTickerValue]
+    [dispatch, selectedType, updateTickerValue, completeCompaniesData, completeCompaniesDataGlobal]
   );
 
   const deleteTicker = useCallback(
