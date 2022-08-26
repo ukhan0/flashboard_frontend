@@ -7,7 +7,7 @@ import moment from 'moment';
 import { get, uniqBy } from 'lodash';
 import { BeatLoader } from 'react-spinners';
 import { getWatchlist } from '../watchlist/watchlistApiCalls';
-import SocketService from '../../socketService';
+// import SocketService from '../../socketService';
 import io from 'socket.io-client';
 import config from 'config/config';
 import { lastTweets } from './HomePageHelpers';
