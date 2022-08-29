@@ -49,11 +49,12 @@ import WatchlistTable2 from './WatchlistTable2';
 // styles
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
-import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
+import { getWatchlist, getWatchlistTable2Data } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { lastReportedState } from './WatchlistTableHelpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
+import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideBar';
 import WatchlistFiltersList from './WatchlistFiltersList';
 import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
 import FileTypes from '../../config/watchlistFileTyes';
@@ -107,12 +108,15 @@ const Watchlist = props => {
   const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
+  const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
+  const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
+
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
   let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
@@ -143,9 +147,28 @@ const Watchlist = props => {
     [selectedType, dispatch]
   );
 
+  const getWatchlistFileTypeEmailAlertStatus = useCallback(async () => {
+    let fileTypesEmailStatus = [];
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/get_doc_type_email_status`);
+      const responseData = get(response, 'data.data', []);
+      fileTypesEmailStatus = responseData.map(document => {
+        return {
+          doc_type: get(document, 'doc_type', '').toUpperCase(),
+          send_email: document.send_email === 1
+        };
+      });
+    } catch (e) {
+      console.log(e);
+      fileTypesEmailStatus = [];
+    } finally {
+      setFileTypesEmailAlertStatus(fileTypesEmailStatus);
+    }
+  }, []);
+
   useEffect(() => {
-    dispatch(getWatchlistFileTypeEmailAlertStatus());
-  }, [dispatch]);
+    getWatchlistFileTypeEmailAlertStatus();
+  }, [getWatchlistFileTypeEmailAlertStatus]);
 
   useEffect(() => {
     firstTimeLoad.current = false;
@@ -596,6 +619,15 @@ const Watchlist = props => {
           />
         </>
       ) : null}
+      <WatchListCustomEmailAlertsSideBar
+        open={isAgGridEmailAlerts}
+        data={fileTypesEmailAlertStatus}
+        updateData={setFileTypesEmailAlertStatus}
+        handleCloseAgGridSideBar={() => {
+          setIsAgGridEmailAlerts(false);
+        }}
+        title="Enable Email Alerts for Watchlist"
+      />
       {loading ? (
         <div className={classes.loaderContainer}>
           <div className={classes.loaderSection}>
@@ -715,6 +747,14 @@ const Watchlist = props => {
                   handleOpenAgGridFilterDialog();
                 }}>
                 Screens
+              </div>
+              <div
+                className={classes.agButtons}
+                style={{ marginTop: '20px' }}
+                onClick={() => {
+                  setIsAgGridEmailAlerts(true);
+                }}>
+                Email alerts
               </div>
             </div>
           </div>

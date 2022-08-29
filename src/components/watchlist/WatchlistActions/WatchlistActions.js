@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setIsColorEnable, setIsActiveCompanies } from '../../../reducers/Watchlist';
 import { updateWatchlistEmailAlertStatus } from './WatchlistActionApiCalls';
 import { getUser, saveUser } from '../WatchlistHelpers';
-import WatchlistFiletypeEmail from '../WatchlistFileTypeEmail';
 
 export default function WatchListActions() {
   const dispatch = useDispatch();
@@ -100,8 +99,6 @@ export default function WatchListActions() {
           </Grid>
         </Grid>
       </List>
-
-      <WatchlistFiletypeEmail />
     </>
   );
 }
