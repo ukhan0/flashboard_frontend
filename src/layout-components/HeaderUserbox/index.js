@@ -52,7 +52,6 @@ export default function HeaderUserbox() {
     localStorage.clear();
     window.location.href = '/PagesRegister';
   };
-
   return (
     <Fragment>
       <Button

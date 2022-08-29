@@ -15,7 +15,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Repeat, SmsOutlined, FavoriteBorderOutlined } from '@material-ui/icons';
 const socket = io.connect(config.socketUrl);
 // SocketService.init(socket);
-
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'

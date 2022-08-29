@@ -15,9 +15,9 @@ import { useDispatch } from 'react-redux';
 import SocketService from '../../socketService';
 import io from 'socket.io-client';
 import { get, orderBy } from 'lodash';
-const socket = io.connect(config.socketUrl);
-SocketService.init(socket);
 const Notification = () => {
+  const socket = io.connect(config.socketUrl);
+  SocketService.init(socket);
   const history = useHistory();
   const dispatch = useDispatch();
   const [anchorEl1, setAnchorEl1] = useState(null);
