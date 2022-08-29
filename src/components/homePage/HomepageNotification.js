@@ -87,6 +87,9 @@ export default function HomepageNotification() {
     storeUpCommingCallsType(key);
     setUpComingCallType(key);
   };
+  const getTime = v => {
+    return moment.unix(v).format('hh:mm A');
+  };
   return (
     <Card className="card-box mb-4" style={{ height: '600px' }}>
       <div className={clsx('card-header')}>
@@ -138,7 +141,7 @@ export default function HomepageNotification() {
                   className="timeline-item"
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
-                  <div className="timeline-item-offset">{moment(data.created_date).format('LT')}</div>
+                  <div className="timeline-item-offset">{getTime(get(data, 'email_time', null))}</div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
                     <h4 className="timeline-item--label mb-2 font-weight-bold">{data.title}</h4>
