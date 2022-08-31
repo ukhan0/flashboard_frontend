@@ -14,6 +14,8 @@ import {
 import { setIsNewEmailNotification } from './reducers/User';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import io from 'socket.io-client';
+import SocketService from './socketService';
 // import dummyData from './dummyData';
 
 const Cache = () => {
@@ -100,6 +102,8 @@ const Cache = () => {
 
   useEffect(() => {
     if (user) {
+      const socket = io.connect(config.socketUrl);
+      SocketService.init(socket);
       dispatch(setCompleteDataLoadedFlag(false));
       dispatch(setCompleteDataLoadedGlobalFlag(false));
       cacheData();

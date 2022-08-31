@@ -16,8 +16,6 @@ import SocketService from '../../socketService';
 import io from 'socket.io-client';
 import { get, orderBy } from 'lodash';
 const Notification = () => {
-  const socket = io.connect(config.socketUrl);
-  SocketService.init(socket);
   const history = useHistory();
   const dispatch = useDispatch();
   const [anchorEl1, setAnchorEl1] = useState(null);
@@ -34,43 +32,20 @@ const Notification = () => {
     });
   }, [notifications]);
 
-  // const playSound = () => {
-  //   const audio = new Audio(sound);
-  //   audio.play();
-  // };
-
-  // const socketNotificationData = useCallback(() => {
-  //   try {
-  //     console.log('yes');
-  //     SocketService.socket.on('emailN', payload => {
-  //       console.log(payload, 'jsdjjjsd');
-  //       // setNotification([payload, ...notification]);÷
-  //       // if (!payload.is_read) {
-  //       //   setCount(count + 1);
-  //       //   playSound();
-  //       // } else {
-  //       //   setCount(count);
-  //       // }
-  //     });
-  //   } catch (error) {
-  //     console.log(error, 'sddf');
-  //   }
-  // }, [count, notification, socket]);
-
   useEffect(() => {
     getNotifications();
   }, [getNotifications]);
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
+    if (user && SocketService.socket) {
       SocketService.socket.connect();
+      SocketService.socket.emit('join_room', user.id);
+      SocketService.socket.on(user.id, function(data) {
+        if (get(data, 'status', false)) {
+          dispatch(setIsNewEmailNotification(true));
+        }
+      });
     }
-    SocketService.socket.emit('join_room', user.id);
-    SocketService.socket.on(user.id, function(data) {
-      if (get(data, 'status', false)) {
-        dispatch(setIsNewEmailNotification(true));
-      }
-    });
   }, [dispatch]);
 
   const open1 = Boolean(anchorEl1);
@@ -109,8 +84,8 @@ const Notification = () => {
     return title;
   };
 
-  const getTime = (v) => {
-   return moment.unix(v).format("hh:mm A");
+  const getTime = v => {
+    return moment.unix(v).format('hh:mm A');
   };
   return (
     <Fragment>
