@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';
 import { get, orderBy } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
+import { subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import {
   setAllSearchParams,
   setSelectedSearch,
@@ -17,7 +18,8 @@ import {
   resetAllSearchParams,
   setBackDropOnCompanyClick,
   setIsUnsavedSearch,
-  setSearchId
+  setSearchId,
+  setTopicSearchDateRange
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, deleteSearch, performTopicTweetsSearchAggregate } from './topicActions';
 import EditIcon from '@material-ui/icons/Edit';
@@ -25,6 +27,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { useLocation } from 'react-router-dom';
 import TopicDeleteSearchConfirmDialog from './TopicDeleteSearchConfirmDialog';
 import { preventParentClick } from './topicHelpers';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,6 +68,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicSearchHistory(props) {
   const classes = useStyles();
+  const history = useHistory();
   const [isModal, setModal] = React.useState(false);
   const [deleteSearchId, setDeleteSearchId] = React.useState(null);
   const { cancelTokenSourceHighlights, savedSearches, selectedSearch, linkSearchId } = useSelector(
@@ -147,8 +151,15 @@ export default function TopicSearchHistory(props) {
   };
 
   const handleSearch = (e, s, showLoader = true) => {
-    dispatch(setIsUnsavedSearch(false));
     preventParentClick(e);
+    dispatch(
+      setTopicSearchDateRange({
+        startDate: subMonths(startOfMonth(new Date()), 12),
+        endDate: endOfMonth(new Date())
+      })
+    );
+    history.push('/topic');
+    dispatch(setIsUnsavedSearch(false));
     setSearchParams(s, showLoader);
     props.handleClose();
     dispatch(setBackDropOnCompanyClick(false));

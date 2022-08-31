@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { startOfMonth, endOfMonth } from 'date-fns';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchDateRange, isDateSet } from '../../reducers/Topic';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -69,6 +70,20 @@ const TopicRangePicker = props => {
       dispatch(isDateSet(true));
     }
   };
+
+  const urlStartDate = new URLSearchParams(window.location.search).get('startDate');
+  const urlEndDate = new URLSearchParams(window.location.search).get('endDate');
+  useEffect(() => {
+    if (urlStartDate && urlEndDate) {
+      dispatch(
+        setTopicSearchDateRange({
+          startDate: urlStartDate,
+          endDate: urlEndDate
+        })
+      );
+    }
+  }, [dispatch, urlStartDate, urlEndDate]);
+
   return (
     <div>
       <div
@@ -76,9 +91,9 @@ const TopicRangePicker = props => {
         onClick={() => {
           setIsDateRangeSelectorOpen(true);
         }}>
-        <span className="font-weight-bold">{format(startDate, displayDateFormat)}</span>
+        <span className="font-weight-bold">{moment(startDate).format(displayDateFormat)}</span>
         <span className="text-white">{'  -  '}</span>
-        <span className="font-weight-bold">{format(endDate, displayDateFormat)} </span>
+        <span className="font-weight-bold">{moment(endDate).format(displayDateFormat)} </span>
       </div>
       {isDateRangeSelectorOpen ? (
         <div className={classes.dateRangeSelector}>

@@ -143,7 +143,7 @@ const TopicDialog = props => {
               {currentSearchDetail.startDate ? (
                 <span className="font-weight-bold">{moment(startDate).format(displayDateFormat)}</span>
               ) : null}
-              {currentSearchDetail.startDate ? (
+              {currentSearchDetail.endDate ? (
                 <span className="font-weight-bold">-{moment(endDate).format(displayDateFormat)}</span>
               ) : null}
             </Grid>
