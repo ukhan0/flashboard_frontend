@@ -13,7 +13,6 @@ import { setSearchId } from '../../reducers/Topic';
 import { setIsNewEmailNotification } from '../../reducers/User';
 import { useDispatch } from 'react-redux';
 import SocketService from '../../socketService';
-import io from 'socket.io-client';
 import { get, orderBy } from 'lodash';
 const Notification = () => {
   const history = useHistory();
