@@ -13,7 +13,7 @@ import {
 } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
-import CloseIcon from '@material-ui/icons/Close';
+// import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 
 const createOptionLabel = option => {
@@ -123,14 +123,14 @@ const WatchlistTopicSearch = props => {
         onChange={selectionChanged}
         options={availableSymbols}
         value={selectedTickerSymbol}
-        closeIcon={
-          <CloseIcon
-            onClick={() => {
-              dispatch(setWatchlistSearchText(''));
-            }}
-            fontSize="small"
-          />
-        }
+        // closeIcon={
+        //   <CloseIcon
+        //     onClick={() => {
+        //       dispatch(setWatchlistSearchText(''));
+        //     }}
+        //     fontSize="small"
+        //   />
+        // }
         getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (
           <TextField

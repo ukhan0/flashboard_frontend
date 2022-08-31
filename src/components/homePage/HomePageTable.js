@@ -198,12 +198,11 @@ export default function HomePageTable() {
   const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
   const [cancelToken, setCancelToken] = useState(null);
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
-  const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState(null);
+  const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
   const {
-   
     completeCompaniesData,
     completeCompaniesDataGlobal,
     completeCompaniesDataIndexs,
@@ -299,8 +298,7 @@ export default function HomePageTable() {
         completeCompaniesDataGlobalIndexs,
         completeCompaniesData,
         completeCompaniesDataGlobal,
-        params.data.ticker,
-        
+        params.data.ticker
       );
       if (company) {
         if (params.data.documentType === '10-K') {
@@ -388,8 +386,8 @@ export default function HomePageTable() {
       cancelToken.cancel();
     }
     setRecentDocumentSearchFilter('');
-    setRecentCompaniesData([])
-    setRowsOfRecentDocumentsTable(0)
+    setRecentCompaniesData([]);
+    setRowsOfRecentDocumentsTable(0);
     dispatch(setHomePageSearchIndex(diff));
   };
   useEffect(() => {

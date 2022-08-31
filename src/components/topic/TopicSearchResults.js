@@ -106,8 +106,7 @@ const TopicSearchResults = () => {
     completeCompaniesDataIndexs,
     completeCompaniesDataGlobalIndexs,
     completeCompaniesData,
-    completeCompaniesDataGlobal,
-   
+    completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
@@ -213,8 +212,7 @@ const TopicSearchResults = () => {
       completeCompaniesDataGlobalIndexs,
       completeCompaniesData,
       completeCompaniesDataGlobal,
-      ticker,
-    
+      ticker
     );
 
     const recentId = fileId.toString().replace('9000', '');
@@ -401,7 +399,7 @@ const TopicSearchResults = () => {
                                   .replaceAll(searchRegex, '')
                                   .replaceAll(replaceHeadingRegex, '');
                                 return (
-                                  <>
+                                  <div key={index}>
                                     <Grid
                                       key={`rsttt${resultIndex}`}
                                       container
@@ -409,18 +407,16 @@ const TopicSearchResults = () => {
                                       justify="flex-start"
                                       alignItems="center">
                                       <Grid item>
-                                        <p className="font-size-lg mb-2 text-black-100">
-                                          {titleData.map((contentTitle, indexTitle) => {
-                                            return (
-                                              <>
-                                                <span>{contentTitle}</span>
-                                                <span>
-                                                  {!indexTitle && titleDataLength > 1 ? <ArrowForwardIcon /> : null}
-                                                </span>
-                                              </>
-                                            );
-                                          })}
-                                        </p>
+                                        {titleData.map((contentTitle, indexTitle) => {
+                                          return (
+                                            <div key={indexTitle} className="font-size-lg mb-2 text-black-100">
+                                              <span>{contentTitle}</span>
+                                              <span>
+                                                {!indexTitle && titleDataLength > 1 ? <ArrowForwardIcon /> : null}
+                                              </span>
+                                            </div>
+                                          );
+                                        })}
                                       </Grid>
                                     </Grid>
                                     <p
@@ -436,7 +432,7 @@ const TopicSearchResults = () => {
                                       onClick={e => goToSentimentScreen(companyResult, result, indexx)}
                                       onMouseUp={e => handleMouseUp(e, indexx)}
                                       onMouseDown={e => handleMouseDown(e, indexx)}></p>
-                                  </>
+                                  </div>
                                 );
                               })}
                             </div>

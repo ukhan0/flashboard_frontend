@@ -261,9 +261,9 @@ const TopicFilters = props => {
       </Grid>
 
       <Grid item xs={12} md={12} lg={12}>
-        <Grid container direction="row" justifyContent="space-around" alignItems="center">
+        <Grid container direction="row" justify="flex-start" alignItems="center" style={{paddingBottom: '5px'}}>
           <Grid item>
-            <h6>Enable Email Alert</h6>
+            <h6 style={{ marginBottom: 0 }}>Enable Email Alert</h6>
           </Grid>
           <Grid item>
             <Switch
