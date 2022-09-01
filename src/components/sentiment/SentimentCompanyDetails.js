@@ -14,7 +14,10 @@ const useStyles = makeStyles(theme => ({
   tickerLogo: {
     display: 'flex',
     height: 70,
-    alignItems: 'center'
+    alignItems: 'center', 
+    '& .MuiAvatar-img': {
+      objectFit: 'contain'
+    }
   },
   logo: {
     height: 70,
