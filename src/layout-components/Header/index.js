@@ -50,7 +50,7 @@ const Header = props => {
         {!props.isCollapsedLayout && <HeaderLogo />}
         <Box className="app-header-toolbar">
           <Hidden lgUp>
-            <Box className="app-logo-wrapper" title="SMA">
+            <Box className="app-logo-wrapper">
               <Link to="/" className="header-logo-wrapper-link">
                 <IconButton color="primary" size="medium">
                   <img className="app-header-logo-img-small" alt="SMA" src={projectLogo} />

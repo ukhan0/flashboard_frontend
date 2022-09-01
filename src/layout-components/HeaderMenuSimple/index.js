@@ -32,6 +32,7 @@ const HeaderMenu = props => {
     if (pathname !== '/topic') {
       currentTarget.style.cursor = 'wait';
       hoverTimer.current = setTimeout(() => {
+        setAnchorHelp(null);
         dispatch(resetAllSearchParams());
         setAnchorEl(anchorEl ? null : currentTarget);
         currentTarget.style.cursor = 'pointer';
@@ -42,7 +43,8 @@ const HeaderMenu = props => {
     clearTimeout(hoverTimer.current);
   };
   const handleClickHelp = event => {
-    setAnchorHelp(anchorEl ? null : event.currentTarget);
+    setAnchorHelp(anchorHelp ? null : event.currentTarget);
+    setAnchorEl(null);
   };
 
   const goToDashboard = () => {
@@ -74,7 +76,7 @@ const HeaderMenu = props => {
   const helpId = openHelp ? 'simple-popper' : undefined;
   return (
     <Fragment>
-      <div className="app-header-menu" style={{display:"flex"}}>
+      <div className="app-header-menu" style={{ display: 'flex' }}>
         <Button
           size="medium"
           color="inherit"
