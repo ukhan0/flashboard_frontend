@@ -343,7 +343,7 @@ const Watchlist = props => {
   const updateChacheData = useCallback(
     (ticker, isTicker) => {
       let rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesDatalocal : completeCompaniesDataGloballocal.current
+        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
       );
       if (Array.isArray(ticker)) {
         for (let i = 0; i < ticker.length; i++) {
