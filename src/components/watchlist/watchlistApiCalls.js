@@ -28,15 +28,11 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
 export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFileTypes, selectedType) => {
   let rawData = [];
   let limit = 100;
-  let tickerStatus = false;
   if (selectedUniverse === 'recent') {
     limit = 50;
   }
   if (selectedUniverse === 'all') {
     limit = 1000;
-  }
-  if (selectedUniverse === 'watchlist') {
-    tickerStatus = true;
   }
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
@@ -62,7 +58,6 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
         // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
         docDate: get(d, 'document_date', null),
         wordCount: round(get(d, 'word_count', null), 2),
-        isTickerActive: tickerStatus
         // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });

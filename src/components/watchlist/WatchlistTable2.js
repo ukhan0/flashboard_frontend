@@ -47,21 +47,21 @@ const gridOptions = {
 };
 
 const colDefs = [
-  // {
-  //   headerName: 'Actions',
-  //   headerTooltip: 'Add/Remove Ticker',
-  //   field: 'isTickerActive',
-  //   colId: 'actions',
-  //   filter: false,
-  //   cellClass: ['center-align-left'],
-  //   cellRenderer: 'AddRemoveIcon',
-  //   width: 50,
-  //   resizable: false,
-  //   suppressMenu: false,
-  //   menuTabs: ['generalMenuTab'],
-  //   pinned: 'left',
-  //   headerClass: ['actionColumnHeader']
-  // },
+  {
+    headerName: 'Actions',
+    headerTooltip: 'Add/Remove Ticker',
+    field: 'isTickerActive',
+    colId: 'actions',
+    filter: false,
+    cellClass: ['center-align-left'],
+    cellRenderer: 'AddRemoveIcon',
+    width: 50,
+    resizable: false,
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
+  },
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',
@@ -253,14 +253,7 @@ const WatchlistTable2 = props => {
     }
     let rowId = params.column.colId;
     if (rowId === 'actions') {
-      // let ticker = params.data.ticker;
-      if (params.data.isTickerActive) {
-        // changeTickerStatus(ticker, false);
-        // deleteTicker(ticker);
-      } else {
-        // changeTickerStatus(ticker, true);
-        // addTicker(ticker);
-      }
+      props.handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
     }
   };
   React.useEffect(() => {

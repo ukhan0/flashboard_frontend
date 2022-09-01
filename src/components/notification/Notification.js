@@ -77,6 +77,9 @@ const Notification = () => {
   };
   const getTitle = data => {
     let title = get(data, 'title', '');
+    if (title.toLocaleLowerCase() === 'FMP-Transcript'.toLocaleLowerCase()) {
+      title = 'Earning Calls';
+    }
     if (title.toLowerCase() === 'ThemeX Alert'.toLocaleLowerCase()) {
       title = `ThemeX (${get(data, 'topic', '')})`;
     }

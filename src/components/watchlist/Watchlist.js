@@ -365,7 +365,7 @@ const Watchlist = props => {
   );
 
   const deleteTicker = useCallback(
-    async ticker => {
+    async (ticker, isTable2 = false) => {
       const user = JSON.parse(localStorage.getItem('user'));
       try {
         const response = await axios.delete(
@@ -374,7 +374,9 @@ const Watchlist = props => {
         const responsePayload = get(response, 'data', null);
         if (responsePayload && !responsePayload.error) {
           let isTicker = false;
-          updateChacheData(ticker, isTicker);
+          if (!isTable2) {
+            updateChacheData(ticker, isTicker);
+          }
           setTopicDialogOpen(false);
           setSnackBar({ isSnackBar: true, message: 'Ticker removed from Watchlist', severity: 'info' });
         } else {
@@ -394,7 +396,7 @@ const Watchlist = props => {
   );
 
   const handleUpload = useCallback(
-    async ticker => {
+    async (ticker, isTable2 = false) => {
       const user = JSON.parse(localStorage.getItem('user'));
 
       try {
@@ -410,8 +412,10 @@ const Watchlist = props => {
           let isTicker = true;
           setTopicDialogOpen(false);
           setLoading(false);
-          updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
-          dispatch(setWatchlistSelectedSymbols([]));
+          if (!isTable2) {
+            updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
+            dispatch(setWatchlistSelectedSymbols([]));
+          }
           dispatch(setOverwriteCheckBox(false));
           setSnackBar({ isSnackBar: true, message: 'Ticker added in Watchlist', severity: 'success' });
         } else {
@@ -583,6 +587,23 @@ const Watchlist = props => {
   };
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
+  };
+
+  const handleWatchlistTickers = (ticker, isTickerAdded) => {
+    let index = gridData2.findIndex(d => d.ticker === ticker);
+    let data = cloneDeep(gridData2);
+    if (isTickerAdded) {
+      if (selectedUniverse === 'watchlist') {
+        data.splice(index, 1);
+      } else {
+        data[index].isTickerActive = false;
+      }
+      deleteTicker(ticker, true);
+    } else {
+      handleUpload(ticker, true);
+      data[index].isTickerActive = true;
+    }
+    setGridData2(data);
   };
   useEffect(() => {
     if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
@@ -767,7 +788,7 @@ const Watchlist = props => {
             storeFilteringState={onStoreFilteringState}
             columnsState={getColumnState()}
             filteringState={getFilteringState()}
-            onColumnClick={onColumnClick}
+            handleWatchlistTickers={handleWatchlistTickers}
           />
         </div>
       )}
