@@ -156,7 +156,7 @@ const TopicFilters = props => {
       </Grid>
       <Grid item xs={12}>
         <div style={{ marginTop: '10px' }}>
-          <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+          <Grid container direction="row" justify="flex-start" alignItems="center">
             <Grid item>
               <Button
                 disabled={isButtonActive}
@@ -184,7 +184,7 @@ const TopicFilters = props => {
         </div>
       </Grid>
       <Grid item xs={12}>
-        <Grid container direction="row" justifyContent="space-around" alignItems="center">
+        <Grid container direction="row" justify="space-around" alignItems="center">
           <Grid item>
             {isSearchError ? (
               <div style={{ marginBottom: '5px' }}>

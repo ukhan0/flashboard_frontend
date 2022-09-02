@@ -70,7 +70,7 @@ const TopicDialog = props => {
   let endDate = currentSearchDetail.endDate;
   let documents = currentSearchDetail.documentType ? currentSearchDetail.documentType : [];
   const dispatch = useDispatch();
-  const displayDateFormat = 'MMMM YYYY';
+  const displayDateFormat = 'MMM YYYY';
   const handleOpenTopicDialog = e => {
     preventParentClick(e);
     let currURL = window.location.href;

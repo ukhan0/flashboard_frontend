@@ -4,6 +4,7 @@ import { cloneDeep, get } from 'lodash';
 import axios from 'axios';
 import { Switch, Grid, Typography, makeStyles } from '@material-ui/core';
 import FileTypes from '../../config/watchlistFileTyes';
+import { renameDocumentTypesLabel } from '../topic/topicHelpers';
 
 const emailFileTypes = FileTypes.map(fileObj => {
   return {
@@ -151,7 +152,7 @@ const WatchlistFileTypeEmail = ({ data, updateData }) => {
                 className={`${classes.listItem} ${index % 2 === 0 ? classes.bgColor1 : classes.bgColor2}`}
                 onClick={e => onEmailStatusChange(e, !file.send_email, file.doc_type, index)}>
                 <Grid item xs={6}>
-                  <Typography>{file.doc_type}</Typography>
+                  <Typography>{renameDocumentTypesLabel(file.doc_type)}</Typography>
                 </Grid>
                 <Grid item container xs={6} justify="flex-end">
                   <Switch

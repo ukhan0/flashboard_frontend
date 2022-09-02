@@ -82,6 +82,18 @@ export const removeDuplicateSuggestions = suggestionsObj => {
   });
   return cleanSuggestionsObj;
 };
+
+export const renameDocumentTypesLabel = label => {
+  switch (label) {
+    case 'EC-FMP': {
+      return 'Earning call';
+    }
+    default: {
+      return `${label}`;
+    }
+  }
+}
+
 export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
     let selected = type.map(v => {

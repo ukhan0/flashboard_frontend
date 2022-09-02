@@ -8,12 +8,13 @@ import { setWatchlistFileType, setIsNewWatchlistDataAvailable } from '../../redu
 import {} from '../../reducers/Sentiment';
 import {} from '../Filings/FillingsHelper';
 import {} from '../watchlist/WatchlistHelpers';
+import { renameDocumentTypesLabel } from '../topic/topicHelpers';
 
 // import CloseIcon from '@material-ui/icons/Close';
 import FileTypes from '../../config/watchlistFileTyes';
 
 const createOptionLabel = option => {
-  return `${option.label}`;
+  return renameDocumentTypesLabel(option.label);
 };
 
 const WatchlistFileTypeDropDown = props => {
