@@ -39,12 +39,25 @@ const TopicDocumentTypeDropdown = props => {
       onChange={handleSelectionChange}
       input={<Input />}
       renderValue={selectedValues => (isAllSelected ? ['All'] : renameDocumentTypes(selectedValues))}
+      autoWidth={true}
+      MenuProps={{
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'left'
+        },
+        transformOrigin: {
+          vertical: 'top',
+          horizontal: 'left'
+        },
+        getContentAnchorEl: null
+      }}
       className={classes.multiSelect}>
       <MenuItem
         value="All"
         classes={{
           root: isAllSelected ? classes.selectedAll : ''
-        }}>
+        }}
+        style={{ width: '300px' }}>
         <Checkbox
           classes={{ indeterminate: classes.indeterminateColor }}
           checked={isAllSelected}
