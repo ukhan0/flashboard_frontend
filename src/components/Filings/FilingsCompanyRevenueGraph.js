@@ -98,7 +98,9 @@ const FilingsCompanyRevenueGraph = props => {
         }
     }
   };
-
+  const getShowingCompany = data => {
+    return data.length > 10 ? 10 : data.length / 2 - 1;
+  };
   const options = {
     chart: {
       type: 'columnrange',
@@ -125,7 +127,8 @@ const FilingsCompanyRevenueGraph = props => {
     xAxis: {
       type: 'category',
       min: 0,
-      max: 10,
+      max: getShowingCompany(get(entitiesData, selectedEntityType, [])),
+
       scrollbar: {
         enabled: true
       },
@@ -192,7 +195,7 @@ const FilingsCompanyRevenueGraph = props => {
     series: [
       {
         name: 'Mentions',
-        data: get(entitiesData, selectedEntityType, []),
+        data: get(entitiesData, selectedEntityType, []).filter(e => e),
         dataLabels: {
           enabled: true
         }
