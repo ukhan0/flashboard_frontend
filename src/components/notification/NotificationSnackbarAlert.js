@@ -30,8 +30,6 @@ const NewNotificationSnackbarAlert = () => {
       const unreadNoti = notifications.filter(notification => !notification.is_read);
       if (unreadNoti.length > 0) {
         setUnreadNotifications(unreadNoti);
-        let audio = new Audio(notificationTune);
-        audio.play();
       } else {
         setUnreadNotifications([]);
       }
@@ -42,23 +40,27 @@ const NewNotificationSnackbarAlert = () => {
     <>
       {unreadNotifications.map((unreadNotification, index) => {
         return (
-          <Snackbar
-            key={index}
-            style={{ marginBottom: index * 55 }}
-            open={true}
-            autoHideDuration={5000}
-            onClose={(event, reason) => {
-              autoHideHandler(index, reason);
-            }}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-            <Alert
-              onClose={() => {
-                handleClose(index);
+          <div key={index}>
+            <audio autoPlay>
+              <source src={notificationTune} type="audio/mp3" />
+            </audio>
+            <Snackbar
+              style={{ marginBottom: index * 55 }}
+              open={true}
+              autoHideDuration={5000}
+              onClose={(event, reason) => {
+                autoHideHandler(index, reason);
               }}
-              severity={'info'}>
-              {`${unreadNotification.title} (${unreadNotification.description})`}
-            </Alert>
-          </Snackbar>
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <Alert
+                onClose={() => {
+                  handleClose(index);
+                }}
+                severity={'info'}>
+                {`${unreadNotification.title} (${unreadNotification.description})`}
+              </Alert>
+            </Snackbar>
+          </div>
         );
       })}
     </>
