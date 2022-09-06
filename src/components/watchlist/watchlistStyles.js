@@ -37,5 +37,8 @@ export default makeStyles(() => ({
     cursor: 'pointer',
     backgroundColor: 'lightgray',
     padding: '8px 0px'
+  },
+  root: {
+    zIndex: '0 !important'
   }
 }));

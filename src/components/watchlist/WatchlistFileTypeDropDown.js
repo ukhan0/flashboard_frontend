@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useTransition, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField } from '@material-ui/core';
+import { FormControl, TextField, Popper } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { setWatchlistFileType, setIsNewWatchlistDataAvailable } from '../../reducers/Watchlist';
@@ -26,6 +26,10 @@ const WatchlistFileTypeDropDown = props => {
   const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(
     state => state.Watchlist
   );
+
+  const CustomPopper = (props) => {
+    return <Popper {...props} className={classes.root} placement="bottom" />;
+  };
 
   const getFileTypes = useCallback(() => {
     let data =
@@ -88,6 +92,7 @@ const WatchlistFileTypeDropDown = props => {
         // closeIcon={<CloseIcon onClick={() => {}} fontSize="small" />}
         closeIcon={false}
         getOptionLabel={option => createOptionLabel(option)}
+        PopperComponent={CustomPopper}
         renderInput={params => (
           <TextField
             onBlur={() => {}}
