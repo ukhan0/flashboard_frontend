@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import io from 'socket.io-client';
 import SocketService from './socketService';
+import { orderBy } from 'lodash';
 // import dummyData from './dummyData';
 
 const Cache = () => {
@@ -84,8 +85,8 @@ const Cache = () => {
         .get(`${apiUrl}`)
         .then(response => {
           let data = get(response, 'data.data', []);
-          if (data) {
-            dispatch(setNotificationData(data));
+          if (data.length) {
+            dispatch(setNotificationData(orderBy(data, ['email_time'], ['desc'])));
           } else {
             dispatch(setNotificationData([]));
           }

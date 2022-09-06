@@ -13,7 +13,9 @@ import { setSearchId } from '../../reducers/Topic';
 import { setIsNewEmailNotification } from '../../reducers/User';
 import { useDispatch } from 'react-redux';
 import SocketService from '../../socketService';
-import { get, orderBy } from 'lodash';
+import NewNotificationSnackbarAlert from './NotificationSnackbarAlert';
+import { get } from 'lodash';
+
 const Notification = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -124,7 +126,7 @@ const Notification = () => {
               </div>
               <div className="height-280">
                 <PerfectScrollbar>
-                  {orderBy(notifications, ['email_time'], ['desc']).map((data, index) => (
+                  {notifications.map((data, index) => (
                     <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
                       <div
                         className="timeline-item"
@@ -150,6 +152,7 @@ const Notification = () => {
           </Popover>
         </Box>
       </Hidden>
+      <NewNotificationSnackbarAlert />
     </Fragment>
   );
 };

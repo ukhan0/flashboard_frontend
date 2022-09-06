@@ -775,7 +775,7 @@ const Watchlist = props => {
                 onClick={() => {
                   setIsAgGridEmailAlerts(true);
                 }}>
-                Email alerts
+                Email Alerts
               </div>
             </div>
           </div>
