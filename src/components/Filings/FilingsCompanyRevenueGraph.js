@@ -23,6 +23,8 @@ const FilingsCompanyRevenueGraph = props => {
   const { filingsRevenueData } = useSelector(state => state.Filings);
   const [entitiesData, setEntitiesData] = useState([]);
   const { selectedItem } = useSelector(state => state.Watchlist);
+  const [reBuildGraph, setReBuildGraph] = useState(false);
+
   const data = useCallback(() => {
     let data = {};
     let caculateStrength = filingsRevenueData
@@ -67,6 +69,9 @@ const FilingsCompanyRevenueGraph = props => {
   }, [filingsRevenueData, selectedItem]);
 
   const handleEntitiesType = type => {
+    if (selectedEntityType !== type) {
+      setReBuildGraph(true);
+    }
     setSelectedEntityType(type);
   };
   
@@ -223,6 +228,13 @@ const FilingsCompanyRevenueGraph = props => {
       }
     ]
   };
+
+  useEffect(() => {
+    if (reBuildGraph) {
+      setReBuildGraph(false);
+    }
+  }, [reBuildGraph]);
+
   const Buttons = () => {
     return (
       <ButtonGroup color="primary">
@@ -262,7 +274,7 @@ const FilingsCompanyRevenueGraph = props => {
         <Grid container spacing={4}>
           <Grid item xs={12} md={12}>
             <div style={{ height: '100%', width: '100%' }}>
-              <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
+              {!reBuildGraph ? <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} /> : <></>}
             </div>
           </Grid>
         </Grid>
