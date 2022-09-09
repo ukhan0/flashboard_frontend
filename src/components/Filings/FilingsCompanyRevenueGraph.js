@@ -13,11 +13,13 @@ import { Grid, Card, Divider, ButtonGroup, Button } from '@material-ui/core';
 import { orderBy, get } from 'lodash';
 import { entityTypes } from '../../config/filterTypes';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import CustomEvents from "highcharts-custom-events";
+CustomEvents(Highcharts);
 
 const FilingsCompanyRevenueGraph = props => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [selectedEntityType, setSelectedEntityType] = useState('emerging_entities');
+  const [selectedEntityType, setSelectedEntityType] = useState(null);
   const { filingsRevenueData } = useSelector(state => state.Filings);
   const [entitiesData, setEntitiesData] = useState([]);
   const { selectedItem } = useSelector(state => state.Watchlist);
@@ -67,6 +69,11 @@ const FilingsCompanyRevenueGraph = props => {
   const handleEntitiesType = type => {
     setSelectedEntityType(type);
   };
+  
+  useEffect(() => {
+    setSelectedEntityType('emerging_entities');
+  }, []);
+  
   useEffect(() => {
     setEntitiesData(data());
   }, [data]);
@@ -132,7 +139,21 @@ const FilingsCompanyRevenueGraph = props => {
       scrollbar: {
         enabled: true
       },
-      tickLength: 0
+      tickLength: 0,
+      labels: {
+        style: { cursor : 'pointer' },
+        events: {
+          click: function() {
+            if (this) {
+              dispatch(setIsFromSideBar(false));
+              dispatch(setFillingsSearchText(this.value));
+              dispatch(setIsFromThemex(false));
+              setId(selectedItem, this, selectedEntityType);
+              history.push('/sentiment');
+            }
+          }
+        }
+      }
     },
     credits: {
       enabled: false
