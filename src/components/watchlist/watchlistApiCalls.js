@@ -53,11 +53,12 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
     rawData = rawData.map(d => {
       return {
         ...d,
+        companyName: get(d, 'company_name', null),
         documentType: get(d, 'document_type', null),
         sentiment: round(get(d, 'sentiment', null), 2),
         // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
         docDate: get(d, 'document_date', null),
-        wordCount: round(get(d, 'word_count', null), 2),
+        wordCount: round(get(d, 'word_count', null), 2)
         // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });

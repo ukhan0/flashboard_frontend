@@ -120,7 +120,7 @@ const WatchlistFilters = props => {
 
   useEffect(() => {
     const setting = {
-      selectedFileType: getSelectedFileType(selectedType, selectedFileType),
+      selectedFileType: selectedFileType,
       selectedType: selectedType,
       selectedUniverse: selectedUniverse,
       selectedMetric: selectedMetric

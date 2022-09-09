@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get, forEach } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
@@ -16,7 +16,8 @@ import {
   dateComparator,
   getCellStyle
 } from './WatchlistTableHelpers';
-
+import { renameDocumentTypes } from '../topic/topicHelpers';
+import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -28,12 +29,14 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
-import { checkIsFilterActive, getWatchlistType } from './WatchlistHelpers';
+import { checkIsFilterActive, getWatchlistType, isBigAgGrid } from './WatchlistHelpers';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import {
   setIsFilterActive,
   setWatchlistSearchText,
   setSelectedTickerSymbol,
-  setIsTickerSelected
+  setIsTickerSelected,
+  setSelectedWatchlist
 } from '../../reducers/Watchlist';
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
@@ -525,6 +528,109 @@ const colDefs = [
     }
   }
 ];
+const colDefs1 = [
+  {
+    headerName: 'Actions',
+    headerTooltip: 'Add/Remove Ticker',
+    field: 'isTickerActive',
+    colId: 'actions',
+    filter: false,
+    cellClass: ['center-align-left'],
+    cellRenderer: 'AddRemoveIcon',
+    width: 50,
+    resizable: false,
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
+  },
+  {
+    headerName: 'Ticker',
+    headerTooltip: 'Ticker',
+    field: 'ticker',
+    colId: 'ticker',
+
+    minWidth: 150,
+    cellClass: ['center-align-text'],
+    filter: 'agTextColumnFilter',
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    cellRenderer: 'TickerLogo'
+    // hide: homePageSelectedSearchIndex.id === 3 ? true : false
+  },
+  {
+    headerName: 'Company Name',
+    headerTooltip: 'Company Name',
+    field: 'companyName',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'companyName',
+    minWidth: 150
+  },
+  {
+    headerName: 'Document Type',
+    field: 'documentType',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'document_type',
+    minWidth: 100,
+    valueFormatter: params => renameDocumentTypes(params.data.document_type)
+  },
+
+  {
+    headerName: 'Document Date',
+    headerTooltip: 'document_date',
+    field: 'document_date',
+    colId: 'document_date',
+    sortable: true,
+    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
+    valueFormatter: params => dateFormaterMoment(params.value),
+    filter: 'agDateColumnFilter',
+    cellClass: ['center-align-text'],
+    minWidth: 50,
+    width: 120,
+    sortingOrder: ['desc', 'asc']
+  },
+  {
+    headerName: 'Aggregate Sentiment',
+    field: 'sentiment',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'agrregate_sentiment',
+    type: 'numericColumn',
+    filter: 'agNumberColumnFilter',
+    minWidth: 100,
+    sortingOrder: ['desc', 'asc'],
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.sentiment', 0);
+      return sentimentValue;
+    }
+  },
+  {
+    headerName: 'Word Count',
+    field: 'wordCount',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    sortingOrder: ['desc', 'asc'],
+    flex: 1,
+    colId: 'word_count',
+    type: 'numericColumn',
+    filter: 'agNumberColumnFilter',
+    minWidth: 100,
+    valueGetter: params => {
+      const sentimentValue = get(params, 'data.wordCount', 0);
+      return sentimentValue;
+    }
+  }
+];
 const tableFooter = {
   border: '1px solid #d1d1d1',
   paddingRight: '1.7%',
@@ -535,13 +641,28 @@ const tableFooter = {
 };
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const { searchText, selectedMetric, isTickerSelected, selectedType } = useSelector(state => state.Watchlist);
+  const {
+    searchText,
+    selectedMetric,
+    isTickerSelected,
+    selectedType,
+    selectedFileType,
+    completeCompaniesDataIndexs,
+    completeCompaniesDataGlobalIndexs,
+    completeCompaniesData,
+    completeCompaniesDataGlobal
+  } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
   const [isFilterData, setIsFilterData] = React.useState(false);
   const [isClear, setIsClear] = React.useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   let isTicker = React.useRef(false);
+  const [columnDefination, setColumnDefination] = useState([]);
   const [rowCount, setRowCount] = React.useState(0);
+
+  useEffect(() => {
+    isBigAgGrid(selectedFileType) ? setColumnDefination(colDefs) : setColumnDefination(colDefs1);
+  }, [selectedFileType]);
   //this function can be used to select first row on load
   const selectTableRow = (data, id, isAutoSelection, rowNode) => {
     let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
@@ -558,6 +679,7 @@ const WatchlistTable = props => {
 
   const storeColumnsStateComman = params => {
     const columnState = params.columnApi.getColumnState();
+
     props.storeColumnsState(columnState);
     var padding = 40;
     var height = headerHeightGetter() + padding;
@@ -599,17 +721,78 @@ const WatchlistTable = props => {
     }
     gridApi.current.onFilterChanged();
   }, [isTickerSelected, searchText]);
-
+  const handleColumnHideForSedar = useCallback(
+    gridApiLocal => {
+      let columnDefs = columnDefination;
+      columnDefs.forEach(function(colDef) {
+        if (colDef.field === 'mktcap' || colDef.field === 'adv') {
+          if (getWatchlistType() === 'global') {
+            colDef.hide = true;
+          } else {
+            colDef.hide = false;
+          }
+        }
+      });
+      gridApiLocal.setColumnDefs(columnDefs);
+    },
+    [columnDefination]
+  );
   useEffect(() => {
     if (!gridApi.current) {
       return;
     }
     handleColumnHideForSedar(gridApi.current);
-  }, [selectedType]);
-
+  }, [selectedType, handleColumnHideForSedar]);
+  const setRecentOldId = (item, company, documentType = '10-K') => {
+    if (documentType === '10-K') {
+      item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
+      item.oldId10k = company.oldId10k ? company.oldId10k : company.oldId10q;
+      item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
+      item.oldId10q = company.oldId10q ? company.oldId10q : company.oldId10k;
+      item.oldId = company.oldId10k ? company.oldId10k : company.oldId10q;
+      // item.recentId = company.recentId10k ? company.recentId10k : company.recentId10q;
+      item.comparisonType = '10-K';
+    } else {
+      item.recentId10k = company.recentId10k ? company.recentId10k : company.recentId10q;
+      item.oldId10k = company.oldId10k ? company.oldId10k : company.oldId10q;
+      item.recentId10q = company.recentId10q ? company.recentId10q : company.recentId10k;
+      item.oldId10q = company.oldId10q ? company.oldId10q : company.oldId10k;
+      item.oldId = company.oldId10q ? company.oldId10q : company.oldId10k;
+      // item.recentId = company.recentId10q ? company.recentId10q : company.recentId10k;
+      item.comparisonType = '10-Q';
+    }
+    return item;
+  };
   const cellClicked = async params => {
     if (params.data) {
+      let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
       let rowId = params.column.colId;
+
+      if (!isBigAgGrid(selectedFileType)) {
+        if (rowId === 'actions') {
+          props.handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
+          return;
+        }
+        let company = getCompanyByIndex(
+          completeCompaniesDataIndexs,
+          completeCompaniesDataGlobalIndexs,
+          completeCompaniesData,
+          completeCompaniesDataGlobal,
+          params.data.ticker
+        );
+        if (company) {
+          if (params.data.documentType === '10-K') {
+            item = setRecentOldId(item, company, '10-K');
+          } else if (params.data.documentType === '10-Q') {
+            item = setRecentOldId(item, company, '10-Q');
+          } else {
+            item = setRecentOldId(item, company, '10-K');
+          }
+        }
+        dispatch(setSelectedWatchlist(item));
+        return;
+      }
+
       selectTableRow(params.data, rowId, false, null);
     }
   };
@@ -632,19 +815,6 @@ const WatchlistTable = props => {
     const filteringModel = params.api.getFilterModel();
     props.storeFilteringState(filteringModel);
     dispatch(setIsFilterActive(checkIsFilterActive()));
-  };
-  const handleColumnHideForSedar = gridApiLocal => {
-    const columnDefs = colDefs;
-    columnDefs.forEach(function(colDef) {
-      if (colDef.field === 'mktcap' || colDef.field === 'adv') {
-        if (getWatchlistType() === 'global') {
-          colDef.hide = true;
-        } else {
-          colDef.hide = false;
-        }
-      }
-    });
-    gridApiLocal.setColumnDefs(columnDefs);
   };
 
   const handleGridReady = params => {
@@ -718,7 +888,8 @@ const WatchlistTable = props => {
     if (!gridApi.current) {
       return;
     }
-    if (props.data.length > 0) {
+
+    if (get(props, 'data', [])) {
       setTimeout(() => {
         let data = gridApi.current.rowModel?.rowsToDisplay;
         setRowCount(data.length);
@@ -735,7 +906,7 @@ const WatchlistTable = props => {
         getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
         // immutableData={true}
         quickFilterText={searchText}
-        columnDefs={colDefs}
+        columnDefs={columnDefination}
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}
         tooltipShowDelay={0}

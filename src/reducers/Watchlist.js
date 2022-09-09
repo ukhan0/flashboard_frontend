@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 export const SET_FILE_TYPE = 'WATCHLIST/SET_FILE_TYPE';
 export const SET_TYPE = 'WATCHLIST/SET_TYPE';
 export const SET_UNIVERSE = 'WATCHLIST/SET_UNIVERSE';
@@ -199,9 +199,7 @@ const getDefaultState = () => {
       : 'domestic'
     : 'domestic';
   const selectedFileTypeWatchList = !isEmpty(watchlistSetting)
-    ? selectedTypeWatchList === 'domestic'
-      ? '10-K'
-      : 'AR'
+    ? get(watchlistSetting, 'selectedFileType', '10-K')
     : selectedTypeWatchList === 'domestic'
     ? '10-K'
     : 'AR';
@@ -242,7 +240,7 @@ const getDefaultState = () => {
     isFilterUpdate: false,
     userWatchlist: [],
     completeCompaniesDataIndexs: {},
-    completeCompaniesDataGlobalIndexs: {},
+    completeCompaniesDataGlobalIndexs: {}
   };
 };
 

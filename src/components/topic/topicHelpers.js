@@ -92,7 +92,7 @@ export const renameDocumentTypesLabel = label => {
       return `${label}`;
     }
   }
-}
+};
 
 export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
@@ -112,14 +112,18 @@ export const renameDocumentTypes = type => {
     }
     return selected.join(', ');
   }
-
-  if (type.toLowerCase() === 'fmp-transcript') {
-    type = 'Earning Call';
-  } else if (type.toLowerCase() === 'fin supp') {
-    type = 'FS';
-  } else if (type.toLowerCase() === 'other financials') {
-    type = 'OF';
+  if (type) {
+    if (type.toLowerCase() === 'fmp-transcript') {
+      type = 'Earning Call';
+    } else if (type.toLowerCase() === 'fin supp') {
+      type = 'FS';
+    } else if (type.toLowerCase() === 'other financials') {
+      type = 'OF';
+    }
+  } else {
+    type = '';
   }
+
   return type;
 };
 

@@ -11,7 +11,8 @@ import {
   storeColumnsState,
   storeFilteringState,
   getColumnState,
-  getFilteringState
+  getFilteringState,
+  isBigAgGrid
 } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
@@ -45,7 +46,6 @@ import Snackbar from '../Snackbar';
 // components
 import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
-import WatchlistTable2 from './WatchlistTable2';
 // styles
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
@@ -159,7 +159,6 @@ const Watchlist = props => {
         };
       });
     } catch (e) {
-      console.log(e);
       fileTypesEmailStatus = [];
     } finally {
       setFileTypesEmailAlertStatus(fileTypesEmailStatus);
@@ -731,67 +730,53 @@ const Watchlist = props => {
           </Grid>
         </Grid>
       </Grid>
-      {selectedFileType === '10-Q' || selectedFileType === '10-K' ? (
-        <>
-          <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
-          <div
-            className={classes.watchlistTableContainer}
-            style={{ display: 'flex', height: window.innerHeight - 160 }}>
-            <WatchlistTable
-              data={gridData}
-              storeColumnsState={onStoreColumnsState}
-              storeFilteringState={onStoreFilteringState}
-              columnsState={getColumnState()}
-              filteringState={getFilteringState()}
-              onColumnClick={onColumnClick}
-            />
-            <div style={{ width: 20, marginTop: 5 }}>
-              <div
-                className={classes.agButtons}
-                onClick={() => {
-                  handleOpenAgGridSideBar(false);
-                }}>
-                Columns
-              </div>
-              <br />
-              <div
-                className={classes.agButtons}
-                onClick={() => {
-                  handleOpenAgGridSideBar(true);
-                }}>
-                Actions
-              </div>
-              <div
-                className={classes.agButtons}
-                style={{ marginTop: '20px' }}
-                onClick={() => {
-                  handleOpenAgGridFilterDialog();
-                }}>
-                Screens
-              </div>
-              <div
-                className={classes.agButtons}
-                style={{ marginTop: '20px' }}
-                onClick={() => {
-                  setIsAgGridEmailAlerts(true);
-                }}>
-                Email Alerts
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
+      <>
+        <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
-          <WatchlistTable2
-            data={gridData2}
+          <WatchlistTable
+            data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
             storeColumnsState={onStoreColumnsState}
             storeFilteringState={onStoreFilteringState}
             columnsState={getColumnState()}
             filteringState={getFilteringState()}
+            onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}
           />
+          <div style={{ width: 20, marginTop: 5 }}>
+            <div
+              className={classes.agButtons}
+              onClick={() => {
+                handleOpenAgGridSideBar(false);
+              }}>
+              Columns
+            </div>
+            <br />
+            <div
+              className={classes.agButtons}
+              onClick={() => {
+                handleOpenAgGridSideBar(true);
+              }}>
+              Actions
+            </div>
+            <div
+              className={classes.agButtons}
+              style={{ marginTop: '20px' }}
+              onClick={() => {
+                handleOpenAgGridFilterDialog();
+              }}>
+              Screens
+            </div>
+            <div
+              className={classes.agButtons}
+              style={{ marginTop: '20px' }}
+              onClick={() => {
+                setIsAgGridEmailAlerts(true);
+              }}>
+              Email Alerts
+            </div>
+          </div>
         </div>
-      )}
+      </>
 
       <WatchlistTopicDialog
         open={topicDialogOpen}

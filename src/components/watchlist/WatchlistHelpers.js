@@ -218,37 +218,13 @@ export const getCompanyByIndex = (
     }
   }
 
-  // if (isCompleteCompaniesDataGlobalLoaded || isCompleteCompaniesDataLoaded) {
-  //   if (isCompleteCompaniesDataLoaded) {
-  //     let index = completeCompaniesDataIndexs[ticker];
-  //     if (index) {
-  //       data = completeCompaniesData[index.index];
-  //     } else {
-  //       if (isCompleteCompaniesDataGlobalLoaded) {
-  //         let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
-  //         if (globalIndex) {
-  //           data = completeCompaniesDataGlobal[globalIndex.index];
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //     if (isCompleteCompaniesDataGlobalLoaded) {
-  //       let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
-  //       if (globalIndex) {
-  //         data = completeCompaniesDataGlobal[globalIndex.index];
-  //       } else {
-  //         if (isCompleteCompaniesDataLoaded) {
-  //           let index = completeCompaniesDataIndexs[ticker];
-  //           if (index) {
-  //             data = completeCompaniesData[index.index];
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   if (data) {
-  //     company = formatComapnyData(data);
-  //   }
-  // }
   return company;
+};
+
+export const isBigAgGrid = selectedFileType => {
+  let status = true;
+  if (!(selectedFileType === '10-K' || selectedFileType === '10-Q')) {
+    status = false;
+  }
+  return status;
 };

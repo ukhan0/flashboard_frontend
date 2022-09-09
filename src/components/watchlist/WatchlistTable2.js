@@ -80,12 +80,12 @@ const colDefs = [
   {
     headerName: 'Company Name',
     headerTooltip: 'Company Name',
-    field: 'company_name',
+    field: 'companyName',
     menuTabs: false,
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'company_name',
+    colId: 'companyName',
     minWidth: 150
   },
   {
