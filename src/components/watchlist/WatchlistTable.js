@@ -790,6 +790,8 @@ const WatchlistTable = props => {
           }
         }
         dispatch(setSelectedWatchlist(item));
+        dispatch(setSidebarToggle(false));
+        dispatch(setSidebarToggleMobile(false));
         return;
       }
 
