@@ -116,16 +116,33 @@ const Watchlist = props => {
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
   const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
-
+  const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
+  const [col, setCol] = React.useState(null);
+  const [currentCol, setCurrentCol] = React.useState([]);
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
   let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
-
+  useEffect(() => {
+    const stateKey = 'watchlist::state';
+    setTimeout(() => {
+      const currentColumnsState = localStorage.getItem(stateKey);
+      let columns = JSON.parse(currentColumnsState);
+      if (columns) {
+        let displayedColumnsState = columns.filter(v => !v.hide).map(v => v.colId);
+        setDispalyedColumns(displayedColumnsState);
+      }
+    }, [100]);
+    setCurrentCol(WatchlistService.getAgGridAColunms().columns);
+  }, [col, isAgGridSideBarOpen]);
   useEffect(() => {
     completeCompaniesDatalocal.current = completeCompaniesData;
     completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
   }, [completeCompaniesData, completeCompaniesDataGlobal]);
-
+  const handleColumns = (e, status) => {
+    const coldId = e.target.value;
+    setCol(`${coldId}${status}`);
+    WatchlistService.mangeAgGridColunms(coldId, status);
+  };
   const syncCompleteDataOnPage = useCallback(
     newData => {
       const rawCompleteData = cloneDeep(
@@ -631,8 +648,12 @@ const Watchlist = props => {
       {WatchlistService.getAgGridAColunms().columns.length > 0 ? (
         <>
           <WatchlistCustomColumnsSideBar
+            handleColumns={handleColumns}
+            dispalyedColumns={dispalyedColumns}
             storeColumnsState={onStoreColumnsState}
+            currentCol={currentCol}
             open={isAgGridSideBarOpen}
+            col={col}
             handleCloseAgGridSideBar={handleCloseAgGridSideBar}
             isAgGridActions={isAgGridActions}
             title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}

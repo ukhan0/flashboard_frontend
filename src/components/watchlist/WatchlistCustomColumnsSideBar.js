@@ -27,26 +27,12 @@ const useStyles = makeStyles(theme => ({
 
 function WatchlistCustomColumnsSideBar(props) {
   const classes = useStyles();
-  const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
-  const [col, setCol] = React.useState(null);
+
   const handleColumns = (e, status) => {
-    const coldId = e.target.value;
-    setCol(`${coldId}${status}`);
-    WatchlistService.mangeAgGridColunms(coldId, status);
+    props.handleColumns(e, status);
   };
 
-  React.useEffect(() => {
-    const stateKey = 'watchlist::state';
-    setTimeout(() => {
-      const currentColumnsState = localStorage.getItem(stateKey);
-      let columns = JSON.parse(currentColumnsState);
-      if (columns)
-      {
-      let displayedColumnsState = columns.filter(v => !v.hide).map(v => v.colId);
-      setDispalyedColumns(displayedColumnsState);
-      }
-    }, [100]);
-  }, [col]);
+ 
 
   return (
     <Drawer
@@ -74,19 +60,19 @@ function WatchlistCustomColumnsSideBar(props) {
         ) : (
           <FormControl component="fieldset" className={classes.formControl}>
             <FormGroup className={classes.formGroup}>
-              {WatchlistService.getAgGridAColunms().columns.map(item => {
+              {props.currentCol.map(item => {
                 return !item.hide ? (
-                <FormControlLabel
-                  control={<Checkbox checked={dispalyedColumns.indexOf(item.colId) > -1} />}
-                  name={item.colId}
-                  label={item.headerName}
-                  key={item.colId}
-                  value={item.colId}
-                  onChange={(e, v) => {
-                    handleColumns(e, v);
-                  }}
-                />
-              ) : null
+                  <FormControlLabel
+                    control={<Checkbox checked={props.dispalyedColumns.indexOf(item.colId) > -1} />}
+                    name={item.colId}
+                    label={item.headerName}
+                    key={item.colId}
+                    value={item.colId}
+                    onChange={(e, v) => {
+                      handleColumns(e, v);
+                    }}
+                  />
+                ) : null;
               })}
             </FormGroup>
           </FormControl>
