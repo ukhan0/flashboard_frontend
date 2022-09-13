@@ -23,11 +23,9 @@ const WatchlistFileTypeDropDown = props => {
   const [isPending, startTransition] = useTransition();
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const [data, setData] = useState([]);
-  const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(
-    state => state.Watchlist
-  );
+  const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(state => state.Watchlist);
 
-  const CustomPopper = (props) => {
+  const CustomPopper = props => {
     return <Popper {...props} className={classes.root} placement="bottom" />;
   };
 
@@ -46,11 +44,10 @@ const WatchlistFileTypeDropDown = props => {
       return;
     }
     const searchabletext = text.toLowerCase();
-    const filteredWatchlist = data.filter(
-      c =>
-        get(c, 'label', '')
-          .toLowerCase()
-          .includes(searchabletext)
+    const filteredWatchlist = data.filter(c =>
+      get(c, 'label', '')
+        .toLowerCase()
+        .includes(searchabletext)
     );
     startTransition(() => {
       setAvailableSymbols(filteredWatchlist);
@@ -98,7 +95,7 @@ const WatchlistFileTypeDropDown = props => {
             onBlur={() => {}}
             {...params}
             variant="outlined"
-            placeholder="Type Company Name or Symbol"
+            placeholder="Type Document Name or  Symbol"
             onChange={e => {
               handleSearchTextChange(e.target.value);
             }}
