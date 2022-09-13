@@ -102,12 +102,6 @@ const TopicSearchResults = () => {
     ignoreSearchTextArray,
     searchText
   } = useSelector(state => state.Topic);
-  const {
-    completeCompaniesDataIndexs,
-    completeCompaniesDataGlobalIndexs,
-    completeCompaniesData,
-    completeCompaniesDataGlobal
-  } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -190,7 +184,7 @@ const TopicSearchResults = () => {
     }
   }, [selectedCompanyName, summaryByCompany]);
 
-  const goToSentimentScreen = (companyDocumentResultData, result, indexx) => {
+  const goToSentimentScreen = async (companyDocumentResultData, result, indexx) => {
     dispatch(setIsFromfilling(false));
     const actualTitle = result.title.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
@@ -207,13 +201,7 @@ const TopicSearchResults = () => {
     const documentDate = get(companyDocumentResultData, 'document_date', null);
     const documentId = get(companyDocumentResultData, 'document_id', null);
     const ticker = get(companyDocumentResultData, 'ticker', null);
-    let company = getCompanyByIndex(
-      completeCompaniesDataIndexs,
-      completeCompaniesDataGlobalIndexs,
-      completeCompaniesData,
-      completeCompaniesDataGlobal,
-      ticker
-    );
+    let company = await getCompanyByIndex(ticker);
 
     const recentId = fileId.toString().replace('9000', '');
     if (company) {

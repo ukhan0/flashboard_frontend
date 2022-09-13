@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Card, ButtonGroup, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setIsFromThemex } from '../../reducers/Topic';
@@ -37,22 +37,10 @@ export default function HomePageSmaLime1(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tableType, setTableType] = React.useState(tableTypes[0]);
-  const {
-    completeCompaniesData,
-    completeCompaniesDataGlobal,
-    completeCompaniesDataIndexs,
-    completeCompaniesDataGlobalIndexs
-  } = useSelector(state => state.Watchlist);
 
   const setCompany = useCallback(
-    ticker => {
-      let company = getCompanyByIndex(
-        completeCompaniesDataIndexs,
-        completeCompaniesDataGlobalIndexs,
-        completeCompaniesData,
-        completeCompaniesDataGlobal,
-        ticker
-      );
+    async ticker => {
+      let company = await getCompanyByIndex(ticker);
 
       if (company) {
         let last10k = new Date(company['last10k']);
@@ -64,13 +52,7 @@ export default function HomePageSmaLime1(props) {
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
     },
-    [
-      completeCompaniesDataIndexs,
-      completeCompaniesDataGlobalIndexs,
-      completeCompaniesData,
-      completeCompaniesDataGlobal,
-      dispatch
-    ]
+    [dispatch]
   );
 
   React.useEffect(() => {

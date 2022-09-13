@@ -226,24 +226,18 @@ const WatchlistTable2 = props => {
     }
     return item;
   };
-  const cellClicked = params => {
+  const cellClicked = async params => {
     if (params.data) {
       let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
 
-      let company = getCompanyByIndex(
-        completeCompaniesDataIndexs,
-        completeCompaniesDataGlobalIndexs,
-        completeCompaniesData,
-        completeCompaniesDataGlobal,
-        params.data.ticker
-      );
+      let company = await getCompanyByIndex(params.data.ticker);
       if (company) {
         if (params.data.documentType === '10-K') {
-          item = setRecentOldId(item, company, '10-K');
+          item = await setRecentOldId(item, company, '10-K');
         } else if (params.data.documentType === '10-Q') {
-          item = setRecentOldId(item, company, '10-Q');
+          item = await setRecentOldId(item, company, '10-Q');
         } else {
-          item = setRecentOldId(item, company, '10-K');
+          item = await setRecentOldId(item, company, '10-K');
         }
       }
       dispatch(setSelectedWatchlist(item));

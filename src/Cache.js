@@ -7,9 +7,7 @@ import {
   setCompleteCompaniesData,
   setCompleteDataLoadedGlobalFlag,
   setCompleteGlobalCompaniesData,
-  setNotificationData,
-  setCompleteCompaniesDataIndexs,
-  setCompleteCompaniesDataGlobalIndex
+  setNotificationData
 } from './reducers/Watchlist';
 import { setIsNewEmailNotification } from './reducers/User';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,65 +15,60 @@ import moment from 'moment';
 import io from 'socket.io-client';
 import SocketService from './socketService';
 import { orderBy } from 'lodash';
-// import dummyData from './dummyData';
+import Localbase from 'localbase';
 
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
   const dispatch = useDispatch();
 
-  const cacheData = useCallback(() => {
-    const lastTimeDataUpdate = moment().format('hh:mm:ss');
-    const apiUrl = `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=domestic&user_id=${user.id}&subject`;
-    axios
-      .get(`${apiUrl}=all`)
-      .then(response => {
-        let data = get(response, 'data.data.content', []);
-        let indexs = {};
-        let modifiedData = [];
-
-        data.forEach((a, index) => {
-          modifiedData.push({ ...a, type: 'domestic' });
-          indexs[a.ticker] = { index: index };
-        });
-
-        dispatch(setCompleteCompaniesDataIndexs(indexs));
-        dispatch(setCompleteCompaniesData(modifiedData));
-        dispatch(setCompleteDataLoadedFlag(true));
-        localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);
-      })
-      .catch(function(error) {
-        // handle error
-        console.log(error);
-      });
-
-    // dispatch(setCompleteCompaniesData(JSON.parse(dummyData)));
-    // console.log(JSON.parse(dummyData));
-    // dispatch(setCompleteDataLoadedFlag(true));
+  const cacheData = useCallback(async () => {
+    try {
+      let indexDB = new Localbase('db');
+      let data = [];
+      const lastTimeDataUpdate = moment().format('hh:mm:ss');
+      const previousStoredData = await indexDB.collection(config.indexDbDomesticCompniesData).get();
+      if (previousStoredData && previousStoredData.length > 0) {
+        data = previousStoredData;
+      } else {
+        const response = await axios.get(
+          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=domestic&user_id=${user.id}&subject=all`
+        );
+        data = get(response, 'data.data.content', []);
+        if (data && data.length > 0) {
+          await indexDB.collection(config.indexDbDomesticCompniesData).set(data);
+        }
+      }
+      dispatch(setCompleteCompaniesData(data));
+      localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(setCompleteDataLoadedFlag(true));
   }, [dispatch, user]);
 
-  const cacheDataGlobal = useCallback(() => {
-    const lastTimeDataUpdate = moment().format('hh:mm:ss');
-    const apiUrl = `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=global&user_id=${user.id}&subject`;
-    axios
-      .get(`${apiUrl}=all`)
-      .then(response => {
-        let data = get(response, 'data.data.content', []);
-        let indexs = {};
-        let modifiedData = [];
-
-        data.forEach((a, index) => {
-          modifiedData.push({ ...a, type: 'global' });
-          indexs[a.ticker] = { index: index };
-        });
-        dispatch(setCompleteCompaniesDataGlobalIndex(indexs));
-        dispatch(setCompleteGlobalCompaniesData(modifiedData));
-        dispatch(setCompleteDataLoadedGlobalFlag(true));
-        localStorage.setItem('lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
-      })
-      .catch(function(error) {
-        // handle error
-        console.log(error);
-      });
+  const cacheDataGlobal = useCallback(async () => {
+    try {
+      let indexDB = new Localbase('db');
+      let data = [];
+      const lastTimeDataUpdate = moment().format('hh:mm:ss');
+      const previousStoredData = await indexDB.collection(config.indexDbGlobalCompniesData).get();
+      if (previousStoredData && previousStoredData.length > 0) {
+        data = previousStoredData;
+      } else {
+        const response = await axios.get(
+          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=global&user_id=${user.id}&subject=all`
+        );
+        data = get(response, 'data.data.content', []);
+        if (data && data.length > 0) {
+          await indexDB.collection(config.indexDbGlobalCompniesData).set(data);
+        }
+      }
+      dispatch(setCompleteGlobalCompaniesData(data));
+      localStorage.setItem('lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(setCompleteDataLoadedGlobalFlag(true));
   }, [dispatch, user]);
 
   useEffect(() => {

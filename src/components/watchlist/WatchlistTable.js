@@ -641,17 +641,9 @@ const tableFooter = {
 };
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const {
-    searchText,
-    selectedMetric,
-    isTickerSelected,
-    selectedType,
-    selectedFileType,
-    completeCompaniesDataIndexs,
-    completeCompaniesDataGlobalIndexs,
-    completeCompaniesData,
-    completeCompaniesDataGlobal
-  } = useSelector(state => state.Watchlist);
+  const { searchText, selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(
+    state => state.Watchlist
+  );
   const gridApi = React.useRef(null);
   const [isFilterData, setIsFilterData] = React.useState(false);
   const [isClear, setIsClear] = React.useState(false);
@@ -773,20 +765,14 @@ const WatchlistTable = props => {
           props.handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
           return;
         }
-        let company = getCompanyByIndex(
-          completeCompaniesDataIndexs,
-          completeCompaniesDataGlobalIndexs,
-          completeCompaniesData,
-          completeCompaniesDataGlobal,
-          params.data.ticker
-        );
+        let company = await getCompanyByIndex(params.data.ticker);
         if (company) {
           if (params.data.documentType === '10-K') {
-            item = setRecentOldId(item, company, '10-K');
+            item = await setRecentOldId(item, company, '10-K');
           } else if (params.data.documentType === '10-Q') {
-            item = setRecentOldId(item, company, '10-Q');
+            item = await setRecentOldId(item, company, '10-Q');
           } else {
-            item = setRecentOldId(item, company, '10-K');
+            item = await setRecentOldId(item, company, '10-K');
           }
         }
         dispatch(setSelectedWatchlist(item));

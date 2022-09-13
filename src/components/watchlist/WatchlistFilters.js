@@ -114,9 +114,9 @@ const WatchlistFilters = props => {
     saveUser(user);
   };
 
-  const getSelectedFileType = (selectedType, selectedFileType) => {
-    return selectedType === 'global' ? '10-K' : selectedFileType;
-  };
+  // const getSelectedFileType = (selectedType, selectedFileType) => {
+  //   return selectedType === 'global' ? '10-K' : selectedFileType;
+  // };
 
   useEffect(() => {
     const setting = {

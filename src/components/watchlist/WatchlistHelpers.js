@@ -1,5 +1,8 @@
 import { forEach, get, isEmpty } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
+import Localbase from 'localbase';
+import config from '../../config/config';
+
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
   mda: ['w', 'x', 'y', 'z', 'aa', 'ab', 'ac'],
@@ -195,30 +198,30 @@ export const isActive = (page, selectedItem) => {
   return status;
 };
 
-export const getCompanyByIndex = (
-  completeCompaniesDataIndexs,
-  completeCompaniesDataGlobalIndexs,
-  completeCompaniesData,
-  completeCompaniesDataGlobal,
-  ticker
-) => {
-  let data;
-  let company = {};
-
-  let index = completeCompaniesDataIndexs[ticker];
-  if (index) {
-    data = completeCompaniesData[index.index];
-    return formatComapnyData(data);
-  }
-  let globalIndex = completeCompaniesDataGlobalIndexs[ticker];
-  if (globalIndex) {
-    data = completeCompaniesDataGlobal[globalIndex.index];
-    if (data) {
-      return formatComapnyData(data);
+export const getCompanyByIndex = async ticker => {
+  try {
+    let indexDB = new Localbase('db');
+    let searchedData = null;
+    searchedData = await indexDB
+      .collection(config.indexDbDomesticCompniesData)
+      .doc({ ticker: ticker })
+      .get();
+    if (searchedData) {
+      return formatComapnyData(searchedData);
+    } else {
+      searchedData = await indexDB
+        .collection(config.indexDbGlobalCompniesData)
+        .doc({ ticker: ticker })
+        .get();
+      if (searchedData) {
+        return formatComapnyData(searchedData);
+      } else {
+        return {};
+      }
     }
+  } catch (error) {
+    console.log('error', error);
   }
-
-  return company;
 };
 
 export const isBigAgGrid = selectedFileType => {

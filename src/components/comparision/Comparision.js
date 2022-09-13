@@ -33,12 +33,8 @@ const Comparision = props => {
   const {
     selectedItem,
     selectedFileType,
-    completeCompaniesData,
-    isCompleteCompaniesDataLoaded,
-    completeCompaniesDataIndexs,
-    completeCompaniesDataGlobalIndexs,
-    isCompleteCompaniesDataGlobalLoaded,
-    completeCompaniesDataGlobal
+
+    isCompleteCompaniesDataLoaded
   } = useSelector(state => state.Watchlist);
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const [comparisionDifference, setComparisionDifference] = useState(
@@ -85,15 +81,7 @@ const Comparision = props => {
       setTimeout(() => {
         let data = queryString.parse(history.location.search);
         if (data.recentId) {
-          let company = getCompanyByIndex(
-            completeCompaniesDataIndexs,
-            completeCompaniesDataGlobalIndexs,
-            completeCompaniesData,
-            completeCompaniesDataGlobal,
-            data.ticker,
-           
-          );
-
+          let company = async () => await getCompanyByIndex(data.ticker);
           if (company) {
             company.recentId = data.recentId;
             company.oldId = data.oldId;
@@ -103,16 +91,7 @@ const Comparision = props => {
         }
       }, [400]);
     }
-  }, [
-    dispatch,
-    completeCompaniesDataIndexs,
-    completeCompaniesDataGlobalIndexs,
-    completeCompaniesData,
-    completeCompaniesDataGlobal,
-    isCompleteCompaniesDataGlobalLoaded,
-    isCompleteCompaniesDataLoaded,
-    history.location.search
-  ]);
+  }, [dispatch, history.location.search, isCompleteCompaniesDataLoaded]);
 
   useEffect(() => {
     const comparisonSetting = {

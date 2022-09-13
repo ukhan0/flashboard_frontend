@@ -18,6 +18,8 @@ const config = {
   googleAnalyticsKey: process.env.REACT_APP_GOOGLE_ANALYTICS_KEY,
   socketUrl: process.env.REACT_APP_SOCKET_URL,
   upcomingEarningCalls: process.env.REACT_APP_UPCOMING_EARNING_CALLS,
-  sentimentHtmlFileUrl: process.env.REACT_APP_SENTIMENT_HTML_FILE_URL
+  sentimentHtmlFileUrl: process.env.REACT_APP_SENTIMENT_HTML_FILE_URL,
+  indexDbDomesticCompniesData: process.env.REACT_APP_INDEX_DB_DOMESTIC_COMPNIES_DATA,
+  indexDbGlobalCompniesData: process.env.REACT_APP_INDEX_DB_GLOBAL_COMPNIES_DATA
 };
 export default config;

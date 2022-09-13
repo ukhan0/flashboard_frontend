@@ -31,8 +31,7 @@ const WatchlistTopicSearch = props => {
     searchText,
     selectedFileType,
     isTickerSelected,
-    completeCompaniesDataIndexs,
-    completeCompaniesDataGlobalIndexs,
+
     completeCompaniesData,
     completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
@@ -75,13 +74,7 @@ const WatchlistTopicSearch = props => {
       //   dispatch(setWatchlistSearchText(newSelectedSymbol.ticker));
       // }, [100]);
 
-      let company = getCompanyByIndex(
-        completeCompaniesDataIndexs,
-        completeCompaniesDataGlobalIndexs,
-        completeCompaniesData,
-        completeCompaniesDataGlobal,
-        newSelectedSymbol.ticker
-      );
+      let company = await getCompanyByIndex(newSelectedSymbol.ticker);
       company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
