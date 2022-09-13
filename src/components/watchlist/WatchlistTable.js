@@ -519,8 +519,8 @@ const colDefs = [
     width: 158,
     filter: 'agTextColumnFilter',
     valueGetter: params => {
-      const filteredWatchlist = countriesCode.filter(c => get(c, 'code') === get(params, 'data.countryCode'));
-      return filteredWatchlist[0]?.name;
+      const filteredWatchlist = countriesCode.find(c => get(c, 'code') === get(params, 'data.countryCode'));
+      return get(filteredWatchlist, 'name', '');
     },
     cellRenderer: 'CountryCodeRenderer',
     cellStyle: params => {
@@ -629,6 +629,56 @@ const colDefs1 = [
       const sentimentValue = get(params, 'data.wordCount', 0);
       return sentimentValue;
     }
+  },
+  {
+    headerName: 'Industry',
+    headerTooltip: 'Industry',
+    field: 'gics_industry',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'gics_industry',
+    minWidth: 150
+  },
+  {
+    headerName: 'Sector',
+    headerTooltip: 'Sector',
+    field: 'gics_sector',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'gics_sector',
+    minWidth: 150
+  },
+  {
+    headerName: 'Country',
+    headerTooltip: 'Country',
+    field: 'countryCode',
+    colId: 'countryCode',
+    width: 158,
+    filter: 'agTextColumnFilter',
+    valueGetter: params => {
+      const filteredWatchlist = countriesCode.find(c => get(c, 'code') === get(params, 'data.countrycode'));
+
+      return get(filteredWatchlist, 'name', '');
+    },
+    cellRenderer: 'CountryCodeRenderer',
+    cellStyle: params => {
+      return getCellStyle({});
+    }
+  },
+  {
+    headerName: 'Source',
+    headerTooltip: 'Source',
+    field: 'source_name',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'source_name',
+    minWidth: 150
   }
 ];
 const tableFooter = {
