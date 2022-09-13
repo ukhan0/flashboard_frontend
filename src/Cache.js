@@ -23,13 +23,8 @@ const localToTimeInMillis = (timeString) => {
 };
 
 const isOneHourPassed = (oldTimeStr, currTimeStr) => {
-  let oldTime = localToTimeInMillis(oldTimeStr);
-  let currTime = localToTimeInMillis(currTimeStr);
-  if((currTime - oldTime) >= 3600000) {
-    return true; //one hour is passed
-  } else if((currTime - oldTime) < 3600000) {
-    return false; //one hour isn't passed yet
-  } 
+  if((localToTimeInMillis(currTimeStr) - localToTimeInMillis(oldTimeStr)) >= 3600000) return true; //one hour is passed
+  else if((localToTimeInMillis(currTimeStr) - localToTimeInMillis(oldTimeStr)) < 3600000) return false; //one hour isn't passed yet
 };
 
 const Cache = () => {
@@ -46,8 +41,7 @@ const Cache = () => {
       if (previousStoredData && previousStoredData.length > 0) {
         data = previousStoredData;
       } else {
-        let oldTimeStr = localStorage.getItem('lastTimeCompleteDataUpdate');
-        if(isOneHourPassed(oldTimeStr, moment().format('hh:mm:ss'))) {
+        if(isOneHourPassed(localStorage.getItem('lastTimeCompleteDataUpdate'), moment().format('hh:mm:ss'))) {
           const response = await axios.get(
             `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=domestic&user_id=${user.id}&subject=all`
           );
@@ -78,8 +72,7 @@ const Cache = () => {
       if (previousStoredData && previousStoredData.length > 0) {
         data = previousStoredData;
       } else {
-        let oldTimeStr = localStorage.getItem('lastTimeCompleteGlobalDataUpdate');
-        if(isOneHourPassed(oldTimeStr, moment().format('hh:mm:ss'))) {
+        if(isOneHourPassed(localStorage.getItem('lastTimeCompleteGlobalDataUpdate'), moment().format('hh:mm:ss'))) {
           const response = await axios.get(
             `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=global&user_id=${user.id}&subject=all`
           );
