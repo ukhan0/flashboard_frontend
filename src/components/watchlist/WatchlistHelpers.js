@@ -198,18 +198,23 @@ export const isActive = (page, selectedItem) => {
   return status;
 };
 
+export const indexedDB = () => {
+  let indexDB = new Localbase('db');
+  indexDB.config.debug = false;
+  return indexDB;
+};
+
 export const getCompanyByIndex = async ticker => {
   try {
-    let indexDB = new Localbase('db');
     let searchedData = null;
-    searchedData = await indexDB
+    searchedData = await indexedDB()
       .collection(config.indexDbDomesticCompniesData)
       .doc({ ticker: ticker })
       .get();
     if (searchedData) {
       return formatComapnyData(searchedData);
     } else {
-      searchedData = await indexDB
+      searchedData = await indexedDB()
         .collection(config.indexDbGlobalCompniesData)
         .doc({ ticker: ticker })
         .get();

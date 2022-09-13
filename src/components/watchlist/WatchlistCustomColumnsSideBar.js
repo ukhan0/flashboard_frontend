@@ -1,5 +1,4 @@
 import React from 'react';
-import WatchlistService from './WatchlistService';
 import Action from './WatchlistActions/WatchlistActions';
 import {
   Drawer,
@@ -31,8 +30,6 @@ function WatchlistCustomColumnsSideBar(props) {
   const handleColumns = (e, status) => {
     props.handleColumns(e, status);
   };
-
- 
 
   return (
     <Drawer

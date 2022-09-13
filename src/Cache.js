@@ -15,7 +15,7 @@ import moment from 'moment';
 import io from 'socket.io-client';
 import SocketService from './socketService';
 import { orderBy } from 'lodash';
-import Localbase from 'localbase';
+import { indexedDB } from './components/watchlist/WatchlistHelpers';
 
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
@@ -23,10 +23,11 @@ const Cache = () => {
 
   const cacheData = useCallback(async () => {
     try {
-      let indexDB = new Localbase('db');
       let data = [];
       const lastTimeDataUpdate = moment().format('hh:mm:ss');
-      const previousStoredData = await indexDB.collection(config.indexDbDomesticCompniesData).get();
+      const previousStoredData = await indexedDB()
+        .collection(config.indexDbDomesticCompniesData)
+        .get();
       if (previousStoredData && previousStoredData.length > 0) {
         data = previousStoredData;
       } else {
@@ -35,7 +36,9 @@ const Cache = () => {
         );
         data = get(response, 'data.data.content', []);
         if (data && data.length > 0) {
-          await indexDB.collection(config.indexDbDomesticCompniesData).set(data);
+          await indexedDB()
+            .collection(config.indexDbDomesticCompniesData)
+            .set(data);
         }
       }
       dispatch(setCompleteCompaniesData(data));
@@ -48,10 +51,11 @@ const Cache = () => {
 
   const cacheDataGlobal = useCallback(async () => {
     try {
-      let indexDB = new Localbase('db');
       let data = [];
       const lastTimeDataUpdate = moment().format('hh:mm:ss');
-      const previousStoredData = await indexDB.collection(config.indexDbGlobalCompniesData).get();
+      const previousStoredData = await indexedDB()
+        .collection(config.indexDbGlobalCompniesData)
+        .get();
       if (previousStoredData && previousStoredData.length > 0) {
         data = previousStoredData;
       } else {
@@ -60,7 +64,9 @@ const Cache = () => {
         );
         data = get(response, 'data.data.content', []);
         if (data && data.length > 0) {
-          await indexDB.collection(config.indexDbGlobalCompniesData).set(data);
+          await indexedDB()
+            .collection(config.indexDbGlobalCompniesData)
+            .set(data);
         }
       }
       dispatch(setCompleteGlobalCompaniesData(data));
