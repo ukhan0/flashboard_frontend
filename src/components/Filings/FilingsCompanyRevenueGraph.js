@@ -13,9 +13,8 @@ import { Grid, Card, Divider, ButtonGroup, Button } from '@material-ui/core';
 import { orderBy, get } from 'lodash';
 import { entityTypes } from '../../config/filterTypes';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import CustomEvents from "highcharts-custom-events";
+import CustomEvents from 'highcharts-custom-events';
 CustomEvents(Highcharts);
-const removingSpacesAndPunctuation = string => string.replace(/[@[.|+,/#?!$%^&*;:<>'’`"{}=\-_~()]/g,"").replace(/\s/g, "").toLowerCase();
 
 const FilingsCompanyRevenueGraph = props => {
   const history = useHistory();
@@ -26,6 +25,12 @@ const FilingsCompanyRevenueGraph = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const [reBuildGraph, setReBuildGraph] = useState(false);
 
+  const removingSpacesAndPunctuation = string =>
+    string
+      .replace(/[@[.|+,/#?!$%^&*;:<>'’`"{}=\-_~()]/g, '')
+      .replace(/\s/g, '')
+      .toLowerCase();
+
   const data = useCallback(() => {
     let data = {};
     let caculateStrength = filingsRevenueData
@@ -33,11 +38,15 @@ const FilingsCompanyRevenueGraph = props => {
         return { ...v, strength: v.newCount - v.oldCount };
       })
       .filter(e => {
-        let firstWord = e.name.split(" ");
-        if(removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(firstWord[0]))) return !removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(firstWord[0]));
-        else if(removingSpacesAndPunctuation(e.name).includes('delaware')) return !removingSpacesAndPunctuation(e.name).includes('delaware');
-        else return !removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(e.name));
-      })
+        let firstWord = e.name.split(' ');
+        return !(
+          removingSpacesAndPunctuation(selectedItem.companyName).includes(
+            removingSpacesAndPunctuation(firstWord[0].toLowerCase())
+          ) ||
+          removingSpacesAndPunctuation(e.name).includes('delaware'.toLowerCase()) ||
+          removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(e.name))
+        );
+      });
     const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
     const disappearing = caculateStrength.filter(v => v.oldCount > 0 && v.newCount === 0);
     const emerging = caculateStrength.filter(v => v.newCount > 0 && v.oldCount === 0);
@@ -78,11 +87,11 @@ const FilingsCompanyRevenueGraph = props => {
     }
     setSelectedEntityType(type);
   };
-  
+
   useEffect(() => {
     setSelectedEntityType('emerging_entities');
   }, []);
-  
+
   useEffect(() => {
     setEntitiesData(data());
   }, [data]);
@@ -150,7 +159,7 @@ const FilingsCompanyRevenueGraph = props => {
       },
       tickLength: 0,
       labels: {
-        style: { cursor : 'pointer' },
+        style: { cursor: 'pointer' },
         events: {
           click: function() {
             if (this) {
