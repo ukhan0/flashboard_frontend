@@ -15,6 +15,7 @@ import { entityTypes } from '../../config/filterTypes';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import CustomEvents from "highcharts-custom-events";
 CustomEvents(Highcharts);
+const removingSpacesAndPunctuation = string => string.replace(/[@[.|+,/#?!$%^&*;:<>'’`"{}=\-_~()]/g,"").replace(/\s/g, "").toLowerCase();
 
 const FilingsCompanyRevenueGraph = props => {
   const history = useHistory();
@@ -31,9 +32,12 @@ const FilingsCompanyRevenueGraph = props => {
       .map(v => {
         return { ...v, strength: v.newCount - v.oldCount };
       })
-      .filter(e => !selectedItem.companyName.toLowerCase().includes(e.name.toLowerCase()))
-      .filter(t => !t.name.toLowerCase().includes('Delaware'.toLowerCase()));
-
+      .filter(e => {
+        let firstWord = e.name.split(" ");
+        if(removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(firstWord[0]))) return !removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(firstWord[0]));
+        else if(removingSpacesAndPunctuation(e.name).includes('delaware')) return !removingSpacesAndPunctuation(e.name).includes('delaware');
+        else return !removingSpacesAndPunctuation(selectedItem.companyName).includes(removingSpacesAndPunctuation(e.name));
+      })
     const comman = caculateStrength.filter(v => v.oldCount > 0 && v.newCount > 0);
     const disappearing = caculateStrength.filter(v => v.oldCount > 0 && v.newCount === 0);
     const emerging = caculateStrength.filter(v => v.newCount > 0 && v.oldCount === 0);
