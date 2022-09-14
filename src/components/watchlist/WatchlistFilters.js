@@ -94,9 +94,6 @@ const WatchlistFilters = props => {
     }
   };
 
-  // const getSelectedFileType = (selectedType, selectedFileType) => {
-  //   return selectedType === 'global' ? '10-K' : selectedFileType;
-  // };
 
   useEffect(() => {
     const setting = {
@@ -111,7 +108,7 @@ const WatchlistFilters = props => {
   return (
     <Grid container direction="row" justify="flex-start" alignItems="center" spacing={1}>
       <Grid item>
-        <div className="text-black-50 opacity-6">Type</div>
+        <div className="text-black-50 opacity-6">Regions</div>
         <ButtonGroup color="primary">
           {typesSelection.map((type, i) => (
             <Button

@@ -7,8 +7,9 @@ export const fileTypesSelectionGlobal = [
   { label: 'QR', key: '10q' }
 ];
 export const typesSelection = [
-  { label: 'SEC', key: 'domestic' },
-  { label: 'SEDAR', key: 'global' }
+  { label: 'US', key: 'domestic' },
+  { label: 'Canada', key: 'global' },
+  // { label: 'Global', key: 'globalFileTypes' }
 ];
 export const universeSelection = [
   { label: 'Watchlist', key: 'watchlist' },

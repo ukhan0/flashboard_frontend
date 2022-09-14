@@ -57,7 +57,7 @@ import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideBar';
 import WatchlistFiltersList from './WatchlistFiltersList';
 import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
-import FileTypes from '../../config/watchlistFileTyes';
+import { FileTypes } from '../../config/watchlistFileTyes';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -238,12 +238,20 @@ const Watchlist = props => {
   const getWatchlistTable2Dataa = useCallback(async () => {
     if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
       setLoading(true);
-      let fileTypes = FileTypes.find(
-        e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-      );
+      let fileTypes = [];
+      if (selectedType === 'domestic') {
+        fileTypes = FileTypes.usFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
+      } else if (selectedType === 'global') {
+        fileTypes = FileTypes.canadaFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
+      }
+      const countryCode = get(fileTypes, 'countryCode', null);
       fileTypes = get(fileTypes, 'value', []).map(e => e.value);
       let data = await dispatch(
-        getWatchlistTable2Data('fillings_*', selectedUniverse, fileTypes.join(','), selectedType)
+        getWatchlistTable2Data('fillings_*', selectedUniverse, fileTypes.join(','), selectedType, countryCode)
       );
       setLoading(false);
       setGridData2(data);
