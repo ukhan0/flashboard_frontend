@@ -59,7 +59,9 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
         // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
         docDate: get(d, 'document_date', null),
         wordCount: round(get(d, 'word_count', null), 2),
-        countryCode: get(d, 'countrycode', null)
+        countryCode: get(d, 'countrycode', null),
+        sector: get(d, 'gics_sector', null),
+        industry: get(d, 'gics_industry', null)
         // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });

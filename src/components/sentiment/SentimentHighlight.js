@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import { get, forEach } from 'lodash';
@@ -74,7 +74,7 @@ const SentimentHighlights = props => {
   const [highlightsData, setHighlightsData] = useState(props.highlightsData);
   const keys = Object.keys(highlightsData);
   const refValues = useRef({ count: 0, total: 0, selectedKeyIndex: 0, selectedWordIndex: 0, blueTextId: null });
-  const defaultSelect = () => {
+  const defaultSelect = useCallback(() => {
     refValues.current.count = 0;
     refValues.current.selectedKeyIndex = 0;
     refValues.current.selectedWordIndex = 0;
@@ -91,14 +91,13 @@ const SentimentHighlights = props => {
 
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
-  };
+  }, [highlightsData, props, keys]);
   useEffect(() => {
     if (props.highlightsData) {
       setHighlightsData(props.highlightsData);
     }
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.highlightsData]);
+  }, [props.highlightsData, keys]);
 
   useEffect(() => {
     defaultSelect();
@@ -108,8 +107,7 @@ const SentimentHighlights = props => {
     });
     document.getElementById('totalhighlight').textContent = total;
     refValues.current.total = total;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightsData]);
+  }, [highlightsData, defaultSelect]);
 
   useEffect(() => {
     setTimeout(() => {

@@ -5,8 +5,7 @@ import { BeatLoader } from 'react-spinners';
 const SentimentHtmlFile = props => {
   const [isLoading, setIsloading] = useState(false);
   const { selectedItem } = useSelector(state => state.Watchlist);
-  // eslint-disable-next-line
-  const [height, setHeight] = useState(3000);
+
   const sentimentIframe = useRef(null);
 
   if (!selectedItem) {
@@ -34,7 +33,7 @@ const SentimentHtmlFile = props => {
         src={`${config.sentimentHtmlFileUrl}?filling_id=${selectedItem.recentId}`}
         title="Sentiment"
         width="100%"
-        height={`${height}px`}
+        height={`${3000}px`}
         samesite="None"
         frameBorder="0"
         id="Sentiments"

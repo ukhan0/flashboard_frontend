@@ -571,31 +571,24 @@ const colDefs1 = [
     minWidth: 150
   },
   {
-    headerName: 'Document Type',
-    field: 'documentType',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'document_type',
-    minWidth: 100,
-    valueFormatter: params => renameDocumentTypes(params.data.document_type)
+    headerName: 'Country',
+    headerTooltip: 'Country',
+    field: 'countryCode',
+    colId: 'countryCode',
+    width: 158,
+    filter: 'agTextColumnFilter',
+    valueGetter: params => {
+      const filteredWatchlist = countriesCode.find(c => get(c, 'code') === get(params, 'data.countrycode'));
+
+      return get(filteredWatchlist, 'name', '');
+    },
+    cellRenderer: 'CountryCodeRenderer',
+    cellStyle: params => {
+      return getCellStyle({});
+    }
   },
 
-  {
-    headerName: 'Document Date',
-    headerTooltip: 'document_date',
-    field: 'document_date',
-    colId: 'document_date',
-    sortable: true,
-    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
-    valueFormatter: params => dateFormaterMoment(params.value),
-    filter: 'agDateColumnFilter',
-    cellClass: ['center-align-text'],
-    minWidth: 50,
-    width: 120,
-    sortingOrder: ['desc', 'asc']
-  },
+ 
   {
     headerName: 'Aggregate Sentiment',
     field: 'sentiment',
@@ -631,15 +624,29 @@ const colDefs1 = [
     }
   },
   {
-    headerName: 'Industry',
-    headerTooltip: 'Industry',
-    field: 'gics_industry',
+    headerName: 'Document Date',
+    headerTooltip: 'document_date',
+    field: 'document_date',
+    colId: 'document_date',
+    sortable: true,
+    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
+    valueFormatter: params => dateFormaterMoment(params.value),
+    filter: 'agDateColumnFilter',
+    cellClass: ['center-align-text'],
+    minWidth: 50,
+    width: 120,
+    sortingOrder: ['desc', 'asc']
+  },
+  {
+    headerName: 'Document Type',
+    field: 'documentType',
     menuTabs: false,
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'gics_industry',
-    minWidth: 150
+    colId: 'document_type',
+    minWidth: 100,
+    valueFormatter: params => renameDocumentTypes(params.data.document_type)
   },
   {
     headerName: 'Sector',
@@ -653,22 +660,19 @@ const colDefs1 = [
     minWidth: 150
   },
   {
-    headerName: 'Country',
-    headerTooltip: 'Country',
-    field: 'countryCode',
-    colId: 'countryCode',
-    width: 158,
-    filter: 'agTextColumnFilter',
-    valueGetter: params => {
-      const filteredWatchlist = countriesCode.find(c => get(c, 'code') === get(params, 'data.countrycode'));
-
-      return get(filteredWatchlist, 'name', '');
-    },
-    cellRenderer: 'CountryCodeRenderer',
-    cellStyle: params => {
-      return getCellStyle({});
-    }
+    headerName: 'Industry',
+    headerTooltip: 'Industry',
+    field: 'gics_industry',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'gics_industry',
+    minWidth: 150
   },
+ 
+  
+ 
   {
     headerName: 'Source',
     headerTooltip: 'Source',
