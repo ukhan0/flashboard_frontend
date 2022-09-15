@@ -202,7 +202,7 @@ const getDefaultState = () => {
     ? get(watchlistSetting, 'selectedFileType', '10-K')
     : selectedTypeWatchList === 'domestic'
     ? '10-K'
-    : 'AR';
+    : '10-K';
 
   return {
     isActiveCompanies: true,
@@ -267,7 +267,7 @@ export default function reducer(
         ...state,
         selectedType: action.watchlistType,
         selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric,
-        selectedFileType: action.watchlistType === 'global' ? 'AR' : state.selectedFileType
+        selectedFileType: action.watchlistType === 'global' ? '10-K' : state.selectedFileType
       };
     case SET_UNIVERSE:
       return { ...state, selectedUniverse: action.universe };

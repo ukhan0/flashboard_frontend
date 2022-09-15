@@ -74,7 +74,7 @@ const WatchlistFilters = props => {
         dispatch(setWatchlistFileType('10-K'));
       }
       if (key === 'global') {
-        dispatch(setWatchlistFileType('AR'));
+        dispatch(setWatchlistFileType('10-K'));
       }
 
       dispatch(setWatchlistType(key));
