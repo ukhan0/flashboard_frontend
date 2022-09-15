@@ -3,10 +3,10 @@ import config from '../../config/config';
 import { cloneDeep, get } from 'lodash';
 import axios from 'axios';
 import { Switch, Grid, Typography, makeStyles } from '@material-ui/core';
-import FileTypes from '../../config/watchlistFileTyes';
+import { FileTypes } from '../../config/watchlistFileTyes';
 import { renameDocumentTypesLabel } from '../topic/topicHelpers';
 
-const emailFileTypes = FileTypes.map(fileObj => {
+const emailFileTypes = FileTypes.fileTypes.map(fileObj => {
   return {
     doc_type: fileObj.label,
     send_email: false

@@ -25,7 +25,13 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
   };
 };
 
-export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFileTypes, selectedType) => {
+export const getWatchlistTable2Data = (
+  searchIndex,
+  selectedUniverse,
+  selectedFileTypes,
+  selectedType,
+  countryCode
+) => {
   let rawData = [];
   let limit = 100;
   if (selectedUniverse === 'recent') {
@@ -39,9 +45,18 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_with_file_type?index=${searchIndex}&order=desc&limit=${limit}&subject=${selectedUniverse}&document_type=${selectedFileTypes}&selected_type=${selectedType}`,
+        `${config.apiUrl}/api/get_companies_with_file_type`,
         {
-          cancelToken: cancelToken.token
+          cancelToken: cancelToken.token,
+          params: {
+            index: searchIndex,
+            order: 'desc',
+            limit: limit,
+            subject: selectedUniverse,
+            document_type: selectedFileTypes,
+            selected_type: selectedType,
+            ...(countryCode && { country_code: countryCode })
+          }
         }
       );
 
@@ -58,7 +73,10 @@ export const getWatchlistTable2Data = (searchIndex, selectedUniverse, selectedFi
         sentiment: round(get(d, 'sentiment', null), 2),
         // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
         docDate: get(d, 'document_date', null),
-        wordCount: round(get(d, 'word_count', null), 2)
+        wordCount: round(get(d, 'word_count', null), 2),
+        countryCode: get(d, 'countrycode', null),
+        sector: get(d, 'gics_sector', null),
+        industry: get(d, 'gics_industry', null)
         // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });

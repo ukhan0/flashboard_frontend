@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { Grid, ButtonGroup, Button, Switch, Typography } from '@material-ui/core';
+import { Grid, ButtonGroup, Button } from '@material-ui/core';
 import {
   setWatchlistUniverse,
   setWatchlistMetric,
   setIsNewWatchlistDataAvailable,
-  setIsWatchlistEmailAlertEnable,
   setWatchlistType,
   setSelectedWatchlist,
   setWatchlistFileType
@@ -12,8 +11,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { universeSelection, metricsSelection, typesSelection } from '../../config/filterTypes';
-import { updateWatchlistEmailAlertStatus } from './WatchlistActions/WatchlistActionApiCalls';
-import { getUser, saveUser, saveWatchlistSettings } from './WatchlistHelpers';
+import { saveWatchlistSettings } from './WatchlistHelpers';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import WatchlistFileTypeDropDown from './WatchlistFileTypeDropDown';
 
@@ -26,7 +24,6 @@ const WatchlistFilters = props => {
     isCompleteCompaniesDataLoaded,
     isCompleteCompaniesDataGlobalLoaded,
     cancelExistingDocumentTypeCalls,
-    isEmailAlertEnable,
     selectedItem
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
@@ -77,7 +74,7 @@ const WatchlistFilters = props => {
         dispatch(setWatchlistFileType('10-K'));
       }
       if (key === 'global') {
-        dispatch(setWatchlistFileType('AR'));
+        dispatch(setWatchlistFileType('10-K'));
       }
 
       dispatch(setWatchlistType(key));
@@ -86,17 +83,6 @@ const WatchlistFilters = props => {
         cancelExistingDocumentTypeCalls.cancel();
       }
     }
-  };
-
-  const handleChangeEmailAlert = event => {
-    if (event.target.checked) {
-      updateUserLocalStorage(true);
-      dispatch(setIsWatchlistEmailAlertEnable(true));
-    } else {
-      updateUserLocalStorage(false);
-      dispatch(setIsWatchlistEmailAlertEnable(false));
-    }
-    dispatch(updateWatchlistEmailAlertStatus());
   };
 
   const handleClickWatchlistMetric = metric => {
@@ -108,15 +94,6 @@ const WatchlistFilters = props => {
     }
   };
 
-  const updateUserLocalStorage = status => {
-    const user = getUser();
-    user.send_watchlist_alert_email = status;
-    saveUser(user);
-  };
-
-  // const getSelectedFileType = (selectedType, selectedFileType) => {
-  //   return selectedType === 'global' ? '10-K' : selectedFileType;
-  // };
 
   useEffect(() => {
     const setting = {
@@ -131,7 +108,7 @@ const WatchlistFilters = props => {
   return (
     <Grid container direction="row" justify="flex-start" alignItems="center" spacing={1}>
       <Grid item>
-        <div className="text-black-50 opacity-6">Type</div>
+        <div className="text-black-50 opacity-6">Regions</div>
         <ButtonGroup color="primary">
           {typesSelection.map((type, i) => (
             <Button
@@ -194,26 +171,6 @@ const WatchlistFilters = props => {
             </Button>
           ))}
         </ButtonGroup>
-      </Grid>
-      <Grid item>
-        <Grid container direction="row" alignItems="center">
-          <Grid item>
-            <Typography style={{ paddingTop: '20px' }} color="primary">
-              Enable Email Alert
-            </Typography>
-          </Grid>
-          <Grid item>
-            <div style={{ paddingTop: '20px' }}>
-              <Switch
-                checked={isEmailAlertEnable}
-                onChange={handleChangeEmailAlert}
-                color="primary"
-                name="checkedB"
-                inputProps={{ 'aria-label': 'primary checkbox' }}
-              />
-            </div>
-          </Grid>
-        </Grid>
       </Grid>
     </Grid>
   );

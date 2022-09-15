@@ -8,13 +8,12 @@ import { setWatchlistFileType, setIsNewWatchlistDataAvailable } from '../../redu
 import {} from '../../reducers/Sentiment';
 import {} from '../Filings/FillingsHelper';
 import {} from '../watchlist/WatchlistHelpers';
-import { renameDocumentTypesLabel } from '../topic/topicHelpers';
 
 // import CloseIcon from '@material-ui/icons/Close';
-import FileTypes from '../../config/watchlistFileTyes';
+import { FileTypes } from '../../config/watchlistFileTyes';
 
 const createOptionLabel = option => {
-  return renameDocumentTypesLabel(option.label);
+  return option.labelToShow;
 };
 
 const WatchlistFileTypeDropDown = props => {
@@ -23,20 +22,20 @@ const WatchlistFileTypeDropDown = props => {
   const [isPending, startTransition] = useTransition();
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const [data, setData] = useState([]);
-  const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(
-    state => state.Watchlist
-  );
+  const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(state => state.Watchlist);
 
-  const CustomPopper = (props) => {
+  const CustomPopper = props => {
     return <Popper {...props} className={classes.root} placement="bottom" />;
   };
 
   const getFileTypes = useCallback(() => {
-    let data =
-      selectedType === 'global'
-        ? FileTypes.filter(v => parseInt(v.globalFlag) === 1)
-        : FileTypes.filter(v => parseInt(v.globalFlag) === 0);
-    return data;
+    if (selectedType === 'global') {
+      return FileTypes.canadaFileTypes;
+    } else if (selectedType === 'domestic') {
+      return FileTypes.usFileTypes;
+    } else {
+      return [];
+    }
   }, [selectedType]);
   const handleSearchTextChange = debounce(async text => {
     // free text search for Watchlist table
@@ -46,11 +45,10 @@ const WatchlistFileTypeDropDown = props => {
       return;
     }
     const searchabletext = text.toLowerCase();
-    const filteredWatchlist = data.filter(
-      c =>
-        get(c, 'label', '')
-          .toLowerCase()
-          .includes(searchabletext)
+    const filteredWatchlist = data.filter(c =>
+      get(c, 'label', '')
+        .toLowerCase()
+        .includes(searchabletext)
     );
     startTransition(() => {
       setAvailableSymbols(filteredWatchlist);
@@ -98,7 +96,7 @@ const WatchlistFileTypeDropDown = props => {
             onBlur={() => {}}
             {...params}
             variant="outlined"
-            placeholder="Type Company Name or Symbol"
+            placeholder="Type Document Name or  Symbol"
             onChange={e => {
               handleSearchTextChange(e.target.value);
             }}
