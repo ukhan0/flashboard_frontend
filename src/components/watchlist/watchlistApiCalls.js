@@ -11,7 +11,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${selectedType === 'newGlobal' ? 'global' : selectedType}`,
+        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${selectedType === 'newGlobal' ? 'domestic' : selectedType}`,
         {
           cancelToken: cancelToken.token
         }
