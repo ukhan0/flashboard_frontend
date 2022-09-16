@@ -33,6 +33,8 @@ const WatchlistFileTypeDropDown = props => {
       return FileTypes.canadaFileTypes;
     } else if (selectedType === 'domestic') {
       return FileTypes.usFileTypes;
+    } else if (selectedType === 'newGlobal') {
+      return FileTypes.globalFileTypes;
     } else {
       return [];
     }

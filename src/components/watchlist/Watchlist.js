@@ -247,6 +247,10 @@ const Watchlist = props => {
         fileTypes = FileTypes.canadaFileTypes.find(
           e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
         );
+      } else if (selectedType === 'newGlobal') {
+        fileTypes = FileTypes.globalFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
       }
       const countryCode = get(fileTypes, 'countryCode', null);
       fileTypes = get(fileTypes, 'value', []).map(e => e.value);
