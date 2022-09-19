@@ -21,14 +21,14 @@ const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
   const dispatch = useDispatch();
 
-  const cacheDomesticData = async (apiParam, localStorageName, currMoment) => {
+  const refreshIndexDB = async (apiParam, localStorageName, currMoment, indexDBCollectionName) => {
     const response = await axios.get(
       `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=${apiParam}&user_id=${user.id}&subject=all`
     );
     let data = get(response, 'data.data.content', []);
     if (data && data.length > 0) {
       await indexedDB()
-        .collection(config.indexDbDomesticCompniesData)
+        .collection(indexDBCollectionName)
         .set(data);
     }
     localStorage.setItem(localStorageName, currMoment);
@@ -46,11 +46,11 @@ const Cache = () => {
         data = previousStoredData;
         dispatch(setCompleteCompaniesData(data));
       } else {
-        cacheDomesticData('domestic', 'lastTimeCompleteDataUpdate', lastTimeDataUpdate);
+        await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdate', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
       }
       if (localStorage.getItem('lastTimeCompleteDataUpdate')) {
         if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteDataUpdate'))) > 3600000)) {
-          cacheDomesticData('domestic', 'lastTimeCompleteDataUpdate', lastTimeDataUpdate);
+          await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdate', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
         }
       }
     } catch (error) {
@@ -71,11 +71,11 @@ const Cache = () => {
         data = previousStoredData;
         dispatch(setCompleteGlobalCompaniesData(data));
       } else {
-        cacheDomesticData('global', 'lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
+        await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
       }
       if (localStorage.getItem('lastTimeCompleteGlobalDataUpdate')) {
         if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteGlobalDataUpdate'))) > 3600000)) {
-          cacheDomesticData('global', 'lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
+          await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
         }
       }
     } catch (error) {
