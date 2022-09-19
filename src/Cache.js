@@ -63,7 +63,6 @@ const Cache = () => {
     try {
       let data = [];
       const lastTimeDataUpdate = moment().format();
-
       const previousStoredData = await indexedDB()
         .collection(config.indexDbGlobalCompniesData)
         .get();
@@ -97,7 +96,7 @@ const Cache = () => {
             dispatch(setNotificationData([]));
           }
         })
-        .catch(function (error) {
+        .catch(function(error) {
           dispatch(setNotificationData([]));
           // handle error
           console.log(error);
