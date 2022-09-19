@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import notificationTune from './notificationTune.mp3';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -6,6 +6,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { cloneDeep } from 'lodash';
 
 const NewNotificationSnackbarAlert = () => {
+  const doNotShowOnReload = useRef(0);
   const [unreadNotifications, setUnreadNotifications] = useState([]);
   const { notifications } = useSelector(state => state.Watchlist);
 
@@ -26,14 +27,14 @@ const NewNotificationSnackbarAlert = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    if (doNotShowOnReload.current === 2) {
       const unreadNoti = notifications.filter(notification => !notification.is_read);
-      if (unreadNoti.length > 0) {
-        setUnreadNotifications(unreadNoti);
-      } else {
-        setUnreadNotifications([]);
-      }
-    }, [3000]);
+      setUnreadNotifications(unreadNoti.slice(0, 5));
+    } else if (doNotShowOnReload.current === 0) {
+      doNotShowOnReload.current = 1;
+    } else {
+      doNotShowOnReload.current = 2;
+    }
   }, [notifications]);
 
   return (
