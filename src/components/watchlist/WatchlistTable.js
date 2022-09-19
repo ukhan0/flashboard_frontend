@@ -29,8 +29,7 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
-import { checkIsFilterActive, getWatchlistType, isBigAgGrid } from './WatchlistHelpers';
-import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
+import { checkIsFilterActive, getWatchlistType, isBigAgGrid, getCompanyByIndex, storeColumnsState } from './WatchlistHelpers';
 import {
   setIsFilterActive,
   setWatchlistSearchText,
@@ -588,7 +587,6 @@ const colDefs1 = [
     }
   },
 
- 
   {
     headerName: 'Aggregate Sentiment',
     field: 'sentiment',
@@ -670,9 +668,7 @@ const colDefs1 = [
     colId: 'gics_industry',
     minWidth: 150
   },
- 
-  
- 
+
   {
     headerName: 'Source',
     headerTooltip: 'Source',
@@ -726,26 +722,16 @@ const WatchlistTable = props => {
   const storeColumnsStateComman = params => {
     const columnState = params.columnApi.getColumnState();
 
-    props.storeColumnsState(columnState);
+    storeColumnsState(columnState);
     var padding = 40;
     var height = headerHeightGetter() + padding;
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
   };
-  const storeColumnsState = params => {
-    if (params.type === 'sortChanged') {
+  const storeChangedColumnsState = params => {
+    if (params.type === 'sortChanged' || params.type === 'columnResized' || params.type === 'columnMoved') {
       storeColumnsStateComman(params);
     }
-    if (params.type === 'columnResized') {
-      storeColumnsStateComman(params);
-    }
-    if (params.type === 'columnMoved') {
-      storeColumnsStateComman(params);
-    }
-    // if (isColResizing > 3) {
-    //   storeColumnsStateComman(params);
-    // }
-    // setColResizing(isColResizing + 1);
   };
 
   const storeColumnsStateVisible = params => {
@@ -896,7 +882,7 @@ const WatchlistTable = props => {
       });
     } else {
       const columnState = params.columnApi.getColumnState();
-      props.storeColumnsState(columnState);
+      storeColumnsState(columnState);
     }
 
     if (filteringState && !isEmpty(filteringState)) {
@@ -958,10 +944,10 @@ const WatchlistTable = props => {
         multiSortKey="ctrl"
         frameworkComponents={frameworkComponents}
         onCellClicked={cellClicked}
-        onColumnResized={storeColumnsState}
-        onColumnMoved={storeColumnsState}
+        onColumnResized={storeChangedColumnsState}
+        onColumnMoved={storeChangedColumnsState}
         onColumnVisible={storeColumnsStateVisible}
-        onSortChanged={storeColumnsState}
+        onSortChanged={storeChangedColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
         context={countriesCode}

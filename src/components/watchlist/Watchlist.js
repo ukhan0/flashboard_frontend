@@ -8,7 +8,6 @@ import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers'
 import { Box } from '@material-ui/core';
 import {
   formatData,
-  storeColumnsState,
   storeFilteringState,
   getColumnState,
   getFilteringState,
@@ -518,10 +517,6 @@ const Watchlist = props => {
     setIsFilterLabelOpen(false);
   };
 
-  const onStoreColumnsState = state => {
-    storeColumnsState(state);
-  };
-
   const onStoreFilteringState = state => {
     storeFilteringState(state);
   };
@@ -664,7 +659,6 @@ const Watchlist = props => {
           <WatchlistCustomColumnsSideBar
             handleColumns={handleColumns}
             dispalyedColumns={dispalyedColumns}
-            storeColumnsState={onStoreColumnsState}
             currentCol={currentCol}
             open={isAgGridSideBarOpen}
             col={col}
@@ -770,7 +764,6 @@ const Watchlist = props => {
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
           <WatchlistTable
             data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
-            storeColumnsState={onStoreColumnsState}
             storeFilteringState={onStoreFilteringState}
             columnsState={getColumnState()}
             filteringState={getFilteringState()}
