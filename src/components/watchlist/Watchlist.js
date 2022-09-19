@@ -146,7 +146,9 @@ const Watchlist = props => {
   const syncCompleteDataOnPage = useCallback(
     newData => {
       const rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
+       (selectedType === 'domestic' || selectedType === 'newGlobal')
+          ? completeCompaniesDatalocal.current
+          : completeCompaniesDataGloballocal.current
       );
       if (!rawCompleteData || !isArray(rawCompleteData)) {
         return;
@@ -155,7 +157,7 @@ const Watchlist = props => {
         const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
         rawCompleteData[tickerIndex] = nd;
       });
-      if (selectedType === 'domestic') {
+      if    (selectedType === 'domestic' || selectedType === 'newGlobal') {
         dispatch(setCompleteCompaniesData(rawCompleteData));
       } else {
         dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
@@ -197,7 +199,7 @@ const Watchlist = props => {
   useEffect(() => {
     let rawData = [];
     if (selectedUniverse === 'all') {
-      if (selectedType === 'domestic') {
+      if  (selectedType === 'domestic' || selectedType === 'newGlobal') {
         rawData = completeCompaniesData;
       } else {
         rawData = completeCompaniesDataGlobal;
@@ -245,6 +247,10 @@ const Watchlist = props => {
         );
       } else if (selectedType === 'global') {
         fileTypes = FileTypes.canadaFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
+      } else if (selectedType === 'newGlobal') {
+        fileTypes = FileTypes.globalFileTypes.find(
           e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
         );
       }
@@ -354,7 +360,7 @@ const Watchlist = props => {
       let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
       if (updatedTickerDetail !== -1) {
         rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-        if (selectedType === 'domestic') {
+        if  (selectedType === 'domestic' || selectedType === 'newGlobal') {
           dispatch(setCompleteCompaniesData(rawCompleteData));
         } else {
           dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
@@ -367,7 +373,7 @@ const Watchlist = props => {
   const updateChacheData = useCallback(
     (ticker, isTicker) => {
       let rawCompleteData = cloneDeep(
-        selectedType === 'domestic' ? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
+        (selectedType === 'domestic' || selectedType === 'newGlobal')? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
       );
       if (Array.isArray(ticker)) {
         for (let i = 0; i < ticker.length; i++) {
@@ -376,7 +382,7 @@ const Watchlist = props => {
             rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
           }
         }
-        if (selectedType === 'domestic') {
+        if  (selectedType === 'domestic' || selectedType === 'newGlobal'){
           dispatch(setCompleteCompaniesData(rawCompleteData));
         } else {
           dispatch(setCompleteGlobalCompaniesData(rawCompleteData));

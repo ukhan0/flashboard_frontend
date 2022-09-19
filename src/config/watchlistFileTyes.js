@@ -627,23 +627,8 @@ export const FileTypes = {
   ],
   globalFileTypes: [
     {
-      label: 'EC-FMP',
-      value: [{ value: 'FMP-Transcript', color: 'rgb(244,91,91)' }],
-      globalFlag: 0,
-      documentTypeGroup: 'EC-FMP',
-      domestic: 1,
-      canadian: 1,
-      global: null,
-      index: 'fillings_sec_ecfmp*',
-      sections: {
-        totdoc: ['fmp-transcript.*'],
-        mda: [],
-        rf: [],
-        notes: []
-      }
-    },
-    {
       label: '10-K',
+      labelToShow: '10-K',
       value: [
         { value: '10-K', color: 'rgb(244,91,91)' },
         { value: '10-K/A', color: 'rgb(244,91,91)' },
@@ -665,9 +650,9 @@ export const FileTypes = {
         notes: ['10k.n.*']
       }
     },
-
     {
       label: '10-Q',
+      labelToShow: '10-Q',
       value: [
         { value: '10-Q', color: 'rgb(247,163,92)' },
         { value: '10QSB', color: 'rgb(247,163,92)' },
@@ -690,6 +675,7 @@ export const FileTypes = {
     },
     {
       label: '20-F',
+      labelToShow: '20-F',
       value: [
         { value: '20-F', color: 'rgb(200,91,144)' },
         { value: '20-F/A', color: 'rgb(200,91,144)' }
@@ -708,42 +694,8 @@ export const FileTypes = {
       }
     },
     {
-      label: 'FIN-SUPP',
-      value: [{ value: 'FIN-SUPP', color: 'rgb(50,91,91)' }],
-
-      globalFlag: 1,
-      documentTypeGroup: 'FIN-SUPP',
-      domestic: 1,
-      canadian: 1,
-      global: null,
-      index: 'fillings_global_finsupp*',
-      sections: {
-        totdoc: ['fin supp.*'],
-        mda: [],
-        rf: [],
-        notes: []
-      }
-    },
-    {
-      label: 'OTH-FIN',
-      value: [{ value: 'Other Financials', color: 'rgb(248,91,91)' }],
-
-      globalFlag: 1,
-      documentTypeGroup: 'OTH-FIN',
-      domestic: 1,
-      canadian: 1,
-      global: null,
-      index: 'fillings_global_othfin*',
-      sections: {
-        totdoc: ['other financials.*'],
-        mda: [],
-        rf: [],
-        notes: []
-      }
-    },
-
-    {
       label: '40-F',
+      labelToShow: '40-F',
       value: [{ value: '40-F', color: 'rgb(80,91,144)' }, { value: '40-F' }],
 
       globalFlag: 0,
@@ -761,6 +713,7 @@ export const FileTypes = {
     },
     {
       label: '6-K',
+      labelToShow: '6-K',
       value: [
         { value: '6-k', color: 'rgb(210,91,148)' },
         { value: '6-K/A', color: 'rgb(210,91,148)' }
@@ -780,6 +733,7 @@ export const FileTypes = {
     },
     {
       label: '8-K',
+      labelToShow: '8-K',
       value: [
         { value: '8-K15D5', color: 'rgb(43,144,144)' },
         { value: '8-K12G3/A', color: 'rgb(43,144,144)' },
@@ -803,9 +757,26 @@ export const FileTypes = {
         notes: []
       }
     },
-
+    {
+      label: 'EC-FMP',
+      labelToShow: 'Earning call',
+      value: [{ value: 'FMP-Transcript', color: 'rgb(244,91,91)' }],
+      globalFlag: 0,
+      documentTypeGroup: 'EC-FMP',
+      domestic: 1,
+      canadian: 1,
+      global: null,
+      index: 'fillings_sec_ecfmp*',
+      sections: {
+        totdoc: ['fmp-transcript.*'],
+        mda: [],
+        rf: [],
+        notes: []
+      }
+    },
     {
       label: 'AR',
+      labelToShow: 'AR',
       value: [
         { value: 'ARS/A', color: 'rgb(00,91,91)' },
         { value: 'ARS', color: 'rgb(00,91,91)' },
@@ -825,9 +796,84 @@ export const FileTypes = {
         notes: []
       }
     },
+    {
+      label: 'QR',
+      labelToShow: 'QR',
+      value: [
+        { value: 'QR', color: 'rgb(140,91,91)' },
+        { value: 'QR/A', color: 'rgb(140,91,91)' }
+      ],
 
+      globalFlag: 1,
+      documentTypeGroup: 'QR',
+      domestic: 1,
+      canadian: 1,
+      global: null,
+      index: 'fillings_global_qr*',
+      sections: {
+        totdoc: ['qr.*'],
+        mda: [],
+        rf: [],
+        notes: []
+      }
+    },
+    {
+      label: 'SR',
+      labelToShow: 'SR',
+      value: [{ value: 'SR', color: 'rgb(110,91,91' }],
+
+      globalFlag: 1,
+      documentTypeGroup: 'SR',
+      domestic: 1,
+      canadian: 1,
+      global: null,
+      index: 'fillings_global_sr*',
+      sections: {
+        totdoc: ['sr.*'],
+        mda: [],
+        rf: [],
+        notes: []
+      }
+    },
+    {
+      label: 'FIN-SUPP',
+      labelToShow: 'Finn Supp',
+      value: [{ value: 'FIN-SUPP', color: 'rgb(50,91,91)' }],
+
+      globalFlag: 1,
+      documentTypeGroup: 'FIN-SUPP',
+      domestic: 1,
+      canadian: 1,
+      global: null,
+      index: 'fillings_global_finsupp*',
+      sections: {
+        totdoc: ['fin supp.*'],
+        mda: [],
+        rf: [],
+        notes: []
+      }
+    },
+    {
+      label: 'OTH-FIN',
+      labelToShow: 'Oth Finn',
+      value: [{ value: 'Other Financials', color: 'rgb(248,91,91)' }],
+
+      globalFlag: 1,
+      documentTypeGroup: 'OTH-FIN',
+      domestic: 1,
+      canadian: 1,
+      global: null,
+      index: 'fillings_global_othfin*',
+      sections: {
+        totdoc: ['other financials.*'],
+        mda: [],
+        rf: [],
+        notes: []
+      }
+    },
     {
       label: 'ESG',
+      labelToShow: 'ESG',
       value: [
         { value: 'TCFD Report', color: 'rgb(120,91,105)' },
         { value: 'Sustainability Report', color: 'rgb(120,91,105)' },
@@ -849,44 +895,6 @@ export const FileTypes = {
         notes: []
       }
     },
-
-    {
-      label: 'QR',
-      value: [
-        { value: 'QR', color: 'rgb(140,91,91)' },
-        { value: 'QR/A', color: 'rgb(140,91,91)' }
-      ],
-
-      globalFlag: 1,
-      documentTypeGroup: 'QR',
-      domestic: 1,
-      canadian: 1,
-      global: null,
-      index: 'fillings_global_qr*',
-      sections: {
-        totdoc: ['qr.*'],
-        mda: [],
-        rf: [],
-        notes: []
-      }
-    },
-    {
-      label: 'SR',
-      value: [{ value: 'SR', color: 'rgb(110,91,91' }],
-
-      globalFlag: 1,
-      documentTypeGroup: 'SR',
-      domestic: 1,
-      canadian: 1,
-      global: null,
-      index: 'fillings_global_sr*',
-      sections: {
-        totdoc: ['sr.*'],
-        mda: [],
-        rf: [],
-        notes: []
-      }
-    }
   ]
 };
 

@@ -9,7 +9,7 @@ export const fileTypesSelectionGlobal = [
 export const typesSelection = [
   { label: 'US', key: 'domestic' },
   { label: 'Canada', key: 'global' },
-  // { label: 'Global', key: 'globalFileTypes' }
+  { label: 'Global', key: 'newGlobal' }
 ];
 export const universeSelection = [
   { label: 'Watchlist', key: 'watchlist' },
