@@ -21,61 +21,67 @@ const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
   const dispatch = useDispatch();
 
+  const refreshIndexDB = useCallback(async (apiParam, localStorageName, currMoment, indexDBCollectionName) => {
+    const response = await axios.get(
+      `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=${apiParam}&user_id=${user.id}&subject=all`
+    );
+    let data = get(response, 'data.data.content', []);
+    if (data && data.length > 0) {
+      await indexedDB()
+        .collection(indexDBCollectionName)
+        .set(data);
+    }
+    localStorage.setItem(localStorageName, currMoment);
+    dispatch(setCompleteCompaniesData(data));
+  }, [dispatch, user])
+
   const cacheData = useCallback(async () => {
     try {
       let data = [];
-      const lastTimeDataUpdate = moment().format('hh:mm:ss');
+      const lastTimeDataUpdate = moment().format();
       const previousStoredData = await indexedDB()
         .collection(config.indexDbDomesticCompniesData)
         .get();
       if (previousStoredData && previousStoredData.length > 0) {
         data = previousStoredData;
+        dispatch(setCompleteCompaniesData(data));
       } else {
-        const response = await axios.get(
-          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=domestic&user_id=${user.id}&subject=all`
-        );
-        data = get(response, 'data.data.content', []);
-        if (data && data.length > 0) {
-          await indexedDB()
-            .collection(config.indexDbDomesticCompniesData)
-            .set(data);
-        }
+        await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
       }
-      dispatch(setCompleteCompaniesData(data));
-      localStorage.setItem('lastTimeCompleteDataUpdate', lastTimeDataUpdate);
+      if (localStorage.getItem('lastTimeCompleteDataUpdatereal')) {
+        if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteDataUpdatereal'))) > 3600000)) {
+          await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+        }
+      } else await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
     } catch (error) {
       console.log(error);
     }
     dispatch(setCompleteDataLoadedFlag(true));
-  }, [dispatch, user]);
+  }, [dispatch, refreshIndexDB]);
 
   const cacheDataGlobal = useCallback(async () => {
     try {
       let data = [];
-      const lastTimeDataUpdate = moment().format('hh:mm:ss');
+      const lastTimeDataUpdate = moment().format();
       const previousStoredData = await indexedDB()
         .collection(config.indexDbGlobalCompniesData)
         .get();
       if (previousStoredData && previousStoredData.length > 0) {
         data = previousStoredData;
+        dispatch(setCompleteGlobalCompaniesData(data));
       } else {
-        const response = await axios.get(
-          `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=global&user_id=${user.id}&subject=all`
-        );
-        data = get(response, 'data.data.content', []);
-        if (data && data.length > 0) {
-          await indexedDB()
-            .collection(config.indexDbGlobalCompniesData)
-            .set(data);
-        }
+        await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
       }
-      dispatch(setCompleteGlobalCompaniesData(data));
-      localStorage.setItem('lastTimeCompleteGlobalDataUpdate', lastTimeDataUpdate);
+      if (localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal')) {
+        if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal'))) > 3600000)) {
+          await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+        }
+      } else await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
     } catch (error) {
       console.log(error);
     }
     dispatch(setCompleteDataLoadedGlobalFlag(true));
-  }, [dispatch, user]);
+  }, [dispatch, refreshIndexDB]);
 
   useEffect(() => {
     if (isNewEmailNotification && user) {
