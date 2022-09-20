@@ -3,6 +3,9 @@ import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 import Localbase from 'localbase';
 import config from '../../config/config';
 
+const watchlistStateKey1 = 'watchlistBigGridState';
+const watchlistStateKey2 = 'watchlistSmallGridState';
+
 const fields10k = {
   totdoc: ['i', 'j', 'k', 'l', 'm', 'n', 'o'],
   mda: ['w', 'x', 'y', 'z', 'aa', 'ab', 'ac'],
@@ -76,6 +79,18 @@ const formatFileTypeData = (fileTypeFields, rawData) => {
   return fileTypeData;
 };
 
+export const getStateKeyName = fileType => {
+  if (fileType) {
+    if (fileType === '10-K' || fileType === '10-Q') {
+      return watchlistStateKey1;
+    } else {
+      return watchlistStateKey2;
+    }
+  } else {
+    return null;
+  }
+};
+
 export const formatData = rawDataArr => {
   return rawDataArr.map(rawData => formatComapnyData(rawData));
 };
@@ -112,15 +127,16 @@ export const formatComapnyData = rawData => {
   };
 };
 
-const stateKey = 'watchlist::state';
+// const stateKey = 'watchlist::state';
 const filteringModelKey = 'watchlist::filtering';
 
-export const getColumnState = () => {
-  const offRampAlertsTableState = localStorage.getItem(stateKey);
+export const getColumnState = selectedFileType => {
+  const stateKey = getStateKeyName(selectedFileType);
+  const previousState = localStorage.getItem(stateKey);
   let columnState = [];
-  if (offRampAlertsTableState) {
+  if (previousState) {
     try {
-      columnState = JSON.parse(offRampAlertsTableState);
+      columnState = JSON.parse(previousState);
     } catch (error) {
       // logException(error)
     }
@@ -141,7 +157,8 @@ export const getFilteringState = () => {
   return sortingState;
 };
 
-export const storeColumnsState = state => {
+export const storeColumnsState = (selectedFileType, state) => {
+  const stateKey = getStateKeyName(selectedFileType);
   localStorage.setItem(stateKey, JSON.stringify(state));
 };
 
