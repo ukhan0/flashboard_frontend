@@ -91,7 +91,7 @@ const SentimentHighlights = props => {
 
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
-  }, [highlightsData, props, keys]);
+  }, [highlightsData]);
   useEffect(() => {
     if (props.highlightsData) {
       setHighlightsData(props.highlightsData);
