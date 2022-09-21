@@ -6,14 +6,7 @@ import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
 // import cjson from 'compressed-json';
 import { Box } from '@material-ui/core';
-import {
-  formatData,
-  storeColumnsState,
-  storeFilteringState,
-  getColumnState,
-  getFilteringState,
-  isBigAgGrid
-} from './WatchlistHelpers';
+import { formatData, storeFilteringState, getColumnState, getFilteringState, isBigAgGrid } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
@@ -122,22 +115,21 @@ const Watchlist = props => {
   let completeCompaniesDatalocal = useRef(completeCompaniesData);
   let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
+
   useEffect(() => {
-    const stateKey = 'watchlist::state';
     setTimeout(() => {
-      const currentColumnsState = localStorage.getItem(stateKey);
-      let columns = JSON.parse(currentColumnsState);
-      if (columns) {
-        let displayedColumnsState = columns.filter(v => !v.hide).map(v => v.colId);
-        setDispalyedColumns(displayedColumnsState);
-      }
+      let columns = getColumnState(selectedFileType);
+      let displayedColumnsState = columns.filter(v => !v.hide).map(v => v.colId);
+      setDispalyedColumns(displayedColumnsState);
     }, [100]);
     setCurrentCol(WatchlistService.getAgGridAColunms().columns);
-  }, [col, isAgGridSideBarOpen]);
+  }, [col, isAgGridSideBarOpen, selectedFileType]);
+
   useEffect(() => {
     completeCompaniesDatalocal.current = completeCompaniesData;
     completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
   }, [completeCompaniesData, completeCompaniesDataGlobal]);
+
   const handleColumns = (e, status) => {
     const coldId = e.target.value;
     setCol(`${coldId}${status}`);
@@ -146,7 +138,7 @@ const Watchlist = props => {
   const syncCompleteDataOnPage = useCallback(
     newData => {
       const rawCompleteData = cloneDeep(
-       (selectedType === 'domestic' || selectedType === 'newGlobal')
+        selectedType === 'domestic' || selectedType === 'newGlobal'
           ? completeCompaniesDatalocal.current
           : completeCompaniesDataGloballocal.current
       );
@@ -157,7 +149,7 @@ const Watchlist = props => {
         const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
         rawCompleteData[tickerIndex] = nd;
       });
-      if    (selectedType === 'domestic' || selectedType === 'newGlobal') {
+      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
         dispatch(setCompleteCompaniesData(rawCompleteData));
       } else {
         dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
@@ -199,7 +191,7 @@ const Watchlist = props => {
   useEffect(() => {
     let rawData = [];
     if (selectedUniverse === 'all') {
-      if  (selectedType === 'domestic' || selectedType === 'newGlobal') {
+      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
         rawData = completeCompaniesData;
       } else {
         rawData = completeCompaniesDataGlobal;
@@ -360,7 +352,7 @@ const Watchlist = props => {
       let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker : null));
       if (updatedTickerDetail !== -1) {
         rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-        if  (selectedType === 'domestic' || selectedType === 'newGlobal') {
+        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
           dispatch(setCompleteCompaniesData(rawCompleteData));
         } else {
           dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
@@ -373,7 +365,9 @@ const Watchlist = props => {
   const updateChacheData = useCallback(
     (ticker, isTicker) => {
       let rawCompleteData = cloneDeep(
-        (selectedType === 'domestic' || selectedType === 'newGlobal')? completeCompaniesDatalocal.current : completeCompaniesDataGloballocal.current
+        selectedType === 'domestic' || selectedType === 'newGlobal'
+          ? completeCompaniesDatalocal.current
+          : completeCompaniesDataGloballocal.current
       );
       if (Array.isArray(ticker)) {
         for (let i = 0; i < ticker.length; i++) {
@@ -382,7 +376,7 @@ const Watchlist = props => {
             rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
           }
         }
-        if  (selectedType === 'domestic' || selectedType === 'newGlobal'){
+        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
           dispatch(setCompleteCompaniesData(rawCompleteData));
         } else {
           dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
@@ -516,10 +510,6 @@ const Watchlist = props => {
       setSnackBar({ isSnackBar: true, message: 'something went wroung', severity: 'error' });
     }
     setIsFilterLabelOpen(false);
-  };
-
-  const onStoreColumnsState = state => {
-    storeColumnsState(state);
   };
 
   const onStoreFilteringState = state => {
@@ -664,10 +654,8 @@ const Watchlist = props => {
           <WatchlistCustomColumnsSideBar
             handleColumns={handleColumns}
             dispalyedColumns={dispalyedColumns}
-            storeColumnsState={onStoreColumnsState}
             currentCol={currentCol}
             open={isAgGridSideBarOpen}
-            col={col}
             handleCloseAgGridSideBar={handleCloseAgGridSideBar}
             isAgGridActions={isAgGridActions}
             title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
@@ -770,9 +758,8 @@ const Watchlist = props => {
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
           <WatchlistTable
             data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
-            storeColumnsState={onStoreColumnsState}
             storeFilteringState={onStoreFilteringState}
-            columnsState={getColumnState()}
+            // columnsState={getColumnState(selectedFileType)}
             filteringState={getFilteringState()}
             onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}

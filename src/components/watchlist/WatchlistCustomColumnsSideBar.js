@@ -60,7 +60,15 @@ function WatchlistCustomColumnsSideBar(props) {
               {props.currentCol.map(item => {
                 return !item.hide ? (
                   <FormControlLabel
-                    control={<Checkbox checked={props.dispalyedColumns.indexOf(item.colId) > -1} />}
+                    control={
+                      <Checkbox
+                        checked={
+                          props.dispalyedColumns && props.dispalyedColumns.length
+                            ? props.dispalyedColumns.indexOf(item.colId) > -1
+                            : true
+                        }
+                      />
+                    }
                     name={item.colId}
                     label={item.headerName}
                     key={item.colId}
