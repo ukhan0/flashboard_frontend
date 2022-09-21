@@ -32,7 +32,8 @@ import { saveComparisionSettings, getComparisionSettings } from '../comparision/
 import {
   checkIsFilterActive,
   getWatchlistType,
-  isBigAgGrid, getWatchlistSettings,
+  isBigAgGrid,
+  getWatchlistSettings,
   getCompanyByIndex,
   storeColumnsState,
   getColumnState
@@ -840,9 +841,7 @@ const WatchlistTable = props => {
         setTimeout(() => {
           gridApi.current.showNoRowsOverlay();
         }, [200]);
-        console.log("No data is available to show", data)
       } else {
-        console.log("yes data is available to show")
         setIsFilterData(false);
         gridApi.current.hideOverlay();
       }
