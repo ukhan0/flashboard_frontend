@@ -702,7 +702,7 @@ const WatchlistTable = props => {
     state => state.Watchlist
   );
   const gridApi = React.useRef(null);
-  const gridRef = React.useRef(null);
+  const gridRef = React.useRef();
   const [isFilterData, setIsFilterData] = React.useState(false);
   const [isClear, setIsClear] = React.useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
@@ -857,16 +857,11 @@ const WatchlistTable = props => {
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
     gridApi.current = params.api;
-    gridRef.current = params;
     var inputFilters = document.getElementsByClassName('ag-text-field-input');
     forEach(inputFilters, function(data) {
       data.setAttribute('autoComplete', 'new-password');
     });
 
-    const columnsState = getColumnState(selectedFileType);
-    if (!columnsState || !columnsState.length) {
-      storeColumnsState(selectedFileType, columnsState);
-    }
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
@@ -888,7 +883,6 @@ const WatchlistTable = props => {
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
 
-
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
@@ -905,6 +899,13 @@ const WatchlistTable = props => {
     // if (data) {
     //   selectTableRow(data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
     // }
+    const columnsState = getColumnState(selectedFileType);
+    if (columnsState && columnsState.length) {
+      gridRef.current.columnApi.applyColumnState({
+        state: columnsState,
+        applyOrder: true
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -929,18 +930,24 @@ const WatchlistTable = props => {
     }
   }, [props]);
 
-  const newColumnsLoadedHandler = params => {
-    setTimeout(() => {
-      const columnsState = getColumnState(selectedFileType);
-      params.columnApi.applyColumnState({
-        state: columnsState,
-        applyOrder: true
-      });
-    }, [200]);
-  };
+  useEffect(() => {
+    const columnsState = getColumnState(selectedFileType);
+    if (columnsState && columnsState.length) {
+      setTimeout(() => {
+        gridRef.current.columnApi.applyColumnState({
+          state: columnsState,
+          applyOrder: true
+        });
+      }, [500]);
+    } else {
+      storeColumnsState(selectedFileType, columnsState);
+    }
+  }, [selectedFileType]);
+
   return (
     <div className="ag-theme-alpine" style={{ height: '98%', width: '100%' }}>
       <AgGridReact
+        ref={gridRef}
         sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
@@ -961,7 +968,6 @@ const WatchlistTable = props => {
         onColumnResized={storeChangedColumnsState}
         onColumnMoved={storeChangedColumnsState}
         onColumnVisible={storeColumnsStateVisible}
-        onNewColumnsLoaded={newColumnsLoadedHandler}
         onSortChanged={storeChangedColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
