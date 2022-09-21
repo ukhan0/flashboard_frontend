@@ -29,8 +29,14 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
-import { checkIsFilterActive, getWatchlistType, isBigAgGrid } from './WatchlistHelpers';
-import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
+import {
+  checkIsFilterActive,
+  getWatchlistType,
+  isBigAgGrid,
+  getCompanyByIndex,
+  storeColumnsState,
+  getColumnState
+} from './WatchlistHelpers';
 import {
   setIsFilterActive,
   setWatchlistSearchText,
@@ -137,7 +143,6 @@ const colDefs = [
     field: 'ticker',
     colId: 'ticker',
     width: 118,
-    minWidth: 118,
     cellClass: ['center-align-text'],
     wrapText: false,
     filter: 'agTextColumnFilter',
@@ -550,7 +555,7 @@ const colDefs1 = [
     field: 'ticker',
     colId: 'ticker',
 
-    minWidth: 150,
+    width: 150,
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,
@@ -568,7 +573,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'companyName',
-    minWidth: 150
+    width: 150
   },
   {
     headerName: 'Country',
@@ -588,7 +593,6 @@ const colDefs1 = [
     }
   },
 
- 
   {
     headerName: 'Aggregate Sentiment',
     field: 'sentiment',
@@ -599,7 +603,7 @@ const colDefs1 = [
     colId: 'agrregate_sentiment',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    minWidth: 100,
+    width: 100,
     sortingOrder: ['desc', 'asc'],
     valueGetter: params => {
       const sentimentValue = get(params, 'data.sentiment', 0);
@@ -617,7 +621,7 @@ const colDefs1 = [
     colId: 'word_count',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    minWidth: 100,
+    width: 100,
     valueGetter: params => {
       const sentimentValue = get(params, 'data.wordCount', 0);
       return sentimentValue;
@@ -633,7 +637,6 @@ const colDefs1 = [
     valueFormatter: params => dateFormaterMoment(params.value),
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    minWidth: 50,
     width: 120,
     sortingOrder: ['desc', 'asc']
   },
@@ -645,7 +648,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'document_type',
-    minWidth: 100,
+    width: 100,
     valueFormatter: params => renameDocumentTypes(params.data.document_type)
   },
   {
@@ -657,7 +660,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'gics_sector',
-    minWidth: 150
+    width: 150
   },
   {
     headerName: 'Industry',
@@ -668,11 +671,9 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'gics_industry',
-    minWidth: 150
+    width: 150
   },
- 
-  
- 
+
   {
     headerName: 'Source',
     headerTooltip: 'Source',
@@ -682,7 +683,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'source_name',
-    minWidth: 150
+    width: 150
   }
 ];
 const tableFooter = {
@@ -699,6 +700,7 @@ const WatchlistTable = props => {
     state => state.Watchlist
   );
   const gridApi = React.useRef(null);
+  const gridRef = React.useRef();
   const [isFilterData, setIsFilterData] = React.useState(false);
   const [isClear, setIsClear] = React.useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
@@ -726,26 +728,16 @@ const WatchlistTable = props => {
   const storeColumnsStateComman = params => {
     const columnState = params.columnApi.getColumnState();
 
-    props.storeColumnsState(columnState);
+    storeColumnsState(selectedFileType, columnState);
     var padding = 40;
     var height = headerHeightGetter() + padding;
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
   };
-  const storeColumnsState = params => {
-    if (params.type === 'sortChanged') {
+  const storeChangedColumnsState = params => {
+    if (params.type === 'sortChanged' || params.type === 'columnResized' || params.type === 'columnMoved') {
       storeColumnsStateComman(params);
     }
-    if (params.type === 'columnResized') {
-      storeColumnsStateComman(params);
-    }
-    if (params.type === 'columnMoved') {
-      storeColumnsStateComman(params);
-    }
-    // if (isColResizing > 3) {
-    //   storeColumnsStateComman(params);
-    // }
-    // setColResizing(isColResizing + 1);
   };
 
   const storeColumnsStateVisible = params => {
@@ -862,11 +854,11 @@ const WatchlistTable = props => {
   const handleGridReady = params => {
     WatchlistService.init(params.api, params.columnApi); // global service
     gridApi.current = params.api;
-
     var inputFilters = document.getElementsByClassName('ag-text-field-input');
     forEach(inputFilters, function(data) {
       data.setAttribute('autoComplete', 'new-password');
     });
+
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];
@@ -882,22 +874,11 @@ const WatchlistTable = props => {
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
     }
-    const columnsState = props.columnsState;
     const filteringState = props.filteringState;
     var padding = 40;
     var height = headerHeightGetter() + padding;
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
-
-    if (columnsState && columnsState.length) {
-      params.columnApi.applyColumnState({
-        state: columnsState,
-        applyOrder: true
-      });
-    } else {
-      const columnState = params.columnApi.getColumnState();
-      props.storeColumnsState(columnState);
-    }
 
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
@@ -915,6 +896,13 @@ const WatchlistTable = props => {
     // if (data) {
     //   selectTableRow(data, 'ticker', true, params.api.getDisplayedRowAtIndex(0));
     // }
+    const columnsState = getColumnState(selectedFileType);
+    if (columnsState && columnsState.length) {
+      gridRef.current.columnApi.applyColumnState({
+        state: columnsState,
+        applyOrder: true
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -938,9 +926,25 @@ const WatchlistTable = props => {
       }, [100]);
     }
   }, [props]);
+
+  useEffect(() => {
+    const columnsState = getColumnState(selectedFileType);
+    if (columnsState && columnsState.length) {
+      setTimeout(() => {
+        gridRef.current.columnApi.applyColumnState({
+          state: columnsState,
+          applyOrder: true
+        });
+      }, [500]);
+    } else {
+      storeColumnsState(selectedFileType, columnsState);
+    }
+  }, [selectedFileType]);
+
   return (
     <div className="ag-theme-alpine" style={{ height: '98%', width: '100%' }}>
       <AgGridReact
+        ref={gridRef}
         sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
@@ -958,10 +962,10 @@ const WatchlistTable = props => {
         multiSortKey="ctrl"
         frameworkComponents={frameworkComponents}
         onCellClicked={cellClicked}
-        onColumnResized={storeColumnsState}
-        onColumnMoved={storeColumnsState}
+        onColumnResized={storeChangedColumnsState}
+        onColumnMoved={storeChangedColumnsState}
         onColumnVisible={storeColumnsStateVisible}
-        onSortChanged={storeColumnsState}
+        onSortChanged={storeChangedColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
         context={countriesCode}
