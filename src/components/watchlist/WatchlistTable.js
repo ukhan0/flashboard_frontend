@@ -760,7 +760,6 @@ const WatchlistTable = props => {
     gridApi.current.onFilterChanged();
   }, [isTickerSelected, searchText]);
   const handleColumnHideForSedar = useCallback(
-    ///////////////////////////////
     gridApiLocal => {
       let columnDefs = columnDefination;
       columnDefs.forEach(function(colDef) {

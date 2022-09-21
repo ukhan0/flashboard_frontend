@@ -529,7 +529,7 @@ const Watchlist = props => {
   };
 
   const clearSortHandler = state => {
-    const columnState = getColumnState(); ///////////////////
+    const columnState = getColumnState();
     let sortLast = null;
     columnState.forEach(elements => {
       if (elements.colId === 'last') {
