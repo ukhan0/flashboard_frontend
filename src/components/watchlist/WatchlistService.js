@@ -97,22 +97,6 @@ class WatchListService {
     }
   }
 
-  getColumnStateTable2 = () => {
-    const offRampAlertsTableState = localStorage.getItem(this.agGrid2);
-    let columnState = [];
-    if (offRampAlertsTableState) {
-      try {
-        columnState = JSON.parse(offRampAlertsTableState);
-      } catch (error) {
-        // logException(error)
-      }
-    }
-    return columnState;
-  };
-
-  storeColumnsStateTable2 = state => {
-    localStorage.setItem(this.agGrid2, JSON.stringify(state));
-  };
 }
 
 export default new WatchListService();

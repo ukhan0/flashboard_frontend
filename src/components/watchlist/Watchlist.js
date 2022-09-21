@@ -656,7 +656,6 @@ const Watchlist = props => {
             dispalyedColumns={dispalyedColumns}
             currentCol={currentCol}
             open={isAgGridSideBarOpen}
-            col={col}
             handleCloseAgGridSideBar={handleCloseAgGridSideBar}
             isAgGridActions={isAgGridActions}
             title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
