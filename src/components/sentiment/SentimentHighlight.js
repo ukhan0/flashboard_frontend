@@ -91,7 +91,8 @@ const SentimentHighlights = props => {
 
     document.getElementById('selectedHighlightText').textContent = keys[refValues.current.selectedKeyIndex];
     setViewedHighlights(refValues.current.count);
-  }, [highlightsData, props, keys]);
+    // eslint-disable-next-line no-use-before-define
+  }, [highlightsData]);
   useEffect(() => {
     if (props.highlightsData) {
       setHighlightsData(props.highlightsData);
