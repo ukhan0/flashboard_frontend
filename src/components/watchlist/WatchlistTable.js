@@ -143,7 +143,6 @@ const colDefs = [
     field: 'ticker',
     colId: 'ticker',
     width: 118,
-    minWidth: 118,
     cellClass: ['center-align-text'],
     wrapText: false,
     filter: 'agTextColumnFilter',
@@ -556,7 +555,7 @@ const colDefs1 = [
     field: 'ticker',
     colId: 'ticker',
 
-    minWidth: 150,
+    width: 150,
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,
@@ -574,7 +573,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'companyName',
-    minWidth: 150
+    width: 150
   },
   {
     headerName: 'Country',
@@ -604,7 +603,7 @@ const colDefs1 = [
     colId: 'agrregate_sentiment',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    minWidth: 100,
+    width: 100,
     sortingOrder: ['desc', 'asc'],
     valueGetter: params => {
       const sentimentValue = get(params, 'data.sentiment', 0);
@@ -622,7 +621,7 @@ const colDefs1 = [
     colId: 'word_count',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    minWidth: 100,
+    width: 100,
     valueGetter: params => {
       const sentimentValue = get(params, 'data.wordCount', 0);
       return sentimentValue;
@@ -638,7 +637,6 @@ const colDefs1 = [
     valueFormatter: params => dateFormaterMoment(params.value),
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    minWidth: 50,
     width: 120,
     sortingOrder: ['desc', 'asc']
   },
@@ -650,7 +648,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'document_type',
-    minWidth: 100,
+    width: 100,
     valueFormatter: params => renameDocumentTypes(params.data.document_type)
   },
   {
@@ -662,7 +660,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'gics_sector',
-    minWidth: 150
+    width: 150
   },
   {
     headerName: 'Industry',
@@ -673,7 +671,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'gics_industry',
-    minWidth: 150
+    width: 150
   },
 
   {
@@ -685,7 +683,7 @@ const colDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'source_name',
-    minWidth: 150
+    width: 150
   }
 ];
 const tableFooter = {
@@ -737,7 +735,7 @@ const WatchlistTable = props => {
     params.api.resetRowHeights();
   };
   const storeChangedColumnsState = params => {
-    if (params.type === 'sortChanged' || params.type === 'columnResizeddd' || params.type === 'columnMoved') {
+    if (params.type === 'sortChanged' || params.type === 'columnResized' || params.type === 'columnMoved') {
       storeColumnsStateComman(params);
     }
   };
