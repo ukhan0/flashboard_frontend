@@ -246,7 +246,7 @@ const SentimentSection = props => {
                                                                             childClr(d.attributes ? d.attributes.v : 0)
                                                                       }`,
 
-                                                                      marginLeft: 3,
+                                                                      marginLeft: 0,
                                                                       //borderRadius: 4,
                                                                       borderRadius: `${
                                                                         d.attributes
