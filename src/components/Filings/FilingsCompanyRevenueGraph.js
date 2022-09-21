@@ -124,7 +124,7 @@ const FilingsCompanyRevenueGraph = props => {
     }
   };
   const getShowingCompany = data => {
-    return data.length > 10 ? 10 : data.length / 2 - 1;
+    return (data.length / 2) > 10 ? 10 : (data.length / 2) - 1;
   };
   const options = {
     chart: {
