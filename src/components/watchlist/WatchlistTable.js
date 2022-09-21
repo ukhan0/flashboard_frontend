@@ -29,7 +29,7 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
-import { checkIsFilterActive, getWatchlistType, isBigAgGrid } from './WatchlistHelpers';
+import { checkIsFilterActive, getWatchlistType, isBigAgGrid, getWatchlistSettings } from './WatchlistHelpers';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import {
   setIsFilterActive,
@@ -848,14 +848,30 @@ const WatchlistTable = props => {
         setTimeout(() => {
           gridApi.current.showNoRowsOverlay();
         }, [200]);
+        console.log("No data is available to show", data)
       } else {
+        console.log("yes data is available to show")
         setIsFilterData(false);
         gridApi.current.hideOverlay();
       }
     }
     setIsClear(WatchlistService.getTickerState());
     const filteringModel = params.api.getFilterModel();
-    props.storeFilteringState(filteringModel);
+    const watchlistSetting = getWatchlistSettings();
+    let selectedType, selectedFileType, selectedUniverse, selectedMetric;
+    if (watchlistSetting) {
+      selectedType = watchlistSetting.selectedType ? watchlistSetting.selectedType : "domestic";
+      selectedFileType = watchlistSetting.selectedFileType ? watchlistSetting.selectedFileType : "10-K";
+      selectedUniverse = watchlistSetting.selectedUniverse ? watchlistSetting.selectedUniverse : "watchlist";
+      selectedMetric = watchlistSetting.selectedMetric ? watchlistSetting.selectedMetric : "totdoc";
+    } else {
+      selectedType = "domestic";
+      selectedFileType = "10-K";
+      selectedUniverse = "watchlist";
+      selectedMetric = "totdoc";
+    }
+    const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
+    props.storeFilteringState(allSelectedFilters);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
 
