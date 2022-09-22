@@ -168,12 +168,8 @@ export const storeFilteringState = state => {
 
 export const checkIsFilterActive = () => {
   const filteringState = getFilteringState();
-  delete filteringState.selectedFileType
-  delete filteringState.selectedMetric
-  delete filteringState.selectedType
-  delete filteringState.selectedUniverse
-  console.log("state",filteringState)
-  return !isEmpty(filteringState);
+  let { selectedFileType, selectedMetric, selectedType, selectedUniverse, ...filteredOutState } = filteringState;
+  return !isEmpty(filteredOutState);
 };
 
 export const checkIsSortActive = () => {
