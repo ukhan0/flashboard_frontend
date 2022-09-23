@@ -4,11 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, TextField } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
-import {
-  setSelectedTickerSymbol,
-  setSelectedWatchlist,
-  setIsTickerSelected
-} from '../../reducers/Watchlist';
+import { setSelectedTickerSymbol, setSelectedWatchlist, setIsTickerSelected } from '../../reducers/Watchlist';
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { useHistory } from 'react-router-dom';
@@ -23,12 +19,9 @@ const WatchlistTopicSearch = props => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const {
-    selectedTickerSymbol,
-    selectedFileType,
-    completeCompaniesData,
-    completeCompaniesDataGlobal
-  } = useSelector(state => state.Watchlist);
+  const { selectedTickerSymbol, selectedFileType, completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
+    state => state.Watchlist
+  );
 
   const getSearchFilteredData = (dataArray, textToSearch) => {
     textToSearch = textToSearch.toLowerCase();
@@ -57,7 +50,7 @@ const WatchlistTopicSearch = props => {
     setAvailableSymbols(filteredWatchlist);
 
     setLoading(false);
-  }, 0);
+  }, 100);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
@@ -79,14 +72,16 @@ const WatchlistTopicSearch = props => {
   };
 
   useEffect(() => {
-    const filteredWatchlist = completeCompaniesData
-      .concat(completeCompaniesDataGlobal)
-      .slice(0, 100)
-      .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
-      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+    if (availableSymbols.length === 0) {
+      const filteredWatchlist = completeCompaniesData
+        .concat(completeCompaniesDataGlobal)
+        .slice(0, 100)
+        .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
+        .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
 
-    setAvailableSymbols(filteredWatchlist);
-  }, [completeCompaniesData, completeCompaniesDataGlobal]);
+      setAvailableSymbols(filteredWatchlist);
+    }
+  }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols]);
 
   return (
     <FormControl className={classes.formControl}>
@@ -102,7 +97,7 @@ const WatchlistTopicSearch = props => {
         getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (
           <TextField
-            onBlur={() => { }}
+            onBlur={() => {}}
             {...params}
             variant="outlined"
             placeholder="Type Company Name or Symbol"
