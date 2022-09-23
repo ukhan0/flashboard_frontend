@@ -16,7 +16,7 @@ import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import GlobalTickerSearchField from '../../components/watchlist/WatchlistSearch';
 import WatchlistConfirmationDialog from 'components/watchlist/ActionConfirmation';
 import WatchlistService from '../../components/watchlist/WatchlistService';
-import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
+import { setSelectedTickerSymbol } from '../../reducers/Watchlist';
 const Header = props => {
   const { headerShadow, headerFixed, sidebarToggleMobile, showSidebar, sidebarToggle } = useSelector(
     state => state.ThemeOptions
@@ -35,7 +35,6 @@ const Header = props => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
     setConfirmationClearFilterDialog(false);
-    dispatch(setWatchlistSearchText(''));
   };
 
   return (

@@ -27,7 +27,7 @@ import {
 } from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
-import { setWatchlistSearchText, setSelectedTickerSymbol } from '../../reducers/Watchlist';
+import { setSelectedTickerSymbol } from '../../reducers/Watchlist';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
@@ -194,7 +194,6 @@ const TopicSearchResults = () => {
     dispatch(setIsApiResponseReceived(false));
     dispatch(setSentimentResult(null, null));
     dispatch(setSelectedTickerSymbol(null));
-    dispatch(setWatchlistSearchText(''));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const companyId = get(companyDocumentResultData, 'company_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);

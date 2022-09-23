@@ -12,7 +12,6 @@ import {
   setWatchlistSelectedSymbols,
   setOverwriteCheckBox,
   setCount,
-  setWatchlistSearchText,
   setSelectedTickerSymbol,
   setIsNewWatchlistDataAvailable,
   setIsTickerSelected,
@@ -76,10 +75,8 @@ const Watchlist = props => {
     selectedMetric,
     selectedSymbols,
     count,
-    searchText,
     isFilterActive,
     selectedTickerSymbol,
-
     isColorEnable,
     overwriteCheckBox,
     completeCompaniesData,
@@ -98,7 +95,6 @@ const Watchlist = props => {
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const firstTimeLoad = useRef(true);
-  const [isFilterActiveOnSearch, setIsFilterActiveOnSearch] = useState(null);
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
@@ -268,10 +264,6 @@ const Watchlist = props => {
       dispatch(setIsNewWatchlistDataAvailable(true));
     }
   }, [dispatch, history.location.pathname]);
-
-  useEffect(() => {
-    setIsFilterActiveOnSearch(searchText);
-  }, [searchText]);
 
   // useEffect(() => {
   //   let tickers = [];
@@ -520,8 +512,6 @@ const Watchlist = props => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
     setConfirmationClearFilterDialog(false);
-    dispatch(setWatchlistSearchText(''));
-    setIsFilterActiveOnSearch('');
     dispatch(setIsTickerSelected(false));
     dispatch(setSelectedFilter(null));
     dispatch(setIsFilterUpdate(false));
@@ -694,7 +684,7 @@ const Watchlist = props => {
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Grid item>
               <Box className="d-flex align-items-center">
-                {isFilterActive || isFilterActiveOnSearch ? (
+                {isFilterActive ? (
                   <>
                     {isFilterUpdate && savedFiltersList.length >= 1 ? (
                       <>
