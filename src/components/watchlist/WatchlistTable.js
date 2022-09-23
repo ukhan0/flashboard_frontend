@@ -39,7 +39,6 @@ import {
 } from './WatchlistHelpers';
 import {
   setIsFilterActive,
-  setWatchlistSearchText,
   setSelectedTickerSymbol,
   setIsTickerSelected,
   setSelectedWatchlist
@@ -696,7 +695,7 @@ const tableFooter = {
 };
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const { searchText, selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(
+  const { selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(
     state => state.Watchlist
   );
   const gridApi = React.useRef(null);
@@ -754,11 +753,11 @@ const WatchlistTable = props => {
       isTicker.current = true;
       tickerFilterInstance.setModel({
         type: 'equals',
-        filter: searchText
+        filter: ''
       });
     }
     gridApi.current.onFilterChanged();
-  }, [isTickerSelected, searchText]);
+  }, [isTickerSelected]);
   const handleColumnHideForSedar = useCallback(
     gridApiLocal => {
       let columnDefs = columnDefination;
@@ -907,7 +906,6 @@ const WatchlistTable = props => {
 
   React.useEffect(() => {
     if (isClear && isTicker.current) {
-      dispatch(setWatchlistSearchText(''));
       dispatch(setSelectedTickerSymbol(null));
       setIsClear(false);
       dispatch(setIsTickerSelected(false));
@@ -951,7 +949,7 @@ const WatchlistTable = props => {
         rowData={props.data}
         getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
         // immutableData={true}
-        quickFilterText={searchText}
+        quickFilterText={''}
         columnDefs={columnDefination}
         defaultColDef={defaultColDef}
         sideBar={sideBarConfiguration}

@@ -3,7 +3,6 @@ export const SET_FILE_TYPE = 'WATCHLIST/SET_FILE_TYPE';
 export const SET_TYPE = 'WATCHLIST/SET_TYPE';
 export const SET_UNIVERSE = 'WATCHLIST/SET_UNIVERSE';
 export const SET_METRIC = 'WATCHLIST/SET_METRIC';
-export const SET_SEARCH_TEXT = 'WATCHLIST/SET_SEARCH_TEXT';
 export const SET_SELECTED_TAB = 'WATCHLIST/SET_SELECTED_TAB';
 export const SET_SELECTED_WATCHLIST = 'WATCHLIST/SET_SELECTED_WATCHLIST';
 export const SET_SELECTED_SYMBOLS = 'WATCHLIST/SET_SELECTED_SYMBOLS';
@@ -85,10 +84,6 @@ export const setWatchlistUniverse = universe => ({
 export const setWatchlistMetric = metric => ({
   type: SET_METRIC,
   metric
-});
-export const setWatchlistSearchText = searchText => ({
-  type: SET_SEARCH_TEXT,
-  searchText
 });
 export const setWatchlistTopicTab = selectedTab => ({
   type: SET_SELECTED_TAB,
@@ -214,7 +209,6 @@ const getDefaultState = () => {
         ? watchlistSetting.selectedMetric
         : 'totdoc'
       : 'totdoc',
-    searchText: '',
     selectedTab: 0,
     count: 0,
     selectedSymbols: [],
@@ -273,8 +267,6 @@ export default function reducer(
       return { ...state, selectedUniverse: action.universe };
     case SET_METRIC:
       return { ...state, selectedMetric: action.metric };
-    case SET_SEARCH_TEXT:
-      return { ...state, searchText: action.searchText };
     case SET_SELECTED_TAB:
       return { ...state, selectedTab: action.selectedTab };
     case SET_SELECTED_WATCHLIST:
