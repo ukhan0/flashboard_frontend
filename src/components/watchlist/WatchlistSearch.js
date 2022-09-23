@@ -81,7 +81,7 @@ const WatchlistTopicSearch = props => {
 
       setAvailableSymbols(filteredWatchlist);
     }
-  }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols]);
+  }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols.length]);
 
   return (
     <FormControl className={classes.formControl}>
