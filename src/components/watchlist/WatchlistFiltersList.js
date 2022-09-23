@@ -13,7 +13,14 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import WatchlistService from './WatchlistService';
-import { setIsFilterUpdate, setSelectedFilter, setFilterLabel } from '../../reducers/Watchlist';
+import { 
+  setIsFilterUpdate,
+  setSelectedFilter,
+  setFilterLabel,
+  setWatchlistType,
+  setWatchlistFileType,
+  setWatchlistMetric,
+  setWatchlistUniverse } from '../../reducers/Watchlist';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -36,6 +43,10 @@ function WatchlistFiltersList(props) {
       WatchlistService.agGridAPI.setFilterModel(filter.search_json);
     }
     if (isUpdate) {
+      dispatch(setWatchlistType(filter.search_json.selectedType));
+      dispatch(setWatchlistFileType(filter.search_json.selectedFileType));
+      dispatch(setWatchlistMetric(filter.search_json.selectedMetric));
+      dispatch(setWatchlistUniverse(filter.search_json.selectedUniverse));
       dispatch(setSelectedFilter(filter));
       dispatch(setIsFilterUpdate(true));
       dispatch(setFilterLabel(filter.filter_label));

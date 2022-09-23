@@ -33,6 +33,7 @@ import {
   checkIsFilterActive,
   getWatchlistType,
   isBigAgGrid,
+  getWatchlistSettings,
   getCompanyByIndex,
   storeColumnsState,
   getColumnState
@@ -846,7 +847,21 @@ const WatchlistTable = props => {
     }
     setIsClear(WatchlistService.getTickerState());
     const filteringModel = params.api.getFilterModel();
-    props.storeFilteringState(filteringModel);
+    const watchlistSetting = getWatchlistSettings();
+    let selectedType, selectedFileType, selectedUniverse, selectedMetric;
+    if (watchlistSetting) {
+      selectedType = watchlistSetting.selectedType ? watchlistSetting.selectedType : "domestic";
+      selectedFileType = watchlistSetting.selectedFileType ? watchlistSetting.selectedFileType : "10-K";
+      selectedUniverse = watchlistSetting.selectedUniverse ? watchlistSetting.selectedUniverse : "watchlist";
+      selectedMetric = watchlistSetting.selectedMetric ? watchlistSetting.selectedMetric : "totdoc";
+    } else {
+      selectedType = "domestic";
+      selectedFileType = "10-K";
+      selectedUniverse = "watchlist";
+      selectedMetric = "totdoc";
+    }
+    const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
+    props.storeFilteringState(allSelectedFilters);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
 
