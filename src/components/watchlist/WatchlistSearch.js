@@ -50,7 +50,7 @@ const WatchlistTopicSearch = props => {
     setAvailableSymbols(filteredWatchlist);
 
     setLoading(false);
-  }, 100);
+  }, 250);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
