@@ -108,8 +108,12 @@ export const getCompanyPrice0verlayOnTimeline = () => {
     try {
       const response = await axios.get(`${config.apiUrl}/api/get_price_by_ticker?ticker=${selectedItem.ticker}`);
 
-      const data = get(response, 'data', []);
       if (response) {
+        const data = get(response, 'data', []);
+        if (data.error) {
+          dispatch(setCompanyPriceOverlay([]));
+          return;
+        }
         dispatch(setCompanyPriceOverlay(data));
       } else {
         dispatch(setCompanyPriceOverlay([]));
