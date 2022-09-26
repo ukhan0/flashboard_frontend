@@ -23,19 +23,22 @@ const Cache = () => {
   const domesticKey = 'lastTimeCompleteDataUpdatereal';
   const globalKey = 'lastTimeCompleteGlobalDataUpdatereal';
 
-  const refreshIndexDB = useCallback(async (apiParam, localStorageName, currMoment, indexDBCollectionName) => {
-    const response = await axios.get(
-      `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=${apiParam}&user_id=${user.id}&subject=all`
-    );
-    let data = get(response, 'data.data.content', []);
-    if (data && data.length > 0) {
-      await indexedDB()
-        .collection(indexDBCollectionName)
-        .set(data);
-    }
-    localStorage.setItem(localStorageName, currMoment);
-    dispatch(setCompleteCompaniesData(data));
-  }, [dispatch, user])
+  const refreshIndexDB = useCallback(
+    async (apiParam, localStorageName, currMoment, indexDBCollectionName) => {
+      const response = await axios.get(
+        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=${apiParam}&user_id=${user.id}&subject=all`
+      );
+      let data = get(response, 'data.data.content', []);
+      if (data && data.length > 0) {
+        await indexedDB()
+          .collection(indexDBCollectionName)
+          .set(data);
+      }
+      localStorage.setItem(localStorageName, currMoment);
+      dispatch(setCompleteCompaniesData(data));
+    },
+    [dispatch, user]
+  );
 
   const cacheData = useCallback(async () => {
     dispatch(setCompleteDataLoadedFlag(false));
@@ -53,8 +56,9 @@ const Cache = () => {
         dispatch(setCompleteDataLoadedFlag(true));
         return;
       }
-      if (localStorage.getItem(domesticKey)) {
-        if (((new Date() - new Date(localStorage.getItem(domesticKey))) > 3600000)) {
+      const savedDate = localStorage.getItem(domesticKey);
+      if (savedDate) {
+        if (new Date() - new Date(savedDate) > 3600000) {
           await refreshIndexDB('domestic', domesticKey, lastTimeDataUpdate, config.indexDbDomesticCompniesData);
         }
       } else await refreshIndexDB('domestic', domesticKey, lastTimeDataUpdate, config.indexDbDomesticCompniesData);
@@ -65,7 +69,7 @@ const Cache = () => {
   }, [dispatch, refreshIndexDB]);
 
   const cacheDataGlobal = useCallback(async () => {
-      dispatch(setCompleteDataLoadedGlobalFlag(false));
+    dispatch(setCompleteDataLoadedGlobalFlag(false));
     try {
       let data = [];
       const lastTimeDataUpdate = moment().format();
@@ -80,8 +84,10 @@ const Cache = () => {
         dispatch(setCompleteDataLoadedGlobalFlag(true));
         return;
       }
-      if (localStorage.getItem(globalKey)) {
-        if (((new Date() - new Date(localStorage.getItem(globalKey))) > 3600000)) {
+      const savedDate = localStorage.getItem(globalKey);
+
+      if (savedDate) {
+        if (new Date() - new Date(savedDate) > 3600000) {
           await refreshIndexDB('global', globalKey, lastTimeDataUpdate, config.indexDbGlobalCompniesData);
         }
       } else await refreshIndexDB('global', globalKey, lastTimeDataUpdate, config.indexDbGlobalCompniesData);
