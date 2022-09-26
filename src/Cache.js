@@ -39,9 +39,13 @@ const Cache = () => {
           .collection(indexDBCollectionName)
           .set(data);
       }
-      const key = apiParam === 'domestic' ? domesticKey : globalKey;
-      localStorage.setItem(localStorageName, currMoment);
-      dispatch(setCompleteCompaniesData(data));
+      if (apiParam === 'domestic') {
+        localStorage.setItem(domesticKey, currMoment);
+        dispatch(setCompleteCompaniesData(data));
+      } else if (apiParam === 'global') {
+        localStorage.setItem(globalKey, currMoment);
+        dispatch(setCompleteGlobalCompaniesData(data));
+      }
     },
     [dispatch, user]
   );
