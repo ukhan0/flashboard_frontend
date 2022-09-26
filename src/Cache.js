@@ -20,6 +20,8 @@ import { indexedDB } from './components/watchlist/WatchlistHelpers';
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
   const dispatch = useDispatch();
+  const domesticKey = 'lastTimeCompleteDataUpdatereal';
+  const globalKey = 'lastTimeCompleteGlobalDataUpdatereal';
 
   const refreshIndexDB = useCallback(async (apiParam, localStorageName, currMoment, indexDBCollectionName) => {
     const response = await axios.get(
@@ -36,6 +38,7 @@ const Cache = () => {
   }, [dispatch, user])
 
   const cacheData = useCallback(async () => {
+    dispatch(setCompleteDataLoadedFlag(false));
     try {
       let data = [];
       const lastTimeDataUpdate = moment().format();
@@ -47,6 +50,8 @@ const Cache = () => {
         dispatch(setCompleteCompaniesData(data));
       } else {
         await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+        dispatch(setCompleteDataLoadedFlag(true));
+        return;
       }
       if (localStorage.getItem('lastTimeCompleteDataUpdatereal')) {
         if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteDataUpdatereal'))) > 3600000)) {
@@ -60,6 +65,7 @@ const Cache = () => {
   }, [dispatch, refreshIndexDB]);
 
   const cacheDataGlobal = useCallback(async () => {
+      dispatch(setCompleteDataLoadedGlobalFlag(false));
     try {
       let data = [];
       const lastTimeDataUpdate = moment().format();
@@ -71,6 +77,8 @@ const Cache = () => {
         dispatch(setCompleteGlobalCompaniesData(data));
       } else {
         await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+        dispatch(setCompleteDataLoadedGlobalFlag(true));
+        return;
       }
       if (localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal')) {
         if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal'))) > 3600000)) {
@@ -110,8 +118,6 @@ const Cache = () => {
     if (user) {
       const socket = io.connect(config.socketUrl);
       SocketService.init(socket);
-      dispatch(setCompleteDataLoadedFlag(false));
-      dispatch(setCompleteDataLoadedGlobalFlag(false));
       cacheData();
       cacheDataGlobal();
     }
