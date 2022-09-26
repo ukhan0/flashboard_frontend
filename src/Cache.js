@@ -49,15 +49,15 @@ const Cache = () => {
         data = previousStoredData;
         dispatch(setCompleteCompaniesData(data));
       } else {
-        await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+        await refreshIndexDB('domestic', domesticKey, lastTimeDataUpdate, config.indexDbDomesticCompniesData);
         dispatch(setCompleteDataLoadedFlag(true));
         return;
       }
-      if (localStorage.getItem('lastTimeCompleteDataUpdatereal')) {
-        if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteDataUpdatereal'))) > 3600000)) {
-          await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+      if (localStorage.getItem(domesticKey)) {
+        if (((new Date() - new Date(localStorage.getItem(domesticKey))) > 3600000)) {
+          await refreshIndexDB('domestic', domesticKey, lastTimeDataUpdate, config.indexDbDomesticCompniesData);
         }
-      } else await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+      } else await refreshIndexDB('domestic', domesticKey, lastTimeDataUpdate, config.indexDbDomesticCompniesData);
     } catch (error) {
       console.log(error);
     }
@@ -76,15 +76,15 @@ const Cache = () => {
         data = previousStoredData;
         dispatch(setCompleteGlobalCompaniesData(data));
       } else {
-        await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+        await refreshIndexDB('global', globalKey, lastTimeDataUpdate, config.indexDbGlobalCompniesData);
         dispatch(setCompleteDataLoadedGlobalFlag(true));
         return;
       }
-      if (localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal')) {
-        if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal'))) > 3600000)) {
-          await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+      if (localStorage.getItem(globalKey)) {
+        if (((new Date() - new Date(localStorage.getItem(globalKey))) > 3600000)) {
+          await refreshIndexDB('global', globalKey, lastTimeDataUpdate, config.indexDbGlobalCompniesData);
         }
-      } else await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+      } else await refreshIndexDB('global', globalKey, lastTimeDataUpdate, config.indexDbGlobalCompniesData);
     } catch (error) {
       console.log(error);
     }
