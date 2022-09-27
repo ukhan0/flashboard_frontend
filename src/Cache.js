@@ -24,7 +24,7 @@ const Cache = () => {
   const globalKey = 'lastTimeCompleteGlobalDataUpdatereal';
 
   const refreshIndexDB = useCallback(
-    async (apiParam, indexDBCollectionName) => {
+    async apiParam => {
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
         params: {
           auth_token: user.authentication_token,
@@ -37,15 +37,18 @@ const Cache = () => {
       if (data && data.length > 0) {
         const currMoment = moment().format();
         if (apiParam === 'domestic') {
-          localStorage.setItem(domesticKey, currMoment);
           dispatch(setCompleteCompaniesData(data));
+          localStorage.setItem(domesticKey, currMoment);
+          await indexedDB()
+            .collection(config.indexDbDomesticCompniesData)
+            .set(data);
         } else if (apiParam === 'global') {
-          localStorage.setItem(globalKey, currMoment);
           dispatch(setCompleteGlobalCompaniesData(data));
+          localStorage.setItem(globalKey, currMoment);
+          await indexedDB()
+            .collection(config.indexDbGlobalCompniesData)
+            .set(data);
         }
-        await indexedDB()
-          .collection(indexDBCollectionName)
-          .set(data);
       }
     },
     [dispatch, user]
@@ -60,16 +63,16 @@ const Cache = () => {
       if (previousStoredData && previousStoredData.length > 0) {
         dispatch(setCompleteCompaniesData(previousStoredData));
       } else {
-        await refreshIndexDB('domestic', config.indexDbDomesticCompniesData);
+        await refreshIndexDB('domestic');
         dispatch(setCompleteDataLoadedFlag(true));
         return;
       }
       const savedDate = localStorage.getItem(domesticKey);
       if (savedDate) {
         if (new Date() - new Date(savedDate) > 3600000) {
-          await refreshIndexDB('domestic', config.indexDbDomesticCompniesData);
+          await refreshIndexDB('domestic');
         }
-      } else await refreshIndexDB('domestic', config.indexDbDomesticCompniesData);
+      } else await refreshIndexDB('domestic');
     } catch (error) {
       console.log(error);
     }
@@ -85,16 +88,16 @@ const Cache = () => {
       if (previousStoredData && previousStoredData.length > 0) {
         dispatch(setCompleteGlobalCompaniesData(previousStoredData));
       } else {
-        await refreshIndexDB('global', config.indexDbGlobalCompniesData);
+        await refreshIndexDB('global');
         dispatch(setCompleteDataLoadedGlobalFlag(true));
         return;
       }
       const savedDate = localStorage.getItem(globalKey);
       if (savedDate) {
         if (new Date() - new Date(savedDate) > 3600000) {
-          await refreshIndexDB('global', config.indexDbGlobalCompniesData);
+          await refreshIndexDB('global');
         }
-      } else await refreshIndexDB('global', config.indexDbGlobalCompniesData);
+      } else await refreshIndexDB('global');
     } catch (error) {
       console.log(error);
     }
