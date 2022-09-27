@@ -20,39 +20,59 @@ import { indexedDB } from './components/watchlist/WatchlistHelpers';
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
   const dispatch = useDispatch();
+  const domesticKey = 'lastTimeCompleteDataUpdatereal';
+  const globalKey = 'lastTimeCompleteGlobalDataUpdatereal';
 
-  const refreshIndexDB = useCallback(async (apiParam, localStorageName, currMoment, indexDBCollectionName) => {
-    const response = await axios.get(
-      `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&selected_type=${apiParam}&user_id=${user.id}&subject=all`
-    );
-    let data = get(response, 'data.data.content', []);
-    if (data && data.length > 0) {
-      await indexedDB()
-        .collection(indexDBCollectionName)
-        .set(data);
-    }
-    localStorage.setItem(localStorageName, currMoment);
-    dispatch(setCompleteCompaniesData(data));
-  }, [dispatch, user])
+  const refreshIndexDB = useCallback(
+    async apiParam => {
+      const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
+        params: {
+          auth_token: user.authentication_token,
+          selected_type: apiParam,
+          user_id: user.id,
+          subject: 'all'
+        }
+      });
+      let data = get(response, 'data.data.content', []);
+      if (data && data.length > 0) {
+        const currMoment = moment().format();
+        if (apiParam === 'domestic') {
+          dispatch(setCompleteCompaniesData(data));
+          localStorage.setItem(domesticKey, currMoment);
+          await indexedDB()
+            .collection(config.indexDbDomesticCompniesData)
+            .set(data);
+        } else if (apiParam === 'global') {
+          dispatch(setCompleteGlobalCompaniesData(data));
+          localStorage.setItem(globalKey, currMoment);
+          await indexedDB()
+            .collection(config.indexDbGlobalCompniesData)
+            .set(data);
+        }
+      }
+    },
+    [dispatch, user]
+  );
 
   const cacheData = useCallback(async () => {
+    dispatch(setCompleteDataLoadedFlag(false));
     try {
-      let data = [];
-      const lastTimeDataUpdate = moment().format();
       const previousStoredData = await indexedDB()
         .collection(config.indexDbDomesticCompniesData)
         .get();
       if (previousStoredData && previousStoredData.length > 0) {
-        data = previousStoredData;
-        dispatch(setCompleteCompaniesData(data));
+        dispatch(setCompleteCompaniesData(previousStoredData));
       } else {
-        await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+        await refreshIndexDB('domestic');
+        dispatch(setCompleteDataLoadedFlag(true));
+        return;
       }
-      if (localStorage.getItem('lastTimeCompleteDataUpdatereal')) {
-        if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteDataUpdatereal'))) > 3600000)) {
-          await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+      const savedDate = localStorage.getItem(domesticKey);
+      if (savedDate) {
+        if (new Date() - new Date(savedDate) > 3600000) {
+          await refreshIndexDB('domestic');
         }
-      } else await refreshIndexDB('domestic', 'lastTimeCompleteDataUpdatereal', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
+      } else await refreshIndexDB('domestic');
     } catch (error) {
       console.log(error);
     }
@@ -60,23 +80,24 @@ const Cache = () => {
   }, [dispatch, refreshIndexDB]);
 
   const cacheDataGlobal = useCallback(async () => {
+    dispatch(setCompleteDataLoadedGlobalFlag(false));
     try {
-      let data = [];
-      const lastTimeDataUpdate = moment().format();
       const previousStoredData = await indexedDB()
         .collection(config.indexDbGlobalCompniesData)
         .get();
       if (previousStoredData && previousStoredData.length > 0) {
-        data = previousStoredData;
-        dispatch(setCompleteGlobalCompaniesData(data));
+        dispatch(setCompleteGlobalCompaniesData(previousStoredData));
       } else {
-        await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+        await refreshIndexDB('global');
+        dispatch(setCompleteDataLoadedGlobalFlag(true));
+        return;
       }
-      if (localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal')) {
-        if (((new Date() - new Date(localStorage.getItem('lastTimeCompleteGlobalDataUpdatereal'))) > 3600000)) {
-          await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+      const savedDate = localStorage.getItem(globalKey);
+      if (savedDate) {
+        if (new Date() - new Date(savedDate) > 3600000) {
+          await refreshIndexDB('global');
         }
-      } else await refreshIndexDB('global', 'lastTimeCompleteGlobalDataUpdatereal', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
+      } else await refreshIndexDB('global');
     } catch (error) {
       console.log(error);
     }
@@ -110,12 +131,10 @@ const Cache = () => {
     if (user) {
       const socket = io.connect(config.socketUrl);
       SocketService.init(socket);
-      dispatch(setCompleteDataLoadedFlag(false));
-      dispatch(setCompleteDataLoadedGlobalFlag(false));
       cacheData();
       cacheDataGlobal();
     }
-  }, [cacheData, cacheDataGlobal, user, dispatch]);
+  }, [cacheData, cacheDataGlobal, user]);
 
   return <></>;
 };
