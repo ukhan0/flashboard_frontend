@@ -22,8 +22,12 @@ export default function FillingCompanyPriceOverlay(props) {
       const response = await axios.get(
         `${config.apiUrl}/api/get_price_by_ticker?ticker=${homePageSelectedItem.ticker}`
       );
-      const data = get(response, 'data', []);
       if (response) {
+        const data = get(response, 'data', []);
+        if (data.error) {
+          setStockChartPriceData([]);
+          return;
+        }
         setStockChartPriceData(data);
       } else {
         setStockChartPriceData([]);

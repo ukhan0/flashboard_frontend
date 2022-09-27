@@ -284,7 +284,7 @@ const TopicFilters = props => {
         </Grid>
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
-        <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+        <Grid container direction="row" justify="flex-start" alignItems="center">
           <Grid item>
             <Button
               disabled={isButtonActive}

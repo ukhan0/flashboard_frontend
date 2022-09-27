@@ -123,7 +123,7 @@ export default function HomepageNotification() {
                   </div>
                   <div className="timeline-item--content">
                     <div className="timeline-item--icon"></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '20px' }}>
+                    <div style={{ display: 'flex', justify: 'space-between', paddingRight: '20px' }}>
                       <h4 className="timeline-item--label mb-2 ">{data.symbol}</h4>
                       <h4 className="timeline-item--label mb-2 " style={{ textAlign: 'right' }}>
                         {moment(`${data.date}T${data.time}:00`).format('MM/DD/YYYY')}
