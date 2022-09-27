@@ -35,16 +35,16 @@ const Cache = () => {
       });
       let data = get(response, 'data.data.content', []);
       if (data && data.length > 0) {
+        if (apiParam === 'domestic') {
+          localStorage.setItem(domesticKey, currMoment);
+          dispatch(setCompleteCompaniesData(data));
+        } else if (apiParam === 'global') {
+          localStorage.setItem(globalKey, currMoment);
+          dispatch(setCompleteGlobalCompaniesData(data));
+        }
         await indexedDB()
           .collection(indexDBCollectionName)
           .set(data);
-      }
-      if (apiParam === 'domestic') {
-        localStorage.setItem(domesticKey, currMoment);
-        dispatch(setCompleteCompaniesData(data));
-      } else if (apiParam === 'global') {
-        localStorage.setItem(globalKey, currMoment);
-        dispatch(setCompleteGlobalCompaniesData(data));
       }
     },
     [dispatch, user]
@@ -53,14 +53,12 @@ const Cache = () => {
   const cacheData = useCallback(async () => {
     dispatch(setCompleteDataLoadedFlag(false));
     try {
-      let data = [];
       const lastTimeDataUpdate = moment().format();
       const previousStoredData = await indexedDB()
         .collection(config.indexDbDomesticCompniesData)
         .get();
       if (previousStoredData && previousStoredData.length > 0) {
-        data = previousStoredData;
-        dispatch(setCompleteCompaniesData(data));
+        dispatch(setCompleteCompaniesData(previousStoredData));
       } else {
         await refreshIndexDB('domestic', lastTimeDataUpdate, config.indexDbDomesticCompniesData);
         dispatch(setCompleteDataLoadedFlag(true));
@@ -81,14 +79,12 @@ const Cache = () => {
   const cacheDataGlobal = useCallback(async () => {
     dispatch(setCompleteDataLoadedGlobalFlag(false));
     try {
-      let data = [];
       const lastTimeDataUpdate = moment().format();
       const previousStoredData = await indexedDB()
         .collection(config.indexDbGlobalCompniesData)
         .get();
       if (previousStoredData && previousStoredData.length > 0) {
-        data = previousStoredData;
-        dispatch(setCompleteGlobalCompaniesData(data));
+        dispatch(setCompleteGlobalCompaniesData(previousStoredData));
       } else {
         await refreshIndexDB('global', lastTimeDataUpdate, config.indexDbGlobalCompniesData);
         dispatch(setCompleteDataLoadedGlobalFlag(true));
