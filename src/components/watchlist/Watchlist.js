@@ -30,7 +30,6 @@ import {
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
-import WatchlistConfirmationDialog from './ActionConfirmation';
 import { useSelector, useDispatch } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
@@ -43,7 +42,6 @@ import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
 import { getWatchlist, getWatchlistTable2Data } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
-import { lastReportedState } from './WatchlistTableHelpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideBar';
@@ -64,7 +62,7 @@ const screenTitle = {
   zIndex: '1',
   textAlign: 'center'
 };
-const Watchlist = props => {
+const Watchlist = () => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -89,8 +87,6 @@ const Watchlist = props => {
 
   const [watchlistData, setWatchlistData] = useState([]);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
-  const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
-  const [confirmationClearSortDialog, setConfirmationClearSortDialog] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
@@ -98,13 +94,13 @@ const Watchlist = props => {
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
+  const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
-  const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
   const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
   const [col, setCol] = React.useState(null);
   const [currentCol, setCurrentCol] = React.useState([]);
@@ -131,28 +127,6 @@ const Watchlist = props => {
     setCol(`${coldId}${status}`);
     WatchlistService.mangeAgGridColunms(coldId, status);
   };
-  const syncCompleteDataOnPage = useCallback(
-    newData => {
-      const rawCompleteData = cloneDeep(
-        selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesDatalocal.current
-          : completeCompaniesDataGloballocal.current
-      );
-      if (!rawCompleteData || !isArray(rawCompleteData)) {
-        return;
-      }
-      newData.forEach(nd => {
-        const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
-        rawCompleteData[tickerIndex] = nd;
-      });
-      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-        dispatch(setCompleteCompaniesData(rawCompleteData));
-      } else {
-        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-      }
-    },
-    [selectedType, dispatch]
-  );
 
   const getWatchlistFileTypeEmailAlertStatus = useCallback(async () => {
     let fileTypesEmailStatus = [];
@@ -181,8 +155,24 @@ const Watchlist = props => {
   }, []);
 
   useEffect(() => {
-    syncCompleteDataOnPage(syncData);
-  }, [syncData, syncCompleteDataOnPage]);
+    const rawCompleteData = cloneDeep(
+      selectedType === 'domestic' || selectedType === 'newGlobal'
+        ? completeCompaniesDatalocal.current
+        : completeCompaniesDataGloballocal.current
+    );
+    if (!rawCompleteData || !isArray(rawCompleteData)) {
+      return;
+    }
+    syncData.forEach(nd => {
+      const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+      rawCompleteData[tickerIndex] = nd;
+    });
+    if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+      dispatch(setCompleteCompaniesData(rawCompleteData));
+    } else {
+      dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+    }
+  }, [syncData, selectedType, dispatch]);
 
   useEffect(() => {
     let rawData = [];
@@ -195,35 +185,6 @@ const Watchlist = props => {
       setWatchlistData(formatData(rawData));
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal]);
-  const fetchData = useCallback(async () => {
-    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
-      try {
-        let rawData = [];
-        if (selectedUniverse !== 'all') {
-          setLoading(true);
-          setWatchlistData([]);
-          rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          setSyncData(rawData);
-          // syncCompleteDataOnPage(rawData);
-          // update cached data of all (Complete) watchlist
-          if (!firstTimeLoad.current) {
-            dispatch(setIsNewWatchlistDataAvailable(false));
-          }
-        }
-        if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
-          setTopicDialogOpen(true);
-          dispatch(setCount(count + 1));
-        }
-        if (selectedUniverse !== 'all') {
-          setWatchlistData(formatData(rawData));
-        }
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        // log exception here
-      }
-    }
-  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
 
   const getWatchlistTable2Dataa = useCallback(async () => {
     if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
@@ -255,6 +216,35 @@ const Watchlist = props => {
     getWatchlistTable2Dataa();
   }, [getWatchlistTable2Dataa]);
 
+  const fetchData = useCallback(async () => {
+    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
+      try {
+        let rawData = [];
+        if (selectedUniverse !== 'all') {
+          setLoading(true);
+          setWatchlistData([]);
+          rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
+          setSyncData(rawData);
+          // update cached data of all (Complete) watchlist
+          if (!firstTimeLoad.current) {
+            dispatch(setIsNewWatchlistDataAvailable(false));
+          }
+        }
+        if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
+          setTopicDialogOpen(true);
+          dispatch(setCount(count + 1));
+        }
+        if (selectedUniverse !== 'all') {
+          setWatchlistData(formatData(rawData));
+        }
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        // log exception here
+      }
+    }
+  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -265,13 +255,6 @@ const Watchlist = props => {
     }
   }, [dispatch, history.location.pathname]);
 
-  // useEffect(() => {
-  //   let tickers = [];
-  //   watchlistData.forEach(function(value) {
-  //     tickers.push(value.ticker);
-  //   });
-  //   dispatch(setUserWatchlist(tickers));
-  // }, [watchlistData, dispatch]);
   const preProcess = useCallback(
     watchlist => {
       const data = {
@@ -492,7 +475,6 @@ const Watchlist = props => {
       });
       const responsePayload = get(response, 'data', null);
       if (!responsePayload.error) {
-        // clearFilterHandler();
         getSavedFilters();
         setSnackBar({ isSnackBar: true, message: 'filter updated successfully', severity: 'success' });
       } else {
@@ -511,24 +493,10 @@ const Watchlist = props => {
   const clearFilterHandler = state => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
-    setConfirmationClearFilterDialog(false);
     dispatch(setIsTickerSelected(false));
     dispatch(setSelectedFilter(null));
     dispatch(setIsFilterUpdate(false));
     dispatch(setFilterLabel(''));
-  };
-
-  const clearSortHandler = state => {
-    const columnState = getColumnState();
-    let sortLast = null;
-    columnState.forEach(elements => {
-      if (elements.colId === 'last') {
-        sortLast = lastReportedState;
-      }
-    });
-
-    WatchlistService.clearSort(sortLast);
-    setConfirmationClearSortDialog(false);
   };
 
   const handleOpenAgGridSideBar = isActions => {
@@ -717,7 +685,6 @@ const Watchlist = props => {
                       size="small"
                       variant="contained"
                       onClick={() => {
-                        // setConfirmationClearFilterDialog(true);
                         clearFilterHandler();
                       }}>
                       Clear Filters
@@ -749,7 +716,6 @@ const Watchlist = props => {
           <WatchlistTable
             data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
             storeFilteringState={onStoreFilteringState}
-            // columnsState={getColumnState(selectedFileType)}
             filteringState={getFilteringState()}
             onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}
@@ -795,20 +761,6 @@ const Watchlist = props => {
         onClose={() => setTopicDialogOpen(false)}
         error={topicAddingError}
         onUpload={handleUpload}
-      />
-      <WatchlistConfirmationDialog
-        isOpen={confirmationClearFilterDialog}
-        Agree={() => clearFilterHandler()}
-        disAgree={() => setConfirmationClearFilterDialog(false)}
-        actionName="filter"
-        error={topicAddingError}
-      />
-      <WatchlistConfirmationDialog
-        isOpen={confirmationClearSortDialog}
-        Agree={() => clearSortHandler()}
-        disAgree={() => setConfirmationClearSortDialog(false)}
-        actionName="sort"
-        error={topicAddingError}
       />
       <Snackbar
         open={get(snackbar, 'isSnackBar', false)}
