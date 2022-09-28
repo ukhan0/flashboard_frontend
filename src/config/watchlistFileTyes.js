@@ -564,6 +564,82 @@ export const FileTypes = {
       }
     },
     {
+      label: '10-K',
+      labelToShow: 'Sedar - 10K',
+      value: [
+        { value: '10-K', color: 'rgb(244,91,91)' },
+        { value: '10-K/A', color: 'rgb(244,91,91)' },
+        { value: '10-K405', color: 'rgb(244,91,91)' },
+        { value: '10-K405/A', color: 'rgb(244,91,91)' },
+        { value: '10-KT', color: 'rgb(244,91,91)' },
+        { value: '10-KT/A', color: 'rgb(244,91,91)' }
+      ],
+      globalFlag: 0,
+      documentTypeGroup: '10-K',
+      domestic: 1,
+      canadian: null,
+      global: null,
+      index: 'fillings_sec_10K*',
+      sections: {
+        totdoc: ['10-k.*'],
+        mda: ['10k.p2.i7.*'],
+        rf: ['10k.p1.i1a.*'],
+        notes: ['10k.n.*']
+      },
+      countryCode: 'ca'
+    },
+    {
+      label: '10-Q',
+      labelToShow: 'Sedar - 10Q',
+      value: [
+        { value: '10-Q', color: 'rgb(247,163,92)' },
+        { value: '10QSB', color: 'rgb(247,163,92)' },
+        { value: '10-QT/A', color: 'rgb(247,163,92)' },
+        { value: '10-QT', color: 'rgb(247,163,92)' },
+        { value: '10-Q/A', color: 'rgb(247,163,92)' }
+      ],
+      globalFlag: 0,
+      documentTypeGroup: '10-Q',
+      domestic: 1,
+      canadian: null,
+      global: null,
+      index: 'fillings_sec_10Q*',
+      sections: {
+        totdoc: ['10-q.*'],
+        mda: ['10q.p1.i2.*'],
+        rf: ['10q.p2.i1a.*'],
+        notes: ['10q.n.*']
+      },
+      countryCode: 'ca'
+    },
+    {
+      label: '8-K',
+      labelToShow: 'Sedar - 8K',
+      value: [
+        { value: '8-K15D5', color: 'rgb(43,144,144)' },
+        { value: '8-K12G3/A', color: 'rgb(43,144,144)' },
+        { value: '8-K12G3', color: 'rgb(43,144,144)' },
+        { value: '8-K12B/A', color: 'rgb(43,144,144)' },
+        { value: '8-K12B', color: 'rgb(43,144,144)' },
+        { value: '8-K/A', color: 'rgb(43,144,144)' },
+        { value: '8-K', color: 'rgb(43,144,144)' }
+      ],
+
+      globalFlag: 0,
+      documentTypeGroup: '8-K',
+      domestic: 1,
+      canadian: null,
+      global: null,
+      index: 'fillings_sec_8k*',
+      sections: {
+        totdoc: ['8-k.*'],
+        mda: [],
+        rf: [],
+        notes: []
+      },
+      countryCode: 'ca'
+    },
+    {
       label: 'FIN-SUPP',
       labelToShow: 'Sedar - Finn Supp',
       value: [{ value: 'FIN-SUPP', color: 'rgb(50,91,91)' }],
