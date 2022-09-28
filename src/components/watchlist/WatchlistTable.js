@@ -638,6 +638,7 @@ const colDefs1 = [
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     width: 120,
+    sort: lastReportedState,
     sortingOrder: ['desc', 'asc']
   },
   {
