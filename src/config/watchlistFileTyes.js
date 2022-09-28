@@ -512,7 +512,7 @@ export const FileTypes = {
       ],
       color: 'rgb(00,91,91)',
       globalFlag: 1,
-      documentTypeGroup: '10-K',
+      documentTypeGroup: 'AR',
       domestic: 1,
       canadian: 1,
       global: null,
@@ -585,8 +585,7 @@ export const FileTypes = {
         mda: ['10k.p2.i7.*'],
         rf: ['10k.p1.i1a.*'],
         notes: ['10k.n.*']
-      },
-      countryCode: 'ca'
+      }
     },
     {
       label: '10-Q',
@@ -609,8 +608,7 @@ export const FileTypes = {
         mda: ['10q.p1.i2.*'],
         rf: ['10q.p2.i1a.*'],
         notes: ['10q.n.*']
-      },
-      countryCode: 'ca'
+      }
     },
     {
       label: '8-K',
@@ -970,7 +968,7 @@ export const FileTypes = {
         rf: [],
         notes: []
       }
-    },
+    }
   ]
 };
 
