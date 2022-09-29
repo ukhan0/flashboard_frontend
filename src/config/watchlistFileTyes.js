@@ -565,7 +565,7 @@ export const FileTypes = {
     },
     {
       label: '10-K',
-      labelToShow: 'Sedar - 10K',
+      labelToShow: 'Sec 10-K',
       value: [
         { value: '10-K', color: 'rgb(244,91,91)' },
         { value: '10-K/A', color: 'rgb(244,91,91)' },
@@ -589,7 +589,7 @@ export const FileTypes = {
     },
     {
       label: '10-Q',
-      labelToShow: 'Sedar - 10Q',
+      labelToShow: 'Sec 10-Q',
       value: [
         { value: '10-Q', color: 'rgb(247,163,92)' },
         { value: '10QSB', color: 'rgb(247,163,92)' },
@@ -612,7 +612,7 @@ export const FileTypes = {
     },
     {
       label: '8-K',
-      labelToShow: 'Sedar - 8K',
+      labelToShow: 'Sec 8-K',
       value: [
         { value: '8-K15D5', color: 'rgb(43,144,144)' },
         { value: '8-K12G3/A', color: 'rgb(43,144,144)' },
