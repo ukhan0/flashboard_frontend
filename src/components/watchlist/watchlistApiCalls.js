@@ -27,6 +27,12 @@ const isCanadaWatchlistRecent10K10Q = (selectedType, selectedFileType, selectedU
     return false;
   }
 };
+
+const changeDocType = docType => {
+  const doc = { '10-K': '10k', '10-Q': '10q' };
+
+  return doc[docType] ? doc[docType] : '10k';
+};
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
@@ -39,7 +45,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
           auth_token: user.authentication_token,
           user_id: user.id,
           subject: selectedUniverse,
-          doc_type: selectedFileType,
+          doc_type: changeDocType(selectedFileType),
           selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse)
         },
         cancelToken: cancelToken.token
@@ -50,8 +56,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       rawData = [];
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
-      console.log(rawData.filter(item => item.co === 'CA'))
-      return rawData.filter(item => item.co === 'CA') 
+      return rawData.filter(item => item.co === 'CA');
     } else {
       return rawData;
     }

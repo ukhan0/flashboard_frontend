@@ -194,10 +194,10 @@ const getDefaultState = () => {
       : 'domestic'
     : 'domestic';
   const selectedFileTypeWatchList = !isEmpty(watchlistSetting)
-    ? get(watchlistSetting, 'selectedFileType', '10-K')
+    ? get(watchlistSetting, 'selectedFileType', '10k')
     : selectedTypeWatchList === 'domestic'
-    ? '10-K'
-    : '10-K';
+    ? '10k'
+    : '10k';
 
   return {
     isActiveCompanies: true,
