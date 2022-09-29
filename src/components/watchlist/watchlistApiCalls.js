@@ -3,6 +3,30 @@ import { get, round } from 'lodash';
 import axios from 'axios';
 import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
 
+const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
+  if (selectedType === 'newGlobal') {
+    return 'domestic';
+  } else if (
+    selectedType === 'global' &&
+    (selectedFileType === '10-K' || selectedFileType === '10-Q') &&
+    (selectedUniverse === 'recent' || selectedUniverse === 'watchlist')
+  ) {
+    return 'domestic';
+  } else {
+    return selectedType;
+  }
+};
+const isCanadaWatchlistRecent10K10Q = (selectedType, selectedFileType, selectedUniverse) => {
+  if (
+    selectedType === 'global' &&
+    (selectedFileType === '10-K' || selectedFileType === '10-Q') &&
+    (selectedUniverse === 'recent' || selectedUniverse === 'watchlist')
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
@@ -10,22 +34,27 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${
-          user.id
-        }&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${
-          selectedType === 'newGlobal' ? 'domestic' : selectedType
-        }`,
-        {
-          cancelToken: cancelToken.token
-        }
-      );
+      const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
+        params: {
+          auth_token: user.authentication_token,
+          user_id: user.id,
+          subject: selectedUniverse,
+          doc_type: selectedFileType,
+          selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse)
+        },
+        cancelToken: cancelToken.token
+      });
       rawData = get(response, 'data.data.content', []);
       dispatch(setCancelExistingDocumentTypeCalls(null));
     } catch (e) {
       rawData = [];
     }
-    return rawData;
+    if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
+      console.log(rawData.filter(item => item.co === 'CA'))
+      return rawData.filter(item => item.co === 'CA') 
+    } else {
+      return rawData;
+    }
   };
 };
 
