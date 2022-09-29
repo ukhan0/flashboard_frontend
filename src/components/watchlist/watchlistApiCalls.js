@@ -46,7 +46,10 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
           user_id: user.id,
           subject: selectedUniverse,
           doc_type: changeDocType(selectedFileType),
-          selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse)
+          selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse),
+          countrycode: isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)
+            ? 'ca'
+            : undefined
         },
         cancelToken: cancelToken.token
       });
