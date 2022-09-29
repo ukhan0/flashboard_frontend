@@ -697,9 +697,7 @@ const tableFooter = {
 };
 const WatchlistTable = props => {
   const dispatch = useDispatch();
-  const { selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(
-    state => state.Watchlist
-  );
+  const { selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
   const gridRef = React.useRef();
   const [isFilterData, setIsFilterData] = React.useState(false);
@@ -804,7 +802,7 @@ const WatchlistTable = props => {
   };
   const cellClicked = async params => {
     if (params.data) {
-      let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
+      let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.id };
       let rowId = params.column.colId;
 
       if (!isBigAgGrid(selectedFileType)) {
@@ -851,15 +849,15 @@ const WatchlistTable = props => {
     const watchlistSetting = getWatchlistSettings();
     let selectedType, selectedFileType, selectedUniverse, selectedMetric;
     if (watchlistSetting) {
-      selectedType = watchlistSetting.selectedType ? watchlistSetting.selectedType : "domestic";
-      selectedFileType = watchlistSetting.selectedFileType ? watchlistSetting.selectedFileType : "10-K";
-      selectedUniverse = watchlistSetting.selectedUniverse ? watchlistSetting.selectedUniverse : "watchlist";
-      selectedMetric = watchlistSetting.selectedMetric ? watchlistSetting.selectedMetric : "totdoc";
+      selectedType = watchlistSetting.selectedType ? watchlistSetting.selectedType : 'domestic';
+      selectedFileType = watchlistSetting.selectedFileType ? watchlistSetting.selectedFileType : '10-K';
+      selectedUniverse = watchlistSetting.selectedUniverse ? watchlistSetting.selectedUniverse : 'watchlist';
+      selectedMetric = watchlistSetting.selectedMetric ? watchlistSetting.selectedMetric : 'totdoc';
     } else {
-      selectedType = "domestic";
-      selectedFileType = "10-K";
-      selectedUniverse = "watchlist";
-      selectedMetric = "totdoc";
+      selectedType = 'domestic';
+      selectedFileType = '10-K';
+      selectedUniverse = 'watchlist';
+      selectedMetric = 'totdoc';
     }
     const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
     props.storeFilteringState(allSelectedFilters);
@@ -873,7 +871,6 @@ const WatchlistTable = props => {
     forEach(inputFilters, function(data) {
       data.setAttribute('autoComplete', 'new-password');
     });
-
   };
   function headerHeightGetter() {
     var columnHeaderTexts = [...document.querySelectorAll('.ag-header-cell-text')];

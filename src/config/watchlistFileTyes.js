@@ -522,7 +522,8 @@ export const FileTypes = {
         mda: [],
         rf: [],
         notes: []
-      }
+      },
+      sourceName: 'SEDAR'
     },
     {
       label: 'QR',
@@ -543,7 +544,8 @@ export const FileTypes = {
         mda: [],
         rf: [],
         notes: []
-      }
+      },
+      sourceName: 'SEDAR'
     },
     {
       label: 'SR',
@@ -561,7 +563,8 @@ export const FileTypes = {
         mda: [],
         rf: [],
         notes: []
-      }
+      },
+      sourceName: 'SEDAR'
     },
     {
       label: '10-K',

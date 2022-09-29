@@ -206,9 +206,17 @@ const Watchlist = () => {
         );
       }
       const countryCode = get(fileTypes, 'countryCode', null);
+      const sourceName = get(fileTypes, 'sourceName', null);
       fileTypes = get(fileTypes, 'value', []).map(e => e.value);
       let data = await dispatch(
-        getWatchlistTable2Data('fillings_*', selectedUniverse, fileTypes.join(','), selectedType, countryCode)
+        getWatchlistTable2Data(
+          'fillings_*',
+          selectedUniverse,
+          fileTypes.join(','),
+          selectedType,
+          countryCode,
+          sourceName
+        )
       );
       setLoading(false);
       setGridData2(data);

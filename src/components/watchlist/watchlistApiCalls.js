@@ -11,7 +11,11 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${selectedType === 'newGlobal' ? 'domestic' : selectedType}`,
+        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${
+          user.id
+        }&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${
+          selectedType === 'newGlobal' ? 'domestic' : selectedType
+        }`,
         {
           cancelToken: cancelToken.token
         }
@@ -30,7 +34,8 @@ export const getWatchlistTable2Data = (
   selectedUniverse,
   selectedFileTypes,
   selectedType,
-  countryCode
+  countryCode,
+  sourceName
 ) => {
   let rawData = [];
   let limit = 100;
@@ -44,21 +49,19 @@ export const getWatchlistTable2Data = (
   return async dispatch => {
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
-      const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_with_file_type`,
-        {
-          cancelToken: cancelToken.token,
-          params: {
-            index: searchIndex,
-            order: 'desc',
-            limit: limit,
-            subject: selectedUniverse,
-            document_type: selectedFileTypes,
-            selected_type: selectedType,
-            ...(countryCode && { country_code: countryCode })
-          }
+      const response = await axios.get(`${config.apiUrl}/api/get_companies_with_file_type`, {
+        cancelToken: cancelToken.token,
+        params: {
+          index: searchIndex,
+          order: 'desc',
+          limit: limit,
+          subject: selectedUniverse,
+          document_type: selectedFileTypes,
+          selected_type: selectedType,
+          ...(countryCode && { country_code: countryCode }),
+          ...(sourceName && { source_name: sourceName })
         }
-      );
+      });
 
       rawData = get(response, 'data.data', []);
       dispatch(setCancelExistingDocumentTypeCalls(null));
