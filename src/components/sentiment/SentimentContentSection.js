@@ -88,7 +88,8 @@ const SentimentContentSection = props => {
   const newTest = v => {
     is_first_iteration.current = v;
   };
-  const isSentimentHtmlFile = sentimentVesion === 'flatText' && selectedType === 'global' ? true : false;
+  //const isSentimentHtmlFile = sentimentVesion === 'flatText' && selectedType === 'global' ? true : false;
+  const isSentimentHtmlFile =  false;
   return (
     <div ref={contentTopRef}>
       <Button
