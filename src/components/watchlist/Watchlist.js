@@ -655,70 +655,77 @@ const Watchlist = () => {
         alignItems="center"
         spacing={1}
         className={classes.space}>
-        <Grid item xs={12} sm={12} lg={12} xl={8}>
-          <WatchlistFilters clearFilterHandler={clearFilterHandler} />
-        </Grid>
-        <Grid item xs={12} sm={12} lg={12} xl={4}>
-          <Grid container direction="row" justify="flex-end" alignItems="center">
+        <div className='grid_watchlistFilters_screenOptions'>
+          <div className='grid_watchlistFilters grid_watchlistFilters_container grid_upperButtons'>
             <Grid item>
-              <Box className="d-flex align-items-center">
-                {isFilterActive ? (
-                  <>
-                    {isFilterUpdate && savedFiltersList.length >= 1 ? (
+              <WatchlistFilters clearFilterHandler={clearFilterHandler} />
+            </Grid>
+          </div>
+          <div className='grid_screenOptions grid_screenOptions_container grid_upperButtons'>
+            <Grid item>
+              <Grid container direction="row" justify="flex-end" alignItems="center">
+                <Grid item>
+                  <Box className="d-flex align-items-center">
+                    {isFilterActive ? (
                       <>
+                        {isFilterUpdate && savedFiltersList.length >= 1 ? (
+                          <>
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              className={classes.button}
+                              size="small"
+                              onClick={() => {
+                                handleOpenAgGridFilterLabelDialog();
+                              }}>
+                              Update Screen
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            className={classes.button}
+                            size="small"
+                            onClick={() => {
+                              handleOpenAgGridFilterLabelDialog();
+                            }}>
+                            Save Screen
+                          </Button>
+                        )}
                         <Button
                           color="primary"
-                          variant="contained"
                           className={classes.button}
                           size="small"
+                          variant="contained"
                           onClick={() => {
-                            handleOpenAgGridFilterLabelDialog();
+                            // setConfirmationClearFilterDialog(true);
+                            clearFilterHandler();
                           }}>
-                          Update Screen
+                          Clear Filters
                         </Button>
                       </>
-                    ) : (
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        className={classes.button}
-                        size="small"
-                        onClick={() => {
-                          handleOpenAgGridFilterLabelDialog();
-                        }}>
-                        Save Screen
-                      </Button>
-                    )}
-                    <Button
-                      color="primary"
-                      className={classes.button}
-                      size="small"
-                      variant="contained"
-                      onClick={() => {
-                        clearFilterHandler();
-                      }}>
-                      Clear Filters
-                    </Button>
-                  </>
-                ) : null}
-              </Box>
+                    ) : null}
+                  </Box>
+                </Grid>
+                <Grid item className={isFilterActive ? classes.addWatchlistBtnContainer : classes.allBtnActiveContainer }>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    className={classes.button}
+                    size="small"
+                    onClick={
+                      selectedTickerSymbol
+                        ? () => handleUpload(selectedTickerSymbol.ticker)
+                        : () => setTopicDialogOpen(true)
+                    }>
+                    Add Watchlist
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                color="primary"
-                variant="contained"
-                className={classes.button}
-                size="small"
-                onClick={
-                  selectedTickerSymbol
-                    ? () => handleUpload(selectedTickerSymbol.ticker)
-                    : () => setTopicDialogOpen(true)
-                }>
-                Add Watchlist
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+          </div>
+        </div>
       </Grid>
       <>
         <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>

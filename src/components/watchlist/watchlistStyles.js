@@ -18,7 +18,17 @@ export default makeStyles(() => ({
   },
   button: {
     marginRight: 2,
-    marginLeft: 3
+    marginLeft: 3,
+    width: 'max-content'
+  },
+  addWatchlistBtnContainer: {
+    // eslint-disable-next-line
+    ['@media (max-width:1057px)']: {
+      paddingTop: '8px'
+    }
+  },
+  allBtnActiveContainer: {
+    paddingTop: '0px'
   },
   loaderContainer: {
     position: 'absolute',
