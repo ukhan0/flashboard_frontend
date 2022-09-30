@@ -638,7 +638,6 @@ const colDefs1 = [
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     width: 120,
-    sort: lastReportedState,
     sortingOrder: ['desc', 'asc']
   },
   {
@@ -655,23 +654,23 @@ const colDefs1 = [
   {
     headerName: 'Sector',
     headerTooltip: 'Sector',
-    field: 'gics_sector',
+    field: 'sector',
     menuTabs: false,
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'gics_sector',
+    colId: 'sector',
     width: 150
   },
   {
     headerName: 'Industry',
     headerTooltip: 'Industry',
-    field: 'gics_industry',
+    field: 'industry',
     menuTabs: false,
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'gics_industry',
+    colId: 'industry',
     width: 150
   },
 
@@ -951,7 +950,6 @@ const WatchlistTable = props => {
       storeColumnsState(selectedFileType, columnsState);
     }
   }, [selectedFileType]);
-
   return (
     <div className="ag-theme-alpine" style={{ height: '98%', width: '100%' }}>
       <AgGridReact
@@ -960,7 +958,7 @@ const WatchlistTable = props => {
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
-        getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
+        // getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
         // immutableData={true}
         quickFilterText={''}
         columnDefs={columnDefination}

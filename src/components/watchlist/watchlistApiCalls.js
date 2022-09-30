@@ -86,7 +86,7 @@ export const getWatchlistTable2Data = (
   return async dispatch => {
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
-      const response = await axios.get(`${config.apiUrl}/api/get_companies_with_file_type`, {
+      const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`, {
         cancelToken: cancelToken.token,
         params: {
           index: searchIndex,
@@ -115,8 +115,8 @@ export const getWatchlistTable2Data = (
         docDate: get(d, 'document_date', null),
         wordCount: round(get(d, 'word_count', null), 2),
         countryCode: get(d, 'countrycode', null),
-        sector: get(d, 'gics_sector', null),
-        industry: get(d, 'gics_industry', null)
+        sector: get(d, 'sector', null),
+        industry: get(d, 'industry', null)
         // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });
