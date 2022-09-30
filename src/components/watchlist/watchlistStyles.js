@@ -22,6 +22,7 @@ export default makeStyles(() => ({
     width: 'max-content'
   },
   addWatchlistBtnContainer: {
+    // eslint-disable-next-line
     ['@media (max-width:1057px)']: {
       paddingTop: '8px'
     }
