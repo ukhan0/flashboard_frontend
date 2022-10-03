@@ -3,6 +3,32 @@ import { get, round } from 'lodash';
 import axios from 'axios';
 import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
 
+const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
+  if (selectedType === 'newGlobal') {
+    return 'domestic';
+  } else if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
+    return 'domestic';
+  } else {
+    return selectedType;
+  }
+};
+const isCanadaWatchlistRecent10K10Q = (selectedType, selectedFileType, selectedUniverse) => {
+  if (
+    selectedType === 'global' &&
+    (selectedFileType === '10-K' || selectedFileType === '10-Q') &&
+    (selectedUniverse === 'recent' || selectedUniverse === 'watchlist')
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const changeDocType = docType => {
+  const doc = { '10-K': '10k', '10-Q': '10q' };
+
+  return doc[docType] ? doc[docType] : '10k';
+};
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
@@ -10,18 +36,29 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=${selectedUniverse}&doc_type=${selectedFileType}&selected_type=${selectedType === 'newGlobal' ? 'domestic' : selectedType}`,
-        {
-          cancelToken: cancelToken.token
-        }
-      );
+      const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
+        params: {
+          auth_token: user.authentication_token,
+          user_id: user.id,
+          subject: selectedUniverse,
+          doc_type: changeDocType(selectedFileType),
+          selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse),
+          countrycode: isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)
+            ? 'ca'
+            : undefined
+        },
+        cancelToken: cancelToken.token
+      });
       rawData = get(response, 'data.data.content', []);
       dispatch(setCancelExistingDocumentTypeCalls(null));
     } catch (e) {
       rawData = [];
     }
-    return rawData;
+    if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
+      return rawData.filter(item => item.co === 'CA');
+    } else {
+      return rawData;
+    }
   };
 };
 
@@ -30,7 +67,8 @@ export const getWatchlistTable2Data = (
   selectedUniverse,
   selectedFileTypes,
   selectedType,
-  countryCode
+  countryCode,
+  sourceName
 ) => {
   let rawData = [];
   let limit = 100;
@@ -44,21 +82,19 @@ export const getWatchlistTable2Data = (
   return async dispatch => {
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
-      const response = await axios.get(
-        `${config.apiUrl}/api/get_companies_with_file_type`,
-        {
-          cancelToken: cancelToken.token,
-          params: {
-            index: searchIndex,
-            order: 'desc',
-            limit: limit,
-            subject: selectedUniverse,
-            document_type: selectedFileTypes,
-            selected_type: selectedType,
-            ...(countryCode && { country_code: countryCode })
-          }
+      const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`, {
+        cancelToken: cancelToken.token,
+        params: {
+          index: searchIndex,
+          order: 'desc',
+          limit: limit,
+          subject: selectedUniverse,
+          document_type: selectedFileTypes,
+          selected_type: selectedType,
+          ...(countryCode && { country_code: countryCode }),
+          ...(sourceName && { source_name: sourceName })
         }
-      );
+      });
 
       rawData = get(response, 'data.data', []);
       dispatch(setCancelExistingDocumentTypeCalls(null));
@@ -75,8 +111,8 @@ export const getWatchlistTable2Data = (
         docDate: get(d, 'document_date', null),
         wordCount: round(get(d, 'word_count', null), 2),
         countryCode: get(d, 'countrycode', null),
-        sector: get(d, 'gics_sector', null),
-        industry: get(d, 'gics_industry', null)
+        sector: get(d, 'sector', null),
+        industry: get(d, 'industry', null)
         // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });

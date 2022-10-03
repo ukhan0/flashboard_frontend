@@ -13,7 +13,7 @@ import { useLocation } from 'react-router-dom';
 import SentimentCard from '../Filings/FillingsCardData';
 import SentimentPdf from './SentimentPdf';
 import { createHash } from '../../utils/helpers';
-import SentimentHtmlFile from './SentimentHtmlFile';
+
 const useStyles = makeStyles(theme => ({
   drawerOpener: {
     display: 'flex',
@@ -36,12 +36,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SentimentContentSection = props => {
-  const { selectedItem, selectedType } = useSelector(state => state.Watchlist);
+  const { selectedItem } = useSelector(state => state.Watchlist);
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
-  const [sentimentVesion, setSentimentVersion] = useState(
-    isFromThemex ? 'flatText' : selectedType === 'global' ? 'original' : 'flatText'
-  );
+
+  const [sentimentVesion, setSentimentVersion] = useState('flatText');
   const classes = useStyles();
   let is_first_iteration = useRef(0);
   const dispatch = useDispatch();
@@ -87,7 +86,7 @@ const SentimentContentSection = props => {
   const newTest = v => {
     is_first_iteration.current = v;
   };
-  const isSentimentHtmlFile = sentimentVesion === 'flatText' && selectedType === 'global' ? true : false;
+
   return (
     <div ref={contentTopRef}>
       <Button
@@ -121,12 +120,12 @@ const SentimentContentSection = props => {
         )
       ) : null}
 
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      <Grid container direction="row" alignItems="center">
         <Grid item></Grid>
         <Grid item></Grid>
       </Grid>
 
-      <div className={classes.drawerOpener} style={{ display: `${isSentimentHtmlFile ? 'none' : ''}` }}>
+      <div className={classes.drawerOpener}>
         {isTocButton && sentimentVesion === 'flatText' ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
             Table of contents
@@ -137,27 +136,19 @@ const SentimentContentSection = props => {
         <div style={{ display: `${sentimentVesion === 'original' ? 'block' : 'none'}` }}>
           <SentimentPdf />
         </div>
-        {isSentimentHtmlFile ? (
+        {sentimentVesion === 'original' ? null : (
           <>
-            <SentimentHtmlFile disable={isSentimentHtmlFile} />
-          </>
-        ) : (
-          <>
-            {sentimentVesion === 'original' ? null : (
-              <>
-                <SentimentSection
-                  contentData={props.contentData}
-                  onHandleHighlights={props.onHandleHighlights}
-                  onSelection={handleSelection}
-                />
-                <SentimentDrawer
-                  highlightsData={props.highlightsData}
-                  tableData={props.tableData}
-                  onSelection={handleSelection}
-                  clickHandle={clickHandle}
-                />
-              </>
-            )}
+            <SentimentSection
+              contentData={props.contentData}
+              onHandleHighlights={props.onHandleHighlights}
+              onSelection={handleSelection}
+            />
+            <SentimentDrawer
+              highlightsData={props.highlightsData}
+              tableData={props.tableData}
+              onSelection={handleSelection}
+              clickHandle={clickHandle}
+            />
           </>
         )}
       </>

@@ -30,7 +30,6 @@ import {
 import { setSentimentResult } from '../../reducers/Sentiment';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
-import WatchlistConfirmationDialog from './ActionConfirmation';
 import { useSelector, useDispatch } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
@@ -43,7 +42,6 @@ import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
 import { getWatchlist, getWatchlistTable2Data } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
-import { lastReportedState } from './WatchlistTableHelpers';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideBar';
@@ -64,7 +62,7 @@ const screenTitle = {
   zIndex: '1',
   textAlign: 'center'
 };
-const Watchlist = props => {
+const Watchlist = () => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -89,8 +87,6 @@ const Watchlist = props => {
 
   const [watchlistData, setWatchlistData] = useState([]);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
-  const [confirmationClearFilterDialog, setConfirmationClearFilterDialog] = useState(false);
-  const [confirmationClearSortDialog, setConfirmationClearSortDialog] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
@@ -98,13 +94,13 @@ const Watchlist = props => {
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
+  const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
-  const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
   const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
   const [col, setCol] = React.useState(null);
   const [currentCol, setCurrentCol] = React.useState([]);
@@ -189,12 +185,53 @@ const Watchlist = props => {
     if (selectedUniverse === 'all') {
       if (selectedType === 'domestic' || selectedType === 'newGlobal') {
         rawData = completeCompaniesData;
+      } else if (selectedType === 'global' && (selectedFileType === '10-K' || selectedFileType === '10-Q')) {
+        rawData = completeCompaniesData.filter(company => company.co === 'CA');
       } else {
         rawData = completeCompaniesDataGlobal;
       }
       setWatchlistData(formatData(rawData));
     }
-  }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal]);
+  }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal, selectedFileType]);
+
+  const getWatchlistTable2Dataa = useCallback(async () => {
+    if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
+      setLoading(true);
+      let fileTypes = [];
+      if (selectedType === 'domestic') {
+        fileTypes = FileTypes.usFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
+      } else if (selectedType === 'global') {
+        fileTypes = FileTypes.canadaFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
+      } else if (selectedType === 'newGlobal') {
+        fileTypes = FileTypes.globalFileTypes.find(
+          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+        );
+      }
+      const countryCode = get(fileTypes, 'countryCode', null);
+      const sourceName = get(fileTypes, 'sourceName', null);
+      fileTypes = get(fileTypes, 'value', []).map(e => e.value);
+      let data = await dispatch(
+        getWatchlistTable2Data(
+          'fillings_*',
+          selectedUniverse,
+          fileTypes.join(','),
+          selectedType,
+          countryCode,
+          sourceName
+        )
+      );
+      setLoading(false);
+      setGridData2(data);
+    }
+  }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
+  useEffect(() => {
+    getWatchlistTable2Dataa();
+  }, [getWatchlistTable2Dataa]);
+
   const fetchData = useCallback(async () => {
     if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
       try {
@@ -204,7 +241,6 @@ const Watchlist = props => {
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
           setSyncData(rawData);
-          // syncCompleteDataOnPage(rawData);
           // update cached data of all (Complete) watchlist
           if (!firstTimeLoad.current) {
             dispatch(setIsNewWatchlistDataAvailable(false));
@@ -225,36 +261,6 @@ const Watchlist = props => {
     }
   }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
 
-  const getWatchlistTable2Dataa = useCallback(async () => {
-    if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
-      setLoading(true);
-      let fileTypes = [];
-      if (selectedType === 'domestic') {
-        fileTypes = FileTypes.usFileTypes.find(
-          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-        );
-      } else if (selectedType === 'global') {
-        fileTypes = FileTypes.canadaFileTypes.find(
-          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-        );
-      } else if (selectedType === 'newGlobal') {
-        fileTypes = FileTypes.globalFileTypes.find(
-          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-        );
-      }
-      const countryCode = get(fileTypes, 'countryCode', null);
-      fileTypes = get(fileTypes, 'value', []).map(e => e.value);
-      let data = await dispatch(
-        getWatchlistTable2Data('fillings_*', selectedUniverse, fileTypes.join(','), selectedType, countryCode)
-      );
-      setLoading(false);
-      setGridData2(data);
-    }
-  }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
-  useEffect(() => {
-    getWatchlistTable2Dataa();
-  }, [getWatchlistTable2Dataa]);
-
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -265,13 +271,6 @@ const Watchlist = props => {
     }
   }, [dispatch, history.location.pathname]);
 
-  // useEffect(() => {
-  //   let tickers = [];
-  //   watchlistData.forEach(function(value) {
-  //     tickers.push(value.ticker);
-  //   });
-  //   dispatch(setUserWatchlist(tickers));
-  // }, [watchlistData, dispatch]);
   const preProcess = useCallback(
     watchlist => {
       const data = {
@@ -492,7 +491,6 @@ const Watchlist = props => {
       });
       const responsePayload = get(response, 'data', null);
       if (!responsePayload.error) {
-        // clearFilterHandler();
         getSavedFilters();
         setSnackBar({ isSnackBar: true, message: 'filter updated successfully', severity: 'success' });
       } else {
@@ -511,24 +509,10 @@ const Watchlist = props => {
   const clearFilterHandler = state => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
-    setConfirmationClearFilterDialog(false);
     dispatch(setIsTickerSelected(false));
     dispatch(setSelectedFilter(null));
     dispatch(setIsFilterUpdate(false));
     dispatch(setFilterLabel(''));
-  };
-
-  const clearSortHandler = state => {
-    const columnState = getColumnState();
-    let sortLast = null;
-    columnState.forEach(elements => {
-      if (elements.colId === 'last') {
-        sortLast = lastReportedState;
-      }
-    });
-
-    WatchlistService.clearSort(sortLast);
-    setConfirmationClearSortDialog(false);
   };
 
   const handleOpenAgGridSideBar = isActions => {
@@ -677,71 +661,77 @@ const Watchlist = props => {
         alignItems="center"
         spacing={1}
         className={classes.space}>
-        <Grid item xs={12} sm={12} lg={12} xl={8}>
-          <WatchlistFilters clearFilterHandler={clearFilterHandler} />
-        </Grid>
-        <Grid item xs={12} sm={12} lg={12} xl={4}>
-          <Grid container direction="row" justify="flex-end" alignItems="center">
+        <div className='grid_watchlistFilters_screenOptions'>
+          <div className='grid_watchlistFilters grid_watchlistFilters_container grid_upperButtons'>
             <Grid item>
-              <Box className="d-flex align-items-center">
-                {isFilterActive ? (
-                  <>
-                    {isFilterUpdate && savedFiltersList.length >= 1 ? (
+              <WatchlistFilters clearFilterHandler={clearFilterHandler} />
+            </Grid>
+          </div>
+          <div className='grid_screenOptions grid_screenOptions_container grid_upperButtons'>
+            <Grid item>
+              <Grid container direction="row" justify="flex-end" alignItems="center">
+                <Grid item>
+                  <Box className="d-flex align-items-center">
+                    {isFilterActive ? (
                       <>
+                        {isFilterUpdate && savedFiltersList.length >= 1 ? (
+                          <>
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              className={classes.button}
+                              size="small"
+                              onClick={() => {
+                                handleOpenAgGridFilterLabelDialog();
+                              }}>
+                              Update Screen
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            className={classes.button}
+                            size="small"
+                            onClick={() => {
+                              handleOpenAgGridFilterLabelDialog();
+                            }}>
+                            Save Screen
+                          </Button>
+                        )}
                         <Button
                           color="primary"
-                          variant="contained"
                           className={classes.button}
                           size="small"
+                          variant="contained"
                           onClick={() => {
-                            handleOpenAgGridFilterLabelDialog();
+                            // setConfirmationClearFilterDialog(true);
+                            clearFilterHandler();
                           }}>
-                          Update Screen
+                          Clear Filters
                         </Button>
                       </>
-                    ) : (
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        className={classes.button}
-                        size="small"
-                        onClick={() => {
-                          handleOpenAgGridFilterLabelDialog();
-                        }}>
-                        Save Screen
-                      </Button>
-                    )}
-                    <Button
-                      color="primary"
-                      className={classes.button}
-                      size="small"
-                      variant="contained"
-                      onClick={() => {
-                        // setConfirmationClearFilterDialog(true);
-                        clearFilterHandler();
-                      }}>
-                      Clear Filters
-                    </Button>
-                  </>
-                ) : null}
-              </Box>
+                    ) : null}
+                  </Box>
+                </Grid>
+                <Grid item className={isFilterActive ? classes.addWatchlistBtnContainer : classes.allBtnActiveContainer }>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    className={classes.button}
+                    size="small"
+                    onClick={
+                      selectedTickerSymbol
+                        ? () => handleUpload(selectedTickerSymbol.ticker)
+                        : () => setTopicDialogOpen(true)
+                    }>
+                    Add Watchlist
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                color="primary"
-                variant="contained"
-                className={classes.button}
-                size="small"
-                onClick={
-                  selectedTickerSymbol
-                    ? () => handleUpload(selectedTickerSymbol.ticker)
-                    : () => setTopicDialogOpen(true)
-                }>
-                Add Watchlist
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+          </div>
+        </div>
       </Grid>
       <>
         <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
@@ -749,7 +739,6 @@ const Watchlist = props => {
           <WatchlistTable
             data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
             storeFilteringState={onStoreFilteringState}
-            // columnsState={getColumnState(selectedFileType)}
             filteringState={getFilteringState()}
             onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}
@@ -795,20 +784,6 @@ const Watchlist = props => {
         onClose={() => setTopicDialogOpen(false)}
         error={topicAddingError}
         onUpload={handleUpload}
-      />
-      <WatchlistConfirmationDialog
-        isOpen={confirmationClearFilterDialog}
-        Agree={() => clearFilterHandler()}
-        disAgree={() => setConfirmationClearFilterDialog(false)}
-        actionName="filter"
-        error={topicAddingError}
-      />
-      <WatchlistConfirmationDialog
-        isOpen={confirmationClearSortDialog}
-        Agree={() => clearSortHandler()}
-        disAgree={() => setConfirmationClearSortDialog(false)}
-        actionName="sort"
-        error={topicAddingError}
       />
       <Snackbar
         open={get(snackbar, 'isSnackBar', false)}
