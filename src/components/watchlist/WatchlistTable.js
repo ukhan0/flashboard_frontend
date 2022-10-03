@@ -958,8 +958,6 @@ const WatchlistTable = props => {
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
         rowData={props.data}
-        // getRowNodeId={d => (d.ticker ? d.ticker : d.cid)}
-        // immutableData={true}
         quickFilterText={''}
         columnDefs={columnDefination}
         defaultColDef={defaultColDef}

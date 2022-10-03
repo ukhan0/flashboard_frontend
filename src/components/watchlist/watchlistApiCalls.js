@@ -6,11 +6,7 @@ import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
     return 'domestic';
-  } else if (
-    selectedType === 'global' &&
-    (selectedFileType === '10-K' || selectedFileType === '10-Q') &&
-    (selectedUniverse === 'recent' || selectedUniverse === 'watchlist')
-  ) {
+  } else if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
     return 'domestic';
   } else {
     return selectedType;
