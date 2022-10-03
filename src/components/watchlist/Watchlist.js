@@ -127,6 +127,28 @@ const Watchlist = () => {
     setCol(`${coldId}${status}`);
     WatchlistService.mangeAgGridColunms(coldId, status);
   };
+  const syncCompleteDataOnPage = useCallback(
+    newData => {
+      const rawCompleteData = cloneDeep(
+        selectedType === 'domestic' || selectedType === 'newGlobal'
+          ? completeCompaniesDatalocal.current
+          : completeCompaniesDataGloballocal.current
+      );
+      if (!rawCompleteData || !isArray(rawCompleteData)) {
+        return;
+      }
+      newData.forEach(nd => {
+        const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+        rawCompleteData[tickerIndex] = nd;
+      });
+      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
+    },
+    [selectedType, dispatch]
+  );
 
   const getWatchlistFileTypeEmailAlertStatus = useCallback(async () => {
     let fileTypesEmailStatus = [];
@@ -155,24 +177,8 @@ const Watchlist = () => {
   }, []);
 
   useEffect(() => {
-    const rawCompleteData = cloneDeep(
-      selectedType === 'domestic' || selectedType === 'newGlobal'
-        ? completeCompaniesDatalocal.current
-        : completeCompaniesDataGloballocal.current
-    );
-    if (!rawCompleteData || !isArray(rawCompleteData)) {
-      return;
-    }
-    syncData.forEach(nd => {
-      const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
-      rawCompleteData[tickerIndex] = nd;
-    });
-    if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-      dispatch(setCompleteCompaniesData(rawCompleteData));
-    } else {
-      dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-    }
-  }, [syncData, selectedType, dispatch]);
+    syncCompleteDataOnPage(syncData);
+  }, [syncData, syncCompleteDataOnPage]);
 
   useEffect(() => {
     let rawData = [];
