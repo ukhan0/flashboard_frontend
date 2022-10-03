@@ -659,7 +659,7 @@ const colDefs1 = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'sector',
+    colId: 'gics_sector',
     width: 150
   },
   {
@@ -670,7 +670,7 @@ const colDefs1 = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'industry',
+    colId: 'gics_industry',
     width: 150
   },
 
