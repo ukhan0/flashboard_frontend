@@ -120,7 +120,7 @@ const SentimentContentSection = props => {
         )
       ) : null}
 
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      <Grid container direction="row" alignItems="center">
         <Grid item></Grid>
         <Grid item></Grid>
       </Grid>
