@@ -737,9 +737,9 @@ const Watchlist = () => {
         <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
           <WatchlistTable
-            data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
-            storeFilteringState={onStoreFilteringState}
-            filteringState={getFilteringState()}
+            tableData={isBigAgGrid(selectedFileType) ? gridData : gridData2}
+            onStoreFilteringState={onStoreFilteringState}
+            savedFilteringState={getFilteringState()}
             onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}
           />
