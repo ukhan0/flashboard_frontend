@@ -891,14 +891,14 @@ const WatchlistTable = ({
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
     }
-    const filteringState = getFilteringState();
     var padding = 40;
     var height = headerHeightGetter() + padding;
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
 
+    const filteringState = getFilteringState(true);
     if (filteringState && !isEmpty(filteringState)) {
-      params.api.setFilterModel({});
+      params.api.setFilterModel(filteringState);
     }
     const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
     if (getQueryParams.get('ticker')) {
