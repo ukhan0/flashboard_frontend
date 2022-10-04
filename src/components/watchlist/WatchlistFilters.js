@@ -3,7 +3,6 @@ import { Grid, ButtonGroup, Button } from '@material-ui/core';
 import {
   setWatchlistUniverse,
   setWatchlistMetric,
-  setIsNewWatchlistDataAvailable,
   setWatchlistType,
   setSelectedWatchlist,
   setWatchlistFileType
@@ -51,19 +50,10 @@ const WatchlistFilters = props => {
 
   const handleClickUniverse = key => {
     dispatch(setWatchlistUniverse(key));
-    dispatch(setIsNewWatchlistDataAvailable(true));
     if (cancelExistingDocumentTypeCalls) {
       cancelExistingDocumentTypeCalls.cancel();
     }
   };
-
-  // const handleClickFileType = key => {
-  //   dispatch(setWatchlistFileType(key));
-  //   dispatch(setIsNewWatchlistDataAvailable(true));
-  //   if (cancelExistingDocumentTypeCalls) {
-  //     cancelExistingDocumentTypeCalls.cancel();
-  //   }
-  // };
 
   const handleClickType = key => {
     if (key !== selectedType) {
@@ -78,7 +68,6 @@ const WatchlistFilters = props => {
       }
 
       dispatch(setWatchlistType(key));
-      dispatch(setIsNewWatchlistDataAvailable(true));
       if (cancelExistingDocumentTypeCalls) {
         cancelExistingDocumentTypeCalls.cancel();
       }
@@ -124,18 +113,6 @@ const WatchlistFilters = props => {
       <Grid item>
         <div className="text-black-50 opacity-6">File Type</div>
         <WatchlistFileTypeDropDown />
-        {/* <ButtonGroup color="primary">
-          {(isGlobalSelected ? fileTypesSelectionGlobal : fileTypesSelection).map((fileType, i) => (
-            <Button
-              disabled={isGlobalSelected && fileType.key !== '10k' ? true : false}
-              size="small"
-              key={`ft_${i}`}
-              onClick={() => handleClickFileType(fileType.key)}
-              variant={selectedFileType === fileType.key ? 'contained' : 'outlined'}>
-              {fileType.label}
-            </Button>
-          ))}
-        </ButtonGroup> */}
       </Grid>
       <Grid item>
         <div className="text-black-50 opacity-6">Universe</div>

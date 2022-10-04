@@ -13,7 +13,6 @@ import {
   setOverwriteCheckBox,
   setCount,
   setSelectedTickerSymbol,
-  setIsNewWatchlistDataAvailable,
   setIsTickerSelected,
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData,
@@ -90,7 +89,6 @@ const Watchlist = () => {
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
-  const firstTimeLoad = useRef(true);
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
@@ -98,7 +96,6 @@ const Watchlist = () => {
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
-  const [syncData, setSyncData] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
   const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
@@ -173,14 +170,6 @@ const Watchlist = () => {
   }, [getWatchlistFileTypeEmailAlertStatus]);
 
   useEffect(() => {
-    firstTimeLoad.current = false;
-  }, []);
-
-  useEffect(() => {
-    syncCompleteDataOnPage(syncData);
-  }, [syncData, syncCompleteDataOnPage]);
-
-  useEffect(() => {
     let rawData = [];
     if (selectedUniverse === 'all') {
       if (selectedType === 'domestic' || selectedType === 'newGlobal') {
@@ -240,11 +229,7 @@ const Watchlist = () => {
           setLoading(true);
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          setSyncData(rawData);
-          // update cached data of all (Complete) watchlist
-          if (!firstTimeLoad.current) {
-            dispatch(setIsNewWatchlistDataAvailable(false));
-          }
+          syncCompleteDataOnPage(rawData);
         }
         if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
           setTopicDialogOpen(true);
@@ -259,17 +244,11 @@ const Watchlist = () => {
         // log exception here
       }
     }
-  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
+  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch, syncCompleteDataOnPage]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  useEffect(() => {
-    if (history.location.pathname === '/watchlist') {
-      dispatch(setIsNewWatchlistDataAvailable(true));
-    }
-  }, [dispatch, history.location.pathname]);
 
   const preProcess = useCallback(
     watchlist => {
@@ -597,7 +576,7 @@ const Watchlist = () => {
   };
   useEffect(() => {
     if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
-      firstTimeLoad.current ? setGridData(null) : setGridData(processWatchlistData());
+      setGridData(processWatchlistData());
     }
   }, [processWatchlistData, selectedFileType]);
   return (
