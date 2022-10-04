@@ -144,17 +144,23 @@ export const getColumnState = selectedFileType => {
   return columnState;
 };
 
-export const getFilteringState = () => {
+export const getFilteringState = (onlyFilters = false) => {
   const offRampAlertsTableFilteringState = localStorage.getItem(filteringModelKey);
-  let sortingState = [];
+  let state = {};
   if (offRampAlertsTableFilteringState) {
     try {
-      sortingState = JSON.parse(offRampAlertsTableFilteringState);
+      state = JSON.parse(offRampAlertsTableFilteringState);
+      if (onlyFilters) {
+        delete state['selectedType'];
+        delete state['selectedFileType'];
+        delete state['selectedUniverse'];
+        delete state['selectedMetric'];
+      }
     } catch (error) {
       // logException(error)
     }
   }
-  return sortingState;
+  return state;
 };
 
 export const storeColumnsState = (selectedFileType, state) => {

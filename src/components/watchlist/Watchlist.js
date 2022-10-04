@@ -6,7 +6,7 @@ import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
 // import cjson from 'compressed-json';
 import { Box } from '@material-ui/core';
-import { formatData, storeFilteringState, getColumnState, getFilteringState, isBigAgGrid } from './WatchlistHelpers';
+import { formatData, getColumnState, getFilteringState, isBigAgGrid } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
@@ -502,10 +502,6 @@ const Watchlist = () => {
     setIsFilterLabelOpen(false);
   };
 
-  const onStoreFilteringState = state => {
-    storeFilteringState(state);
-  };
-
   const clearFilterHandler = state => {
     dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
@@ -737,9 +733,7 @@ const Watchlist = () => {
         <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
           <WatchlistTable
-            data={isBigAgGrid(selectedFileType) ? gridData : gridData2}
-            storeFilteringState={onStoreFilteringState}
-            filteringState={getFilteringState()}
+            tableData={isBigAgGrid(selectedFileType) ? gridData : gridData2}
             onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}
           />

@@ -36,7 +36,9 @@ import {
   getWatchlistSettings,
   getCompanyByIndex,
   storeColumnsState,
-  getColumnState
+  getColumnState,
+  storeFilteringState,
+  getFilteringState
 } from './WatchlistHelpers';
 import {
   setIsFilterActive,
@@ -694,7 +696,11 @@ const tableFooter = {
   textAlign: 'right',
   width: '100%'
 };
-const WatchlistTable = props => {
+const WatchlistTable = ({
+  tableData,
+  onColumnClick,
+  handleWatchlistTickers
+}) => {
   const dispatch = useDispatch();
   const { selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
@@ -716,7 +722,7 @@ const WatchlistTable = props => {
     saveComparisionSettings(comparisionSection);
     dispatch(setSidebarToggle(true));
     dispatch(setSidebarToggleMobile(true));
-    props.onColumnClick(data, id);
+    onColumnClick(data, id);
     gridApi.current.closeToolPanel();
     if (isAutoSelection) {
       rowNode.setSelected(true, true);
@@ -806,7 +812,7 @@ const WatchlistTable = props => {
 
       if (!isBigAgGrid(selectedFileType)) {
         if (rowId === 'actions') {
-          props.handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
+          handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
           return;
         }
         let company = await getCompanyByIndex(params.data.ticker);
@@ -829,7 +835,7 @@ const WatchlistTable = props => {
     }
   };
 
-  const storeFilteringState = params => {
+  const filterChangeHandler = params => {
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
@@ -859,7 +865,7 @@ const WatchlistTable = props => {
       selectedMetric = 'totdoc';
     }
     const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
-    props.storeFilteringState(allSelectedFilters);
+    storeFilteringState(allSelectedFilters);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
 
@@ -885,12 +891,12 @@ const WatchlistTable = props => {
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
     }
-    const filteringState = props.filteringState;
     var padding = 40;
     var height = headerHeightGetter() + padding;
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
 
+    const filteringState = getFilteringState(true);
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
@@ -929,13 +935,13 @@ const WatchlistTable = props => {
       return;
     }
 
-    if (get(props, 'data', [])) {
+    if (get(tableData, 'data', [])) {
       setTimeout(() => {
         let data = gridApi.current.rowModel?.rowsToDisplay;
         setRowCount(data.length);
       }, [100]);
     }
-  }, [props]);
+  }, [tableData]);
 
   useEffect(() => {
     const columnsState = getColumnState(selectedFileType);
@@ -957,7 +963,7 @@ const WatchlistTable = props => {
         sortingOrder={['asc', 'desc']}
         onGridReady={handleGridReady}
         onFirstDataRendered={handleFirstDataRendered}
-        rowData={props.data}
+        rowData={tableData}
         quickFilterText={''}
         columnDefs={columnDefination}
         defaultColDef={defaultColDef}
@@ -977,7 +983,7 @@ const WatchlistTable = props => {
         enableBrowserTooltips={true}
         context={countriesCode}
         overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
-        onFilterChanged={storeFilteringState}></AgGridReact>
+        onFilterChanged={filterChangeHandler}></AgGridReact>
       <div style={tableFooter}>Total Rows : {rowCount}</div>
     </div>
   );
