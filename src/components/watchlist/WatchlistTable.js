@@ -36,7 +36,9 @@ import {
   getWatchlistSettings,
   getCompanyByIndex,
   storeColumnsState,
-  getColumnState
+  getColumnState,
+  storeFilteringState,
+  getFilteringState
 } from './WatchlistHelpers';
 import {
   setIsFilterActive,
@@ -696,8 +698,6 @@ const tableFooter = {
 };
 const WatchlistTable = ({
   tableData,
-  onStoreFilteringState,
-  savedFilteringState,
   onColumnClick,
   handleWatchlistTickers
 }) => {
@@ -835,7 +835,7 @@ const WatchlistTable = ({
     }
   };
 
-  const storeFilteringState = params => {
+  const filterChangeHandler = params => {
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
@@ -865,7 +865,7 @@ const WatchlistTable = ({
       selectedMetric = 'totdoc';
     }
     const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
-    onStoreFilteringState(allSelectedFilters);
+    storeFilteringState(allSelectedFilters);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
 
@@ -891,14 +891,14 @@ const WatchlistTable = ({
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
     }
-    const filteringState = savedFilteringState;
+    const filteringState = getFilteringState();
     var padding = 40;
     var height = headerHeightGetter() + padding;
     params.api.setHeaderHeight(height);
     params.api.resetRowHeights();
 
     if (filteringState && !isEmpty(filteringState)) {
-      params.api.setFilterModel(filteringState);
+      params.api.setFilterModel({});
     }
     const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
     if (getQueryParams.get('ticker')) {
@@ -983,7 +983,7 @@ const WatchlistTable = ({
         enableBrowserTooltips={true}
         context={countriesCode}
         overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
-        onFilterChanged={storeFilteringState}></AgGridReact>
+        onFilterChanged={filterChangeHandler}></AgGridReact>
       <div style={tableFooter}>Total Rows : {rowCount}</div>
     </div>
   );
