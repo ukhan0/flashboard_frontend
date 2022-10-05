@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Grid, Button } from '@material-ui/core';
 import { get, isArray, cloneDeep } from 'lodash';
 import axios from 'axios';
@@ -274,7 +274,7 @@ const Watchlist = () => {
     },
     [isColorEnable, selectedFileType, selectedMetric]
   );
-  const processWatchlistData = useMemo(() => {
+  const processWatchlistData = useCallback(() => {
     const filteredData = [];
 
     watchlistData.forEach(watchlist => {
@@ -576,7 +576,7 @@ const Watchlist = () => {
   };
   useEffect(() => {
     if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
-      setGridData(processWatchlistData);
+      setGridData(processWatchlistData());
     }
   }, [processWatchlistData, selectedFileType]);
   return (
