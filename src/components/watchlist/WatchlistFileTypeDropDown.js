@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, TextField, Popper } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
-import { setWatchlistFileType, setIsNewWatchlistDataAvailable } from '../../reducers/Watchlist';
+import { setWatchlistFileType } from '../../reducers/Watchlist';
 import {} from '../../reducers/Sentiment';
 import {} from '../Filings/FillingsHelper';
 import {} from '../watchlist/WatchlistHelpers';
@@ -63,7 +63,6 @@ const WatchlistFileTypeDropDown = props => {
   const selectionChanged = (e, newSelectedSymbol) => {
     if (newSelectedSymbol) {
       dispatch(setWatchlistFileType(newSelectedSymbol.documentTypeGroup));
-      dispatch(setIsNewWatchlistDataAvailable(true));
       if (cancelExistingDocumentTypeCalls) {
         cancelExistingDocumentTypeCalls.cancel();
       }

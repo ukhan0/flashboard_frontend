@@ -13,7 +13,6 @@ export const SET_COMPELTE_DATALOADED_GLOBAL_FLAG = 'WATCHLIST/SET_COMPELTE_DATAL
 export const SET_COUNT = 'WATCHLIST/SET_COUNT';
 export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
 export const SET_SELECTED_TICKER_SYMBOL = 'WATCHLIST/SET_SELECTED_TICKER_SYMBOL';
-export const SET_IS_NEW_WATCHLIST_DATA_AVAILABLE = 'WATCHLIST/SET_IS_NEW_WATCHLIST_DATA_AVAILABLE ';
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
 export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
@@ -107,10 +106,6 @@ export const resetWatchlist = () => ({
 export const setSelectedTickerSymbol = selectedTickerSymbol => ({
   type: SET_SELECTED_TICKER_SYMBOL,
   selectedTickerSymbol
-});
-export const setIsNewWatchlistDataAvailable = isNewWatchListDataAvailable => ({
-  type: SET_IS_NEW_WATCHLIST_DATA_AVAILABLE,
-  isNewWatchListDataAvailable
 });
 
 export const setIsOneHourComplete = isOneHourComplete => ({
@@ -216,7 +211,6 @@ const getDefaultState = () => {
     recentDataLoaded: false,
     overwriteCheckBox: false,
     selectedTickerSymbol: null,
-    isNewWatchListDataAvailable: true,
     isOneHourComplete: false,
     isColorEnable: user ? (user.enable_watchlist_color ? user.enable_watchlist_color : false) : false,
     isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
@@ -279,8 +273,6 @@ export default function reducer(
       return { ...state, ...getDefaultState() };
     case SET_SELECTED_TICKER_SYMBOL:
       return { ...state, selectedTickerSymbol: action.selectedTickerSymbol };
-    case SET_IS_NEW_WATCHLIST_DATA_AVAILABLE:
-      return { ...state, isNewWatchListDataAvailable: action.isNewWatchListDataAvailable };
     case SET_IS_ONE_HOUR_COMPLETE:
       return { ...state, isOneHourComplete: action.isOneHourComplete };
     case SET_IS_COLOR_ENABLE:
