@@ -17,7 +17,7 @@ import {
   getCellStyle
 } from './WatchlistTableHelpers';
 import { renameDocumentTypes } from '../topic/topicHelpers';
-import { parseDateStrMoment, dateFormaterMoment, tickerFormater } from '../watchlist/WatchlistTableHelpers';
+import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -155,7 +155,6 @@ const colDefs = [
     cellStyle: params => {
       return getCellStyle({});
     },
-    valueFormatter: (params) => tickerFormater(params.data.ticker)
   },
   {
     headerName: 'Company Name',
@@ -565,8 +564,6 @@ const colDefs1 = [
     menuTabs: ['generalMenuTab'],
     pinned: 'left',
     cellRenderer: 'TickerLogo',
-    valueFormatter: (params) => tickerFormater(params.data.ticker)
-    // hide: homePageSelectedSearchIndex.id === 3 ? true : false
   },
   {
     headerName: 'Company Name',

@@ -9,18 +9,11 @@ class WatchListService {
   constructor() {
     this.agGridAPI = null;
     this.agGridColumnAPI = null;
-    this.agGrid2API = null;
-    this.agGrid2ColumnAPI = null;
-    this.agGrid2 = 'watchlist:grid2';
   }
 
   init(api, columnApi) {
     this.agGridAPI = api;
     this.agGridColumnAPI = columnApi;
-  }
-  initGrid2(api, columnApi) {
-    this.agGrid2API = api;
-    this.agGrid2ColumnAPI = columnApi;
   }
 
   autoSizeColumns = () => {
