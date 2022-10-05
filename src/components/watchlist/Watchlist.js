@@ -299,16 +299,15 @@ const Watchlist = () => {
     const filteredData = [];
 
     watchlistData.forEach(watchlist => {
-      let editedWatchlist = {...watchlist, ticker: watchlist.ticker.slice(0,4)};
       if (isActiveCompanies === true) {
         //show active companies only
-        let isActiveFlag = get(editedWatchlist, 'isActiveFlag', false);
+        let isActiveFlag = get(watchlist, 'isActiveFlag', false);
         if (isActiveFlag === isActiveCompanies) {
-          const data = preProcess(editedWatchlist);
+          const data = preProcess({...watchlist, ticker: watchlist.ticker.slice(0,4)});
           filteredData.push(data);
         }
       } else {
-        const data = preProcess(editedWatchlist);
+        const data = preProcess({...watchlist, ticker: watchlist.ticker.slice(0,4)});
         filteredData.push(data);
         //show all companies
       }
