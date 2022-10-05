@@ -1,15 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { Button, Fab, Box, Grid } from '@material-ui/core';
+import { Button, Fab, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SentimentSection from './SentimentSection';
 import SentimentDrawer from './SentimentDrawer';
 import { useSelector, useDispatch } from 'react-redux';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { useHistory } from 'react-router-dom';
 import SentimentCompanyDetails from './SentimentCompanyDetails';
 import config from '../../config/config';
 import { setSentimentDrawerOpen, setIsPin, setSelectedHeadingId } from '../../reducers/Sentiment';
-import { useLocation } from 'react-router-dom';
 import SentimentCard from '../Filings/FillingsCardData';
 import SentimentPdf from './SentimentPdf';
 import { createHash } from '../../utils/helpers';
@@ -40,14 +38,13 @@ const SentimentContentSection = props => {
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
 
-  const [sentimentVesion, setSentimentVersion] = useState('flatText');
+  const [openPdfPopup, setOpenPdfPopup] = useState(false);
+
   const classes = useStyles();
   let is_first_iteration = useRef(0);
   const dispatch = useDispatch();
   const contentTopRef = useRef(null);
-  let getQueryParams = new URLSearchParams(useLocation().search);
   let hideCards = config.hideCard;
-  const history = useHistory();
   const toggleDrawer = () => {
     if (currentToc) {
       dispatch(setIsPin(true));
@@ -65,15 +62,11 @@ const SentimentContentSection = props => {
     }
   };
 
-  const goBack = () => {
-    if (!getQueryParams.get('recentId')) {
-      history.goBack();
-    } else {
-      history.push('/watchlist');
-    }
-  };
   const handleClickSentimentVersion = v => {
-    setSentimentVersion(v);
+    if (v === 'original') {
+      setOpenPdfPopup(true);
+      return;
+    }
   };
   const clickHandle = (path, is_highlight = false) => {
     if (!is_highlight) {
@@ -89,27 +82,15 @@ const SentimentContentSection = props => {
 
   return (
     <div ref={contentTopRef}>
-      <Button
-        color="primary"
-        className="m-2"
-        variant="contained"
-        onClick={() => {
-          goBack();
-        }}>
-        Back
-      </Button>
       <div className={classes.companyDetail}>
         {selectedItem ? (
           <Box m={2}>
             <SentimentCompanyDetails
               handleClickSentimentVersion={handleClickSentimentVersion}
-              sentimentVesion={sentimentVesion}
-              onSelection={handleSelection}
               highlightsData={props.highlightsData}
               clickHandle={clickHandle}
               newTest={newTest}
               is_first_iteration={is_first_iteration}
-              sentimentV={sentimentVesion}
             />
           </Box>
         ) : null}
@@ -120,37 +101,29 @@ const SentimentContentSection = props => {
         )
       ) : null}
 
-      <Grid container direction="row" alignItems="center">
-        <Grid item></Grid>
-        <Grid item></Grid>
-      </Grid>
-
       <div className={classes.drawerOpener}>
-        {isTocButton && sentimentVesion === 'flatText' ? (
+        {isTocButton ? (
           <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
             Table of contents
           </Button>
         ) : null}
       </div>
       <>
-        <div style={{ display: `${sentimentVesion === 'original' ? 'block' : 'none'}` }}>
-          <SentimentPdf />
-        </div>
-        {sentimentVesion === 'original' ? null : (
-          <>
-            <SentimentSection
-              contentData={props.contentData}
-              onHandleHighlights={props.onHandleHighlights}
-              onSelection={handleSelection}
-            />
-            <SentimentDrawer
-              highlightsData={props.highlightsData}
-              tableData={props.tableData}
-              onSelection={handleSelection}
-              clickHandle={clickHandle}
-            />
-          </>
-        )}
+        {openPdfPopup && <SentimentPdf closeOpenPdfPopup={() => setOpenPdfPopup(false)} />}
+
+        <>
+          <SentimentSection
+            contentData={props.contentData}
+            onHandleHighlights={props.onHandleHighlights}
+            onSelection={handleSelection}
+          />
+          <SentimentDrawer
+            highlightsData={props.highlightsData}
+            tableData={props.tableData}
+            onSelection={handleSelection}
+            clickHandle={clickHandle}
+          />
+        </>
       </>
 
       <div className={classes.goToTopContainer}>
