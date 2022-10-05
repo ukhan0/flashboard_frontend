@@ -303,11 +303,11 @@ const Watchlist = () => {
         //show active companies only
         let isActiveFlag = get(watchlist, 'isActiveFlag', false);
         if (isActiveFlag === isActiveCompanies) {
-          const data = preProcess({...watchlist, ticker: watchlist.ticker.slice(0,4)});
+          const data = preProcess(watchlist);
           filteredData.push(data);
         }
       } else {
-        const data = preProcess({...watchlist, ticker: watchlist.ticker.slice(0,4)});
+        const data = preProcess(watchlist);
         filteredData.push(data);
         //show all companies
       }

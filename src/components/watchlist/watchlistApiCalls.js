@@ -104,7 +104,6 @@ export const getWatchlistTable2Data = (
     rawData = rawData.map(d => {
       return {
         ...d,
-        ticker: d.ticker.slice(0,4),
         companyName: get(d, 'company_name', null),
         documentType: get(d, 'document_type', null),
         sentiment: round(get(d, 'sentiment', null), 2),

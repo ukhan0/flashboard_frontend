@@ -56,6 +56,8 @@ export const formatExportValue = params => {
   }
 };
 
+export const tickerFormater = (ticker) => ticker.slice(0,4);
+
 export const dateFormater = value => {
   let formatedValue = null;
   if (value) {
