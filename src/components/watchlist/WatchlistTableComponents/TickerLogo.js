@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 function TickerLogo(props) {
   const classes = useStyles();
-  const tickerValue = props.value.includes('-G') ? '' : props.value;
+  const tickerValue = props.value.includes('-G') ? '' : props.value.slice(0, 4);
   return (
     <Box className={classes.tickerLogo}>
       <Avatar
