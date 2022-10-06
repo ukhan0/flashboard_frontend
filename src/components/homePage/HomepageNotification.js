@@ -91,9 +91,9 @@ export default function HomepageNotification() {
     return moment.unix(v).format('hh:mm A');
   };
   return (
-    <Card className="card-box mb-4" style={{ height: '600px' }}>
+    <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div className={clsx('card-header')}>
-        <div className="card-header--title font-weight-bold">Notifications</div>
+        <div className="card-header--title font-weight-bold drag-handle">Notifications</div>
         <ButtonGroup color="primary">
           {earningsCallType.map((type, i) => (
             <Button

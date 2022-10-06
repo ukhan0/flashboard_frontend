@@ -128,11 +128,11 @@ const TopicSearchResults = () => {
     }
   }
   return (
-    <Card className="card-box mb-4" style={{ maxHeight: '600px' }}>
+    <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div style={{ outline: '1px solid gray', margin: '10px', borderradius: '8px' }}>
         <Grid container direction="row" justify="space-between" alignItems="flex-start">
           <Grid item>
-            <div className="card-header--title font-weight-bold">Social Stream</div>
+            <div className="card-header--title font-weight-bold drag-handle">Social Stream</div>
           </Grid>
           <Grid item>
             {tweets.current.length < 1 ? (

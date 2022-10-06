@@ -437,9 +437,9 @@ export default function HomePageTable() {
     }, [100]);
   }, [globalWatchlist, domesticWatchlist, recentCompaniesData]);
   return (
-    <Card className="card-box mb-4" style={{ height: '600px' }}>
+    <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div className={clsx('card-header')}>
-        <div className="card-header--title font-weight-bold">Recent Documents</div>
+        <div className="card-header--title font-weight-bold drag-handle">Recent Documents</div>
         <>
           <div className={classes.search}>
             <div className={classes.searchIconContainer}>
