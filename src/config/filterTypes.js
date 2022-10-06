@@ -53,7 +53,7 @@ export const sentimentVersions = [
 ];
 export const homePageTypesSelection = [
   { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 },
-  { label: 'SEC', key: 'fillings_sec*', type: 'SEC', id: 2 },
+  { label: 'SEC', key: 'fillings_sec*', typSe: 'SEC', id: 2 },
   { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR', id: 3 }
 ];
 
@@ -67,3 +67,10 @@ export const entityTypes = [
   { label: 'Disappearing', key: 'disappearing_entities' },
   { label: 'Common', key: 'common_entities' }
 ];
+
+export const homePageWidgets = {
+  homePageTable: { title: 'Recent Documents', show: true },
+  homePageNotification: { title: 'Notifications', show: true },
+  homePageSmaLime1: { title: 'Social Top Ten Stocks', show: true },
+  homePageTweets: { title: 'Social Stream', show: true }
+}
