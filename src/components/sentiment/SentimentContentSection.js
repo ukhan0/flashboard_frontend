@@ -65,7 +65,6 @@ const SentimentContentSection = props => {
   const handleClickSentimentVersion = v => {
     if (v === 'original') {
       setOpenPdfPopup(true);
-      return;
     }
   };
   const clickHandle = (path, is_highlight = false) => {
