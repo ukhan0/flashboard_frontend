@@ -21,11 +21,12 @@ export default makeStyles(() => ({
     marginLeft: 3,
     width: 'max-content'
   },
-  addWatchlistBtnContainer: {
-    // eslint-disable-next-line
-    ['@media (max-width:1057px)']: {
-      paddingTop: '8px'
-    }
+  screenBtnGroupContainer: {
+   alignSelf: 'flex-start',
+   marginTop: 23
+  },
+  screenBtnGroup: {
+    justifyContent: 'flex-end'
   },
   allBtnActiveContainer: {
     paddingTop: '0px'

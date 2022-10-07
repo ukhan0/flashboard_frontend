@@ -144,7 +144,8 @@ const colDefs = [
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-    width: 118,
+    width: 150,
+    minWidth: 150,
     cellClass: ['center-align-text'],
     wrapText: false,
     filter: 'agTextColumnFilter',
@@ -558,6 +559,7 @@ const colDefs1 = [
     colId: 'ticker',
 
     width: 150,
+    minWidth: 150,
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,

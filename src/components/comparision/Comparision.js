@@ -28,8 +28,7 @@ const Comparision = props => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
-  const [height, setHeight] = useState(innerHeight);
-  const [yHeight, setYHeight] = useState(0);
+
   const {
     selectedItem,
     selectedFileType,
@@ -146,20 +145,6 @@ const Comparision = props => {
     setFileType();
   }, [setFileType]);
 
-  useEffect(() => {
-    const handleScroll = event => {
-      const currentYheight = window.scrollY;
-      if (currentYheight > yHeight) {
-        setYHeight(currentYheight);
-        setHeight(window.scrollY + innerHeight);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [innerHeight, yHeight]);
-
   return (
     <>
       {sidebarToggle && (
@@ -188,11 +173,11 @@ const Comparision = props => {
             src={`${config.comparisionSite}?f1=${oldId}&f2=${recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
             title="Comparision"
             width="100%"
-            height={`${height}px`}
+            height={`${innerHeight-170}px`}
             samesite="None"
             frameBorder="0"
             id="comparisionResult"
-            scrolling="no"
+            scrolling="yes"
             onLoad={() => {
               setIsloading(false);
             }}
