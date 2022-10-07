@@ -138,14 +138,13 @@ const colDefs = [
     pinned: 'left',
     headerClass: ['actionColumnHeader']
   },
-
   {
     headerName: 'Ticker',
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-    width: 150,
-    minWidth: 150,
+    width: 130,
+    minWidth: 130,
     cellClass: ['center-align-text'],
     wrapText: false,
     filter: 'agTextColumnFilter',
@@ -155,7 +154,7 @@ const colDefs = [
     cellRenderer: 'TickerLogo',
     cellStyle: params => {
       return getCellStyle({});
-    },
+    }
   },
   {
     headerName: 'Company Name',
@@ -557,15 +556,18 @@ const colDefs1 = [
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-
-    width: 150,
-    minWidth: 150,
+    width: 130,
+    minWidth: 130,
     cellClass: ['center-align-text'],
+    wrapText: false,
     filter: 'agTextColumnFilter',
     suppressMenu: false,
     menuTabs: ['generalMenuTab'],
     pinned: 'left',
     cellRenderer: 'TickerLogo',
+    cellStyle: params => {
+      return getCellStyle({});
+    }
   },
   {
     headerName: 'Company Name',
@@ -697,11 +699,7 @@ const tableFooter = {
   textAlign: 'right',
   width: '100%'
 };
-const WatchlistTable = ({
-  tableData,
-  onColumnClick,
-  handleWatchlistTickers
-}) => {
+const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) => {
   const dispatch = useDispatch();
   const {
     selectedMetric,
@@ -823,11 +821,7 @@ const WatchlistTable = ({
           handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
           return;
         }
-        let company = await getCompanyByIndex(
-          params.data.ticker,
-          completeCompaniesData,
-          completeCompaniesDataGlobal
-        );
+        let company = await getCompanyByIndex(params.data.ticker, completeCompaniesData, completeCompaniesDataGlobal);
         if (company) {
           if (params.data.documentType === '10-K') {
             item = await setRecentOldId(item, company, '10-K');
