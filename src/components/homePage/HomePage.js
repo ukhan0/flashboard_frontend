@@ -44,7 +44,6 @@ const layout = {
       "x": 0,
       "y": 0,
       "i": "HomePageTable",
-      "minW": 4,
       "maxH": 3,
       "moved": false,
       "static": false
@@ -55,7 +54,6 @@ const layout = {
       "x": 0,
       "y": 2,
       "i": "HomePageNotification",
-      "minW": 4,
       "maxH": 3,
       "moved": false,
       "static": false
@@ -66,7 +64,7 @@ const layout = {
       "x": 4,
       "y": 0,
       "i": "HomePageSmaLime1",
-      "minW": 4,
+      "minW": 2,
       "minH": 2,
       "maxH": 3,
       "moved": false,
@@ -78,7 +76,6 @@ const layout = {
       "x": 4,
       "y": 2,
       "i": "HomePageTweets",
-      "minW": 4,
       "maxH": 3,
       "moved": false,
       "static": false
@@ -203,24 +200,24 @@ export default function HomePage() {
         onLayoutChange={handleLayoutChange}
         draggableHandle={'.drag-handle'}
         margin={[10, 10]}
-        compactType={'vertical'}
+        compactType={'horizontal'}
         resizeHandles={['se']}
         autoSize={true}
       >
         {sidebarSelectedWidget.homePageTable.show && (
-          <div key={'HomePageTable'} data-grid={{ x: 0, y: 1, w: 4, h: 2 }}>
+          <div key={'HomePageTable'} data-grid={{ x: 0, y: 0, w: 4, h: 2 }}>
             <HomePageTable />
           </div>
         )}
 
         {sidebarSelectedWidget.homePageNotification.show && (
-          <div key={'HomePageNotification'} data-grid={{ x: 0, y: 1, w: 4, h: 2 }}>
+          <div key={'HomePageNotification'} data-grid={{ x: 0, y: 0, w: 4, h: 2 }}>
             <HomePageNotification />
           </div>
         )}
 
         {sidebarSelectedWidget.homePageSmaLime1.show && (
-          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2 }}>
+          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2, "minW": 2, "minH": 2, "maxH": 3, }}>
             <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
           </div>
         )}
