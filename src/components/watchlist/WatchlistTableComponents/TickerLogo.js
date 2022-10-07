@@ -10,7 +10,10 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     height: 20,
-    width: 20
+    width: 20,
+    '& .MuiAvatar-img': {
+      objectFit: 'contain'
+    }
   },
   tickerText: {
     textAlign: 'left',
@@ -20,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 function TickerLogo(props) {
   const classes = useStyles();
-  const tickerValue = props.value.includes('-G') ? '' : props.value.slice(0, 4);
+  const tickerValue = props.value.includes('-G') ? '' : props.value.slice(0, 6);
   return (
     <Box className={classes.tickerLogo}>
       <Avatar

@@ -28,12 +28,12 @@ const Comparision = props => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isLoading, setIsloading] = useState(true);
-  const [height, setHeight] = useState(innerHeight);
-  const [yHeight, setYHeight] = useState(0);
+
   const {
     selectedItem,
     selectedFileType,
-
+    completeCompaniesData,
+    completeCompaniesDataGlobal,
     isCompleteCompaniesDataLoaded
   } = useSelector(state => state.Watchlist);
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
@@ -81,7 +81,8 @@ const Comparision = props => {
       setTimeout(() => {
         let data = queryString.parse(history.location.search);
         if (data.recentId) {
-          let company = async () => await getCompanyByIndex(data.ticker);
+          let company = async () =>
+            await getCompanyByIndex(data.ticker, completeCompaniesData, completeCompaniesDataGlobal);
           if (company) {
             company.recentId = data.recentId;
             company.oldId = data.oldId;
@@ -91,7 +92,13 @@ const Comparision = props => {
         }
       }, [400]);
     }
-  }, [dispatch, history.location.search, isCompleteCompaniesDataLoaded]);
+  }, [
+    dispatch,
+    history.location.search,
+    isCompleteCompaniesDataLoaded,
+    completeCompaniesData,
+    completeCompaniesDataGlobal
+  ]);
 
   useEffect(() => {
     const comparisonSetting = {
@@ -138,20 +145,6 @@ const Comparision = props => {
     setFileType();
   }, [setFileType]);
 
-  useEffect(() => {
-    const handleScroll = event => {
-      const currentYheight = window.scrollY;
-      if (currentYheight > yHeight) {
-        setYHeight(currentYheight);
-        setHeight(window.scrollY + innerHeight);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [innerHeight, yHeight]);
-
   return (
     <>
       {sidebarToggle && (
@@ -180,11 +173,11 @@ const Comparision = props => {
             src={`${config.comparisionSite}?f1=${oldId}&f2=${recentId}&${metricQueryParam}&method=${comparisionMethod}&diff=${comparisionDifference}`}
             title="Comparision"
             width="100%"
-            height={`${height}px`}
+            height={`${innerHeight-170}px`}
             samesite="None"
             frameBorder="0"
             id="comparisionResult"
-            scrolling="no"
+            scrolling="yes"
             onLoad={() => {
               setIsloading(false);
             }}

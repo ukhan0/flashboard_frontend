@@ -144,7 +144,8 @@ const colDefs = [
     headerTooltip: 'Ticker',
     field: 'ticker',
     colId: 'ticker',
-    width: 118,
+    width: 150,
+    minWidth: 150,
     cellClass: ['center-align-text'],
     wrapText: false,
     filter: 'agTextColumnFilter',
@@ -558,6 +559,7 @@ const colDefs1 = [
     colId: 'ticker',
 
     width: 150,
+    minWidth: 150,
     cellClass: ['center-align-text'],
     filter: 'agTextColumnFilter',
     suppressMenu: false,
@@ -701,7 +703,14 @@ const WatchlistTable = ({
   handleWatchlistTickers
 }) => {
   const dispatch = useDispatch();
-  const { selectedMetric, isTickerSelected, selectedType, selectedFileType } = useSelector(state => state.Watchlist);
+  const {
+    selectedMetric,
+    isTickerSelected,
+    selectedType,
+    selectedFileType,
+    completeCompaniesData,
+    completeCompaniesDataGlobal
+  } = useSelector(state => state.Watchlist);
   const gridApi = React.useRef(null);
   const gridRef = React.useRef();
   const [isFilterData, setIsFilterData] = React.useState(false);
@@ -814,7 +823,11 @@ const WatchlistTable = ({
           handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
           return;
         }
-        let company = await getCompanyByIndex(params.data.ticker);
+        let company = await getCompanyByIndex(
+          params.data.ticker,
+          completeCompaniesData,
+          completeCompaniesDataGlobal
+        );
         if (company) {
           if (params.data.documentType === '10-K') {
             item = await setRecentOldId(item, company, '10-K');
