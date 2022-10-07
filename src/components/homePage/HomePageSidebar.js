@@ -35,11 +35,9 @@ function HomePageSidebar({ title, widgets, open, handleCloseSideBar, handleColum
       <Grid container direction="row" justify="space-between" alignItems="center">
         <Grid item></Grid>
         <Grid item>
-          {' '}
           <Typography variant="h5">{title}</Typography>
         </Grid>
         <Grid item>
-          {' '}
           <IconButton onClick={() => handleCloseSideBar()}>
             <CloseIcon fontSize="small" />
           </IconButton>

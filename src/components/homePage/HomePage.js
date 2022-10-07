@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HomePageTable from './HomePageTable';
 import HomePageSmaLime1 from './HomePageSmaLime1';
 import { BeatLoader } from 'react-spinners';
@@ -14,7 +14,7 @@ import '../../../node_modules/react-grid-layout/css/styles.css';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import './HomePage.css';
 import HomePageSidebar from './HomePageSidebar';
-import { homePageWidgets } from "../../config/filterTypes"
+import { homePageWidgets, homePageWidgetlayout } from './homePageConfig';
 
 const useStyle = makeStyles({
   loader: {
@@ -36,97 +36,13 @@ const useStyle = makeStyles({
   }
 });
 
-const layout = {
-  "lg": [
-    {
-      "w": 4,
-      "h": 2,
-      "x": 0,
-      "y": 0,
-      "i": "HomePageTable",
-      "maxH": 3,
-      "moved": false,
-      "static": false
-    },
-    {
-      "w": 4,
-      "h": 2,
-      "x": 0,
-      "y": 2,
-      "i": "HomePageNotification",
-      "maxH": 3,
-      "moved": false,
-      "static": false
-    },
-    {
-      "w": 4,
-      "h": 2,
-      "x": 4,
-      "y": 0,
-      "i": "HomePageSmaLime1",
-      "minW": 2,
-      "minH": 2,
-      "maxH": 3,
-      "moved": false,
-      "static": false
-    },
-    {
-      "w": 4,
-      "h": 2,
-      "x": 4,
-      "y": 2,
-      "i": "HomePageTweets",
-      "maxH": 3,
-      "moved": false,
-      "static": false
-    }
-  ],
-  "xs": [
-    {
-      "w": 1,
-      "h": 2,
-      "x": 0,
-      "y": 0,
-      "minW": 1,
-      "maxH": 3,
-      "i": "HomePageTable"
-    },
-    {
-      "w": 1,
-      "h": 2,
-      "x": 0,
-      "y": 2,
-      "minW": 1,
-      "maxH": 3,
-      "i": "HomePageNotification"
-    },
-    {
-      "w": 1,
-      "h": 2,
-      "x": 0,
-      "y": 4,
-      "minW": 1,
-      "maxH": 3,
-      "i": "HomePageSmaLime1"
-    },
-    {
-      "w": 1,
-      "h": 2,
-      "x": 0,
-      "y": 6,
-      "minW": 1,
-      "maxH": 3,
-      "i": "HomePageTweets"
-    }
-  ]
-};
-
 const ResponsiveGridLayout = WidthProvider(Responsive);
+const homepageGridLayoutKey = 'homepage-grid-layout';
 
 export default function HomePage() {
   const classes = useStyle();
   const dispatch = useDispatch();
-  const [snackbar, setSnackBar] = React.useState(null);
+  const [snackbar, setSnackBar] = useState(null);
   const [isHomePageSideBarOpen, setIsHomePageSideBarOpen] = useState(false);
   const [sidebarSelectedWidget, setSidebarSelectedWidget] = useState(homePageWidgets);
   const { isLoading } = useSelector(state => state.HomePage);
@@ -136,12 +52,12 @@ export default function HomePage() {
   };
 
   const handleLayoutChange = (layout, layouts) => {
-    localStorage.setItem('grid-layout', JSON.stringify(layouts));
+    localStorage.setItem(homepageGridLayoutKey, JSON.stringify(layouts));
   };
 
   const getLayouts = () => {
-    const savedLayouts = localStorage.getItem('grid-layout');
-    return savedLayouts ? JSON.parse(savedLayouts) : layout;
+    const savedLayouts = localStorage.getItem(homepageGridLayoutKey);
+    return savedLayouts ? JSON.parse(savedLayouts) : homePageWidgetlayout;
   };
 
   const handleCloseSideBar = () => {
@@ -153,7 +69,6 @@ export default function HomePage() {
   };
 
   const handleColumns = (key, status) => {
-
     setSidebarSelectedWidget(prevState => {
       const clone = cloneDeep(prevState);
       clone[key].show = status;
@@ -161,9 +76,10 @@ export default function HomePage() {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getUserWatchlist(['domestic', 'global']));
   }, [dispatch]);
+
   return (
     <div className='home-page'>
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
@@ -217,7 +133,7 @@ export default function HomePage() {
         )}
 
         {sidebarSelectedWidget.homePageSmaLime1.show && (
-          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2, "minW": 2, "minH": 2, "maxH": 3, }}>
+          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2, "minW": 2, "minH": 2, "maxH": 3 }}>
             <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
           </div>
         )}

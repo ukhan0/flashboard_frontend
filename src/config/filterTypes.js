@@ -67,10 +67,3 @@ export const entityTypes = [
   { label: 'Disappearing', key: 'disappearing_entities' },
   { label: 'Common', key: 'common_entities' }
 ];
-
-export const homePageWidgets = {
-  homePageTable: { title: 'Recent Documents', show: true },
-  homePageNotification: { title: 'Notifications', show: true },
-  homePageSmaLime1: { title: 'Social Top Ten Stocks', show: true },
-  homePageTweets: { title: 'Social Stream', show: true }
-}
