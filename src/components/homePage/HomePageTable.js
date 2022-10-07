@@ -196,6 +196,7 @@ export default function HomePageTable() {
   const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
   const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
+  const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
   const [cancelToken, setCancelToken] = useState(null);
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
@@ -287,7 +288,7 @@ export default function HomePageTable() {
     if (params.data) {
       let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
 
-      let company = await getCompanyByIndex(params.data.ticker);
+      let company = await getCompanyByIndex(params.data.ticker, completeCompaniesData, completeCompaniesDataGlobal);
       if (company) {
         if (params.data.documentType === '10-K') {
           item = await setRecentOldId(item, company, '10-K');
