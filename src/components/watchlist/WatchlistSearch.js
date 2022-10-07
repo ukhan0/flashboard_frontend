@@ -57,7 +57,11 @@ const WatchlistTopicSearch = props => {
       dispatch(setIsTickerSelected(true));
       dispatch(setSelectedTickerSymbol(newSelectedSymbol));
 
-      let company = await getCompanyByIndex(newSelectedSymbol.ticker);
+      let company = await getCompanyByIndex(
+        newSelectedSymbol.ticker,
+        completeCompaniesData,
+        completeCompaniesDataGlobal
+      );
       company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
@@ -67,7 +71,7 @@ const WatchlistTopicSearch = props => {
       setTimeout(() => {
         dispatch(setSelectedTickerSymbol(null));
         history.push('/filings');
-      }, [300]);
+      }, [100]);
     }
   };
 

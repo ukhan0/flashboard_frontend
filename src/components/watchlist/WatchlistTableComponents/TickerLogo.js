@@ -10,7 +10,10 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     height: 20,
-    width: 20
+    width: 20,
+    '& .MuiAvatar-img': {
+      objectFit: 'contain'
+    }
   },
   tickerText: {
     textAlign: 'left',
