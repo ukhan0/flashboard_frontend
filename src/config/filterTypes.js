@@ -53,7 +53,7 @@ export const sentimentVersions = [
 ];
 export const homePageTypesSelection = [
   { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 },
-  { label: 'SEC', key: 'fillings_sec*', typSe: 'SEC', id: 2 },
+  { label: 'SEC', key: 'fillings_sec*', type: 'SEC', id: 2 },
   { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR', id: 3 }
 ];
 
