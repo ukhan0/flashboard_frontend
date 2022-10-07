@@ -23,59 +23,54 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function HomePageSidebar(props) {
-  console.log(props.widgets)
+function HomePageSidebar({ title, widgets, open, handleCloseSideBar, handleColumns }) {
   const classes = useStyles();
-
-  const handleColumns = (e, status) => {
-    props.handleColumns(e, status);
-  };
 
   return (
     <Drawer
       anchor={'right'}
-      open={props.open}
-      onClose={props.handleCloseSideBar}
+      open={open}
+      onClose={handleCloseSideBar}
       classes={{ paper: classes.drawerPaper }}>
       <Grid container direction="row" justify="space-between" alignItems="center">
         <Grid item></Grid>
         <Grid item>
           {' '}
-          <Typography variant="h5">{props.title}</Typography>
+          <Typography variant="h5">{title}</Typography>
         </Grid>
         <Grid item>
           {' '}
-          <IconButton onClick={() => props.handleCloseSideBar()}>
+          <IconButton onClick={() => handleCloseSideBar()}>
             <CloseIcon fontSize="small" />
           </IconButton>
         </Grid>
       </Grid>
 
       <div style={{ marginLeft: '10px', height: 'calc(100% - 64px)', top: 64 }}>
-          <FormControl component="fieldset" className={classes.formControl}>
-            <FormGroup className={classes.formGroup}>
-              {Object.keys(props.widgets).map((key , index) => {
-                return (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={
-                          props.widgets[key].show
-                        }
-                      />
-                    }
-                    name={key}
-                    label={props.widgets[key].title}
-                    key={key}
-                    value={props.widgets[key].status}
-                    onChange={(e, v) => {
-                      handleColumns(key, v);
-                    }}
-                  />
-                )
-              })}
-            </FormGroup>
-          </FormControl>
+        <FormControl component="fieldset" className={classes.formControl}>
+          <FormGroup className={classes.formGroup}>
+            {Object.keys(widgets).map((key, index) => {
+              return (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={
+                        widgets[key].show
+                      }
+                    />
+                  }
+                  name={key}
+                  label={widgets[key].title}
+                  key={key}
+                  value={widgets[key].status}
+                  onChange={(e, v) => {
+                    handleColumns(key, v);
+                  }}
+                />
+              )
+            })}
+          </FormGroup>
+        </FormControl>
       </div>
     </Drawer>
   );

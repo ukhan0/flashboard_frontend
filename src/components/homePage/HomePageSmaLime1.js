@@ -84,7 +84,7 @@ export default function HomePageSmaLime1(props) {
   }, [tableType, setCompany]);
 
   return (
-    <Card className="card-box mb-4" style={{ maxHeight: '100%' }}>
+    <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div className={clsx('card-header')}>
         <div className="card-header--title font-weight-bold drag-handle">{tableType['label']}</div>
         <ButtonGroup color="primary">

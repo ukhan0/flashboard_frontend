@@ -26,8 +26,8 @@ const useStyle = makeStyles({
   },
   widgetSelect: {
     position: 'fixed',
-    right: '-55px',
-    top: '48px',
+    right: '-74px',
+    top: '68px',
     transform: 'rotate(90deg)',
     zIndex: 2000,
     cursor: 'pointer',
@@ -37,186 +37,89 @@ const useStyle = makeStyles({
 });
 
 const layout = {
-  xl: [
+  "lg": [
     {
-      w: 4,
-      h: 2,
-      x: 0,
-      y: 0,
-      i: 'HomePageTable',
-      moved: false,
-      static: false
+      "w": 4,
+      "h": 2,
+      "x": 0,
+      "y": 0,
+      "i": "HomePageTable",
+      "minW": 4,
+      "maxH": 3,
+      "moved": false,
+      "static": false
     },
     {
-      w: 4,
-      h: 2,
-      x: 0,
-      y: 2,
-      i: 'HomePageNotification',
-      moved: false,
-      static: false
+      "w": 4,
+      "h": 2,
+      "x": 0,
+      "y": 2,
+      "i": "HomePageNotification",
+      "minW": 4,
+      "maxH": 3,
+      "moved": false,
+      "static": false
     },
     {
-      w: 4,
-      h: 2,
-      x: 4,
-      y: 0,
-      i: 'HomePageSmaLime1',
-      moved: false,
-      static: false
+      "w": 4,
+      "h": 2,
+      "x": 4,
+      "y": 0,
+      "i": "HomePageSmaLime1",
+      "minW": 4,
+      "minH": 2,
+      "maxH": 3,
+      "moved": false,
+      "static": false
     },
     {
-      w: 4,
-      h: 2,
-      x: 4,
-      y: 2,
-      i: 'HomePageTweets',
-      moved: false,
-      static: false
+      "w": 4,
+      "h": 2,
+      "x": 4,
+      "y": 2,
+      "i": "HomePageTweets",
+      "minW": 4,
+      "maxH": 3,
+      "moved": false,
+      "static": false
     }
   ],
-  lg: [
+  "xs": [
     {
-      w: 3,
-      h: 2,
-      x: 0,
-      y: 0,
-      i: 'HomePageTable',
-      moved: false,
-      static: false
+      "w": 1,
+      "h": 2,
+      "x": 0,
+      "y": 0,
+      "minW": 1,
+      "maxH": 3,
+      "i": "HomePageTable"
     },
     {
-      w: 3,
-      h: 2,
-      x: 0,
-      y: 2,
-      i: 'HomePageNotification',
-      moved: false,
-      static: false
+      "w": 1,
+      "h": 2,
+      "x": 0,
+      "y": 2,
+      "minW": 1,
+      "maxH": 3,
+      "i": "HomePageNotification"
     },
     {
-      w: 3,
-      h: 2,
-      x: 3,
-      y: 0,
-      i: 'HomePageSmaLime1',
-      moved: false,
-      static: false
+      "w": 1,
+      "h": 2,
+      "x": 0,
+      "y": 4,
+      "minW": 1,
+      "maxH": 3,
+      "i": "HomePageSmaLime1"
     },
     {
-      w: 3,
-      h: 2,
-      x: 3,
-      y: 2,
-      i: 'HomePageTweets',
-      moved: false,
-      static: false
-    }
-  ],
-  xxs: [
-    {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 0,
-      i: 'HomePageTable'
-    },
-    {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 2,
-      i: 'HomePageNotification'
-    },
-    {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 4,
-      i: 'HomePageSmaLime1'
-    },
-    {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 6,
-      i: 'HomePageTweets'
-    }
-  ],
-  sm: [
-    {
-      w: 1,
-      h: 2,
-      x: 1,
-      y: 0,
-      i: 'HomePageTable',
-      moved: false,
-      static: false
-    },
-    {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 0,
-      i: 'HomePageNotification',
-      moved: false,
-      static: false
-    },
-    {
-      w: 1,
-      h: 2,
-      x: 0,
-      y: 2,
-      i: 'HomePageSmaLime1',
-      moved: false,
-      static: false
-    },
-    {
-      w: 1,
-      h: 2,
-      x: 1,
-      y: 2,
-      i: 'HomePageTweets',
-      moved: false,
-      static: false
-    }
-  ],
-  md: [
-    {
-      w: 2,
-      h: 2,
-      x: 0,
-      y: 0,
-      i: 'HomePageTable',
-      moved: false,
-      static: false
-    },
-    {
-      w: 2,
-      h: 2,
-      x: 0,
-      y: 2,
-      i: 'HomePageNotification',
-      moved: false,
-      static: false
-    },
-    {
-      w: 2,
-      h: 2,
-      x: 2,
-      y: 0,
-      i: 'HomePageSmaLime1',
-      moved: false,
-      static: false
-    },
-    {
-      w: 2,
-      h: 2,
-      x: 2,
-      y: 2,
-      i: 'HomePageTweets',
-      moved: false,
-      static: false
+      "w": 1,
+      "h": 2,
+      "x": 0,
+      "y": 6,
+      "minW": 1,
+      "maxH": 3,
+      "i": "HomePageTweets"
     }
   ]
 };
@@ -268,7 +171,7 @@ export default function HomePage() {
     <div className='home-page'>
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
       <div className={classes.widgetSelect} onClick={handleOpenSideBar}>
-      Dashboard Widgets
+        Dashboard Widgets
       </div>
       <HomePageSidebar
         title={'Dashboard Widgets'}
@@ -293,37 +196,37 @@ export default function HomePage() {
 
       <ResponsiveGridLayout
         layouts={getLayouts()}
-        breakpoints={{ xl: 1600, lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ xl: 8, lg: 6, md: 4, sm: 2, xs: 2, xxs: 1 }}
+        breakpoints={{ lg: 1200, xs: 0 }}
+        cols={{ lg: 8, xs: 1 }}
         rowHeight={300}
         width={'100%'}
         onLayoutChange={handleLayoutChange}
         draggableHandle={'.drag-handle'}
         margin={[10, 10]}
         compactType={'vertical'}
-        resizeHandles={['sw', 'se']}
+        resizeHandles={['se']}
         autoSize={true}
       >
         {sidebarSelectedWidget.homePageTable.show && (
-          <div key={'HomePageTable'}>
+          <div key={'HomePageTable'} data-grid={{ x: 0, y: 1, w: 4, h: 2 }}>
             <HomePageTable />
           </div>
         )}
 
         {sidebarSelectedWidget.homePageNotification.show && (
-          <div key={'HomePageNotification'}>
+          <div key={'HomePageNotification'} data-grid={{ x: 0, y: 1, w: 4, h: 2 }}>
             <HomePageNotification />
           </div>
         )}
 
         {sidebarSelectedWidget.homePageSmaLime1.show && (
-          <div key={'HomePageSmaLime1'}>
+          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2 }}>
             <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
           </div>
         )}
 
         {sidebarSelectedWidget.homePageTweets.show && (
-          <div key={'HomePageTweets'}>
+          <div key={'HomePageTweets'} data-grid={{ x: 0, y: 0, w: 4, h: 2 }}>
             <HomePageTweets />
           </div>
         )}
