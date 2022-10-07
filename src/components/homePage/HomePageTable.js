@@ -285,8 +285,20 @@ export default function HomePageTable() {
   };
   const cellClicked = async params => {
     if (params.data) {
-      let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
+      let rowId = params.column.colId;
+      if (rowId === 'actions') {
+        let ticker = params.data.ticker;
+        if (params.data.isTickerActive) {
+          changeTickerStatus(ticker, false);
+          deleteTicker(ticker);
+        } else {
+          changeTickerStatus(ticker, true);
+          addTicker(ticker);
+        }
+        return;
+      }
 
+      let item = { ...params.data, companyName: params.data.company_name, recentId: params.data.document_id };
       let company = await getCompanyByIndex(params.data.ticker);
       if (company) {
         if (params.data.documentType === '10-K') {
@@ -301,17 +313,6 @@ export default function HomePageTable() {
       dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
-    }
-    let rowId = params.column.colId;
-    if (rowId === 'actions') {
-      let ticker = params.data.ticker;
-      if (params.data.isTickerActive) {
-        changeTickerStatus(ticker, false);
-        deleteTicker(ticker);
-      } else {
-        changeTickerStatus(ticker, true);
-        addTicker(ticker);
-      }
     }
   };
 
