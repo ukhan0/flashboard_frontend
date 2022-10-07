@@ -673,7 +673,6 @@ const Watchlist = () => {
                   size="small"
                   variant="contained"
                   onClick={() => {
-                    // setConfirmationClearFilterDialog(true);
                     clearFilterHandler();
                   }}>
                   Clear Filters
