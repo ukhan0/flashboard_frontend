@@ -16,6 +16,7 @@ import io from 'socket.io-client';
 import SocketService from './socketService';
 import { orderBy } from 'lodash';
 import { indexedDB } from './components/watchlist/WatchlistHelpers';
+const REFREST_TIME = 10800000;
 
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
@@ -69,7 +70,7 @@ const Cache = () => {
       }
       const savedDate = localStorage.getItem(domesticKey);
       if (savedDate) {
-        if (new Date() - new Date(savedDate) > 3600000) {
+        if (new Date() - new Date(savedDate) > REFREST_TIME) {
           await refreshIndexDB('domestic');
         }
       } else await refreshIndexDB('domestic');
@@ -94,7 +95,7 @@ const Cache = () => {
       }
       const savedDate = localStorage.getItem(globalKey);
       if (savedDate) {
-        if (new Date() - new Date(savedDate) > 3600000) {
+        if (new Date() - new Date(savedDate) > REFREST_TIME) {
           await refreshIndexDB('global');
         }
       } else await refreshIndexDB('global');
