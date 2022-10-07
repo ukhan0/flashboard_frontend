@@ -1,7 +1,6 @@
 import { forEach, get, isEmpty } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 import Localbase from 'localbase';
-import config from '../../config/config';
 
 const watchlistStateKey1 = 'watchlistBigGridState';
 const watchlistStateKey2 = 'watchlistSmallGridState';

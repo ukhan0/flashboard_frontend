@@ -53,7 +53,7 @@ export default function HomePageSmaLime1(props) {
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
     },
-    [dispatch]
+    [dispatch, completeCompaniesData, completeCompaniesDataGlobal]
   );
 
   React.useEffect(() => {
