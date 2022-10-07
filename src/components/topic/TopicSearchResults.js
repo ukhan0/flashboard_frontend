@@ -102,6 +102,7 @@ const TopicSearchResults = () => {
     ignoreSearchTextArray,
     searchText
   } = useSelector(state => state.Topic);
+  const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(null);
   const [companyResults, setCompanyResults] = useState([]);
@@ -200,7 +201,7 @@ const TopicSearchResults = () => {
     const documentDate = get(companyDocumentResultData, 'document_date', null);
     const documentId = get(companyDocumentResultData, 'document_id', null);
     const ticker = get(companyDocumentResultData, 'ticker', null);
-    let company = await getCompanyByIndex(ticker);
+    let company = await getCompanyByIndex(ticker, completeCompaniesData, completeCompaniesDataGlobal);
 
     const recentId = fileId.toString().replace('9000', '');
     if (company) {

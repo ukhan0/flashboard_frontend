@@ -1,7 +1,6 @@
 import { forEach, get, isEmpty } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 import Localbase from 'localbase';
-import config from '../../config/config';
 
 const watchlistStateKey1 = 'watchlistBigGridState';
 const watchlistStateKey2 = 'watchlistSmallGridState';
@@ -228,20 +227,14 @@ export const indexedDB = () => {
   return indexDB;
 };
 
-export const getCompanyByIndex = async ticker => {
+export const getCompanyByIndex = async (ticker, completeCompaniesData, completeCompaniesDataGlobal) => {
   try {
     let searchedData = null;
-    searchedData = await indexedDB()
-      .collection(config.indexDbDomesticCompniesData)
-      .doc({ ticker: ticker })
-      .get();
+    searchedData = completeCompaniesData.find(a => a.ticker === ticker);
     if (searchedData) {
       return formatComapnyData(searchedData);
     } else {
-      searchedData = await indexedDB()
-        .collection(config.indexDbGlobalCompniesData)
-        .doc({ ticker: ticker })
-        .get();
+      searchedData = completeCompaniesDataGlobal.find(a => a.ticker === ticker);
       if (searchedData) {
         return formatComapnyData(searchedData);
       } else {
