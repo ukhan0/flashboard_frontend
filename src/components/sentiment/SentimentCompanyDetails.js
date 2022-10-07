@@ -118,7 +118,7 @@ const SentimentCompanyDetails = props => {
                       key={`sent_${i}`}
                       disabled={isDisabled(selectedItem, sentimentV)}
                       onClick={() => props.handleClickSentimentVersion(sentimentV.key)}
-                      variant={props.sentimentVesion === sentimentV.key ? 'contained' : 'outlined'}>
+                      variant={sentimentV.key === 'flatText' ? 'contained' : 'outlined'}>
                       {sentimentV.label}
                     </Button>
                   ))}
@@ -135,7 +135,7 @@ const SentimentCompanyDetails = props => {
                 <SentimentFilters disable={props.disable} />
               </Grid>
             </Grid>
-            {isHighLightedText && props.sentimentV === 'flatText' ? (
+            {isHighLightedText ? (
               <SentimentHighlights
                 highlightsData={props.highlightsData}
                 clickHandle={props.clickHandle}

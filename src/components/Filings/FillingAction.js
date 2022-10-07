@@ -83,7 +83,7 @@ export const getCompanyFilingRevenueData = () => {
       return;
     }
     try {
-      const response = await axios.get(`${config.fillingApiUrl}?f1=${oldId}&f2=${recentId}&output=json&v=2`);
+      const response = await axios.get(`${config.fillingApiUrl}?f1=${oldId}&f2=${recentId}&output=json`);
       const data = get(response, 'data', []);
       if (response) {
         dispatch(setCompanyFillingRevenueData(data));
