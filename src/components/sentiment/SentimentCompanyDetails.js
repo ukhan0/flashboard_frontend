@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   tickerLogo: {
     display: 'flex',
     height: 70,
-    alignItems: 'center', 
+    alignItems: 'center',
     '& .MuiAvatar-img': {
       objectFit: 'contain'
     }
@@ -38,13 +38,10 @@ const SentimentCompanyDetails = props => {
   const { data, isHighLightedText } = useSelector(state => state.Sentiment);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
-  // const documentId = get(selectedItem, 'documentId', null);
   const isDisabled = (item, sentimentV) => {
     let status = false;
     status =
-      get(item, 'documentType', '').toLowerCase() === 'FMP-Transcript'.toLowerCase() &&
-      sentimentV.key === 'original' &&
-      props.highlightsData.length > 0
+      get(data, 'document_type', '').toLowerCase() === 'FMP-Transcript'.toLowerCase() && sentimentV.key === 'original'
         ? true
         : false;
     return status;
