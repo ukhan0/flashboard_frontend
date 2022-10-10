@@ -7,7 +7,6 @@ import moment from 'moment';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { getColorByDocType } from './FillingsHelper';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setSentimentResult } from '../../reducers/Sentiment';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from 'reducers/Topic';
 
@@ -62,7 +61,6 @@ export default function FillingCompanyPriceOverlay(props) {
   const handleEventClick = event => {
     if (event) {
       selectedItem.recentId = event.point.options.document_id;
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(selectedItem));
       dispatch(setIsFromThemex(false));
       history.push('/sentiment');

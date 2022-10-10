@@ -53,6 +53,12 @@ const Sentiment = () => {
     history.push('/watchlist');
   }
 
+  useEffect(() => {
+    return () => {
+      dispatch(setSentimentResult(null, null));
+    };
+  }, [dispatch]);
+
   const getCompanyByTicker = useCallback(
     async ticker => {
       return new Promise(resolve => {
@@ -70,9 +76,17 @@ const Sentiment = () => {
   }, [history.location.search]);
 
   useEffect(() => {
+    // why this useEffect
     if (!firstTimeLoad.current) {
       dispatch(setIsHighlightedText(false));
       let data = queryString.parse(history.location.search);
+      console.log('data');
+      console.log('data');
+      console.log('data');
+      console.log('data');
+      console.log(data);
+      console.log('data');
+      console.log('data');
       firstTimeLoad.current = true;
       if (data.recentId) {
         let ticker = data.ticker;

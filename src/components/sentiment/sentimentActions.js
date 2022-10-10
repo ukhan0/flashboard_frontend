@@ -34,7 +34,6 @@ export const getSentimentData = () => {
       return;
     }
     const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(selectedSuggestions, searchText);
-    dispatch(setSentimentResult(null));
     let searchTerm = fillingsSearchText
       ? `"${fillingsSearchText}"`
       : getSearchText(
@@ -68,12 +67,12 @@ export const getSentimentData = () => {
         dispatch(setSentimentResult(data, recentId));
         dispatch(setFillingsSearchText(''));
       } else {
-        dispatch(setSentimentResult(null));
+        dispatch(setSentimentResult(null, null));
         dispatch(setFillingsSearchText(''));
       }
       dispatch(setIsLoading(false));
     } catch (error) {
-      dispatch(setSentimentResult(null));
+      dispatch(setSentimentResult(null, null));
       dispatch(setFillingsSearchText(''));
       dispatch(setIsLoading(false));
     }

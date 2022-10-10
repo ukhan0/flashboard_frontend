@@ -21,7 +21,6 @@ import {
 import {
   setSelectedHeadingId,
   setIsApiResponseReceived,
-  setSentimentResult,
   setIsFromfilling,
   setSentimentSearchIndex
 } from '../../reducers/Sentiment';
@@ -193,7 +192,6 @@ const TopicSearchResults = () => {
     dispatch(setSelectedHeadingId(createHash(`id${replaceDots}`)));
     dispatch(setIsFromSideBar(false));
     dispatch(setIsApiResponseReceived(false));
-    dispatch(setSentimentResult(null, null));
     dispatch(setSelectedTickerSymbol(null));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const companyId = get(companyDocumentResultData, 'company_id', null);
@@ -211,10 +209,8 @@ const TopicSearchResults = () => {
       company.last = documentDate;
       company.companyId = companyId;
       company.documentId = documentId;
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(company));
     } else {
-      dispatch(setSentimentResult(null, null));
       dispatch(
         setSelectedWatchlist({
           recentId: recentId,
