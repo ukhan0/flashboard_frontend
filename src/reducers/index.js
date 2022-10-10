@@ -14,6 +14,6 @@ export default {
   Topic,
   Sentiment,
   Filings,
-  HomePage
-  ,SnackBarRedux
+  HomePage, 
+  SnackBarRedux
 };

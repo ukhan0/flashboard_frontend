@@ -62,7 +62,7 @@ const LeftSidebar = props => {
                   }}
                   message={get(snackBarObj, 'message', null)}
                   severity={get(snackBarObj, 'severity', '')}
-                  anchorOrigin={snackBarObj.anchorOrigin}
+                  anchorOrigin={get(snackBarObj, 'anchorOrigin', {vertical: 'bottom', horizontal: 'left'})}
                 />
               </div>
             </div>
