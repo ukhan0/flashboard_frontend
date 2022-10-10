@@ -80,13 +80,6 @@ const Sentiment = () => {
     if (!firstTimeLoad.current) {
       dispatch(setIsHighlightedText(false));
       let data = queryString.parse(history.location.search);
-      console.log('data');
-      console.log('data');
-      console.log('data');
-      console.log('data');
-      console.log(data);
-      console.log('data');
-      console.log('data');
       firstTimeLoad.current = true;
       if (data.recentId) {
         let ticker = data.ticker;
