@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentSection = props => {
+const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
   const classes = useStyles();
   let keywordsArray = {};
   const dispatch = useDispatch();
@@ -83,9 +83,9 @@ const SentimentSection = props => {
 
   useEffect(() => {
     if (selectedHeadingId) {
-      props.onSelection(selectedHeadingId);
+      onSelection(selectedHeadingId);
     }
-  }, [selectedHeadingId, props]);
+  }, [selectedHeadingId, onSelection]);
 
   const rainbow = new Rainbow();
   rainbow.setSpectrum('#ff2a2a', '#ff2a2a', 'white', '#89ff89', '#89ff89');
@@ -119,7 +119,7 @@ const SentimentSection = props => {
       if (!isEmpty(keywordsArray) && !isHighLightedText) {
         dispatch(setIsHighlightedText(true));
       }
-      props.onHandleHighlights(keywordsArray);
+      onHandleHighlights(keywordsArray);
       return hashValue;
     } else {
       return '';
@@ -145,7 +145,6 @@ const SentimentSection = props => {
   };
 
   let signatureIterator = 1;
-  // let keywordsArray = []
   return (
     <div>
       {isLoading ? (
@@ -153,7 +152,7 @@ const SentimentSection = props => {
           <BeatLoader color={'var(--primary)'} size={15} />
         </div>
       ) : (
-        props.contentData.map((d, index) => {
+        contentData.map((d, index) => {
           let idVal = lowerCase(d.prop);
           if (idVal === 'signatures') {
             idVal = idVal + signatureIterator;
