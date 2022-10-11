@@ -82,7 +82,7 @@ const Watchlist = () => {
     selectedFilter,
     isFilterUpdate,
     isActiveCompanies,
-    docTypeSendEmail} = useSelector(state => state.Watchlist);
+  } = useSelector(state => state.Watchlist);
 
   const [watchlistData, setWatchlistData] = useState([]);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
@@ -148,13 +148,8 @@ const Watchlist = () => {
 
 
   useEffect(() => {
-    if (docTypeSendEmail?.length === 0) {
-      async function fetchDocTypeSendEmailsData() {
-        await dispatch(getWatchlistFileTypeEmailAlertStatus());
-      }
-      fetchDocTypeSendEmailsData();
-    }
-  }, [dispatch, docTypeSendEmail.length]);
+    dispatch(getWatchlistFileTypeEmailAlertStatus());
+  }, [dispatch]);
 
   useEffect(() => {
     let rawData = [];

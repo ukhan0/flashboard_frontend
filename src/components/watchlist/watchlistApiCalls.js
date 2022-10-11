@@ -2,7 +2,7 @@ import config from '../../config/config';
 import { get, round } from 'lodash';
 import axios from 'axios';
 import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
-import { setDocTypeSendEmail } from '../../reducers/Watchlist';
+import { setWatchlistFileTypeEmailAlerts } from '../../reducers/Watchlist';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -32,20 +32,23 @@ const changeDocType = docType => {
 };
 export const getWatchlistFileTypeEmailAlertStatus = () => {
   let fileTypesEmailStatus = [];
-  return async dispatch => {
-    try {
-      const response = await axios.get(`${config.apiUrl}/api/get_doc_type_email_status`);
-      const responseData = get(response, 'data.data', []);
-      fileTypesEmailStatus = responseData.map(document => {
-        return {
-          doc_type: get(document, 'doc_type', '').toUpperCase(),
-          send_email: document.send_email === 1
-        };
-      });
-    } catch (e) {
-      fileTypesEmailStatus = [];
-    } finally {
-      dispatch(setDocTypeSendEmail(fileTypesEmailStatus));
+  return async (dispatch, getState) => {
+    const { watchlistFileTypeEmailAlerts } = getState().Watchlist;
+    if (watchlistFileTypeEmailAlerts?.length === 0) {
+      try {
+        const response = await axios.get(`${config.apiUrl}/api/get_doc_type_email_status`);
+        const responseData = get(response, 'data.data', []);
+        fileTypesEmailStatus = responseData.map(document => {
+          return {
+            doc_type: get(document, 'doc_type', '').toUpperCase(),
+            send_email: document.send_email === 1
+          };
+        });
+      } catch (e) {
+        fileTypesEmailStatus = [];
+      } finally {
+        dispatch(setWatchlistFileTypeEmailAlerts(fileTypesEmailStatus));
+      }
     }
   }
 };
