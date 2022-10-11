@@ -1,7 +1,7 @@
 import config from '../../config/config';
 import { get, round } from 'lodash';
 import axios from 'axios';
-import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
+import { setCancelExistingDocumentTypeCalls, setWatchlistFileTypeEmailAlerts } from './../../reducers/Watchlist';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -28,6 +28,28 @@ const changeDocType = docType => {
   const doc = { '10-K': '10k', '10-Q': '10q' };
 
   return doc[docType] ? doc[docType] : '10k';
+};
+export const getWatchlistFileTypeEmailAlertStatus = () => {
+  let fileTypesEmailStatus = [];
+  return async (dispatch, getState) => {
+    const { watchlistFileTypeEmailAlerts } = getState().Watchlist;
+    if (watchlistFileTypeEmailAlerts?.length === 0) {
+      try {
+        const response = await axios.get(`${config.apiUrl}/api/get_doc_type_email_status`);
+        const responseData = get(response, 'data.data', []);
+        fileTypesEmailStatus = responseData.map(document => {
+          return {
+            doc_type: get(document, 'doc_type', '').toUpperCase(),
+            send_email: document.send_email === 1
+          };
+        });
+      } catch (e) {
+        fileTypesEmailStatus = [];
+      } finally {
+        dispatch(setWatchlistFileTypeEmailAlerts(fileTypesEmailStatus));
+      }
+    }
+  }
 };
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];

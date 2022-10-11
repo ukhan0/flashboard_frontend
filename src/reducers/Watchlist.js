@@ -30,6 +30,7 @@ export const SET_IS_ACTIVE_COMPANIES = 'WATCHLIST/SET_IS_ACTIVE_COMPANIES';
 export const SET_USER_WATCHLIST = 'WATCHLIST/SET_USER_WATCHLIST';
 export const SET_COMPLETE_COMPANIES_DATA_INDEXS = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA_INDEXS';
 export const SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS';
+export const SET_WATCHLIST_FILE_TYPE_EMAIL_ALERTS = 'WATCHLIST/SET_WATCHLIST_FILE_TYPE_EMAIL_ALERTS';
 
 export const setUserWatchlist = userWatchlist => ({
   type: SET_USER_WATCHLIST,
@@ -171,6 +172,10 @@ export const setCompleteCompaniesDataGlobalIndex = completeCompaniesDataGlobalIn
   type: SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS,
   completeCompaniesDataGlobalIndexs
 });
+export const setWatchlistFileTypeEmailAlerts = watchlistFileTypeEmailAlerts => ({
+  type: SET_WATCHLIST_FILE_TYPE_EMAIL_ALERTS,
+  watchlistFileTypeEmailAlerts
+});
 
 const getUser = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -228,7 +233,8 @@ const getDefaultState = () => {
     isFilterUpdate: false,
     userWatchlist: [],
     completeCompaniesDataIndexs: {},
-    completeCompaniesDataGlobalIndexs: {}
+    completeCompaniesDataGlobalIndexs: {},
+    watchlistFileTypeEmailAlerts: [],
   };
 };
 
@@ -307,7 +313,8 @@ export default function reducer(
       return { ...state, completeCompaniesDataIndexs: action.completeCompaniesDataIndexs };
     case SET_COMPLETE_COMPANIES_DATA_GLOBAL_INDEXS:
       return { ...state, completeCompaniesDataGlobalIndexs: action.completeCompaniesDataGlobalIndexs };
-
+    case SET_WATCHLIST_FILE_TYPE_EMAIL_ALERTS:
+      return { ...state, watchlistFileTypeEmailAlerts: action.watchlistFileTypeEmailAlerts };
     default:
       break;
   }
