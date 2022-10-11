@@ -15,6 +15,7 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import './HomePage.css';
 import HomePageSidebar from './HomePageSidebar';
 import { homePageWidgets, homePageWidgetlayout } from './homePageConfig';
+import HomePageHeatMap from "./HomePageHeatMap";
 
 const useStyle = makeStyles({
   loader: {
@@ -37,7 +38,7 @@ const useStyle = makeStyles({
 });
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
-const homepageGridLayoutKey = 'homepage-grid-layout';
+const homepageGridLayoutKey = 'homepageGridLayout';
 
 export default function HomePage() {
   const classes = useStyle();
@@ -116,7 +117,7 @@ export default function HomePage() {
         onLayoutChange={handleLayoutChange}
         draggableHandle={'.drag-handle'}
         margin={[10, 10]}
-        compactType={'horizontal'}
+        compactType={'vertical'}
         resizeHandles={['se']}
         autoSize={true}
       >
@@ -133,7 +134,7 @@ export default function HomePage() {
         )}
 
         {sidebarSelectedWidget.homePageSmaLime1.show && (
-          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2, "minW": 2, "minH": 2, "maxH": 3 }}>
+          <div key={'HomePageSmaLime1'} data-grid={{ x: 0, y: 0, w: 4, h: 2, "minW": 2, "minH": 2, "maxH": 2 }}>
             <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
           </div>
         )}
@@ -143,6 +144,12 @@ export default function HomePage() {
             <HomePageTweets />
           </div>
         )}
+
+        {sidebarSelectedWidget.homePageHeatMap.show && (
+          <div key={'HomePageHeatMap'} data-grid={{ x: 0, y: 0, w: 4, h: 2 }}>
+            <HomePageHeatMap />
+          </div>)}
+
       </ResponsiveGridLayout>
     </div>
   );
