@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function WatchListCustomEmailAlertsSideBar({ open, handleCloseAgGridSideBar, title, data, updateData }) {
+function WatchListCustomEmailAlertsSideBar({ open, handleCloseAgGridSideBar, title }) {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ function WatchListCustomEmailAlertsSideBar({ open, handleCloseAgGridSideBar, tit
       </Grid>
 
       <div style={{ marginLeft: '10px', height: 'calc(100% - 64px)', top: 64 }}>
-        <WatchlistFiletypeEmail data={data} updateData={updateData} />
+        <WatchlistFiletypeEmail />
       </div>
     </Drawer>
   );

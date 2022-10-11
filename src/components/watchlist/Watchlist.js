@@ -18,7 +18,7 @@ import {
   setCompleteGlobalCompaniesData,
   setSelectedFilter,
   setFilterLabel,
-  setIsFilterUpdate
+  setIsFilterUpdate,
 } from '../../reducers/Watchlist';
 import {
   setCompanyFillingData,
@@ -26,7 +26,6 @@ import {
   setCompanyFillingRevenueData,
   setCompanyPriceOverlay
 } from '../../reducers/Filings';
-import { setSentimentResult } from '../../reducers/Sentiment';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { useSelector, useDispatch } from 'react-redux';
@@ -39,7 +38,7 @@ import WatchlistTable from './WatchlistTable';
 // styles
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
-import { getWatchlist, getWatchlistTable2Data } from './watchlistApiCalls';
+import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
@@ -81,7 +80,7 @@ const Watchlist = () => {
     filterLabel,
     selectedFilter,
     isFilterUpdate,
-    isActiveCompanies
+    isActiveCompanies,
   } = useSelector(state => state.Watchlist);
 
   const [watchlistData, setWatchlistData] = useState([]);
@@ -92,7 +91,6 @@ const Watchlist = () => {
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
-  const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
   const [isSavedFilterDialog, setIsSavedFilterDialog] = useState(false);
   const [isFilterLabelOpen, setIsFilterLabelOpen] = useState(false);
   const [savedFiltersList, setSavedFilters] = useState([]);
@@ -147,27 +145,10 @@ const Watchlist = () => {
     [selectedType, dispatch]
   );
 
-  const getWatchlistFileTypeEmailAlertStatus = useCallback(async () => {
-    let fileTypesEmailStatus = [];
-    try {
-      const response = await axios.get(`${config.apiUrl}/api/get_doc_type_email_status`);
-      const responseData = get(response, 'data.data', []);
-      fileTypesEmailStatus = responseData.map(document => {
-        return {
-          doc_type: get(document, 'doc_type', '').toUpperCase(),
-          send_email: document.send_email === 1
-        };
-      });
-    } catch (e) {
-      fileTypesEmailStatus = [];
-    } finally {
-      setFileTypesEmailAlertStatus(fileTypesEmailStatus);
-    }
-  }, []);
 
   useEffect(() => {
-    getWatchlistFileTypeEmailAlertStatus();
-  }, [getWatchlistFileTypeEmailAlertStatus]);
+    dispatch(getWatchlistFileTypeEmailAlertStatus());
+  }, [dispatch]);
 
   useEffect(() => {
     let rawData = [];
@@ -521,17 +502,14 @@ const Watchlist = () => {
           setWatchlistData(watchListDataArr);
         }
         deleteTicker(rowData.ticker);
-        dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
       } else {
         // add ticker
         watchListDataArr[updatedTickerDetailIndex].isTickerActive = true;
         setWatchlistData(watchListDataArr);
         handleUpload(rowData.ticker);
-        dispatch(setSentimentResult(null, null));
       }
     } else {
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(rowData));
       dispatch(setSidebarDisplay(true));
       if (
@@ -613,8 +591,6 @@ const Watchlist = () => {
       ) : null}
       <WatchListCustomEmailAlertsSideBar
         open={isAgGridEmailAlerts}
-        data={fileTypesEmailAlertStatus}
-        updateData={setFileTypesEmailAlertStatus}
         handleCloseAgGridSideBar={() => {
           setIsAgGridEmailAlerts(false);
         }}

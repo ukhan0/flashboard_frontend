@@ -9,7 +9,6 @@ import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { BeatLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setSentimentResult } from '../../reducers/Sentiment';
 import FilingsCompanyDetails from '../Filings/FilingsCompanyDetails';
 import { makeStyles } from '@material-ui/core/styles';
 import queryString from 'query-string';
@@ -86,7 +85,6 @@ const Comparision = props => {
           if (company) {
             company.recentId = data.recentId;
             company.oldId = data.oldId;
-            dispatch(setSentimentResult(null, null));
             dispatch(setSelectedWatchlist(company));
           }
         }

@@ -163,13 +163,6 @@ const visitOutlineObj = (acc, obj, lvl, path) => {
         if (vHeadingElem) {
           const extractQuote = virtualDiv.match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, '');
           if (extractQuote.includes('heading')) {
-            const removeClass = virtualDiv.replace(' class=', '');
-            const removeDoubleQuotes = removeClass.replace(/['"]+/g, '');
-            const removeHeading = removeDoubleQuotes.replace(extractQuote, '');
-            console.log(removeHeading )
-            // let result = removeHeading.match(/<heading>(.*?)<\/heading>/g).map(function(val) {
-            //   return val.replace(/<\/?heading>/g, '');
-            // });
             detectedLevel = extractQuote;
             headingLevelDetected = true;
             [].forEach(v => {

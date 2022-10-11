@@ -13,7 +13,7 @@ import { setSelectedCompanyName, setBackDropOnCompanyClick } from '../../reducer
 import { performTopicSearchHighlights } from './topicActions';
 import './TopicTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
+import { setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex, setTopicSearchCompany,isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
@@ -122,7 +122,6 @@ export default function TopicCompantResultsTable() {
         ticker: params.data.ticker,
         companyId: params.data.companyId
       };
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(data));
       dispatch(setIsFromfilling(true));
       dispatch(setIsFromThemex(false));

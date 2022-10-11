@@ -5,7 +5,6 @@ import { FormControl, TextField } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { setSelectedTickerSymbol, setSelectedWatchlist, setIsTickerSelected } from '../../reducers/Watchlist';
-import { setSentimentResult } from '../../reducers/Sentiment';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { useHistory } from 'react-router-dom';
 
@@ -65,7 +64,6 @@ const WatchlistTopicSearch = props => {
       company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
       company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
       company.documentType = selectedFileType;
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
       setTimeout(() => {
