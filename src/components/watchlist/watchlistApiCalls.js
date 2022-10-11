@@ -1,8 +1,7 @@
 import config from '../../config/config';
 import { get, round } from 'lodash';
 import axios from 'axios';
-import { setCancelExistingDocumentTypeCalls } from './../../reducers/Watchlist';
-import { setWatchlistFileTypeEmailAlerts } from '../../reducers/Watchlist';
+import { setCancelExistingDocumentTypeCalls, setWatchlistFileTypeEmailAlerts } from './../../reducers/Watchlist';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
