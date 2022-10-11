@@ -3,7 +3,7 @@ export const homePageWidgets = {
     homePageNotification: { title: 'Notifications', show: true },
     homePageSmaLime1: { title: 'Social Top Ten Stocks', show: true },
     homePageTweets: { title: 'Social Stream', show: true },
-    homePageHeatMap: { title: 'Heat Map', show: true }
+    homePageHeatMap: { title: 'Heat Map', show: false }
 }
 
 export const homePageWidgetlayout = {
