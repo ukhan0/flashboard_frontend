@@ -3,6 +3,8 @@ import config from '../../config/config';
 import { cloneDeep, get } from 'lodash';
 import axios from 'axios';
 import { Switch, Grid, Typography, makeStyles } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { setDocTypeSendEmail } from '../../reducers/Watchlist';
 import { FileTypes } from '../../config/watchlistFileTyes';
 import { renameDocumentTypesLabel } from '../topic/topicHelpers';
 
@@ -38,8 +40,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const WatchlistFileTypeEmail = ({ data, updateData }) => {
+const WatchlistFileTypeEmail = () => {
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const { docTypeSendEmail } = useSelector(state => state.Watchlist);
   const [fileTypesEmailAlertStatus, setFileTypesEmailAlertStatus] = useState([]);
 
   const onSelectAllSwitchStatusClick = async () => {
@@ -95,9 +99,9 @@ const WatchlistFileTypeEmail = ({ data, updateData }) => {
 
   useEffect(() => {
     let dataArray = [];
-    if (data.length > 0) {
+    if (docTypeSendEmail.length > 0) {
       emailFileTypes.forEach(file => {
-        const filtereddata = data.find(obj => obj.doc_type === file.doc_type);
+        const filtereddata = docTypeSendEmail.find(obj => obj.doc_type === file.doc_type);
         if (filtereddata) {
           dataArray.push(filtereddata);
         } else {
@@ -108,16 +112,16 @@ const WatchlistFileTypeEmail = ({ data, updateData }) => {
     } else {
       setFileTypesEmailAlertStatus(emailFileTypes);
     }
-  }, [data]);
+  }, [docTypeSendEmail]);
 
   useEffect(() => {
     return () => {
       setFileTypesEmailAlertStatus(prevState => {
-        updateData(prevState);
+        dispatch(setDocTypeSendEmail(prevState));
         return prevState;
       });
     };
-  }, [updateData]);
+  }, [dispatch]);
 
   return (
     <>
