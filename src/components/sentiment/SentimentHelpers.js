@@ -203,7 +203,7 @@ const visitOutlineObj = (acc, obj, lvl, path) => {
         visitOutlineObj(acc, obj[objIdx], lvl, path);
       } else {
         if (prop !== 'Headingtag' && prop !== 'Sectiontext' && obj[stIdx]) {
-          let content = obj[stIdx].replaceAll('\n', ' ');
+          let content = obj[stIdx].replaceAll('\n', '<br/>');
           li = { path, lvl: lvl + 2, prop, content: content.replace(removeHeadingFromContent, '') };
           acc.push(li);
         }
