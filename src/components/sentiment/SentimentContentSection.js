@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentContentSection = props => {
+const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsData, tableData }) => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
@@ -86,7 +86,7 @@ const SentimentContentSection = props => {
           <Box m={2}>
             <SentimentCompanyDetails
               handleClickSentimentVersion={handleClickSentimentVersion}
-              highlightsData={props.highlightsData}
+              highlightsData={highlightsData}
               clickHandle={clickHandle}
               newTest={newTest}
               is_first_iteration={is_first_iteration}
@@ -112,13 +112,13 @@ const SentimentContentSection = props => {
 
         <>
           <SentimentSection
-            contentData={props.contentData}
-            onHandleHighlights={props.onHandleHighlights}
+            contentData={contentData}
+            onHandleHighlights={onHandleHighlights}
             onSelection={handleSelection}
           />
           <SentimentDrawer
-            highlightsData={props.highlightsData}
-            tableData={props.tableData}
+            highlightsData={highlightsData}
+            tableData={tableData}
             onSelection={handleSelection}
             clickHandle={clickHandle}
           />
