@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Grid } from '@material-ui/core';
-import { BeatLoader } from 'react-spinners';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { getSentimentData } from './sentimentActions';
@@ -34,7 +33,6 @@ const useStyles = makeStyles(theme => ({
 const Sentiment = () => {
   const { selectedItem, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const { isPin, data, sentimentRecentId } = useSelector(state => state.Sentiment);
-  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -76,7 +74,6 @@ const Sentiment = () => {
   }, [history.location.search]);
 
   useEffect(() => {
-    // why this useEffect
     if (!firstTimeLoad.current) {
       dispatch(setIsHighlightedText(false));
       let data = queryString.parse(history.location.search);
@@ -109,15 +106,11 @@ const Sentiment = () => {
 
   useEffect(() => {
     if (!firstTimeLoadd.current) {
-      // const selectedItemRecentId = get(selectedItem, 'recentId', null);
-      // selectedItem && selectedItemRecentId !== sentimentRecentId
-      if (true) {
-        dispatch(getSentimentData());
-        if (hideCards === 'true') {
-          dispatch(getCompanyFilingGraphData());
-        }
-        firstTimeLoadd.current = true;
+      dispatch(getSentimentData());
+      if (hideCards === 'true') {
+        dispatch(getCompanyFilingGraphData());
       }
+      firstTimeLoadd.current = true;
     }
   }, [dispatch, selectedItem, hideCards, sentimentRecentId]);
 
@@ -178,19 +171,9 @@ const Sentiment = () => {
     };
   }, [data]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
   return (
     <>
-      {isLoading ? (
-        <div className={classes.loaderSection}>
-          <BeatLoader color={'var(--primary)'} size={15} />
-        </div>
-      ) : isPin ? (
+      {isPin ? (
         <Grid container spacing={0}>
           <Grid item xs={8}>
             <div className={classes.companyDetail}>
