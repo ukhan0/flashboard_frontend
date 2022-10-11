@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setSentimentResult, setIsFromfilling } from '../../reducers/Sentiment';
+import { setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex } from '../../reducers/Topic';
 import { storeColumnsState, getColumnState } from './FillingsHelper';
 import FillingsService from './FillingsService';
@@ -94,7 +94,6 @@ export default function FilingsResultsTable() {
     if (params.data) {
       selectedItem.recentId = params.data.document_id;
       selectedItem.documentType = params.data.document_type;
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(selectedItem));
       dispatch(setIsFromfilling(true));
       dispatch(setIsFromThemex(false));

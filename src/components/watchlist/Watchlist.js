@@ -26,7 +26,6 @@ import {
   setCompanyFillingRevenueData,
   setCompanyPriceOverlay
 } from '../../reducers/Filings';
-import { setSentimentResult } from '../../reducers/Sentiment';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { useSelector, useDispatch } from 'react-redux';
@@ -521,17 +520,14 @@ const Watchlist = () => {
           setWatchlistData(watchListDataArr);
         }
         deleteTicker(rowData.ticker);
-        dispatch(setSentimentResult(null, null));
         dispatch(setSelectedWatchlist(rowData));
       } else {
         // add ticker
         watchListDataArr[updatedTickerDetailIndex].isTickerActive = true;
         setWatchlistData(watchListDataArr);
         handleUpload(rowData.ticker);
-        dispatch(setSentimentResult(null, null));
       }
     } else {
-      dispatch(setSentimentResult(null, null));
       dispatch(setSelectedWatchlist(rowData));
       dispatch(setSidebarDisplay(true));
       if (
