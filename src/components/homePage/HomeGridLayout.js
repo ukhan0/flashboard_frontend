@@ -7,6 +7,7 @@ import HomePageHeatMap from './HomePageHeatMap';
 import HomePageEarningWatcher from './HomePageEarningWatcher';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { homepageGridLayoutKey, homePageWidgetlayout } from './homePageConfig';
+import HomePageAccountStock from './HomePageAccountStock';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -45,6 +46,10 @@ const HomeGridLayout = ({ enableDragResizeWidgets, sidebarSelectedWidget }) => {
 
       case 'homePageEarningWatcher':
         component = <HomePageEarningWatcher />;
+        break;
+
+      case 'homePageAccountStock':
+        component = <HomePageAccountStock />;
         break;
 
       default:

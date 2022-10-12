@@ -19,14 +19,13 @@ const HomePageEarningWatcher = () => {
             height: '100%',
             title: 'Social Sentiment Earnings Watcher',
             apikey: 'eb521eaa75f8e0b28b88c81a6e272d9ee03f75ee',
-            customCSS:'body{background:red}',
             ontology: 'ticker',
             order: 'top',
             factor: factorsData,
             filters: filter,
             serverDomain: 'stocktwits',
             onItemClick: function (ticker, description) {
-                alert(ticker)
+                // alert(ticker)
             }
         });
     }, [factorsData , filter]);
@@ -35,7 +34,7 @@ const HomePageEarningWatcher = () => {
     return (
         <Card className="card-box mb-4" style={{ height: '100%' }}>
             <div className="card-header">
-                <div className="card-header--title font-weight-bold drag-handle">Earning Watcher</div>
+                <div className="card-header--title font-weight-bold drag-handle">Earnings Watcher</div>
             </div>
             <div style={{ height: '100%'}} id="sma_warning_widget">
             </div>

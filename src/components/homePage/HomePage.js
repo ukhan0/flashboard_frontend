@@ -3,7 +3,7 @@ import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import SnackBar from '../Snackbar';
-import { cloneDeep, get } from 'lodash';
+import { cloneDeep, get, merge } from 'lodash';
 import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
@@ -33,8 +33,12 @@ const useStyle = makeStyles({
 });
 
 const getHomepageWidgets = () => {
-  const savedWidgets = localStorage.getItem(homepageWidgetsKey);
-  return savedWidgets ? JSON.parse(savedWidgets) : homePageWidgets;
+  let savedWidgets = localStorage.getItem(homepageWidgetsKey);
+  savedWidgets = JSON.parse(savedWidgets);
+
+  // if new widget add and not exists in prev localstorage
+  // then get from the config
+  return savedWidgets ? merge(homePageWidgets, savedWidgets) : homePageWidgets;
 };
 
 export default function HomePage() {
