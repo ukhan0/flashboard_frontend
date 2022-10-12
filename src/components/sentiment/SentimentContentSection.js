@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Button, Fab, Box } from '@material-ui/core';
+import { Button, Fab, Box, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SentimentSection from './SentimentSection';
 import SentimentDrawer from './SentimentDrawer';
 import { useSelector, useDispatch } from 'react-redux';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SentimentCompanyDetails from './SentimentCompanyDetails';
+import SentimentTableOfContent from './SentimentTableOfContent';
 import config from '../../config/config';
 import { setSentimentDrawerOpen, setIsPin, setSelectedHeadingId } from '../../reducers/Sentiment';
 import SentimentCard from '../Filings/FillingsCardData';
@@ -30,14 +31,19 @@ const useStyles = makeStyles(theme => ({
     top: 50,
     position: 'sticky',
     zIndex: 100000
+  },
+  tableOfContent: {
+    position: 'sticky',
+    top: 60,
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
 const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsData, tableData }) => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
-  const { isTocButton, currentToc, data } = useSelector(state => state.Sentiment);
-
+  const { isPin, currentToc, data } = useSelector(state => state.Sentiment);
   const [openPdfPopup, setOpenPdfPopup] = useState(false);
 
   const classes = useStyles();
@@ -81,36 +87,68 @@ const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsDa
 
   return (
     <div ref={contentTopRef}>
-      <div className={classes.companyDetail}>
-        {selectedItem ? (
-          <Box m={2}>
-            <SentimentCompanyDetails
-              handleClickSentimentVersion={handleClickSentimentVersion}
-              highlightsData={highlightsData}
-              clickHandle={clickHandle}
-              newTest={newTest}
-              is_first_iteration={is_first_iteration}
-            />
-          </Box>
-        ) : null}
-      </div>
-      {hideCards === 'true' ? (
-        searchIndex['value'] === 'filling_int_sentiment4' && isFromThemex ? null : (
-          <SentimentCard />
-        )
-      ) : null}
-
-      <div className={classes.drawerOpener}>
-        {isTocButton ? (
-          <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
-            Table of contents
-          </Button>
-        ) : null}
-      </div>
-      <>
-        {openPdfPopup && <SentimentPdf closeOpenPdfPopup={() => setOpenPdfPopup(false)} />}
-
+      {openPdfPopup && <SentimentPdf closeOpenPdfPopup={() => setOpenPdfPopup(false)} />}
+      {isPin ? (
         <>
+          <Grid container spacing={0}>
+            <Grid item xs={8}>
+              <div className={classes.companyDetail}>
+                {selectedItem && (
+                  <Box m={2}>
+                    <SentimentCompanyDetails
+                      handleClickSentimentVersion={handleClickSentimentVersion}
+                      highlightsData={highlightsData}
+                      clickHandle={clickHandle}
+                      newTest={newTest}
+                      is_first_iteration={is_first_iteration}
+                    />
+                  </Box>
+                )}
+              </div>
+              {hideCards === 'true' &&
+                (searchIndex['value'] === 'filling_int_sentiment4' && isFromThemex ? null : <SentimentCard />)}
+
+              <SentimentSection
+                contentData={contentData}
+                onHandleHighlights={onHandleHighlights}
+                onSelection={handleSelection}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <div className={classes.tableOfContent}>
+                <SentimentTableOfContent
+                  highlightsData={highlightsData}
+                  tableData={tableData}
+                  onSelection={handleSelection}
+                  clickHandle={clickHandle}
+                />
+              </div>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <>
+          <div className={classes.companyDetail}>
+            {selectedItem && (
+              <Box m={2}>
+                <SentimentCompanyDetails
+                  handleClickSentimentVersion={handleClickSentimentVersion}
+                  highlightsData={highlightsData}
+                  clickHandle={clickHandle}
+                  newTest={newTest}
+                  is_first_iteration={is_first_iteration}
+                />
+              </Box>
+            )}
+          </div>
+          {hideCards === 'true' &&
+            (searchIndex['value'] === 'filling_int_sentiment4' && isFromThemex ? null : <SentimentCard />)}
+
+          <div className={classes.drawerOpener}>
+            <Button color="primary" variant="contained" className="m-2" onClick={toggleDrawer}>
+              Table of contents
+            </Button>
+          </div>
           <SentimentSection
             contentData={contentData}
             onHandleHighlights={onHandleHighlights}
@@ -122,14 +160,13 @@ const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsDa
             onSelection={handleSelection}
             clickHandle={clickHandle}
           />
+          <div className={classes.goToTopContainer}>
+            <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
+              <UpIcon />
+            </Fab>
+          </div>
         </>
-      </>
-
-      <div className={classes.goToTopContainer}>
-        <Fab onClick={() => contentTopRef.current.scrollIntoView()}>
-          <UpIcon />
-        </Fab>
-      </div>
+      )}
     </div>
   );
 };

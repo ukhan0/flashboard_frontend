@@ -2,7 +2,7 @@ import React from 'react';
 import { Drawer } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import SentimentTableOfContent from './SentimentTableOfContent';
-import { setSentimentDrawerOpen, setShowTocButton, setCurrentToc } from '../../reducers/Sentiment';
+import { setSentimentDrawerOpen, setCurrentToc } from '../../reducers/Sentiment';
 
 const SentimentDrawer = props => {
   const dispatch = useDispatch();
@@ -11,7 +11,6 @@ const SentimentDrawer = props => {
   const handleCloseDrawer = () => {
     dispatch(setSentimentDrawerOpen(false));
     dispatch(setCurrentToc(false));
-    dispatch(setShowTocButton(true));
   };
 
   return (
