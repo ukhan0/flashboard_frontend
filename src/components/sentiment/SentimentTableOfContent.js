@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { BeatLoader } from 'react-spinners';
 import { lowerCase } from 'lodash';
-import { setIsPin, setSentimentDrawerOpen, setShowTocButton, setCurrentToc } from '../../reducers/Sentiment';
+import { setIsPin, setSentimentDrawerOpen, setCurrentToc } from '../../reducers/Sentiment';
 import { upperCase } from 'lodash';
 import clsx from 'clsx';
 import pinOpen from '../../assets/images/illustrations/minimize.svg';
@@ -75,11 +75,9 @@ const SentimentTableOfContent = props => {
     } else {
       dispatch(setIsPin(true));
       dispatch(setSentimentDrawerOpen(false));
-      dispatch(setShowTocButton(false));
     }
   };
   const handleClose = () => {
-    dispatch(setShowTocButton(true));
     dispatch(setIsPin(false));
     dispatch(setCurrentToc(true));
   };
@@ -87,7 +85,6 @@ const SentimentTableOfContent = props => {
   const handleCloseDrawer = () => {
     dispatch(setSentimentDrawerOpen(false));
     dispatch(setCurrentToc(false));
-    dispatch(setShowTocButton(true));
     if (canceHighlightsCall) {
       canceHighlightsCall.cancel();
     }

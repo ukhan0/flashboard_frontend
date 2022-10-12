@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { getSentimentData } from './sentimentActions';
 import { useHistory } from 'react-router-dom';
 import SentimentContentSection from './SentimentContentSection';
-import SentimentTableOfContent from './SentimentTableOfContent';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { formatComapnyData } from '../watchlist/WatchlistHelpers';
@@ -18,24 +15,11 @@ import { setSentimentResult, setIsHighlightedText } from '../../reducers/Sentime
 import { visitOutlineObjTable, visitOutlineObj, removeHeadingTags } from './SentimentHelpers';
 import queryString from 'query-string';
 
-const useStyles = makeStyles(theme => ({
-  tableOfContent: {
-    position: 'sticky',
-    top: 50,
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  loaderSection: {
-    textAlign: 'center'
-  }
-}));
-
 const Sentiment = () => {
   const { selectedItem, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
-  const { isPin, data, sentimentRecentId } = useSelector(state => state.Sentiment);
+  const { data, sentimentRecentId } = useSelector(state => state.Sentiment);
 
   const dispatch = useDispatch();
-  const classes = useStyles();
   const history = useHistory();
   const firstTimeLoad = useRef(false);
   const firstTimeLoadd = useRef(false);
@@ -114,14 +98,6 @@ const Sentiment = () => {
     }
   }, [dispatch, selectedItem, hideCards, sentimentRecentId]);
 
-  const handleSelection = path => {
-    setTimeout(() => {
-      if (document.getElementById(path)) {
-        document.getElementById(path).scrollIntoView();
-      }
-    }, 100);
-  };
-
   const handleHighlights = hightlightsArr => {
     if (!firstTimeDataArray.current) {
       firstTimeDataArray.current = true;
@@ -172,33 +148,12 @@ const Sentiment = () => {
   }, [data]);
 
   return (
-    <>
-      {isPin ? (
-        <Grid container spacing={0}>
-          <Grid item xs={8}>
-            <div className={classes.companyDetail}>
-              <SentimentContentSection contentData={contentData} onHandleHighlights={handleHighlights} />
-            </div>
-          </Grid>
-          <Grid item xs={4}>
-            <div className={classes.tableOfContent}>
-              <SentimentTableOfContent
-                highlightsData={sentimentHighlightsData.current}
-                tableData={tableData}
-                onSelection={handleSelection}
-              />
-            </div>
-          </Grid>
-        </Grid>
-      ) : (
-        <SentimentContentSection
-          highlightsData={sentimentHighlightsData.current}
-          contentData={contentData}
-          tableData={tableData}
-          onHandleHighlights={handleHighlights}
-        />
-      )}
-    </>
+    <SentimentContentSection
+      highlightsData={sentimentHighlightsData.current}
+      contentData={contentData}
+      tableData={tableData}
+      onHandleHighlights={handleHighlights}
+    />
   );
 };
 

@@ -7,7 +7,6 @@ export const SET_SELECTED_HEADING_ID = 'SENTIMENT/SET_SELECTED_HEADING_ID';
 export const SET_IS_PIN = 'SENTIMENT/SET_IS_PIN';
 export const SET_SENTIMENT_DRAWER_OPEN = 'TOPIC/SET_SENTIMENT_DRAWER_OPEN ';
 export const SET_CURRENT_TOC = 'TOPIC/SET_CURRENT_TOC ';
-export const SET_SHOW_TOC_BUTTON = 'TOPIC/SET_SHOW_TOC_BUTTON  ';
 export const SET_IS_API_RESPONSE_RECEIVED = 'TOPIC/SET_IS_API_RESPONSE_RECEIVED ';
 export const SET_SENTIMENT = 'TOPIC/SET_SENTIMENT ';
 export const SET_SENTIMENT_HIGHLIGHTS = 'TOPIC/SET_SENTIMENT_HIGHLIGHTS';
@@ -59,11 +58,6 @@ export const setIsPin = isPin => ({
 export const setSentimentDrawerOpen = isSentimentDrawerOpen => ({
   type: SET_SENTIMENT_DRAWER_OPEN,
   isSentimentDrawerOpen
-});
-
-export const setShowTocButton = isTocButton => ({
-  type: SET_SHOW_TOC_BUTTON,
-  isTocButton
 });
 
 export const setCurrentToc = currentToc => ({
@@ -121,7 +115,6 @@ const getDefaultState = () => {
     selectedHeadingId: null,
     isPin: false,
     isSentimentDrawerOpen: false,
-    isTocButton: true,
     currentToc: false,
     isApiResponseReceived: false,
     sentiment: getSentimentSettings() ? getSentimentSettings() : 'visible',
@@ -154,8 +147,6 @@ export default function reducer(
       return { ...state, isPin: action.isPin };
     case SET_SENTIMENT_DRAWER_OPEN:
       return { ...state, isSentimentDrawerOpen: action.isSentimentDrawerOpen };
-    case SET_SHOW_TOC_BUTTON:
-      return { ...state, isTocButton: action.isTocButton };
     case SET_CURRENT_TOC:
       return { ...state, currentToc: action.currentToc };
     case SET_IS_API_RESPONSE_RECEIVED:
