@@ -8,9 +8,12 @@ import {
   Typography,
   makeStyles,
   IconButton,
-  Grid
-} from '@material-ui/core';
+  Grid,
+  Switch, Button
+} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
+import { homePageWidgets } from './homePageConfig';
+import { get } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -20,18 +23,33 @@ const useStyles = makeStyles(theme => ({
   },
   formGroup: {
     flexWrap: 'nowrap'
+  },
+  sidebarBody: {
+    padding: '0 8px',
+    height: 'calc(100% - 64px)'
   }
 }));
 
-function HomePageSidebar({ title, widgets, open, handleCloseSideBar, handleColumns }) {
+const homePageWidgetsList = Object.keys(homePageWidgets);
+
+function HomePageSidebar({
+  title,
+  widgets,
+  open,
+  handleCloseSideBar,
+  handleColumns,
+  enableDragResizeWidgets,
+  handleDragResizeWidgets,
+  handleSaveSelected
+}) {
   const classes = useStyles();
+  const getWidgetStatus = key => {
+    const rest = get(widgets, key, null);
+    return rest ? rest.show : false;
+  };
 
   return (
-    <Drawer
-      anchor={'right'}
-      open={open}
-      onClose={handleCloseSideBar}
-      classes={{ paper: classes.drawerPaper }}>
+    <Drawer anchor={'right'} open={open} onClose={handleCloseSideBar} classes={{ paper: classes.drawerPaper }}>
       <Grid container direction="row" justify="space-between" alignItems="center">
         <Grid item></Grid>
         <Grid item>
@@ -44,31 +62,53 @@ function HomePageSidebar({ title, widgets, open, handleCloseSideBar, handleColum
         </Grid>
       </Grid>
 
-      <div style={{ marginLeft: '10px', height: 'calc(100% - 64px)', top: 64 }}>
-        <FormControl component="fieldset" className={classes.formControl}>
+      <div className={classes.sidebarBody}>
+        <FormControl component="fieldset" className={classes.formControl} fullWidth>
           <FormGroup className={classes.formGroup}>
-            {Object.keys(widgets).map((key, index) => {
+            <FormControlLabel
+              value={enableDragResizeWidgets}
+              control={
+                <Switch
+                  checked={enableDragResizeWidgets}
+                  onChange={handleDragResizeWidgets}
+                  color="primary"
+                  name="enableDragResizeWidgets"
+                />
+              }
+              label="Enable Drag/Resize"
+            />
+          </FormGroup>
+
+          <FormGroup className={classes.formGroup}>
+            {homePageWidgetsList.map((key, index) => {
               return (
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={
-                        widgets[key].show
-                      }
-                    />
-                  }
+                  control={<Checkbox checked={getWidgetStatus(key)} />}
                   name={key}
-                  label={widgets[key].title}
+                  label={homePageWidgets[key].title}
                   key={key}
-                  value={widgets[key].status}
+                  value={getWidgetStatus(key)}
                   onChange={(e, v) => {
                     handleColumns(key, v);
                   }}
                 />
-              )
+              );
             })}
           </FormGroup>
+
+          <FormGroup className={classes.formGroup}>
+            <Button
+              color="primary"
+              variant="contained"
+              className={classes.button}
+              size="small"
+              onClick={handleSaveSelected}>
+              Save
+            </Button>
+          </FormGroup>
         </FormControl>
+
+
       </div>
     </Drawer>
   );

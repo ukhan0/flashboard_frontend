@@ -1,10 +1,13 @@
+export const homepageWidgetsKey = 'homepageWidgets';
+export const homepageGridLayoutKey = 'homepageGridLayout';
+
 export const homePageWidgets = {
     homePageTable: { title: 'Recent Documents', show: true },
     homePageNotification: { title: 'Notifications', show: true },
     homePageSmaLime1: { title: 'Social Top Ten Stocks', show: true },
     homePageTweets: { title: 'Social Stream', show: true },
     homePageHeatMap: { title: 'Heat Map', show: false }
-}
+};
 
 export const homePageWidgetlayout = {
     "lg": [
@@ -13,7 +16,7 @@ export const homePageWidgetlayout = {
             "h": 2,
             "x": 0,
             "y": 0,
-            "i": "HomePageTable",
+            "i": "homePageTable",
             "maxH": 3,
             "moved": false,
             "static": false
@@ -23,7 +26,7 @@ export const homePageWidgetlayout = {
             "h": 2,
             "x": 0,
             "y": 2,
-            "i": "HomePageNotification",
+            "i": "homePageNotification",
             "maxH": 3,
             "moved": false,
             "static": false
@@ -33,7 +36,7 @@ export const homePageWidgetlayout = {
             "h": 2,
             "x": 4,
             "y": 0,
-            "i": "HomePageSmaLime1",
+            "i": "homePageSmaLime1",
             "minW": 2,
             "minH": 2,
             "maxH": 2,
@@ -45,7 +48,7 @@ export const homePageWidgetlayout = {
             "h": 2,
             "x": 4,
             "y": 2,
-            "i": "HomePageTweets",
+            "i": "homePageTweets",
             "maxH": 3,
             "moved": false,
             "static": false
@@ -55,7 +58,7 @@ export const homePageWidgetlayout = {
             "h": 2,
             "x": 0,
             "y": 4,
-            "i": "HomePageHeatMap",
+            "i": "homePageHeatMap",
             "maxH": 3,
             "moved": false,
             "static": false
@@ -69,7 +72,7 @@ export const homePageWidgetlayout = {
             "y": 0,
             "minW": 1,
             "maxH": 3,
-            "i": "HomePageTable"
+            "i": "homePageTable"
         },
         {
             "w": 1,
@@ -78,7 +81,7 @@ export const homePageWidgetlayout = {
             "y": 2,
             "minW": 1,
             "maxH": 3,
-            "i": "HomePageNotification"
+            "i": "homePageNotification"
         },
         {
             "w": 1,
@@ -88,7 +91,7 @@ export const homePageWidgetlayout = {
             "minW": 1,
             "minH": 2,
             "maxH": 2,
-            "i": "HomePageSmaLime1"
+            "i": "homePageSmaLime1"
         },
         {
             "w": 1,
@@ -97,7 +100,7 @@ export const homePageWidgetlayout = {
             "y": 6,
             "minW": 1,
             "maxH": 3,
-            "i": "HomePageTweets"
+            "i": "homePageTweets"
         },
         {
             "w": 1,
@@ -107,7 +110,7 @@ export const homePageWidgetlayout = {
             "minW": 1,
             "minH": 1,
             "maxH": 3,
-            "i": "HomePageHeatMap"
+            "i": "homePageHeatMap"
         }
     ]
 };
