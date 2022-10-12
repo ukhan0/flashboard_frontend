@@ -4,12 +4,13 @@ import HomePageNotification from './HomepageNotification';
 import HomePageSmaLime1 from './HomePageSmaLime1';
 import HomePageTweets from './HomePageTweets';
 import HomePageHeatMap from './HomePageHeatMap';
+import HomePageEarningWatcher from './HomePageEarningWatcher';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { homepageGridLayoutKey, homePageWidgetlayout } from './homePageConfig';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-export default function HomeGridLayout({ enableDragResizeWidgets, sidebarSelectedWidget }) {
+const HomeGridLayout = ({ enableDragResizeWidgets, sidebarSelectedWidget }) => {
   const handleLayoutChange = (layout, layouts) => {
     localStorage.setItem(homepageGridLayoutKey, JSON.stringify(layouts));
   };
@@ -40,6 +41,10 @@ export default function HomeGridLayout({ enableDragResizeWidgets, sidebarSelecte
 
       case 'homePageHeatMap':
         component = <HomePageHeatMap />;
+        break;
+
+      case 'homePageEarningWatcher':
+        component = <HomePageEarningWatcher />;
         break;
 
       default:
@@ -88,3 +93,5 @@ export default function HomeGridLayout({ enableDragResizeWidgets, sidebarSelecte
     </ResponsiveGridLayout>
   );
 }
+
+export default HomeGridLayout;

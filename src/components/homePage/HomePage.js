@@ -43,7 +43,7 @@ export default function HomePage() {
   const [snackbar, setSnackBar] = useState(null);
   const [isHomePageSideBarOpen, setIsHomePageSideBarOpen] = useState(false);
   const [sidebarSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
-  const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(true);
+  const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
   const { isLoading } = useSelector(state => state.HomePage);
   const anchorOrigin = { vertical: 'top', horizontal: 'center' };
   // const handleSnackBar = data => {

@@ -106,8 +106,8 @@ export default function HomepageNotification() {
           ))}
         </ButtonGroup>
       </div>
-      <div>
-        <div style={{ height: '600px', marginRight: 12 }}>
+      <div style={{height: 'calc(100% - 70px)'}}>
+        <div style={{ height: '100%'}}>
           <PerfectScrollbar>
             <div className="card-header--title font-weight-bold " style={{ textAlign: 'center', padding: '10px' }}>
               Upcoming Calls
