@@ -5,6 +5,7 @@ import Topic from './Topic';
 import Sentiment from './Sentiment';
 import Filings from './Filings';
 import HomePage from './HomePage';
+import SnackBarRedux from './SnackBarRedux';
 
 export default {
   ThemeOptions,
@@ -13,5 +14,6 @@ export default {
   Topic,
   Sentiment,
   Filings,
-  HomePage
+  HomePage, 
+  SnackBarRedux
 };

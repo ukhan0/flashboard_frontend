@@ -31,7 +31,6 @@ import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { useSelector, useDispatch } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
-import Snackbar from '../Snackbar';
 // components
 import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
@@ -46,6 +45,7 @@ import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideB
 import WatchlistFiltersList from './WatchlistFiltersList';
 import WatchlistFilterLabelDialog from './WatchlistFilterLabelDialog';
 import { FileTypes } from '../../config/watchlistFileTyes';
+import { setSnackBarObj } from '../../reducers/SnackBarRedux';
 
 const compileTikcerData = selectedSymbols => {
   return selectedSymbols.map(s => (isObject(s) ? s.ticker : s));
@@ -87,7 +87,6 @@ const Watchlist = () => {
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
@@ -353,21 +352,32 @@ const Watchlist = () => {
             updateChacheData(ticker, isTicker);
           }
           setTopicDialogOpen(false);
-          setSnackBar({ isSnackBar: true, message: 'Ticker removed from Watchlist', severity: 'info' });
+          dispatch(setSnackBarObj({
+            isSnackBar: true, 
+            message: 'Ticker removed from Watchlist', 
+            severity: 'info',
+            anchorOrigin: anchorOrigin,
+          }));
         } else {
           setTopicAddingError(true);
-          setSnackBar({
+          dispatch(setSnackBarObj({
             isSnackBar: true,
             message: 'Unable to Add/Remove Ticker To/From Watchlist',
-            severity: 'error'
-          });
+            severity: 'error',
+            anchorOrigin: anchorOrigin,
+          }));
         }
       } catch (error) {
         setTopicAddingError(true);
-        setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'Unable to Add/Remove Ticker To/From Watchlist', 
+          severity: 'error',
+          anchorOrigin: anchorOrigin,
+        }));
       }
     },
-    [updateChacheData, selectedType]
+    [updateChacheData, selectedType, anchorOrigin, dispatch]
   );
 
   const handleUpload = useCallback(
@@ -392,17 +402,32 @@ const Watchlist = () => {
             dispatch(setWatchlistSelectedSymbols([]));
           }
           dispatch(setOverwriteCheckBox(false));
-          setSnackBar({ isSnackBar: true, message: 'Ticker added in Watchlist', severity: 'success' });
+          dispatch(setSnackBarObj({
+            isSnackBar: true, 
+            message: 'Ticker added in Watchlist', 
+            severity: 'success',
+            anchorOrigin: anchorOrigin,
+          }));
         } else {
           setTopicAddingError(true);
-          setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
+          dispatch(setSnackBarObj({
+            isSnackBar: true, 
+            message: responsePayload.message, 
+            severity: 'error',
+            anchorOrigin: anchorOrigin,
+          }));
         }
       } catch (error) {
         setTopicAddingError(true);
-        setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'Unable to Add/Remove Ticker To/From Watchlist', 
+          severity: 'error',
+          anchorOrigin: anchorOrigin,
+        }));
       }
     },
-    [dispatch, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
+    [anchorOrigin, dispatch, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
   );
 
   const saveFilter = async text => {
@@ -415,13 +440,28 @@ const Watchlist = () => {
         });
         const responsePayload = get(response, 'data', null);
         if (responsePayload && !responsePayload.error) {
-          setSnackBar({ isSnackBar: true, message: 'filter saved successfully', severity: 'success' });
+          dispatch(setSnackBarObj({
+            isSnackBar: true, 
+            message: 'filter saved successfully', 
+            severity: 'success',
+            anchorOrigin: anchorOrigin,
+          }));
           getSavedFilters();
         } else {
-          setSnackBar({ isSnackBar: true, message: 'filter not saved', severity: 'error' });
+          dispatch(setSnackBarObj({
+            isSnackBar: true, 
+            message: 'filter not saved', 
+            severity: 'error',
+            anchorOrigin: anchorOrigin,
+          }));
         }
       } catch (error) {
-        setSnackBar({ isSnackBar: true, message: 'something went wrong', severity: 'error' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'something went wrong', 
+          severity: 'error',
+          anchorOrigin: anchorOrigin,
+        }));
       }
     }
     setIsFilterLabelOpen(false);
@@ -433,12 +473,27 @@ const Watchlist = () => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         getSavedFilters();
-        setSnackBar({ isSnackBar: true, message: 'filter deleted successfully', severity: 'info' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'filter deleted successfully', 
+          severity: 'info',
+          anchorOrigin: anchorOrigin,
+        }));
       } else {
-        setSnackBar({ isSnackBar: true, message: 'filter not deleted', severity: 'error' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'filter not deleted', 
+          severity: 'error',
+          anchorOrigin: anchorOrigin,
+        }));
       }
     } catch (error) {
-      setSnackBar({ isSnackBar: true, message: 'something went wroung', severity: 'error' });
+      dispatch(setSnackBarObj({
+        isSnackBar: true, 
+        message: 'something went wrong', 
+        severity: 'error',
+        anchorOrigin: anchorOrigin,
+      }));
     }
   };
 
@@ -452,12 +507,27 @@ const Watchlist = () => {
       const responsePayload = get(response, 'data', null);
       if (!responsePayload.error) {
         getSavedFilters();
-        setSnackBar({ isSnackBar: true, message: 'filter updated successfully', severity: 'success' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'filter updated successfully', 
+          severity: 'success',
+          anchorOrigin: anchorOrigin,
+        }))
       } else {
-        setSnackBar({ isSnackBar: true, message: 'filter not updated', severity: 'error' });
+        dispatch(setSnackBarObj({
+          isSnackBar: true, 
+          message: 'filter not updated', 
+          severity: 'error',
+          anchorOrigin: anchorOrigin,
+        }))
       }
     } catch (error) {
-      setSnackBar({ isSnackBar: true, message: 'something went wroung', severity: 'error' });
+      dispatch(setSnackBarObj({
+        isSnackBar: true, 
+        message: 'something went wroung', 
+        severity: 'error',
+        anchorOrigin: anchorOrigin,
+      }))
     }
     setIsFilterLabelOpen(false);
   };
@@ -719,19 +789,6 @@ const Watchlist = () => {
         onClose={() => setTopicDialogOpen(false)}
         error={topicAddingError}
         onUpload={handleUpload}
-      />
-      <Snackbar
-        open={get(snackbar, 'isSnackBar', false)}
-        onClose={() =>
-          setSnackBar({
-            isSnackBar: false,
-            message: get(snackbar, 'message', null),
-            severity: get(snackbar, 'severity', '')
-          })
-        }
-        message={get(snackbar, 'message', null)}
-        severity={get(snackbar, 'severity', '')}
-        anchorOrigin={anchorOrigin}
       />
     </>
   );

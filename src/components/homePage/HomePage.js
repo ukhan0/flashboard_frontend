@@ -5,8 +5,6 @@ import HomePageSmaLime1 from './HomePageSmaLime1';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import SnackBar from '../Snackbar';
-import { get } from 'lodash';
 import HomePageNotification from './HomepageNotification';
 import HomePageTweets from './HomePageTweets';
 import { getUserWatchlist } from './HomePageAction';
@@ -23,12 +21,7 @@ const useStyle = makeStyles({
 export default function HomePage() {
   const classes = useStyle();
   const dispatch = useDispatch();
-  const [snackbar, setSnackBar] = React.useState(null);
   const { isLoading } = useSelector(state => state.HomePage);
-  const anchorOrigin = { vertical: 'top', horizontal: 'center' };
-  const handleSnackBar = data => {
-    setSnackBar(data);
-  };
   React.useEffect(() => {
     dispatch(getUserWatchlist(['domestic', 'global']));
   }, [dispatch]);
@@ -45,20 +38,7 @@ export default function HomePage() {
       </Grid>
       <Grid container spacing={1}>
         <Grid item xs={6}>
-          <SnackBar
-            open={get(snackbar, 'isSnackBar', false)}
-            onClose={() =>
-              setSnackBar({
-                isSnackBar: false,
-                message: get(snackbar, 'message', null),
-                severity: get(snackbar, 'severity', '')
-              })
-            }
-            message={get(snackbar, 'message', null)}
-            severity={get(snackbar, 'severity', '')}
-            anchorOrigin={anchorOrigin}
-          />
-          <HomePageSmaLime1 handleSnackBar={handleSnackBar} />
+          <HomePageSmaLime1 />
         </Grid>
         <Grid item xs={6}>
           <HomePageTweets />
