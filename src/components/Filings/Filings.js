@@ -10,12 +10,6 @@ import {
   getCompanyPrice0verlayOnTimeline,
   clearStateAndCancelApiCalls
 } from './FillingAction';
-import {
-  setCompanyFillingData,
-  setCompanyFillingGraphData,
-  setCompanyFillingRevenueData,
-  setCompanyPriceOverlay
-} from '../../reducers/Filings';
 import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import FillingTable from './FilingsTable';
