@@ -18,14 +18,8 @@ import {
   setCompleteGlobalCompaniesData,
   setSelectedFilter,
   setFilterLabel,
-  setIsFilterUpdate,
+  setIsFilterUpdate
 } from '../../reducers/Watchlist';
-import {
-  setCompanyFillingData,
-  setCompanyFillingGraphData,
-  setCompanyFillingRevenueData,
-  setCompanyPriceOverlay
-} from '../../reducers/Filings';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,7 +34,7 @@ import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
 import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
-import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
+import { setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideBar';
 import WatchlistFiltersList from './WatchlistFiltersList';
@@ -80,7 +74,7 @@ const Watchlist = () => {
     filterLabel,
     selectedFilter,
     isFilterUpdate,
-    isActiveCompanies,
+    isActiveCompanies
   } = useSelector(state => state.Watchlist);
 
   const [watchlistData, setWatchlistData] = useState([]);
@@ -144,7 +138,6 @@ const Watchlist = () => {
     },
     [selectedType, dispatch]
   );
-
 
   useEffect(() => {
     dispatch(getWatchlistFileTypeEmailAlertStatus());
@@ -480,11 +473,6 @@ const Watchlist = () => {
   };
   const onColumnClick = (rowData, columnId) => {
     dispatch(setIsFromThemex(false));
-    dispatch(setCompanyFillingData([]));
-    dispatch(setCompanyFillingGraphData([]));
-    dispatch(setCompanyFillingRevenueData([]));
-    dispatch(setCompanyPriceOverlay([]));
-    dispatch(setHeadingRedirect(null));
     rowData.documentType = selectedFileType;
     if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
       dispatch(setSelectedWatchlist(rowData));
@@ -563,7 +551,6 @@ const Watchlist = () => {
         saveFilter={saveFilter}
         updateFilter={updateFilter}
         isFilterLabelOpen={isFilterLabelOpen}
-        handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
         handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
         filterLabel={filterLabel}
       />
@@ -571,24 +558,19 @@ const Watchlist = () => {
         deleteFilter={deleteFilter}
         savedFiltersList={savedFiltersList}
         isSavedFilterDialog={isSavedFilterDialog}
-        handleOpenAgGridFilterDialog={handleOpenAgGridFilterDialog}
         handleCloseAgGridFilterDialog={handleCloseAgGridFilterDialog}
-        handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
-        handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
       />
-      {WatchlistService.getAgGridAColunms().columns.length > 0 ? (
-        <>
-          <WatchlistCustomColumnsSideBar
-            handleColumns={handleColumns}
-            dispalyedColumns={dispalyedColumns}
-            currentCol={currentCol}
-            open={isAgGridSideBarOpen}
-            handleCloseAgGridSideBar={handleCloseAgGridSideBar}
-            isAgGridActions={isAgGridActions}
-            title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
-          />
-        </>
-      ) : null}
+      {WatchlistService.getAgGridAColunms().columns.length > 0 && (
+        <WatchlistCustomColumnsSideBar
+          handleColumns={handleColumns}
+          dispalyedColumns={dispalyedColumns}
+          currentCol={currentCol}
+          open={isAgGridSideBarOpen}
+          handleCloseAgGridSideBar={handleCloseAgGridSideBar}
+          isAgGridActions={isAgGridActions}
+          title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
+        />
+      )}
       <WatchListCustomEmailAlertsSideBar
         open={isAgGridEmailAlerts}
         handleCloseAgGridSideBar={() => {
@@ -661,9 +643,7 @@ const Watchlist = () => {
               className={classes.button}
               size="small"
               onClick={
-                selectedTickerSymbol
-                  ? () => handleUpload(selectedTickerSymbol.ticker)
-                  : () => setTopicDialogOpen(true)
+                selectedTickerSymbol ? () => handleUpload(selectedTickerSymbol.ticker) : () => setTopicDialogOpen(true)
               }>
               Add Watchlist
             </Button>

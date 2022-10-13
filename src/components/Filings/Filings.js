@@ -9,6 +9,12 @@ import {
   getCompanyFilingRevenueData,
   getCompanyPrice0verlayOnTimeline
 } from './FillingAction';
+import {
+  setCompanyFillingData,
+  setCompanyFillingGraphData,
+  setCompanyFillingRevenueData,
+  setCompanyPriceOverlay
+} from '../../reducers/Filings';
 import FilingsCards from './FillingsCardData';
 import FilingsCompanyDetails from './FilingsCompanyDetails';
 import FillingTable from './FilingsTable';
@@ -48,6 +54,12 @@ const Filings = () => {
     dispatch(getCompanyFilingGraphData());
     dispatch(getCompanyFilingRevenueData());
     dispatch(getCompanyPrice0verlayOnTimeline());
+    return () => {
+      dispatch(setCompanyFillingData([]));
+      dispatch(setCompanyFillingGraphData([]));
+      dispatch(setCompanyFillingRevenueData([]));
+      dispatch(setCompanyPriceOverlay([]));
+    };
   }, [dispatch, selectedItem]);
 
   if (!selectedItem) {
