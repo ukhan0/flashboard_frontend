@@ -20,12 +20,6 @@ import {
   setFilterLabel,
   setIsFilterUpdate,
 } from '../../reducers/Watchlist';
-import {
-  setCompanyFillingData,
-  setCompanyFillingGraphData,
-  setCompanyFillingRevenueData,
-  setCompanyPriceOverlay
-} from '../../reducers/Filings';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,7 +34,7 @@ import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
 import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
-import { setHeadingRedirect, setIsFromThemex } from '../../reducers/Topic';
+import { setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
 import WatchListCustomEmailAlertsSideBar from './WatchListCustomEmailAlertsSideBar';
 import WatchlistFiltersList from './WatchlistFiltersList';
@@ -480,11 +474,6 @@ const Watchlist = () => {
   };
   const onColumnClick = (rowData, columnId) => {
     dispatch(setIsFromThemex(false));
-    dispatch(setCompanyFillingData([]));
-    dispatch(setCompanyFillingGraphData([]));
-    dispatch(setCompanyFillingRevenueData([]));
-    dispatch(setCompanyPriceOverlay([]));
-    dispatch(setHeadingRedirect(null));
     rowData.documentType = selectedFileType;
     if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
       dispatch(setSelectedWatchlist(rowData));

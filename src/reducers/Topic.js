@@ -47,7 +47,6 @@ export const SET_SELECTED_SECTION = 'TOPIC/SET_SELECTED_SECTION';
 export const SET_OPEN_TOPIC_SEARCH_DIALOG = 'TOPIC/SET_OPEN_TOPIC_SEARCH_DIALOG';
 export const SET_CURRENT_SEARCH_DETAIL = 'TOPIC/SET_CURRENT_SEARCH_DETAIL';
 export const SET_BACKDROP_ON_COMPANY_CLICK = 'TOPIC/SET_BACKDROP_ON_COMPANY_CLICK';
-export const SET_HEADING_REDIRECT = 'TOPIC/SET_HEADING_REDIRECT ';
 export const IS_DATE_SET = 'TOPIC/IS_DATE_SET ';
 export const SET_IS_FROM_SIDE_BAR = 'TOPIC/SET_IS_FROM_SIDE_BAR';
 export const SET_IS_TOPIC_EMAIL_ALERT_ENABLE = 'TOPIC/SET_IS_TOPIC_EMAIL_ALERT_ENABLE';
@@ -294,11 +293,6 @@ export const setBackDropOnCompanyClick = isCompanyClick => ({
   isCompanyClick
 });
 
-export const setHeadingRedirect = heading => ({
-  type: SET_HEADING_REDIRECT,
-  heading
-});
-
 export const isDateSet = isDate => ({
   type: IS_DATE_SET,
   isDate
@@ -537,7 +531,6 @@ const getDefaultState = () => {
     openTopicSearchDialog: false,
     currentSearchDetail: {},
     isCompanyClick: false,
-    heading: null,
     isDate: false,
     isFromSideBar: false,
     isFromThemex: false,
@@ -693,8 +686,6 @@ export default function reducer(
       return { ...state, currentSearchDetail: action.currentSearchDetail };
     case SET_BACKDROP_ON_COMPANY_CLICK:
       return { ...state, isCompanyClick: action.isCompanyClick };
-    case SET_HEADING_REDIRECT:
-      return { ...state, heading: action.heading };
     case IS_DATE_SET:
       return { ...state, isDate: action.isDate };
     case SET_IS_FROM_SIDE_BAR:

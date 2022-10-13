@@ -76,7 +76,6 @@ export const getCompanyFilingRevenueData = () => {
     const oldId = getOldId({}, selectedFileType, selectedItem);
     const recentId = getRecentId({}, selectedFileType, selectedItem);
     dispatch(setIsEntitiesChart(false));
-    dispatch(setCompanyFillingRevenueData([]));
     if (!oldId || !recentId) {
       dispatch(setIsEntitiesChart(true));
       dispatch(setCompanyFillingRevenueData([]));
