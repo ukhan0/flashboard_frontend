@@ -10,6 +10,7 @@ import {
 import { get } from 'lodash';
 import config from '../../config/config';
 import { getOldId, getRecentId } from '../comparision/ComparisionHelper';
+const cancelTokens = [];
 
 export const getCompanyFilingListing = () => {
   return async (dispatch, getState) => {
@@ -20,10 +21,13 @@ export const getCompanyFilingListing = () => {
       return;
     }
     try {
+      const comparnerCancelToken = axios.CancelToken.source();
+      cancelTokens.push(comparnerCancelToken);
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_listing?index=${config.fillingApiIndex}${
-          companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
-        }`
+        `${config.apiUrl}/api/get_company_filing_listing?index=${config.fillingApiIndex}${companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
+        }`, {
+        cancelToken: comparnerCancelToken.token
+      }
       );
 
       const data = get(response, 'data', []);
@@ -32,9 +36,7 @@ export const getCompanyFilingListing = () => {
       } else {
         dispatch(setCompanyFillingData([]));
       }
-    } catch (error) {
-      dispatch(setCompanyFillingData([]));
-    }
+    } catch (error) { }
   };
 };
 
@@ -49,10 +51,13 @@ export const getCompanyFilingGraphData = () => {
       return;
     }
     try {
+      const comparnerCancelToken = axios.CancelToken.source();
+      cancelTokens.push(comparnerCancelToken);
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_graph_detail?index=${config.fillingApiIndex}${
-          companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
-        }`
+        `${config.apiUrl}/api/get_company_filing_graph_detail?index=${config.fillingApiIndex}${companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
+        }`, {
+        cancelToken: comparnerCancelToken.token
+      }
       );
 
       const data = get(response, 'data', []);
@@ -63,10 +68,7 @@ export const getCompanyFilingGraphData = () => {
         dispatch(setCompanyFillingGraphData([]));
       }
       dispatch(setIsWordCountChart(true));
-    } catch (error) {
-      dispatch(setCompanyFillingGraphData([]));
-      dispatch(setIsWordCountChart(true));
-    }
+    } catch (error) { }
   };
 };
 
@@ -82,7 +84,11 @@ export const getCompanyFilingRevenueData = () => {
       return;
     }
     try {
-      const response = await axios.get(`${config.fillingApiUrl}?f1=${oldId}&f2=${recentId}&output=json`);
+      const comparnerCancelToken = axios.CancelToken.source();
+      cancelTokens.push(comparnerCancelToken);
+      const response = await axios.get(`${config.fillingApiUrl}?f1=${oldId}&f2=${recentId}&output=json`, {
+        cancelToken: comparnerCancelToken.token
+      });
       const data = get(response, 'data', []);
       if (response) {
         dispatch(setCompanyFillingRevenueData(data));
@@ -90,10 +96,7 @@ export const getCompanyFilingRevenueData = () => {
         dispatch(setCompanyFillingRevenueData([]));
       }
       dispatch(setIsEntitiesChart(true));
-    } catch (error) {
-      dispatch(setCompanyFillingRevenueData([]));
-      dispatch(setIsEntitiesChart(true));
-    }
+    } catch (error) { }
   };
 };
 
@@ -105,7 +108,11 @@ export const getCompanyPrice0verlayOnTimeline = () => {
       return;
     }
     try {
-      const response = await axios.get(`${config.apiUrl}/api/get_price_by_ticker?ticker=${selectedItem.ticker}`);
+      const comparnerCancelToken = axios.CancelToken.source();
+      cancelTokens.push(comparnerCancelToken);
+      const response = await axios.get(`${config.apiUrl}/api/get_price_by_ticker?ticker=${selectedItem.ticker}`, {
+        cancelToken: comparnerCancelToken.token
+      });
 
       if (response) {
         const data = get(response, 'data', []);
@@ -117,8 +124,21 @@ export const getCompanyPrice0verlayOnTimeline = () => {
       } else {
         dispatch(setCompanyPriceOverlay([]));
       }
-    } catch (error) {
-      dispatch(setCompanyPriceOverlay([]));
-    }
+    } catch (error) { }
   };
 };
+
+export const clearStateAndCancelApiCalls = () => {
+  return async (dispatch) => {
+    dispatch(setCompanyFillingData([]));
+    dispatch(setCompanyFillingGraphData([]));
+    dispatch(setCompanyFillingRevenueData([]));
+    dispatch(setCompanyPriceOverlay([]));
+
+    if (cancelTokens) {
+      cancelTokens.forEach(token => {
+        token.cancel();
+      });
+    }
+  }
+}

@@ -7,7 +7,8 @@ import {
   getCompanyFilingListing,
   getCompanyFilingGraphData,
   getCompanyFilingRevenueData,
-  getCompanyPrice0verlayOnTimeline
+  getCompanyPrice0verlayOnTimeline,
+  clearStateAndCancelApiCalls
 } from './FillingAction';
 import {
   setCompanyFillingData,
@@ -55,10 +56,7 @@ const Filings = () => {
     dispatch(getCompanyFilingRevenueData());
     dispatch(getCompanyPrice0verlayOnTimeline());
     return () => {
-      dispatch(setCompanyFillingData([]));
-      dispatch(setCompanyFillingGraphData([]));
-      dispatch(setCompanyFillingRevenueData([]));
-      dispatch(setCompanyPriceOverlay([]));
+      dispatch(clearStateAndCancelApiCalls());
     };
   }, [dispatch, selectedItem]);
 

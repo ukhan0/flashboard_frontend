@@ -24,6 +24,7 @@ const FilingsCompanyRevenueGraph = props => {
   const [entitiesData, setEntitiesData] = useState([]);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const [reBuildGraph, setReBuildGraph] = useState(false);
+  const [dataAvailable, setDataAvailable] = useState(false)
 
   const removingSpacesAndPunctuation = string =>
     string
@@ -133,7 +134,7 @@ const FilingsCompanyRevenueGraph = props => {
       panning: true,
       panKey: 'shift',
       events: {
-        load: function() {}
+        load: function () { }
       }
     },
 
@@ -161,7 +162,7 @@ const FilingsCompanyRevenueGraph = props => {
       labels: {
         style: { cursor: 'pointer' },
         events: {
-          click: function() {
+          click: function () {
             if (this) {
               dispatch(setIsFromSideBar(false));
               dispatch(setFillingsSearchText(this.value));
@@ -182,7 +183,7 @@ const FilingsCompanyRevenueGraph = props => {
         text: 'Mentions'
       },
       labels: {
-        formatter: function() {
+        formatter: function () {
           return Math.abs(this.value);
         }
       },
@@ -205,7 +206,7 @@ const FilingsCompanyRevenueGraph = props => {
         dataLabels: {
           enabled: true,
           grouping: true,
-          formatter: function() {
+          formatter: function () {
             if (this.y === 0) return '';
             else return Math.abs(this.y);
           }
@@ -216,7 +217,7 @@ const FilingsCompanyRevenueGraph = props => {
         cursor: 'pointer',
         point: {
           events: {
-            click: function() {
+            click: function () {
               if (this) {
                 dispatch(setIsFromSideBar(false));
                 dispatch(setFillingsSearchText(this.name));
@@ -248,6 +249,10 @@ const FilingsCompanyRevenueGraph = props => {
     }
   }, [reBuildGraph]);
 
+  useEffect(() => {
+    setDataAvailable(filingsRevenueData?.length > 0)
+  }, [filingsRevenueData])
+
   const Buttons = () => {
     return (
       <ButtonGroup color="primary">
@@ -267,33 +272,38 @@ const FilingsCompanyRevenueGraph = props => {
 
   return (
     <Card className="mb-4">
-      <div className="card-header-alt d-flex justify-content-between p-4">
-        <Grid container spacing={3}>
-          <Grid container alignItems="center">
-            <Grid item xs={6}>
-              <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
-              <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
+      {dataAvailable ?
+        <>
+          <div className="card-header-alt d-flex justify-content-between p-4">
+            <Grid container spacing={3}>
+              <Grid container alignItems="center">
+                <Grid item xs={6}>
+                  <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
+                  <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
+                </Grid>
+                <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
+                  {Buttons()}
+                </Grid>
+              </Grid>
             </Grid>
-
-            <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
-              {Buttons()}
+          </div>
+          <div className="mx-4 divider" />
+          <div className="mx-4 divider" />
+          <div className="p-4">
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={12}>
+                <div style={{ height: '100%', width: '100%' }}>
+                  {!reBuildGraph ? <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} /> : <></>}
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </div>
-      <div className="mx-4 divider" />
-      <div className="mx-4 divider" />
-      <div className="p-4">
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={12}>
-            <div style={{ height: '100%', width: '100%' }}>
-              {!reBuildGraph ? <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} /> : <></>}
-            </div>
-          </Grid>
-        </Grid>
-        <Divider />
-        <Divider />
-      </div>
+            <Divider />
+            <Divider />
+          </div>
+        </>
+        :
+        <></>
+      }
     </Card>
   );
 };
