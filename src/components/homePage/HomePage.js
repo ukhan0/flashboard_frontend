@@ -3,7 +3,7 @@ import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import SnackBar from '../Snackbar';
-import { cloneDeep, get, merge } from 'lodash';
+import { cloneDeep, get } from 'lodash';
 import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
@@ -38,7 +38,7 @@ const getHomepageWidgets = () => {
 
   // if new widget add and not exists in prev localstorage
   // then get from the config
-  return savedWidgets ? merge(homePageWidgets, savedWidgets) : homePageWidgets;
+  return savedWidgets ? { ...homePageWidgets, ...savedWidgets } : homePageWidgets;
 };
 
 export default function HomePage() {
@@ -74,8 +74,23 @@ export default function HomePage() {
     setEnableDragResizeWidgets(prevState => !prevState);
   };
 
-  const handleSaveSelected = () => {
-    localStorage.setItem(homepageWidgetsKey, JSON.stringify(sidebarSelectedWidget));
+  const handleSaveSelected = async() => {
+    const homeWidgets = JSON.stringify(sidebarSelectedWidget);
+    localStorage.setItem(homepageWidgetsKey, homeWidgets);
+    setIsHomePageSideBarOpen(false);
+
+    // const { user } = useSelector(state => state.User);
+
+    // try {
+    //   const user = JSON.parse(localStorage.getItem('user'));
+    //   const response = await axios.post(`${config.apiUrl}/api/users/save_home_widgets`, 
+    //   { user_id: user.id, homw_widgets: homeWidgets});
+
+    //   console.log('response');
+    //   console.log(response)
+    // } catch (error) {
+    //   setErrorText('Unable to login');
+    // }
   };
   useEffect(() => {
     dispatch(getUserWatchlist(['domestic', 'global']));

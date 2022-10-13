@@ -40,9 +40,7 @@ export const homePageWidgetlayout = {
             "x": 4,
             "y": 0,
             "i": "homePageSmaLime1",
-            "minW": 2,
-            "minH": 2,
-            "maxH": 2,
+            "maxH": 3,
             "moved": false,
             "static": false
         },
@@ -92,8 +90,7 @@ export const homePageWidgetlayout = {
             "x": 0,
             "y": 4,
             "minW": 1,
-            "minH": 2,
-            "maxH": 2,
+            "maxH": 3,
             "i": "homePageSmaLime1"
         },
         {
@@ -111,7 +108,6 @@ export const homePageWidgetlayout = {
             "x": 0,
             "y": 8,
             "minW": 1,
-            "minH": 1,
             "maxH": 3,
             "i": "homePageHeatMap"
         }

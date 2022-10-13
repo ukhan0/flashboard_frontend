@@ -34,6 +34,7 @@ import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../reducers/User';
+import { homepageWidgetsKey } from 'components/homePage/homePageConfig';
 
 const StyledTabs = withStyles({
   indicator: {
@@ -121,6 +122,10 @@ const LivePreviewExample = () => {
         dispatch(setIsWatchlistEmailAlertEnable(userData.data.send_watchlist_alert_email));
         dispatch(setIsColorEnable(userData.data.enable_watchlist_color));
         localStorage.setItem('user', JSON.stringify(userData.data));
+        let homeWidgets = get(userData.data , 'home_widgets' , null);
+        if(homeWidgets){
+          localStorage.setItem(homepageWidgetsKey, homeWidgets);
+        }
         let token = get(userData, 'auth_token', null);
         if (token) {
           localStorage.setItem('auth_token', token);
