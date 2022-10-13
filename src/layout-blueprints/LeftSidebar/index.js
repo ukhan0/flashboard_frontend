@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import { Button, CircularProgress, Backdrop} from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchBackdrop,setSearchBackdropHighlights } from '../../reducers/Topic';
+import SnackBar from '../../components/Snackbar';
+import { setSnackBarObj } from '../../reducers/SnackBarRedux';
 import topicStyles from './leftSidebarStyles';
 import { connect } from 'react-redux';
 import { Sidebar, Header, Footer } from '../../layout-components';
@@ -13,6 +15,7 @@ import { get } from 'lodash';
 const LeftSidebar = props => {
   const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
   const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights, isCompanyClick } = useSelector(state => state.Topic);
+  const { snackBarObj } = useSelector(state => state.SnackBarRedux);
   const location = useLocation();
 
   const dispatch = useDispatch()
@@ -46,7 +49,22 @@ const LeftSidebar = props => {
               'app-content-footer-fixed': footerFixed
             })}>
             <div className="app-content--inner">
-              <div className="app-content--inner__wrapper">{children}</div>
+              <div className="app-content--inner__wrapper">
+                {children}
+                <SnackBar
+                  open={get(snackBarObj, 'isSnackBar', false)}
+                  onClose={() => {
+                    dispatch(setSnackBarObj({
+                      isSnackBar: false,
+                      message: '',
+                      severity: '',
+                    }))
+                  }}
+                  message={get(snackBarObj, 'message', null)}
+                  severity={get(snackBarObj, 'severity', '')}
+                  anchorOrigin={get(snackBarObj, 'anchorOrigin', {vertical: 'bottom', horizontal: 'left'})}
+                />
+              </div>
             </div>
             {
               get(location, 'pathname', null) !== '/comparision' ?
