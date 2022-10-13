@@ -18,7 +18,7 @@ import {
   setCompleteGlobalCompaniesData,
   setSelectedFilter,
   setFilterLabel,
-  setIsFilterUpdate,
+  setIsFilterUpdate
 } from '../../reducers/Watchlist';
 import { setSidebarDisplay } from '../../reducers/ThemeOptions';
 import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
@@ -74,7 +74,7 @@ const Watchlist = () => {
     filterLabel,
     selectedFilter,
     isFilterUpdate,
-    isActiveCompanies,
+    isActiveCompanies
   } = useSelector(state => state.Watchlist);
 
   const [watchlistData, setWatchlistData] = useState([]);
@@ -138,7 +138,6 @@ const Watchlist = () => {
     },
     [selectedType, dispatch]
   );
-
 
   useEffect(() => {
     dispatch(getWatchlistFileTypeEmailAlertStatus());
@@ -552,7 +551,6 @@ const Watchlist = () => {
         saveFilter={saveFilter}
         updateFilter={updateFilter}
         isFilterLabelOpen={isFilterLabelOpen}
-        handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
         handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
         filterLabel={filterLabel}
       />
@@ -560,24 +558,19 @@ const Watchlist = () => {
         deleteFilter={deleteFilter}
         savedFiltersList={savedFiltersList}
         isSavedFilterDialog={isSavedFilterDialog}
-        handleOpenAgGridFilterDialog={handleOpenAgGridFilterDialog}
         handleCloseAgGridFilterDialog={handleCloseAgGridFilterDialog}
-        handleOpenAgGridFilterLabelDialog={handleOpenAgGridFilterLabelDialog}
-        handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
       />
-      {WatchlistService.getAgGridAColunms().columns.length > 0 ? (
-        <>
-          <WatchlistCustomColumnsSideBar
-            handleColumns={handleColumns}
-            dispalyedColumns={dispalyedColumns}
-            currentCol={currentCol}
-            open={isAgGridSideBarOpen}
-            handleCloseAgGridSideBar={handleCloseAgGridSideBar}
-            isAgGridActions={isAgGridActions}
-            title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
-          />
-        </>
-      ) : null}
+      {WatchlistService.getAgGridAColunms().columns.length > 0 && (
+        <WatchlistCustomColumnsSideBar
+          handleColumns={handleColumns}
+          dispalyedColumns={dispalyedColumns}
+          currentCol={currentCol}
+          open={isAgGridSideBarOpen}
+          handleCloseAgGridSideBar={handleCloseAgGridSideBar}
+          isAgGridActions={isAgGridActions}
+          title={isAgGridActions ? 'Actions' : 'Show/Hide Columns'}
+        />
+      )}
       <WatchListCustomEmailAlertsSideBar
         open={isAgGridEmailAlerts}
         handleCloseAgGridSideBar={() => {
@@ -650,9 +643,7 @@ const Watchlist = () => {
               className={classes.button}
               size="small"
               onClick={
-                selectedTickerSymbol
-                  ? () => handleUpload(selectedTickerSymbol.ticker)
-                  : () => setTopicDialogOpen(true)
+                selectedTickerSymbol ? () => handleUpload(selectedTickerSymbol.ticker) : () => setTopicDialogOpen(true)
               }>
               Add Watchlist
             </Button>
