@@ -122,10 +122,12 @@ const LivePreviewExample = () => {
         dispatch(setIsWatchlistEmailAlertEnable(userData.data.send_watchlist_alert_email));
         dispatch(setIsColorEnable(userData.data.enable_watchlist_color));
         localStorage.setItem('user', JSON.stringify(userData.data));
-        let homeWidgets = get(userData.data , 'home_widgets' , null);
-        if(homeWidgets){
+
+        let homeWidgets = get(userData.data, 'home_widgets', null);
+        if (homeWidgets) {
           localStorage.setItem(homepageWidgetsKey, homeWidgets);
         }
+
         let token = get(userData, 'auth_token', null);
         if (token) {
           localStorage.setItem('auth_token', token);
