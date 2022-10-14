@@ -4,13 +4,12 @@ import {
   setCompanyFillingGraphData,
   setCompanyFillingRevenueData,
   setCompanyPriceOverlay,
-  setIsEntitiesChart,
   setIsWordCountChart
 } from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
 import { getOldId, getRecentId } from '../comparision/ComparisionHelper';
-const cancelTokens = [];
+let cancelTokens = [];
 
 export const getCompanyFilingListing = () => {
   return async (dispatch, getState) => {
@@ -21,13 +20,15 @@ export const getCompanyFilingListing = () => {
       return;
     }
     try {
-      const comparnerCancelToken = axios.CancelToken.source();
-      cancelTokens.push(comparnerCancelToken);
+      const filingListingCancelToken = axios.CancelToken.source();
+      cancelTokens.push(filingListingCancelToken);
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_listing?index=${config.fillingApiIndex}${companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
-        }`, {
-        cancelToken: comparnerCancelToken.token
-      }
+        `${config.apiUrl}/api/get_company_filing_listing?index=${config.fillingApiIndex}${
+          companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
+        }`,
+        {
+          cancelToken: filingListingCancelToken.token
+        }
       );
 
       const data = get(response, 'data', []);
@@ -36,7 +37,7 @@ export const getCompanyFilingListing = () => {
       } else {
         dispatch(setCompanyFillingData([]));
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 };
 
@@ -51,13 +52,15 @@ export const getCompanyFilingGraphData = () => {
       return;
     }
     try {
-      const comparnerCancelToken = axios.CancelToken.source();
-      cancelTokens.push(comparnerCancelToken);
+      const graphDetailCancelToken = axios.CancelToken.source();
+      cancelTokens.push(graphDetailCancelToken);
       const response = await axios.get(
-        `${config.apiUrl}/api/get_company_filing_graph_detail?index=${config.fillingApiIndex}${companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
-        }`, {
-        cancelToken: comparnerCancelToken.token
-      }
+        `${config.apiUrl}/api/get_company_filing_graph_detail?index=${config.fillingApiIndex}${
+          companyId ? `&company_id=${companyId}` : `&ticker=${ticker}`
+        }`,
+        {
+          cancelToken: graphDetailCancelToken.token
+        }
       );
 
       const data = get(response, 'data', []);
@@ -68,7 +71,7 @@ export const getCompanyFilingGraphData = () => {
         dispatch(setCompanyFillingGraphData([]));
       }
       dispatch(setIsWordCountChart(true));
-    } catch (error) { }
+    } catch (error) {}
   };
 };
 
@@ -77,9 +80,7 @@ export const getCompanyFilingRevenueData = () => {
     const { selectedItem, selectedFileType } = getState().Watchlist;
     const oldId = getOldId({}, selectedFileType, selectedItem);
     const recentId = getRecentId({}, selectedFileType, selectedItem);
-    dispatch(setIsEntitiesChart(false));
     if (!oldId || !recentId) {
-      dispatch(setIsEntitiesChart(true));
       dispatch(setCompanyFillingRevenueData([]));
       return;
     }
@@ -95,8 +96,7 @@ export const getCompanyFilingRevenueData = () => {
       } else {
         dispatch(setCompanyFillingRevenueData([]));
       }
-      dispatch(setIsEntitiesChart(true));
-    } catch (error) { }
+    } catch (error) {}
   };
 };
 
@@ -108,10 +108,10 @@ export const getCompanyPrice0verlayOnTimeline = () => {
       return;
     }
     try {
-      const comparnerCancelToken = axios.CancelToken.source();
-      cancelTokens.push(comparnerCancelToken);
+      const priceByTickerCancelToken = axios.CancelToken.source();
+      cancelTokens.push(priceByTickerCancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_price_by_ticker?ticker=${selectedItem.ticker}`, {
-        cancelToken: comparnerCancelToken.token
+        cancelToken: priceByTickerCancelToken.token
       });
 
       if (response) {
@@ -124,21 +124,20 @@ export const getCompanyPrice0verlayOnTimeline = () => {
       } else {
         dispatch(setCompanyPriceOverlay([]));
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 };
 
 export const clearStateAndCancelApiCalls = () => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch(setCompanyFillingData([]));
     dispatch(setCompanyFillingGraphData([]));
     dispatch(setCompanyFillingRevenueData([]));
     dispatch(setCompanyPriceOverlay([]));
 
-    if (cancelTokens) {
-      cancelTokens.forEach(token => {
-        token.cancel();
-      });
-    }
-  }
-}
+    cancelTokens.forEach(token => {
+      token.cancel();
+    });
+    cancelTokens = [];
+  };
+};

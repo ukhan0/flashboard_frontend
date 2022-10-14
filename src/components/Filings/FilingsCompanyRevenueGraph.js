@@ -16,7 +16,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import CustomEvents from 'highcharts-custom-events';
 CustomEvents(Highcharts);
 
-const FilingsCompanyRevenueGraph = props => {
+const FilingsCompanyRevenueGraph = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [selectedEntityType, setSelectedEntityType] = useState(null);
@@ -267,40 +267,34 @@ const FilingsCompanyRevenueGraph = props => {
 
   return (
     <Card className="mb-4">
-      {filingsRevenueData.length && (
-        <>
-          <div className="card-header-alt d-flex justify-content-between p-4">
-            <Grid container spacing={3}>
-              <Grid container alignItems="center">
-                <Grid item xs={6}>
-                  <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
-                  <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
-                </Grid>
-                <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
-                  {Buttons()}
-                </Grid>
+      <>
+        <div className="card-header-alt d-flex justify-content-between p-4">
+          <Grid container spacing={3}>
+            <Grid container alignItems="center">
+              <Grid item xs={6}>
+                <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
+                <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
+              </Grid>
+              <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
+                {Buttons()}
               </Grid>
             </Grid>
-          </div>
-          <div className="mx-4 divider" />
-          <div className="mx-4 divider" />
-          <div className="p-4">
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={12}>
-                <div style={{ height: '100%', width: '100%' }}>
-                  {!reBuildGraph ? (
-                    <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </Grid>
+          </Grid>
+        </div>
+        <div className="mx-4 divider" />
+        <div className="mx-4 divider" />
+        <div className="p-4">
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={12}>
+              <div style={{ height: '100%', width: '100%' }}>
+                {!reBuildGraph ? <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} /> : null}
+              </div>
             </Grid>
-            <Divider />
-            <Divider />
-          </div>
-        </>
-      )}
+          </Grid>
+          <Divider />
+          <Divider />
+        </div>
+      </>
     </Card>
   );
 };
