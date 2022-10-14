@@ -4,6 +4,7 @@ export const SET_COMPANY_FILLING_REVENUE_DATA = 'FILLING/SET_COMPANY_FILLING_REV
 export const SET_COMPANY_PRICE_0VERLAY = 'FILLING/SET_COMPANY_PRICE_0VERLAY';
 export const SET_FILLINGS_SEARCH_TEXT = 'FILLING/SET_FILLINGS_SEARCH_TEXT';
 export const SET_IS_WORD_COUNT_CHART = 'FILLING/SET_IS_WORD_COUNT_CHART';
+export const CLEAR_FILINGS_STATES = 'FILLING/CLEAR_FILINGS_STATES';
 export const setCompanyFillingData = companyFillingData => ({
   type: SET_COMPANY_FILLING_DATA,
   companyFillingData
@@ -28,6 +29,10 @@ export const setFillingsSearchText = fillingsSearchText => ({
 export const setIsWordCountChart = isWordCountChart => ({
   type: SET_IS_WORD_COUNT_CHART,
   isWordCountChart
+});
+
+export const clearFilingsStates = () => ({
+  type: CLEAR_FILINGS_STATES
 });
 
 const getDefaultState = () => {
@@ -60,6 +65,8 @@ export default function reducer(
       return { ...state, fillingsSearchText: action.fillingsSearchText };
     case SET_IS_WORD_COUNT_CHART:
       return { ...state, isWordCountChart: action.isWordCountChart };
+    case CLEAR_FILINGS_STATES:
+      return { ...state, fillingsData: [], fillingsGraphData: [], filingsRevenueData: [], priceOverlay: [] };
 
     default:
       break;

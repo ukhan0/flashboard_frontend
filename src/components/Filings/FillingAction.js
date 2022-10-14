@@ -4,7 +4,8 @@ import {
   setCompanyFillingGraphData,
   setCompanyFillingRevenueData,
   setCompanyPriceOverlay,
-  setIsWordCountChart
+  setIsWordCountChart,
+  clearFilingsStates
 } from '../../reducers/Filings';
 import { get } from 'lodash';
 import config from '../../config/config';
@@ -130,11 +131,7 @@ export const getCompanyPrice0verlayOnTimeline = () => {
 
 export const clearStateAndCancelApiCalls = () => {
   return async dispatch => {
-    dispatch(setCompanyFillingData([]));
-    dispatch(setCompanyFillingGraphData([]));
-    dispatch(setCompanyFillingRevenueData([]));
-    dispatch(setCompanyPriceOverlay([]));
-
+    dispatch(clearFilingsStates());
     cancelTokens.forEach(token => {
       token.cancel();
     });
