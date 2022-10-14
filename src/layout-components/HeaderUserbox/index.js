@@ -111,7 +111,6 @@ export default function HeaderUserbox() {
               <span className="text-black-50 text-center">{get(user, 'email', '')}</span>
             </div>
             <Divider className="w-100 mt-2" />
-            <ListItem button>My Account</ListItem>
             <ListItem button color="secondary" onClick={signout}>
               Sign Out
             </ListItem>

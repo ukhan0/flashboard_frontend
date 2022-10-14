@@ -16,7 +16,7 @@ import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import CustomEvents from 'highcharts-custom-events';
 CustomEvents(Highcharts);
 
-const FilingsCompanyRevenueGraph = props => {
+const FilingsCompanyRevenueGraph = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [selectedEntityType, setSelectedEntityType] = useState(null);
@@ -124,7 +124,7 @@ const FilingsCompanyRevenueGraph = props => {
     }
   };
   const getShowingCompany = data => {
-    return (data.length / 2) > 10 ? 10 : (data.length / 2) - 1;
+    return data.length / 2 > 10 ? 10 : data.length / 2 - 1;
   };
   const options = {
     chart: {
@@ -274,7 +274,6 @@ const FilingsCompanyRevenueGraph = props => {
               <h6 className="font-weight-bold font-size-lg mb-1 text-black">Entities Mentioned</h6>
               <p className="text-black-50 mb-0">Old vs New Entities Mentioned</p>
             </Grid>
-
             <Grid item xs={6} style={{ textAlign: 'right', paddingRight: '15px' }}>
               {Buttons()}
             </Grid>
@@ -287,7 +286,7 @@ const FilingsCompanyRevenueGraph = props => {
         <Grid container spacing={4}>
           <Grid item xs={12} md={12}>
             <div style={{ height: '100%', width: '100%' }}>
-              {!reBuildGraph ? <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} /> : <></>}
+              {!reBuildGraph ? <HighchartsReact highcharts={highchartsGantt(Highcharts)} options={options} /> : null}
             </div>
           </Grid>
         </Grid>
