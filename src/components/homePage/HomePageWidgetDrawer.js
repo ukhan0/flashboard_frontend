@@ -28,7 +28,7 @@ const homePageWidgetsList = Object.keys(homePageWidgets);
 
 const HomePageWidgetDrawer = ({
   widgets,
-  handleSideBar,
+  handleDrawer,
   handleColumns,
   handleSaveSelected
 }) => {
@@ -81,7 +81,7 @@ const HomePageWidgetDrawer = ({
               variant="contained"
               className={clsx([classes.button, classes.btnSize])}
               size="small"
-              onClick={handleSideBar}>
+              onClick={handleDrawer}>
               Close
             </Button>
           </Grid>

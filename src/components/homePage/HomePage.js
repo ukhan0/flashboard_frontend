@@ -49,16 +49,16 @@ const getHomepageWidgets = () => {
 export default function HomePage() {
   const classes = useStyle();
   const dispatch = useDispatch();
-  const [isHomePageSideBarOpen, setIsHomePageSideBarOpen] = useState(false);
-  const [sidebarSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
+  const [isHomePageDrawerOpen, setIsHomePageDrawerOpen] = useState(false);
+  const [drawerSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
   const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
   const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const { isLoading } = useSelector(state => state.HomePage);
   const { user } = useSelector(state => state.User);
   const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
 
-  const handleSideBar = () => {
-    setIsHomePageSideBarOpen((prevState) => {
+  const handleDrawer = () => {
+    setIsHomePageDrawerOpen((prevState) => {
       return !prevState
     });
     setEnableDragResizeWidgets((prevState) => {
@@ -77,12 +77,12 @@ export default function HomePage() {
   const handleSaveSelected = async () => {
     try {
       const response = await axios.post(`${config.apiUrl}/api/users/save_home_widgets`,
-        { user_id: user.id, home_widgets: sidebarSelectedWidget });
+        { user_id: user.id, home_widgets: drawerSelectedWidget });
 
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         setSnackBar({ isSnackBar: true, message: 'Home Widgets saved', severity: 'success' });
-        localStorage.setItem(homepageWidgetsKey, JSON.stringify(sidebarSelectedWidget));
+        localStorage.setItem(homepageWidgetsKey, JSON.stringify(drawerSelectedWidget));
       } else {
         setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
       }
@@ -90,7 +90,7 @@ export default function HomePage() {
       setSnackBar({ isSnackBar: true, message: 'Unable to save home widgets', severity: 'error' });
     }
 
-    setIsHomePageSideBarOpen(false);
+    setIsHomePageDrawerOpen(false);
   };
   useEffect(() => {
     dispatch(getUserWatchlist(['domestic', 'global']));
@@ -119,7 +119,7 @@ export default function HomePage() {
           <span className={clsx([classes.pageHeading, 'font-weight-bold'])}>Dashboard Widgets</span>
         </Grid>
         <Grid item>
-          <Button onClick={handleSideBar}
+          <Button onClick={handleDrawer}
             color="primary"
             variant="contained"
             className={clsx([classes.button])}
@@ -129,13 +129,12 @@ export default function HomePage() {
         </Grid>
       </Grid>
 
-      <Slide direction="down" in={isHomePageSideBarOpen} mountOnEnter unmountOnExit>
+      <Slide direction="down" in={isHomePageDrawerOpen} mountOnEnter unmountOnExit>
         <Paper>
           <HomePageWidgetDrawer
-            title={'Dashboard Widgets'}
-            open={isHomePageSideBarOpen}
-            handleSideBar={handleSideBar}
-            widgets={sidebarSelectedWidget}
+            open={isHomePageDrawerOpen}
+            handleDrawer={handleDrawer}
+            widgets={drawerSelectedWidget}
             handleColumns={handleColumns}
             handleSaveSelected={handleSaveSelected}
           />
@@ -143,7 +142,7 @@ export default function HomePage() {
       </Slide>
 
       <div className={classes.gridLayoutContainer}>
-        <HomeGridLayout enableDragResizeWidgets={enableDragResizeWidgets} sidebarSelectedWidget={sidebarSelectedWidget} />
+        <HomeGridLayout enableDragResizeWidgets={enableDragResizeWidgets} drawerSelectedWidget={drawerSelectedWidget} />
       </div>
     </div>
   );

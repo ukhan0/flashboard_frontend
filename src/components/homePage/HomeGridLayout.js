@@ -11,7 +11,7 @@ import HomePageAccountStock from './HomePageAccountStock';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const HomeGridLayout = ({ enableDragResizeWidgets, sidebarSelectedWidget }) => {
+const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
   const handleLayoutChange = (layout, layouts) => {
     localStorage.setItem(homepageGridLayoutKey, JSON.stringify(layouts));
   };
@@ -60,15 +60,15 @@ const HomeGridLayout = ({ enableDragResizeWidgets, sidebarSelectedWidget }) => {
   };
 
   const componentRender = useMemo(() => {
-    let originalSavedWidgets = sidebarSelectedWidget;
-    let savedWidgets = Object.keys(sidebarSelectedWidget);
+    let originalSavedWidgets = drawerSelectedWidget;
+    let savedWidgets = Object.keys(drawerSelectedWidget);
     savedWidgets = savedWidgets.filter((item, index) => {
       return originalSavedWidgets[item].show;
     });
     return savedWidgets.map((item, index) => {
       return { name: item, component: getComponent(item) };
     });
-  }, [sidebarSelectedWidget]);
+  }, [drawerSelectedWidget]);
 
   return (
     <ResponsiveGridLayout
