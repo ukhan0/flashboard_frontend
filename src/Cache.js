@@ -16,7 +16,7 @@ import io from 'socket.io-client';
 import SocketService from './socketService';
 import { orderBy } from 'lodash';
 import { indexedDB } from './components/watchlist/WatchlistHelpers';
-const REFREST_TIME = 10800000;
+const REFREST_TIME = 3600000; // one hour
 
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
@@ -55,18 +55,20 @@ const Cache = () => {
     [dispatch, user]
   );
 
-  const cacheData = useCallback(async () => {
+  const cacheData = useCallback(async (tryToGetFromIndexDb = true) => {
     dispatch(setCompleteDataLoadedFlag(false));
     try {
-      const previousStoredData = await indexedDB()
-        .collection(config.indexDbDomesticCompniesData)
-        .get();
-      if (previousStoredData && previousStoredData.length > 0) {
-        dispatch(setCompleteCompaniesData(previousStoredData));
-      } else {
-        await refreshIndexDB('domestic');
-        dispatch(setCompleteDataLoadedFlag(true));
-        return;
+      if (tryToGetFromIndexDb) {
+        const previousStoredData = await indexedDB()
+          .collection(config.indexDbDomesticCompniesData)
+          .get();
+        if (previousStoredData && previousStoredData.length > 0) {
+          dispatch(setCompleteCompaniesData(previousStoredData));
+        } else {
+          await refreshIndexDB('domestic');
+          dispatch(setCompleteDataLoadedFlag(true));
+          return;
+        }
       }
       const savedDate = localStorage.getItem(domesticKey);
       if (savedDate) {
@@ -80,18 +82,20 @@ const Cache = () => {
     dispatch(setCompleteDataLoadedFlag(true));
   }, [dispatch, refreshIndexDB]);
 
-  const cacheDataGlobal = useCallback(async () => {
+  const cacheDataGlobal = useCallback(async (tryToGetFromIndexDb = true) => {
     dispatch(setCompleteDataLoadedGlobalFlag(false));
     try {
-      const previousStoredData = await indexedDB()
-        .collection(config.indexDbGlobalCompniesData)
-        .get();
-      if (previousStoredData && previousStoredData.length > 0) {
-        dispatch(setCompleteGlobalCompaniesData(previousStoredData));
-      } else {
-        await refreshIndexDB('global');
-        dispatch(setCompleteDataLoadedGlobalFlag(true));
-        return;
+      if(tryToGetFromIndexDb){
+        const previousStoredData = await indexedDB()
+          .collection(config.indexDbGlobalCompniesData)
+          .get();
+        if (previousStoredData && previousStoredData.length > 0) {
+          dispatch(setCompleteGlobalCompaniesData(previousStoredData));
+        } else {
+          await refreshIndexDB('global');
+          dispatch(setCompleteDataLoadedGlobalFlag(true));
+          return;
+        }
       }
       const savedDate = localStorage.getItem(globalKey);
       if (savedDate) {
@@ -132,8 +136,14 @@ const Cache = () => {
     if (user) {
       const socket = io.connect(config.socketUrl);
       SocketService.init(socket);
-      cacheData();
-      cacheDataGlobal();
+      cacheData(true);
+      cacheDataGlobal(true);
+
+      const refreshDataAfterInterval = setInterval(() => {
+        cacheData(false);
+        cacheDataGlobal(false);
+      }, [600000]); // 10 minutes
+      return () => clearInterval(refreshDataAfterInterval);
     }
   }, [cacheData, cacheDataGlobal, user]);
 
