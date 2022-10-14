@@ -16,7 +16,7 @@ import io from 'socket.io-client';
 import SocketService from './socketService';
 import { orderBy } from 'lodash';
 import { indexedDB } from './components/watchlist/WatchlistHelpers';
-const REFREST_TIME = 10800000;
+const REFREST_TIME = 3600000; // one hour
 
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
@@ -139,10 +139,10 @@ const Cache = () => {
       cacheData(true);
       cacheDataGlobal(true);
 
-      const refreshDataAfterInterval = setInterval(async () => {
+      const refreshDataAfterInterval = setInterval(() => {
         cacheData(false);
         cacheDataGlobal(false);
-      }, [600000]);
+      }, [600000]); // 10 minutes
       return () => clearInterval(refreshDataAfterInterval);
     }
   }, [cacheData, cacheDataGlobal, user]);
