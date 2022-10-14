@@ -11,13 +11,7 @@ const HomePageAccountStock = () => {
             dates: 'datetime+eq+recent',
             frequency: '1',
             sort: 'positive+desc',
-            limit: 10,
-            // type: 'SMA',
-            // layoutColor: '999999',
-            // tblRowColor: 'F9F9F9'
-            // onItemClick: function(ticker){
-            //   // alert('Hurray!!! Got '+ticker);
-            // }
+            limit: 10
         });
     }, []);
 

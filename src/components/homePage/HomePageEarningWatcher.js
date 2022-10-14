@@ -23,10 +23,7 @@ const HomePageEarningWatcher = () => {
             order: 'top',
             factor: factorsData,
             filters: filter,
-            serverDomain: 'stocktwits',
-            onItemClick: function (ticker, description) {
-                // alert(ticker)
-            }
+            serverDomain: 'stocktwits'
         });
     }, [factorsData , filter]);
 
