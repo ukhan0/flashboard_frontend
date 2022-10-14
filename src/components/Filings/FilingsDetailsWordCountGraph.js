@@ -18,7 +18,7 @@ Highcharts.setOptions({
 });
 
 const FilingsDetailsGraph = props => {
-  const { fillingsGraphData, filingsRevenueData, isWordCountChart, isEntitiesChart } = useSelector(
+  const { fillingsGraphData, filingsRevenueData, isWordCountChart } = useSelector(
     state => state.Filings
   );
   const { selectedItem } = useSelector(state => state.Watchlist);
@@ -140,7 +140,7 @@ const FilingsDetailsGraph = props => {
           xs={entitiesGraphSize}
           md={entitiesGraphSize}
           lg={entitiesGraphSize}
-          style={{ display: !isEntities && isEntitiesChart ? 'none' : 'block' }}>
+          style={{ display: !isEntities ? 'none' : 'block' }}>
           <div>{hideGraphs === 'false' ? <FillingRevenueGraph /> : null}</div>
         </Grid>
         <Grid item xs={12} md={graphSize} lg={graphSize}>
