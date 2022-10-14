@@ -76,8 +76,8 @@ export default function HomePage() {
 
   const handleSaveSelected = async () => {
     try {
-      const response = await axios.post(`${config.apiUrl}/api/users/save_home_widgets`,
-        { user_id: user.id, home_widgets: drawerSelectedWidget });
+      const response = await axios.post(`${config.apiUrl}/api/users/update_user`,
+        { id: user.id, home_widgets: drawerSelectedWidget });
 
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
