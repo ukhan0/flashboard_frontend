@@ -91,6 +91,7 @@ export default function HomePage() {
     }
 
     setIsHomePageDrawerOpen(false);
+    setEnableDragResizeWidgets(false);
   };
   useEffect(() => {
     dispatch(getUserWatchlist(['domestic', 'global']));
