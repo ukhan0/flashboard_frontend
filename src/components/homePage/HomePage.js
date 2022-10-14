@@ -8,9 +8,15 @@ import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import './HomePage.css';
-import HomePageSidebar from './HomePageSidebar';
 import { homePageWidgets, homepageWidgetsKey } from "./homePageConfig";
 import HomeGridLayout from './HomeGridLayout';
+import axios from 'axios';
+import config from '../../config/config';
+import HomePageWidgetDrawer from './HomePageWidgetDrawer';
+import { Paper, Grid, Button } from '@material-ui/core';
+import Slide from '@material-ui/core/Slide';
+import clsx from 'clsx';
+
 
 const useStyle = makeStyles({
   loader: {
@@ -20,15 +26,14 @@ const useStyle = makeStyles({
     left: 0,
     right: 0
   },
-  widgetSelect: {
-    position: 'fixed',
-    right: '-74px',
-    top: '68px',
-    transform: 'rotate(90deg)',
-    zIndex: 2000,
-    cursor: 'pointer',
-    backgroundColor: 'lightgray',
-    padding: '2px 8px'
+  pageHeader: {
+    padding: '8px 0'
+  },
+  pageHeading: {
+    fontSize: 14
+  },
+  gridLayoutContainer: {
+    marginTop: 8
   }
 });
 
@@ -44,22 +49,21 @@ const getHomepageWidgets = () => {
 export default function HomePage() {
   const classes = useStyle();
   const dispatch = useDispatch();
-  const [snackbar, setSnackBar] = useState(null);
   const [isHomePageSideBarOpen, setIsHomePageSideBarOpen] = useState(false);
   const [sidebarSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
   const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
+  const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const { isLoading } = useSelector(state => state.HomePage);
-  const anchorOrigin = { vertical: 'top', horizontal: 'center' };
-  // const handleSnackBar = data => {
-  //   setSnackBar(data);
-  // };
+  const { user } = useSelector(state => state.User);
+  const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
 
-  const handleCloseSideBar = () => {
-    setIsHomePageSideBarOpen(false);
-  };
-
-  const handleOpenSideBar = () => {
-    setIsHomePageSideBarOpen(true);
+  const handleSideBar = () => {
+    setIsHomePageSideBarOpen((prevState) => {
+      return !prevState
+    });
+    setEnableDragResizeWidgets((prevState) => {
+      return !prevState
+    });
   };
 
   const handleColumns = (key, status) => {
@@ -70,27 +74,23 @@ export default function HomePage() {
     });
   };
 
-  const handleDragResizeWidgets = () => {
-    setEnableDragResizeWidgets(prevState => !prevState);
-  };
+  const handleSaveSelected = async () => {
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/users/save_home_widgets`,
+        { user_id: user.id, home_widgets: sidebarSelectedWidget });
 
-  const handleSaveSelected = async() => {
-    const homeWidgets = JSON.stringify(sidebarSelectedWidget);
-    localStorage.setItem(homepageWidgetsKey, homeWidgets);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        setSnackBar({ isSnackBar: true, message: 'Home Widgets saved', severity: 'success' });
+        localStorage.setItem(homepageWidgetsKey, JSON.stringify(sidebarSelectedWidget));
+      } else {
+        setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
+      }
+    } catch (error) {
+      setSnackBar({ isSnackBar: true, message: 'Unable to save home widgets', severity: 'error' });
+    }
+
     setIsHomePageSideBarOpen(false);
-
-    // const { user } = useSelector(state => state.User);
-
-    // try {
-    //   const user = JSON.parse(localStorage.getItem('user'));
-    //   const response = await axios.post(`${config.apiUrl}/api/users/save_home_widgets`, 
-    //   { user_id: user.id, homw_widgets: homeWidgets});
-
-    //   console.log('response');
-    //   console.log(response)
-    // } catch (error) {
-    //   setErrorText('Unable to login');
-    // }
   };
   useEffect(() => {
     dispatch(getUserWatchlist(['domestic', 'global']));
@@ -98,20 +98,6 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
-      <div className={classes.widgetSelect} onClick={handleOpenSideBar}>
-        Dashboard Widgets
-      </div>
-      <HomePageSidebar
-        title={'Dashboard Widgets'}
-        open={isHomePageSideBarOpen}
-        handleCloseSideBar={handleCloseSideBar}
-        widgets={sidebarSelectedWidget}
-        handleColumns={handleColumns}
-        enableDragResizeWidgets={enableDragResizeWidgets}
-        handleDragResizeWidgets={handleDragResizeWidgets}
-        handleSaveSelected={handleSaveSelected}
-      />
       <SnackBar
         open={get(snackbar, 'isSnackBar', false)}
         onClose={() =>
@@ -126,7 +112,39 @@ export default function HomePage() {
         anchorOrigin={anchorOrigin}
       />
 
-      <HomeGridLayout enableDragResizeWidgets={enableDragResizeWidgets} sidebarSelectedWidget={sidebarSelectedWidget} />
+      <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
+
+      <Grid container justify="space-between" alignItems='center' className={classes.pageHeader}>
+        <Grid item>
+          <span className={clsx([classes.pageHeading, 'font-weight-bold'])}>Dashboard Widgets</span>
+        </Grid>
+        <Grid item>
+          <Button onClick={handleSideBar}
+            color="primary"
+            variant="contained"
+            className={clsx([classes.button])}
+          >
+            Customize Dashboard
+          </Button>
+        </Grid>
+      </Grid>
+
+      <Slide direction="down" in={isHomePageSideBarOpen} mountOnEnter unmountOnExit>
+        <Paper>
+          <HomePageWidgetDrawer
+            title={'Dashboard Widgets'}
+            open={isHomePageSideBarOpen}
+            handleSideBar={handleSideBar}
+            widgets={sidebarSelectedWidget}
+            handleColumns={handleColumns}
+            handleSaveSelected={handleSaveSelected}
+          />
+        </Paper>
+      </Slide>
+
+      <div className={classes.gridLayoutContainer}>
+        <HomeGridLayout enableDragResizeWidgets={enableDragResizeWidgets} sidebarSelectedWidget={sidebarSelectedWidget} />
+      </div>
     </div>
   );
 }

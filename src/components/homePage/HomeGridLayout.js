@@ -72,6 +72,7 @@ const HomeGridLayout = ({ enableDragResizeWidgets, sidebarSelectedWidget }) => {
 
   return (
     <ResponsiveGridLayout
+      containerPadding={[0, 4]}
       layouts={getLayouts()}
       breakpoints={{ lg: 1200, xs: 0 }}
       cols={{ lg: 8, xs: 1 }}
