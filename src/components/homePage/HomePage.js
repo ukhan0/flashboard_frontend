@@ -22,13 +22,13 @@ const useStyle = makeStyles({
   loader: {
     position: 'absolute',
     textAlign: 'center',
-    zIndex: 10,
+    zIndex: 100000,
     left: 0,
     right: 0
   },
   pageHeader: {
     padding: '8px 4px',
-    zIndex: 100000,
+    zIndex: 10000,
     backgroundColor: '#ffffff',
     top: '60px',
     position: 'sticky'
