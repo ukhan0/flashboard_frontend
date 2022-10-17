@@ -21,8 +21,8 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import HomePageService from './HomePageService';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import AddRemoveIcon from '../watchlist/WatchlistTableComponents/AddRemoveIcon';
-import Snackbar from '../Snackbar';
 import { getUserWatchlist } from './HomePageAction';
+import { setSnackBarObj } from '../../reducers/Alerts';
 
 const frameworkComponents = {
   TickerLogo: TickerLogo,
@@ -201,8 +201,6 @@ export default function HomePageTable() {
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
-  const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
-  const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
   const dispatch = useDispatch();
   const tableRef = useRef();
   const selectedType = 'domestic';
@@ -243,14 +241,14 @@ export default function HomePageTable() {
       });
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
-        setSnackBar({ isSnackBar: true, message: 'Ticker added in Watchlist', severity: 'success' });
+        dispatch(setSnackBarObj({ message: 'Ticker added in Watchlist', severity: 'success' }));
         dispatch(getUserWatchlist(['domestic', 'global']));
       } else {
-        setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
+        dispatch(setSnackBarObj({ message: responsePayload.message, severity: 'error' }));
       }
     } catch (error) {
       console.log(error);
-      setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
+      dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
     }
   };
 
@@ -260,17 +258,13 @@ export default function HomePageTable() {
       const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`);
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
-        setSnackBar({ isSnackBar: true, message: 'Ticker removed from Watchlist', severity: 'info' });
+        dispatch(setSnackBarObj({ message: 'Ticker removed from Watchlist', severity: 'info' }));
         dispatch(getUserWatchlist(['domestic', 'global']));
       } else {
-        setSnackBar({
-          isSnackBar: true,
-          message: 'Unable to Add/Remove Ticker To/From Watchlist',
-          severity: 'error'
-        });
+        dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
       }
     } catch (error) {
-      setSnackBar({ isSnackBar: true, message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' });
+      dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
     }
   };
 
@@ -491,19 +485,6 @@ export default function HomePageTable() {
           suppressScrollOnNewData={true}
           onViewportChanged={handleOnViewportChanged}></AgGridReact>
       </div>
-      <Snackbar
-        open={get(snackbar, 'isSnackBar', false)}
-        onClose={() =>
-          setSnackBar({
-            isSnackBar: false,
-            message: get(snackbar, 'message', null),
-            severity: get(snackbar, 'severity', '')
-          })
-        }
-        message={get(snackbar, 'message', null)}
-        severity={get(snackbar, 'severity', '')}
-        anchorOrigin={anchorOrigin}
-      />
     </Card>
   );
 }

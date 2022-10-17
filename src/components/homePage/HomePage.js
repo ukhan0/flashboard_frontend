@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import SnackBar from '../Snackbar';
 import { cloneDeep, get } from 'lodash';
 import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
@@ -16,6 +15,7 @@ import HomePageWidgetDrawer from './HomePageWidgetDrawer';
 import { Paper, Grid, Button } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
+import { setSnackBarObj } from '../../reducers/Alerts';
 
 
 const useStyle = makeStyles({
@@ -62,10 +62,8 @@ export default function HomePage() {
   const [isHomePageDrawerOpen, setIsHomePageDrawerOpen] = useState(false);
   const [drawerSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
   const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
-  const [snackbar, setSnackBar] = useState({ isSnackBar: false, message: '', severity: 'success' });
   const { isLoading } = useSelector(state => state.HomePage);
   const { user } = useSelector(state => state.User);
-  const anchorOrigin = { vertical: 'bottom', horizontal: 'left' };
 
   const handleDrawer = () => {
     setIsHomePageDrawerOpen((prevState) => {
@@ -91,13 +89,13 @@ export default function HomePage() {
 
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
-        setSnackBar({ isSnackBar: true, message: 'Widgets settings have been saved successfully.', severity: 'success' });
+        dispatch(setSnackBarObj({ message: 'Widgets settings have been saved successfully.', severity: 'success' }));
         localStorage.setItem(homepageWidgetsKey, JSON.stringify(drawerSelectedWidget));
       } else {
-        setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
+        dispatch(setSnackBarObj({ message: responsePayload.message, severity: 'error' }));
       }
     } catch (error) {
-      setSnackBar({ isSnackBar: true, message: 'An error has occurred. Please try again.', severity: 'error' });
+      dispatch(setSnackBarObj({ message: 'An error has occurred. Please try again.', severity: 'error' }));
     }
 
     setIsHomePageDrawerOpen(false);
@@ -109,20 +107,6 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <SnackBar
-        open={get(snackbar, 'isSnackBar', false)}
-        onClose={() =>
-          setSnackBar({
-            isSnackBar: false,
-            message: get(snackbar, 'message', null),
-            severity: get(snackbar, 'severity', '')
-          })
-        }
-        message={get(snackbar, 'message', null)}
-        severity={get(snackbar, 'severity', '')}
-        anchorOrigin={anchorOrigin}
-      />
-
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
 
       <Grid container justify="space-between" alignItems='center' className={classes.pageHeader}>
