@@ -5,6 +5,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Provider } from 'react-redux';
 import Routes from './Routes';
 import Cache from './Cache';
+import NotificationAlerts from './components/notification/NotificationAlerts';
 import ScrollToTop from './utils/ScrollToTop';
 import DateFnsUtils from '@date-io/date-fns';
 import './assets/base.scss';
@@ -28,6 +29,7 @@ class App extends Component {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <CssBaseline />
             <ScrollToTop>
+              <NotificationAlerts />
               <Cache />
               <Routes />
             </ScrollToTop>
