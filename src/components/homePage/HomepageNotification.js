@@ -1,7 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Card, ButtonGroup, Button } from '@material-ui/core';
 import clsx from 'clsx';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -16,9 +15,9 @@ import { getUpCommingCallsType, storeUpCommingCallsType } from './HomePageHelper
 export default function HomepageNotification() {
   const { notifications } = useSelector(state => state.Watchlist);
   const { globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
-  const [upcomingCalls, setUpcomingCalls] = React.useState([]);
-  const [upComingCallType, setUpComingCallType] = React.useState('all');
-  const [filterData, setFilterData] = React.useState([]);
+  const [upcomingCalls, setUpcomingCalls] = useState([]);
+  const [upComingCallType, setUpComingCallType] = useState('all');
+  const [filterData, setFilterData] = useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
   const handleEmailTemplate = (link, id) => {
@@ -47,11 +46,11 @@ export default function HomepageNotification() {
       const data = get(response, 'data', []);
       reverse(data);
       //place datetime object in all items
-      forEach(data, function(item) {
+      forEach(data, function (item) {
         item['datetime'] = moment(`${item.date}T${item.time}:00`);
       });
       //re-sort data by time in ascending order
-      data.sort(function(a, b) {
+      data.sort(function (a, b) {
         return a.datetime - b.datetime;
       });
       setUpcomingCalls(data);
@@ -75,12 +74,12 @@ export default function HomepageNotification() {
     setFilterData(finalData);
   }, [globalWatchlist, domesticWatchlist, upcomingCalls]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setUpComingCallType(getUpCommingCallsType());
     getEarningsCalls();
   }, [getEarningsCalls, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getSelectedData();
   }, [getSelectedData]);
   const handleUpType = key => {
@@ -106,48 +105,46 @@ export default function HomepageNotification() {
           ))}
         </ButtonGroup>
       </div>
-      <div style={{height: 'calc(100% - 70px)'}}>
-        <div style={{ height: '100%'}}>
-          <PerfectScrollbar>
-            <div className="card-header--title font-weight-bold " style={{ textAlign: 'center', padding: '10px' }}>
-              Upcoming Calls
+      <div style={{ height: 'calc(100% - 70px)' }}>
+        <div style={{ height: '100%', overflowY: 'auto' }}>
+          <div className="card-header--title font-weight-bold " style={{ textAlign: 'center', padding: '10px' }}>
+            Upcoming Calls
+          </div>
+          {(upComingCallType === 'all' ? upcomingCalls : filterData).map((data, index) => (
+            <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
+              <div
+                className="timeline-item"
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleNotificationClick(data)}>
+                <div className="timeline-item-offset" style={{ width: '60px', textAlign: 'center' }}>
+                  {moment(`${data.date}T${data.time}:00`).format('hh:mm A') + '(ET)'}
+                </div>
+                <div className="timeline-item--content">
+                  <div className="timeline-item--icon"></div>
+                  <div style={{ display: 'flex', justify: 'space-between', paddingRight: '20px' }}>
+                    <h4 className="timeline-item--label mb-2 ">{data.symbol}  &nbsp; {moment(`${data.date}T${data.time}:00`).format('MM/DD/YYYY')}</h4>
+                  </div>
+                  <p>{data.title}</p>
+                </div>
+              </div>
             </div>
-            {(upComingCallType === 'all' ? upcomingCalls : filterData).map((data, index) => (
-              <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
-                <div
-                  className="timeline-item"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleNotificationClick(data)}>
-                  <div className="timeline-item-offset" style={{ width: '60px', textAlign: 'center' }}>
-                    {moment(`${data.date}T${data.time}:00`).format('hh:mm A') + '(ET)'}
-                  </div>
-                  <div className="timeline-item--content">
-                    <div className="timeline-item--icon"></div>
-                    <div style={{ display: 'flex', justify: 'space-between', paddingRight: '20px' }}>
-                      <h4 className="timeline-item--label mb-2 ">{data.symbol}  &nbsp; {moment(`${data.date}T${data.time}:00`).format('MM/DD/YYYY')}</h4>
-                    </div>
-                    <p>{data.title}</p>
-                  </div>
+          ))}
+          <hr></hr>
+          {notifications.map((data, index) => (
+            <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
+              <div
+                className="timeline-item"
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
+                <div className="timeline-item-offset">{getTime(get(data, 'email_time', null))}</div>
+                <div className="timeline-item--content">
+                  <div className="timeline-item--icon"></div>
+                  <h4 className="timeline-item--label mb-2 font-weight-bold">{data.title}</h4>
+                  <p>{data.description}</p>
                 </div>
               </div>
-            ))}
-            <hr></hr>
-            {notifications.map((data, index) => (
-              <div className="timeline-list timeline-list-offset timeline-list-offset-dot" key={index}>
-                <div
-                  className="timeline-item"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleEmailTemplate(data.link, get(data, 'searchId', null))}>
-                  <div className="timeline-item-offset">{getTime(get(data, 'email_time', null))}</div>
-                  <div className="timeline-item--content">
-                    <div className="timeline-item--icon"></div>
-                    <h4 className="timeline-item--label mb-2 font-weight-bold">{data.title}</h4>
-                    <p>{data.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </PerfectScrollbar>
+            </div>
+          ))}
         </div>
       </div>
     </Card>
