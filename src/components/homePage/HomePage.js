@@ -81,13 +81,13 @@ export default function HomePage() {
 
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
-        setSnackBar({ isSnackBar: true, message: 'Home Widgets saved', severity: 'success' });
+        setSnackBar({ isSnackBar: true, message: 'Widgets settings have been saved successfully.', severity: 'success' });
         localStorage.setItem(homepageWidgetsKey, JSON.stringify(drawerSelectedWidget));
       } else {
         setSnackBar({ isSnackBar: true, message: responsePayload.message, severity: 'error' });
       }
     } catch (error) {
-      setSnackBar({ isSnackBar: true, message: 'Unable to save home widgets', severity: 'error' });
+      setSnackBar({ isSnackBar: true, message: 'An error has occurred. Please try again.', severity: 'error' });
     }
 
     setIsHomePageDrawerOpen(false);

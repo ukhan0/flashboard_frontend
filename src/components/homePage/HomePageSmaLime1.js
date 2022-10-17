@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Card, ButtonGroup, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -37,7 +37,7 @@ export default function HomePageSmaLime1(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
-  const [tableType, setTableType] = React.useState(tableTypes[0]);
+  const [tableType, setTableType] = useState(tableTypes[0]);
 
   const setCompany = useCallback(
     async ticker => {
@@ -56,7 +56,7 @@ export default function HomePageSmaLime1(props) {
     [dispatch, completeCompaniesData, completeCompaniesDataGlobal]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     var factorsData = {
       description: { text: 'Company Name' },
       sscore: { text: 'Sentiment', neg: 'red', pos: 'green' },
@@ -76,7 +76,7 @@ export default function HomePageSmaLime1(props) {
       sort: tableType['sort'],
       factor: factorsData,
       filters: 'svolume+gt+12,lastclose+gt+5',
-      onItemClick: function(ticker) {
+      onItemClick: function (ticker) {
         if (ticker) {
           setCompany(ticker);
         }
@@ -101,13 +101,13 @@ export default function HomePageSmaLime1(props) {
         </ButtonGroup>
       </div>
       {tableType['container'] === 'container1' ? (
-        <div className={classes.cardcontent} style={{ height: '100vh' }} id={tableType['container']}></div>
+        <div className={classes.cardcontent} style={{ height: 'calc(100% - 80px)' }} id={tableType['container']}></div>
       ) : null}
       {tableType['container'] === 'container2' ? (
-        <div className={classes.cardcontent} style={{ height: '100vh' }} id={tableType['container']}></div>
+        <div className={classes.cardcontent} style={{ height: 'calc(100% - 80px)' }} id={tableType['container']}></div>
       ) : null}
       {tableType['container'] === 'container3' ? (
-        <div className={classes.cardcontent} style={{ height: '100vh' }} id={tableType['container']}></div>
+        <div className={classes.cardcontent} style={{ height: 'calc(100% - 80px)' }} id={tableType['container']}></div>
       ) : null}
     </Card>
   );
