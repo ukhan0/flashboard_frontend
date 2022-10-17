@@ -27,13 +27,23 @@ const useStyle = makeStyles({
     right: 0
   },
   pageHeader: {
-    padding: '8px 0'
+    padding: '8px 4px',
+    zIndex: 100000,
+    backgroundColor: '#ffffff',
+    top: '60px',
+    position: 'sticky'
   },
   pageHeading: {
     fontSize: 14
   },
   gridLayoutContainer: {
     marginTop: 8
+  },
+  drawerContainer: {
+    zIndex: 100000,
+    backgroundColor: '#ffffff',
+    top: '112px',
+    position: 'sticky'
   }
 });
 
@@ -131,7 +141,7 @@ export default function HomePage() {
       </Grid>
 
       <Slide direction="down" in={isHomePageDrawerOpen} mountOnEnter unmountOnExit>
-        <Paper>
+        <Paper className={classes.drawerContainer}>
           <HomePageWidgetDrawer
             open={isHomePageDrawerOpen}
             handleDrawer={handleDrawer}
