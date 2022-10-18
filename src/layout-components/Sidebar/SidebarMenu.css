@@ -1,0 +1,5 @@
+.sidebar-menu-item-disable .app-sidebar-item a {
+  color: rgba(0, 0, 0, 0.26);
+  cursor: default;
+  pointer-events: none;
+}

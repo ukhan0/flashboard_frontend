@@ -1,0 +1,7 @@
+.app-sidebar-userbox.sidebar-disabled .app-sidebar-userbox-name {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.app-sidebar-userbox.sidebar-disabled .MuiAvatar-root {
+  color: transparent;
+}

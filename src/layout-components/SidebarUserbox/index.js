@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import config from '../../config/config';
 import { makeStyles } from '@material-ui/core/styles';
+import "./SidebarUserbox.css"
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
     '& .MuiAvatar-img': {
@@ -15,14 +16,17 @@ const SidebarUserbox = props => {
   const classes = useStyles();
   const { sidebarToggle, sidebarHover } = useSelector(state => state.ThemeOptions);
   const { selectedItem } = useSelector(state => state.Watchlist);
+  const selectItemLength = Object.keys(selectedItem).length;
+
   return (
     <Fragment>
       <Box
         className={clsx('app-sidebar-userbox', classes.tickerLogo, {
-          'app-sidebar-userbox--collapsed': sidebarToggle && !sidebarHover
+          'app-sidebar-userbox--collapsed': sidebarToggle && !sidebarHover,
+          'sidebar-disabled': selectItemLength === 0
         })}>
         <Avatar
-          alt="Symbol"
+          alt={selectItemLength === 0 ? '.' : "Symbol"}
           src={`${config.companyLogoPath}${selectedItem.ticker}.png`}
           className="app-sidebar-userbox-avatar"
         />
