@@ -6,7 +6,7 @@ import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
 // import cjson from 'compressed-json';
 import { Box } from '@material-ui/core';
-import { formatData, getColumnState, getFilteringState, isBigAgGrid } from './WatchlistHelpers';
+import { formatData, getColumnState, getFilteringState, isBigAgGrid, setTickerActiveStatus } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
@@ -330,72 +330,69 @@ const Watchlist = () => {
     [dispatch, selectedType, updateTickerValue]
   );
 
-  const deleteTicker = useCallback(
-    async (ticker, isTable2 = false) => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      try {
-        const response = await axios.delete(
-          `${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`
+  const deleteTicker = async (ticker, isTable2 = false) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    try {
+      const response = await axios.delete(`${config.apiUrl}/api/delete_watchlist/${user.id}/${ticker}/${selectedType}`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        let isTicker = false;
+        if (!isTable2) {
+          updateChacheData(ticker, isTicker);
+        }
+        setTopicDialogOpen(false);
+        dispatch(setSnackBarObj({ message: 'Ticker removed from Watchlist', severity: 'info' }));
+        if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
+          setTickerActiveStatus(ticker, false);
+        }
+      } else {
+        setTopicAddingError(true);
+        dispatch(
+          setSnackBarObj({
+            message: 'Unable to Add/Remove Ticker To/From Watchlist',
+            severity: 'error'
+          })
         );
-        const responsePayload = get(response, 'data', null);
-        if (responsePayload && !responsePayload.error) {
-          let isTicker = false;
-          if (!isTable2) {
-            updateChacheData(ticker, isTicker);
-          }
-          setTopicDialogOpen(false);
-          dispatch(setSnackBarObj({ message: 'Ticker removed from Watchlist', severity: 'info' }));
-        } else {
-          setTopicAddingError(true);
-          dispatch(
-            setSnackBarObj({
-              message: 'Unable to Add/Remove Ticker To/From Watchlist',
-              severity: 'error'
-            })
-          );
-        }
-      } catch (error) {
-        setTopicAddingError(true);
-        dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
       }
-    },
-    [dispatch, updateChacheData, selectedType]
-  );
+    } catch (error) {
+      setTopicAddingError(true);
+      dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
+    }
+  };
 
-  const handleUpload = useCallback(
-    async (ticker, isTable2 = false) => {
-      const user = JSON.parse(localStorage.getItem('user'));
-
-      try {
-        setLoading(true);
-        const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
-          user_id: user.id,
-          ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
-          delete_old_values: overwriteCheckBox,
-          watchlist_type: selectedType
-        });
-        const responsePayload = get(response, 'data', null);
-        if (responsePayload && !responsePayload.error) {
-          let isTicker = true;
-          setTopicDialogOpen(false);
-          setLoading(false);
-          if (!isTable2) {
-            updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
-            dispatch(setWatchlistSelectedSymbols([]));
-          }
-          dispatch(setOverwriteCheckBox(false));
-          dispatch(setSnackBarObj({ message: 'Ticker added in Watchlist', severity: 'success' }));
-        } else {
-          setTopicAddingError(true);
-          dispatch(setSnackBarObj({ message: responsePayload.message, severity: 'error' }));
+  const handleUpload = async (ticker, isTable2 = false) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    try {
+      setLoading(true);
+      const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
+        user_id: user.id,
+        ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
+        delete_old_values: overwriteCheckBox,
+        watchlist_type: selectedType
+      });
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        let isTicker = true;
+        setTopicDialogOpen(false);
+        setLoading(false);
+        if (!isTable2) {
+          updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
+          dispatch(setWatchlistSelectedSymbols([]));
         }
-      } catch (error) {
+        dispatch(setOverwriteCheckBox(false));
+        dispatch(setSnackBarObj({ message: 'Ticker added in Watchlist', severity: 'success' }));
+        if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
+          setTickerActiveStatus(ticker, true);
+        }
+      } else {
         setTopicAddingError(true);
-        dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
+        dispatch(setSnackBarObj({ message: responsePayload.message, severity: 'error' }));
       }
-    },
-    [dispatch, overwriteCheckBox, updateChacheData, selectedSymbols, selectedType]
-  );
+    } catch (error) {
+      setTopicAddingError(true);
+      dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
+    }
+  };
 
   const saveFilter = async text => {
     if (!isEmpty(getFilteringState())) {
