@@ -67,7 +67,7 @@ export default function HomePage() {
   const dispatch = useDispatch();
   const [isHomePageDrawerOpen, setIsHomePageDrawerOpen] = useState(false);
   const [drawerSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
-  const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(true);
+  const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
   const { isLoading } = useSelector(state => state.HomePage);
   const { user } = useSelector(state => state.User);
 
