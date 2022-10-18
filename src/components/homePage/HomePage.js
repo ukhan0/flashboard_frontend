@@ -20,9 +20,10 @@ import { setSnackBarObj } from '../../reducers/Alerts';
 
 const useStyle = makeStyles({
   loader: {
-    position: 'absolute',
+    position: 'fixed',
     textAlign: 'center',
-    zIndex: 100000,
+    zIndex: 10010,
+    top: '70px',
     left: 0,
     right: 0
   },
@@ -36,11 +37,16 @@ const useStyle = makeStyles({
   pageHeading: {
     fontSize: 14
   },
+  btn: {
+    padding: '4px 8px',
+    fontSize: '13px',
+    borderRadius: '0.3rem'
+  },
   gridLayoutContainer: {
     marginTop: 8
   },
   drawerContainer: {
-    zIndex: 100000,
+    zIndex: 10000,
     backgroundColor: '#ffffff',
     top: '112px',
     position: 'sticky'
@@ -117,7 +123,7 @@ export default function HomePage() {
           <Button onClick={handleDrawer}
             color="primary"
             variant="contained"
-            className={clsx([classes.button])}
+            className={clsx([classes.button, classes.btn])}
           >
             Customize Dashboard
           </Button>

@@ -23,6 +23,7 @@ import {
   setSidebarFooter,
   setSidebarUserbox
 } from '../../reducers/ThemeOptions';
+import './SidebarMenu.css';
 
 const Sidebar = props => {
   const dispatch = useDispatch();
@@ -61,7 +62,8 @@ const Sidebar = props => {
   const sidebarMenuContent = (
     <div
       className={clsx({
-        'app-sidebar-nav-close': sidebarToggle && !sidebarHover
+        'app-sidebar-nav-close': sidebarToggle && !sidebarHover,
+        'sidebar-menu-item-disable' : selectedItem && Object.keys(selectedItem).length === 0
       })}>
       {navItems.map(list => (
         <SidebarMenu

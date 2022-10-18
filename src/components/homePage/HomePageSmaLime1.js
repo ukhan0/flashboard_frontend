@@ -48,6 +48,12 @@ export default function HomePageSmaLime1(props) {
         let last10q = new Date(company['last10q']);
         company.recentId = last10k > last10q ? company.recentId10k : company.recentId10q;
       }
+
+      // if recent id not set
+      if (company.recentId === undefined || company.recentId === null) {
+        company = {};
+      }
+
       dispatch(setIsFromThemex(false));
       dispatch(setSelectedWatchlist(company));
       dispatch(setSidebarToggle(false));
