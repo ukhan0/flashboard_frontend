@@ -1,6 +1,7 @@
 import { forEach, get, isEmpty } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 import Localbase from 'localbase';
+import config from '../../config/config';
 
 const watchlistStateKey1 = 'watchlistBigGridState';
 const watchlistStateKey2 = 'watchlistSmallGridState';
@@ -241,6 +242,17 @@ export const getCompanyByIndex = async (ticker, completeCompaniesData, completeC
         return {};
       }
     }
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
+export const setTickerActiveStatus = async (ticker, status) => {
+  try {
+    await indexedDB()
+      .collection(config.indexDbDomesticCompniesData)
+      .doc({ ticker })
+      .update({ isTickerActive: status });
   } catch (error) {
     console.log('error', error);
   }
