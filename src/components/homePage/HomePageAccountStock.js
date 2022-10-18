@@ -21,7 +21,7 @@ const HomePageAccountStock = () => {
             }
 
             // if recent id not set
-            if (company.recentId === undefined) {
+            if (company.recentId === undefined || company.recentId === null) {
                 company = {};
             }
 

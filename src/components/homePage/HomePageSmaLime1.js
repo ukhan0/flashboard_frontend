@@ -50,7 +50,7 @@ export default function HomePageSmaLime1(props) {
       }
 
       // if recent id not set
-      if (company.recentId === undefined) {
+      if (company.recentId === undefined || company.recentId === null) {
         company = {};
       }
 
