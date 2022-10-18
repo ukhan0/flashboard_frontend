@@ -27,8 +27,8 @@ const Guideline = lazy(() => import('./components/guidelines'));
 const HomePage = lazy(() => import('./components/homePage'));
 const pageVariants = {
   initial: {
-    opacity: 0,
-    scale: 0.99
+    opacity: 0
+    // scale: 0.99
   },
   in: {
     opacity: 1,
@@ -144,7 +144,7 @@ const Routes = () => {
                     '/topic',
                     '/socialSentiment',
                     '/guideline',
-                    '/home',
+                    '/home'
                   ]}>
                   <LeftSidebar>
                     <Switch location={location} key={location.pathname}>
