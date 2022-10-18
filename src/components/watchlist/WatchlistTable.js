@@ -210,8 +210,9 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         let comparisionSection = getComparisionSettings() ? getComparisionSettings() : {};
         comparisionSection.comparisionSection = selectedMetric;
         saveComparisionSettings(comparisionSection);
-        // dispatch(setSidebarToggle(true));
-        // dispatch(setSidebarToggleMobile(true));
+        if (rowId !== 'actions') {
+          dispatch(setSidebarToggleMobile(true));
+        }
         onColumnClick(params.data, rowId);
       }
     }
