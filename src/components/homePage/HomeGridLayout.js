@@ -14,6 +14,9 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
   const handleLayoutChange = (layout, layouts) => {
     localStorage.setItem(homepageGridLayoutKey, JSON.stringify(layouts));
+
+    // scroll layout when widget selection updated
+    layoutScroll();
   };
 
   const getLayouts = () => {
@@ -60,15 +63,30 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
   };
 
   const componentRender = useMemo(() => {
-    let originalSavedWidgets = drawerSelectedWidget;
-    let savedWidgets = Object.keys(drawerSelectedWidget);
-    savedWidgets = savedWidgets.filter((item, index) => {
-      return originalSavedWidgets[item].show;
-    });
-    return savedWidgets.map((item, index) => {
-      return { name: item, component: getComponent(item) };
+    return drawerSelectedWidget.map((item, index) => {
+      return { ...item, component: getComponent(item.name) };
     });
   }, [drawerSelectedWidget]);
+
+  const layoutScroll = () => {
+    let widgetScroll = componentRender[componentRender.length - 1];
+    if (widgetScroll) {
+      const drawerExtraHeight = 100;
+      widgetScroll = document.getElementById(widgetScroll.name)
+      let drawerHeader = document.getElementById('widget-drawer-container')
+      drawerHeader = drawerHeader ? drawerHeader.offsetHeight + drawerExtraHeight : 100 + drawerExtraHeight;
+      let topOfElement;
+
+      if (componentRender.length >= 2) {
+        topOfElement = window.pageYOffset + widgetScroll.getBoundingClientRect().top - drawerHeader
+      } else {
+        topOfElement = widgetScroll.getBoundingClientRect().top - 200
+      }
+
+      window.scroll({ top: topOfElement, behavior: "smooth" });
+    }
+  }
+
 
   return (
     <ResponsiveGridLayout
@@ -85,10 +103,12 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
       resizeHandles={['se']}
       autoSize={true}
       isDraggable={enableDragResizeWidgets}
-      isResizable={enableDragResizeWidgets}>
+      isResizable={enableDragResizeWidgets}
+    >
       {componentRender.map((item, index) => {
         return (
           <div
+            id={item.name}
             key={item.name}
             data-grid-id={item.name}
             data-grid={{ x: 0, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}>

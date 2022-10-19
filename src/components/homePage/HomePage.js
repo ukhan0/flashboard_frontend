@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { cloneDeep, get } from 'lodash';
+import { get } from 'lodash';
 import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
@@ -48,7 +48,7 @@ const useStyle = makeStyles({
   drawerContainer: {
     zIndex: 10000,
     backgroundColor: '#ffffff',
-    top: '112px',
+    top: '106px',
     position: 'sticky'
   }
 });
@@ -59,7 +59,16 @@ const getHomepageWidgets = () => {
 
   // if new widget add and not exists in prev localstorage
   // then get from the config
-  return savedWidgets ? { ...homePageWidgets, ...savedWidgets } : homePageWidgets;
+  savedWidgets = savedWidgets ? { ...savedWidgets } : homePageWidgets;
+  let finalWidgets = [];
+
+  // convert saved widgets into array
+  Object.keys(savedWidgets).forEach((item) => {
+    if (savedWidgets[item].show)
+      finalWidgets.push({ name: item, ...savedWidgets[item] });
+  })
+
+  return finalWidgets;
 };
 
 export default function HomePage() {
@@ -80,18 +89,29 @@ export default function HomePage() {
     });
   };
 
-  const handleColumns = (key, status) => {
-    setSidebarSelectedWidget(prevState => {
-      const clone = cloneDeep(prevState);
-      clone[key].show = status;
-      return clone;
-    });
+  const handleColumns = (selectedWidget, status) => {
+    if (status) {
+      setSidebarSelectedWidget(prevState => {
+        return [...prevState, selectedWidget];
+      });
+    } else {
+      setSidebarSelectedWidget(prevState => {
+        return prevState.filter((item) => {
+          return item.name !== selectedWidget.name
+        });
+      });
+    }
   };
 
   const handleSaveSelected = async () => {
+    const convertSelectWidgetData = {};
+    drawerSelectedWidget.forEach((item) => {
+      convertSelectWidgetData[item.name] = item
+    });
+
     try {
       const response = await axios.post(`${config.apiUrl}/api/users/update_user`,
-        { id: user.id, home_widgets: drawerSelectedWidget });
+        { id: user.id, home_widgets: convertSelectWidgetData });
 
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
@@ -131,7 +151,7 @@ export default function HomePage() {
       </Grid>
 
       <Slide direction="down" in={isHomePageDrawerOpen} mountOnEnter unmountOnExit>
-        <Paper className={classes.drawerContainer}>
+        <Paper className={classes.drawerContainer} id='widget-drawer-container'>
           <HomePageWidgetDrawer
             open={isHomePageDrawerOpen}
             handleDrawer={handleDrawer}
