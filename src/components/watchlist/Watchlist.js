@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { get, cloneDeep } from 'lodash';
 import { Grid, Button, Box } from '@material-ui/core';
-import { get, isArray, cloneDeep } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
@@ -27,7 +27,12 @@ import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
-import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
+import {
+  getWatchlist,
+  getWatchlistTable2Data,
+  getWatchlistFileTypeEmailAlertStatus,
+  syncCompleteDataOnPage
+} from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
@@ -85,11 +90,9 @@ const Watchlist = () => {
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
-  const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
-  const [col, setCol] = React.useState(null);
-  const [currentCol, setCurrentCol] = React.useState([]);
-  let completeCompaniesDatalocal = useRef(completeCompaniesData);
-  let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
+  const [dispalyedColumns, setDispalyedColumns] = useState([]);
+  const [col, setCol] = useState(null);
+  const [currentCol, setCurrentCol] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -100,38 +103,11 @@ const Watchlist = () => {
     setCurrentCol(WatchlistService.getAgGridAColunms().columns);
   }, [col, isAgGridSideBarOpen, selectedFileType]);
 
-  useEffect(() => {
-    completeCompaniesDatalocal.current = completeCompaniesData;
-    completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
-  }, [completeCompaniesData, completeCompaniesDataGlobal]);
-
   const handleColumns = (e, status) => {
     const coldId = e.target.value;
     setCol(`${coldId}${status}`);
     WatchlistService.mangeAgGridColunms(coldId, status);
   };
-  const syncCompleteDataOnPage = useCallback(
-    newData => {
-      const rawCompleteData = cloneDeep(
-        selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesDatalocal.current
-          : completeCompaniesDataGloballocal.current
-      );
-      if (!rawCompleteData || !isArray(rawCompleteData)) {
-        return;
-      }
-      newData.forEach(nd => {
-        const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
-        rawCompleteData[tickerIndex] = nd;
-      });
-      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-        dispatch(setCompleteCompaniesData(rawCompleteData));
-      } else {
-        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-      }
-    },
-    [selectedType, dispatch]
-  );
 
   useEffect(() => {
     dispatch(getWatchlistFileTypeEmailAlertStatus());
@@ -200,7 +176,7 @@ const Watchlist = () => {
           setLoading(true);
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          syncCompleteDataOnPage(rawData);
+          dispatch(syncCompleteDataOnPage(selectedType, rawData));
         }
         if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
           setTopicDialogOpen(true);
@@ -215,7 +191,7 @@ const Watchlist = () => {
         // log exception here
       }
     }
-  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch, syncCompleteDataOnPage]);
+  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
 
   useEffect(() => {
     fetchData();
@@ -303,31 +279,26 @@ const Watchlist = () => {
     [dispatch, selectedType]
   );
 
-  const updateChacheData = useCallback(
-    (ticker, isTicker) => {
-      let rawCompleteData = cloneDeep(
-        selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesDatalocal.current
-          : completeCompaniesDataGloballocal.current
-      );
-      if (Array.isArray(ticker)) {
-        for (let i = 0; i < ticker.length; i++) {
-          let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
-          if (updatedTickerDetail !== -1) {
-            rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-          }
+  const updateChacheData = (ticker, isTicker) => {
+    let rawCompleteData = cloneDeep(
+      selectedType === 'domestic' || selectedType === 'newGlobal' ? completeCompaniesData : completeCompaniesDataGlobal
+    );
+    if (Array.isArray(ticker)) {
+      for (let i = 0; i < ticker.length; i++) {
+        let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
+        if (updatedTickerDetail !== -1) {
+          rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
         }
-        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-          dispatch(setCompleteCompaniesData(rawCompleteData));
-        } else {
-          dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-        }
-      } else {
-        updateTickerValue(rawCompleteData, ticker, isTicker);
       }
-    },
-    [dispatch, selectedType, updateTickerValue]
-  );
+      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
+    } else {
+      updateTickerValue(rawCompleteData, ticker, isTicker);
+    }
+  };
 
   const deleteTicker = async (ticker, isTable2 = false) => {
     const user = JSON.parse(localStorage.getItem('user'));

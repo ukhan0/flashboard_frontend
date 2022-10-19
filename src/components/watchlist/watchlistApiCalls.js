@@ -1,7 +1,12 @@
 import config from '../../config/config';
-import { get, round } from 'lodash';
+import { get, round, cloneDeep, isArray } from 'lodash';
 import axios from 'axios';
-import { setCancelExistingDocumentTypeCalls, setWatchlistFileTypeEmailAlerts } from './../../reducers/Watchlist';
+import {
+  setCancelExistingDocumentTypeCalls,
+  setWatchlistFileTypeEmailAlerts,
+  setCompleteCompaniesData,
+  setCompleteGlobalCompaniesData
+} from './../../reducers/Watchlist';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -49,7 +54,7 @@ export const getWatchlistFileTypeEmailAlertStatus = () => {
         dispatch(setWatchlistFileTypeEmailAlerts(fileTypesEmailStatus));
       }
     }
-  }
+  };
 };
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
@@ -77,9 +82,34 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       rawData = [];
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
-      return rawData.filter(item => item.co === 'CA');
-    } else {
-      return rawData;
+      rawData = rawData.filter(item => item.co === 'CA');
+    }
+    return rawData;
+  };
+};
+
+export const syncCompleteDataOnPage = (selectedType, rawData) => {
+  return async (dispatch, getState) => {
+    const { completeCompaniesData, completeCompaniesDataGlobal } = getState().Watchlist;
+    try {
+      const rawCompleteData = cloneDeep(
+        selectedType === 'domestic' || selectedType === 'newGlobal'
+          ? completeCompaniesData
+          : completeCompaniesDataGlobal
+      );
+      if (rawCompleteData && isArray(rawCompleteData)) {
+        rawData.forEach(nd => {
+          const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+          rawCompleteData[tickerIndex] = nd;
+        });
+        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+          dispatch(setCompleteCompaniesData(rawCompleteData));
+        } else {
+          dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 };
