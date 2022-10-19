@@ -297,31 +297,26 @@ const Watchlist = () => {
     [dispatch, selectedType]
   );
 
-  const updateChacheData = useCallback(
-    (ticker, isTicker) => {
-      let rawCompleteData = cloneDeep(
-        selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesData
-          : completeCompaniesDataGlobal
-      );
-      if (Array.isArray(ticker)) {
-        for (let i = 0; i < ticker.length; i++) {
-          let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
-          if (updatedTickerDetail !== -1) {
-            rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
-          }
+  const updateChacheData = (ticker, isTicker) => {
+    let rawCompleteData = cloneDeep(
+      selectedType === 'domestic' || selectedType === 'newGlobal' ? completeCompaniesData : completeCompaniesDataGlobal
+    );
+    if (Array.isArray(ticker)) {
+      for (let i = 0; i < ticker.length; i++) {
+        let updatedTickerDetail = rawCompleteData.findIndex(d => (d.ticker ? d.ticker === ticker[i] : null));
+        if (updatedTickerDetail !== -1) {
+          rawCompleteData[updatedTickerDetail].isTickerActive = isTicker;
         }
-        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-          dispatch(setCompleteCompaniesData(rawCompleteData));
-        } else {
-          dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-        }
-      } else {
-        updateTickerValue(rawCompleteData, ticker, isTicker);
       }
-    },
-    [dispatch, selectedType, updateTickerValue]
-  );
+      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
+    } else {
+      updateTickerValue(rawCompleteData, ticker, isTicker);
+    }
+  };
 
   const deleteTicker = async (ticker, isTable2 = false) => {
     const user = JSON.parse(localStorage.getItem('user'));
