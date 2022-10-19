@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import HomePageTable from './HomePageTable';
 import HomePageNotification from './HomepageNotification';
 import HomePageSmaLime1 from './HomePageSmaLime1';
@@ -14,9 +14,6 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
   const handleLayoutChange = (layout, layouts) => {
     localStorage.setItem(homepageGridLayoutKey, JSON.stringify(layouts));
-
-    // scroll layout when widget selection updated
-    layoutScroll();
   };
 
   const getLayouts = () => {
@@ -87,6 +84,11 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
     }
   }
 
+  useEffect(() => {
+    // scroll layout when widget selection updated
+    layoutScroll();
+  }, [componentRender])
+
 
   return (
     <ResponsiveGridLayout
@@ -111,7 +113,7 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
             id={item.name}
             key={item.name}
             data-grid-id={item.name}
-            data-grid={{ x: 0, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}>
+            data-grid={{ x: 8, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}>
             {item.component}
           </div>
         );
