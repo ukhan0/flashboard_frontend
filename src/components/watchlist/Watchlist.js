@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Grid, Button } from '@material-ui/core';
 import { get, cloneDeep } from 'lodash';
+import { Grid, Button, Box } from '@material-ui/core';
 import axios from 'axios';
 import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
-// import cjson from 'compressed-json';
-import { Box } from '@material-ui/core';
 import { formatData, getColumnState, getFilteringState, isBigAgGrid, setTickerActiveStatus } from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
@@ -25,10 +23,8 @@ import WatchlistTopicDialog from './WatchlistTopic/WatchlistTopicDialog';
 import { useSelector, useDispatch } from 'react-redux';
 import { BeatLoader } from 'react-spinners';
 import WatchlistService from './WatchlistService';
-// components
 import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
-// styles
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
 import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
@@ -162,6 +158,9 @@ const Watchlist = () => {
   }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
   useEffect(() => {
     getWatchlistTable2Dataa();
+    return () => {
+      setGridData2([]);
+    };
   }, [getWatchlistTable2Dataa]);
 
   const fetchData = useCallback(async () => {
