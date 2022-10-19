@@ -8,7 +8,6 @@ import {
   Grid, Button
 } from "@material-ui/core";
 import { homePageWidgets } from './homePageConfig';
-import { get } from 'lodash';
 import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +33,9 @@ const HomePageWidgetDrawer = ({
 }) => {
   const classes = useStyles();
   const getWidgetStatus = key => {
-    const status = get(widgets, key, null);
+    const status = widgets.find((item) => {
+      return item.name === key;
+    });
     return status ? status.show : false;
   };
 
@@ -53,7 +54,7 @@ const HomePageWidgetDrawer = ({
                     key={key}
                     value={getWidgetStatus(key)}
                     onChange={(e, v) => {
-                      handleColumns(key, v);
+                      handleColumns({ name: key, title: homePageWidgets[key].title, show: v }, v);
                     }}
                   />
                 </Grid>
@@ -74,7 +75,7 @@ const HomePageWidgetDrawer = ({
               Save
             </Button>
           </Grid>
-          
+
           <Grid item>
             <Button
               color="primary"
