@@ -49,7 +49,7 @@ export const getWatchlistFileTypeEmailAlertStatus = () => {
         dispatch(setWatchlistFileTypeEmailAlerts(fileTypesEmailStatus));
       }
     }
-  }
+  };
 };
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
@@ -77,10 +77,9 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       rawData = [];
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
-      return rawData.filter(item => item.co === 'CA');
-    } else {
-      return rawData;
+      rawData = rawData.filter(item => item.co === 'CA');
     }
+    return rawData;
   };
 };
 
