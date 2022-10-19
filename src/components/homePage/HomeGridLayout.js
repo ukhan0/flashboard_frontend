@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useCallback } from 'react';
 import HomePageTable from './HomePageTable';
 import HomePageNotification from './HomepageNotification';
 import HomePageSmaLime1 from './HomePageSmaLime1';
@@ -65,7 +65,7 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
     });
   }, [drawerSelectedWidget]);
 
-  const layoutScroll = () => {
+  const layoutScroll = useCallback(() => {
     let widgetScroll = componentRender[componentRender.length - 1];
     if (widgetScroll) {
       const drawerExtraHeight = 100;
@@ -82,12 +82,12 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
 
       window.scroll({ top: topOfElement, behavior: "smooth" });
     }
-  }
+  }, [componentRender])
 
   useEffect(() => {
     // scroll layout when widget selection updated
     layoutScroll();
-  }, [componentRender])
+  }, [layoutScroll])
 
 
   return (
