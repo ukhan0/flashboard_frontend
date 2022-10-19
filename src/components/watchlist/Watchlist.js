@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Grid, Button } from '@material-ui/core';
 import { get, isArray, cloneDeep } from 'lodash';
 import axios from 'axios';
@@ -89,9 +89,9 @@ const Watchlist = () => {
   const [savedFiltersList, setSavedFilters] = useState([]);
   const [gridData, setGridData] = useState(null);
   const [gridData2, setGridData2] = useState([]);
-  const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
-  const [col, setCol] = React.useState(null);
-  const [currentCol, setCurrentCol] = React.useState([]);
+  const [dispalyedColumns, setDispalyedColumns] = useState([]);
+  const [col, setCol] = useState(null);
+  const [currentCol, setCurrentCol] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
