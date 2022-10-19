@@ -92,8 +92,6 @@ const Watchlist = () => {
   const [dispalyedColumns, setDispalyedColumns] = React.useState([]);
   const [col, setCol] = React.useState(null);
   const [currentCol, setCurrentCol] = React.useState([]);
-  let completeCompaniesDatalocal = useRef(completeCompaniesData);
-  let completeCompaniesDataGloballocal = useRef(completeCompaniesDataGlobal);
 
   useEffect(() => {
     setTimeout(() => {
@@ -104,11 +102,6 @@ const Watchlist = () => {
     setCurrentCol(WatchlistService.getAgGridAColunms().columns);
   }, [col, isAgGridSideBarOpen, selectedFileType]);
 
-  useEffect(() => {
-    completeCompaniesDatalocal.current = completeCompaniesData;
-    completeCompaniesDataGloballocal.current = completeCompaniesDataGlobal;
-  }, [completeCompaniesData, completeCompaniesDataGlobal]);
-
   const handleColumns = (e, status) => {
     const coldId = e.target.value;
     setCol(`${coldId}${status}`);
@@ -118,8 +111,8 @@ const Watchlist = () => {
     newData => {
       const rawCompleteData = cloneDeep(
         selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesDatalocal.current
-          : completeCompaniesDataGloballocal.current
+          ? completeCompaniesData
+          : completeCompaniesDataGlobal
       );
       if (!rawCompleteData || !isArray(rawCompleteData)) {
         return;
@@ -308,8 +301,8 @@ const Watchlist = () => {
     (ticker, isTicker) => {
       let rawCompleteData = cloneDeep(
         selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesDatalocal.current
-          : completeCompaniesDataGloballocal.current
+          ? completeCompaniesData
+          : completeCompaniesDataGlobal
       );
       if (Array.isArray(ticker)) {
         for (let i = 0; i < ticker.length; i++) {
