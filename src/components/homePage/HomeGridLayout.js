@@ -113,7 +113,7 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
             id={item.name}
             key={item.name}
             data-grid-id={item.name}
-            data-grid={{ x: 8, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}>
+            data-grid={{ x: 0, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}>
             {item.component}
           </div>
         );
