@@ -1,7 +1,12 @@
 import config from '../../config/config';
-import { get, round } from 'lodash';
+import { get, round, cloneDeep, isArray } from 'lodash';
 import axios from 'axios';
-import { setCancelExistingDocumentTypeCalls, setWatchlistFileTypeEmailAlerts } from './../../reducers/Watchlist';
+import {
+  setCancelExistingDocumentTypeCalls,
+  setWatchlistFileTypeEmailAlerts,
+  setCompleteCompaniesData,
+  setCompleteGlobalCompaniesData
+} from './../../reducers/Watchlist';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -54,7 +59,8 @@ export const getWatchlistFileTypeEmailAlertStatus = () => {
 export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const { completeCompaniesData, completeCompaniesDataGlobal } = getState().Watchlist;
     try {
       dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
@@ -78,6 +84,20 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
       rawData = rawData.filter(item => item.co === 'CA');
+    }
+    const rawCompleteData = cloneDeep(
+      selectedType === 'domestic' || selectedType === 'newGlobal' ? completeCompaniesData : completeCompaniesDataGlobal
+    );
+    if (rawCompleteData && isArray(rawCompleteData)) {
+      rawData.forEach(nd => {
+        const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
+        rawCompleteData[tickerIndex] = nd;
+      });
+      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+        dispatch(setCompleteCompaniesData(rawCompleteData));
+      } else {
+        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
+      }
     }
     return rawData;
   };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Grid, Button } from '@material-ui/core';
-import { get, isArray, cloneDeep } from 'lodash';
+import { get, cloneDeep } from 'lodash';
 import axios from 'axios';
 import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
@@ -107,28 +107,6 @@ const Watchlist = () => {
     setCol(`${coldId}${status}`);
     WatchlistService.mangeAgGridColunms(coldId, status);
   };
-  const syncCompleteDataOnPage = useCallback(
-    newData => {
-      const rawCompleteData = cloneDeep(
-        selectedType === 'domestic' || selectedType === 'newGlobal'
-          ? completeCompaniesData
-          : completeCompaniesDataGlobal
-      );
-      if (!rawCompleteData || !isArray(rawCompleteData)) {
-        return;
-      }
-      newData.forEach(nd => {
-        const tickerIndex = rawCompleteData.findIndex(rd => rd.ticker === nd.ticker);
-        rawCompleteData[tickerIndex] = nd;
-      });
-      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-        dispatch(setCompleteCompaniesData(rawCompleteData));
-      } else {
-        dispatch(setCompleteGlobalCompaniesData(rawCompleteData));
-      }
-    },
-    [selectedType, dispatch]
-  );
 
   useEffect(() => {
     dispatch(getWatchlistFileTypeEmailAlertStatus());
@@ -194,7 +172,6 @@ const Watchlist = () => {
           setLoading(true);
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          syncCompleteDataOnPage(rawData);
         }
         if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
           setTopicDialogOpen(true);
@@ -209,7 +186,7 @@ const Watchlist = () => {
         // log exception here
       }
     }
-  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch, syncCompleteDataOnPage]);
+  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
 
   useEffect(() => {
     fetchData();
