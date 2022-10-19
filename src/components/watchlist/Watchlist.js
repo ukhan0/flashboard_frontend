@@ -27,7 +27,12 @@ import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
 import { isObject, isEmpty } from 'lodash';
-import { getWatchlist, getWatchlistTable2Data, getWatchlistFileTypeEmailAlertStatus } from './watchlistApiCalls';
+import {
+  getWatchlist,
+  getWatchlistTable2Data,
+  getWatchlistFileTypeEmailAlertStatus,
+  syncCompleteDataOnPage
+} from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from '../../reducers/Topic';
 import WatchlistCustomColumnsSideBar from './WatchlistCustomColumnsSideBar';
@@ -171,6 +176,7 @@ const Watchlist = () => {
           setLoading(true);
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
+          await dispatch(syncCompleteDataOnPage(selectedType, rawData));
         }
         if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
           setTopicDialogOpen(true);
