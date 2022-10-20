@@ -7,7 +7,7 @@ import { IconButton, Box, Tooltip } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 
-import projectLogo from '../../assets/images/logos/pen-sma-logo.svg';
+import projectLogo from '../../assets/images/logos/ca-logo-color-256.png';
 
 import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 
@@ -40,8 +40,8 @@ const SidebarHeader = props => {
         >
         <Box className="header-logo-wrapper" title="SMA">
           <Link to="/" className="header-logo-wrapper-link">
-            <IconButton color="primary">
-              <img className="app-sidebar-logo" alt="SMA" style={{width:"100px"}} src={projectLogo} />
+            <IconButton color="primary" className='pt-0 py-0'>
+              <img className="app-sidebar-logo" alt="SMA" style={{width:"108px"}} src={projectLogo} />
             </IconButton>
           </Link>
         </Box>
