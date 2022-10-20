@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useCallback } from 'react';
+import React, { useMemo, useEffect, useCallback, useState } from 'react';
 import HomePageTable from './HomePageTable';
 import HomePageNotification from './HomepageNotification';
 import HomePageSmaLime1 from './HomePageSmaLime1';
@@ -8,17 +8,22 @@ import HomePageEarningWatcher from './HomePageEarningWatcher';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { homepageGridLayoutKey, homePageWidgetlayout } from './homePageConfig';
 import HomePageAccountStock from './HomePageAccountStock';
+import { get, maxBy } from 'lodash';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
+  const [xAxis, setXAxis] = useState(0);
+
   const handleLayoutChange = (layout, layouts) => {
     localStorage.setItem(homepageGridLayoutKey, JSON.stringify(layouts));
+    setXPoint(layouts);
   };
 
   const getLayouts = () => {
-    const savedLayouts = localStorage.getItem(homepageGridLayoutKey);
-    return savedLayouts ? JSON.parse(savedLayouts) : homePageWidgetlayout;
+    let savedLayouts = localStorage.getItem(homepageGridLayoutKey);
+    savedLayouts = savedLayouts ? JSON.parse(savedLayouts) : homePageWidgetlayout;
+    return savedLayouts;
   };
 
   const getComponent = name => {
@@ -84,6 +89,15 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
     }
   }, [componentRender])
 
+  const setXPoint = (layouts) => {
+    let currentLayoutBreakPoint = window.outerWidth >= 1200 ? 'lg' : 'xs';
+    let selectedLayout = layouts[currentLayoutBreakPoint];
+    selectedLayout = maxBy(selectedLayout.slice(-1), 'x');
+    let x = get(selectedLayout, 'x', 0);
+    x = x > 3 ? 0 : x + 4;
+    setXAxis(componentRender.length ? x : 0);
+  };
+
   useEffect(() => {
     // scroll layout when widget selection updated
     layoutScroll();
@@ -113,7 +127,8 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
             id={item.name}
             key={item.name}
             data-grid-id={item.name}
-            data-grid={{ x: 0, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}>
+            data-grid={{ x: xAxis, y: componentRender.length > 1 ? componentRender.length * 2 : 0, w: 4, h: 2 }}
+          >
             {item.component}
           </div>
         );
