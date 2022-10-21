@@ -77,11 +77,10 @@ const Comparision = props => {
     setIsloading(true);
     if (!firstTimeLoad.current && isCompleteCompaniesDataLoaded) {
       firstTimeLoad.current = true;
-      setTimeout(() => {
+      setTimeout(async() => {
         let data = queryString.parse(history.location.search);
         if (data.recentId) {
-          let company = async () =>
-            await getCompanyByIndex(data.ticker, completeCompaniesData, completeCompaniesDataGlobal);
+          let company = await getCompanyByIndex(data.ticker, completeCompaniesData, completeCompaniesDataGlobal);
           if (company) {
             company.recentId = data.recentId;
             company.oldId = data.oldId;
