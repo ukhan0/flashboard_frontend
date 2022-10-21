@@ -7,7 +7,7 @@ import { IconButton, Box } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 
-import smaLogo from '../../assets/images/logos/sma-logo-white.svg';
+import smaLogo from '../../assets/images/logos/ca-logo-white.png';
 
 const HeaderLogo = props => {
   const { sidebarToggle, sidebarHover } = props;
