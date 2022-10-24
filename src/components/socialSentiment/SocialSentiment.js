@@ -10,15 +10,14 @@ const SocialSentiment = () => {
   }
 
   const getSentimentUrl = selectedItem => {
-    let url = null;
-    if (selectedItem.flag === '15') {
-      url = `${selectedItem.ticker}.TO?ontology=tsx`;
-    } else if (selectedItem.flag === '6') {
-      url = `QQQ?ontology=etf`;
-    } else {
-      url = `${selectedItem.ticker}?ontology=ticker`;
+    let socailArr = {
+      2: `${selectedItem.ticker}?ontology=ticker`,
+      6: `${selectedItem.ticker}?ontology=etf`,
+      13: `${selectedItem.ticker}?ontology=spac`,
+      15: `${selectedItem.ticker}.TO?ontology=tsx`,
+
     }
-    return url;
+    return socailArr[selectedItem.flag]??null
   };
   return (
     <div>
