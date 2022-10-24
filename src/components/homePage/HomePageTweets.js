@@ -6,14 +6,12 @@ import moment from 'moment';
 import { cloneDeep, get, uniqBy } from 'lodash';
 import { BeatLoader } from 'react-spinners';
 import { getWatchlist } from '../watchlist/watchlistApiCalls';
-// import SocketService from '../../socketService';
 import io from 'socket.io-client';
 import config from 'config/config';
 import { lastTweets } from './HomePageHelpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Repeat, SmsOutlined, FavoriteBorderOutlined } from '@material-ui/icons';
 const socket = io.connect(config.socketUrl);
-// SocketService.init(socket);
 const useStyles = makeStyles(theme => ({
   resultHeader: {
     display: 'flex'
@@ -69,12 +67,9 @@ const useStyles = makeStyles(theme => ({
 const TopicSearchResults = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  // const tweets = useRef(lastTweets());
   const [tweetsUpdate, setTweetsUpdate] = useState(lastTweets());
-  // const [renderTime, setRenderTime] = useState(0);
   const [userWatchlist, setUserWatchlist] = useState([]);
   const { selectedFileType, selectedType } = useSelector(state => state.Watchlist);
-  // const lastTweetsData = JSON.stringify(tweets.current);
   const getUserWatchlist = useCallback(async () => {
     const resp = await dispatch(getWatchlist('watchlist', selectedFileType, selectedType));
     setUserWatchlist(resp);
@@ -113,15 +108,6 @@ const TopicSearchResults = () => {
     }
   }, [userWatchlist]);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setRenderTime(renderTime + 1);
-  //   }, [3000]);
-  //   return () => {
-  //     clearInterval(intervalId); //This is important
-  //   };
-  // }, [renderTime]);
-
   function goToTweet(tweet_link) {
     window.open(tweet_link, '_blank');
   }
@@ -145,7 +131,6 @@ const TopicSearchResults = () => {
       </div>
       <div style={{ outline: '1px solid gray', margin: '10px 0 10px 10px', borderradius: '8px', height: '100%' }}>
         <Grid container direction="row" justify="center" alignItems="flex-start">
-          {/* <Grid item></Grid> */}
           <Grid item>
             {tweetsUpdate.length < 1 ? (
               <div>
@@ -153,7 +138,6 @@ const TopicSearchResults = () => {
               </div>
             ) : null}
           </Grid>
-          {/* <Grid item></Grid> */}
         </Grid>
 
         {tweetsUpdate.length > 0 && <div style={{ height: 'calc(100% - 60px)', margin: ' 0', overflowY: 'auto' }}>
