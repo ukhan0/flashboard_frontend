@@ -63,7 +63,7 @@ const Sidebar = props => {
     <div
       className={clsx({
         'app-sidebar-nav-close': sidebarToggle && !sidebarHover,
-        'sidebar-menu-item-disable' : selectedItem && Object.keys(selectedItem).length === 0
+        'sidebar-menu-item-disable': selectedItem && Object.keys(selectedItem).length === 0
       })}>
       {navItems.map(list => (
         <SidebarMenu

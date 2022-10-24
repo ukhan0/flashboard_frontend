@@ -216,7 +216,7 @@ export const isActive = (page, selectedItem) => {
   if (page.label === 'Comparison' && !selectedItem.oldId) {
     status = true;
   }
-  if (page.label === 'Social Sentiment' && selectedItem.flag === '0') {
+  if (page.label === 'Social Sentiment' && (selectedItem.flag === '0' || selectedItem.flag === undefined)) {
     status = true;
   }
   return status;
