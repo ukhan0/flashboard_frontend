@@ -55,59 +55,65 @@ const Cache = () => {
     [dispatch, user]
   );
 
-  const cacheData = useCallback(async (tryToGetFromIndexDb = true) => {
-    dispatch(setCompleteDataLoadedFlag(false));
-    try {
-      if (tryToGetFromIndexDb) {
-        const previousStoredData = await indexedDB()
-          .collection(config.indexDbDomesticCompniesData)
-          .get();
-        if (previousStoredData && previousStoredData.length > 0) {
-          dispatch(setCompleteCompaniesData(previousStoredData));
-        } else {
-          await refreshIndexDB('domestic');
-          dispatch(setCompleteDataLoadedFlag(true));
-          return;
+  const cacheData = useCallback(
+    async (tryToGetFromIndexDb = true) => {
+      dispatch(setCompleteDataLoadedFlag(false));
+      try {
+        if (tryToGetFromIndexDb) {
+          const previousStoredData = await indexedDB()
+            .collection(config.indexDbDomesticCompniesData)
+            .get();
+          if (previousStoredData && previousStoredData.length > 0) {
+            dispatch(setCompleteCompaniesData(previousStoredData));
+          } else {
+            await refreshIndexDB('domestic');
+            dispatch(setCompleteDataLoadedFlag(true));
+            return;
+          }
         }
+        const savedDate = localStorage.getItem(domesticKey);
+        if (savedDate) {
+          if (new Date() - new Date(savedDate) > REFREST_TIME) {
+            await refreshIndexDB('domestic');
+          }
+        } else await refreshIndexDB('domestic');
+      } catch (error) {
+        console.log(error);
       }
-      const savedDate = localStorage.getItem(domesticKey);
-      if (savedDate) {
-        if (new Date() - new Date(savedDate) > REFREST_TIME) {
-          await refreshIndexDB('domestic');
-        }
-      } else await refreshIndexDB('domestic');
-    } catch (error) {
-      console.log(error);
-    }
-    dispatch(setCompleteDataLoadedFlag(true));
-  }, [dispatch, refreshIndexDB]);
+      dispatch(setCompleteDataLoadedFlag(true));
+    },
+    [dispatch, refreshIndexDB]
+  );
 
-  const cacheDataGlobal = useCallback(async (tryToGetFromIndexDb = true) => {
-    dispatch(setCompleteDataLoadedGlobalFlag(false));
-    try {
-      if(tryToGetFromIndexDb){
-        const previousStoredData = await indexedDB()
-          .collection(config.indexDbGlobalCompniesData)
-          .get();
-        if (previousStoredData && previousStoredData.length > 0) {
-          dispatch(setCompleteGlobalCompaniesData(previousStoredData));
-        } else {
-          await refreshIndexDB('global');
-          dispatch(setCompleteDataLoadedGlobalFlag(true));
-          return;
+  const cacheDataGlobal = useCallback(
+    async (tryToGetFromIndexDb = true) => {
+      dispatch(setCompleteDataLoadedGlobalFlag(false));
+      try {
+        if (tryToGetFromIndexDb) {
+          const previousStoredData = await indexedDB()
+            .collection(config.indexDbGlobalCompniesData)
+            .get();
+          if (previousStoredData && previousStoredData.length > 0) {
+            dispatch(setCompleteGlobalCompaniesData(previousStoredData));
+          } else {
+            await refreshIndexDB('global');
+            dispatch(setCompleteDataLoadedGlobalFlag(true));
+            return;
+          }
         }
+        const savedDate = localStorage.getItem(globalKey);
+        if (savedDate) {
+          if (new Date() - new Date(savedDate) > REFREST_TIME) {
+            await refreshIndexDB('global');
+          }
+        } else await refreshIndexDB('global');
+      } catch (error) {
+        console.log(error);
       }
-      const savedDate = localStorage.getItem(globalKey);
-      if (savedDate) {
-        if (new Date() - new Date(savedDate) > REFREST_TIME) {
-          await refreshIndexDB('global');
-        }
-      } else await refreshIndexDB('global');
-    } catch (error) {
-      console.log(error);
-    }
-    dispatch(setCompleteDataLoadedGlobalFlag(true));
-  }, [dispatch, refreshIndexDB]);
+      dispatch(setCompleteDataLoadedGlobalFlag(true));
+    },
+    [dispatch, refreshIndexDB]
+  );
 
   useEffect(() => {
     if (isNewEmailNotification && user) {
