@@ -84,11 +84,9 @@ const TopicSearchResults = () => {
     getUserWatchlist();
   }, [getUserWatchlist]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     localStorage.setItem('lastTweets', JSON.stringify(tweetsUpdate));
-  //   };
-  // }, [tweetsUpdate]);
+  useEffect(() => {
+    localStorage.setItem('lastTweets', JSON.stringify(tweetsUpdate));
+  }, [tweetsUpdate]);
 
   useEffect(() => {
     return () => {
@@ -107,13 +105,8 @@ const TopicSearchResults = () => {
 
         setTweetsUpdate((prevState) => {
           let tweets = cloneDeep(prevState);
-          if (tweets.length > 70) {
-            tweets.pop();
-          }
-
+          tweets = tweets.slice(0, 70);
           tweets.unshift(tweetObj);
-          localStorage.setItem('lastTweets', JSON.stringify(tweets));
-          
           return tweets
         });
       });
