@@ -120,7 +120,8 @@ export const getWatchlistTable2Data = (
   selectedFileTypes,
   selectedType,
   countryCode,
-  sourceName
+  sourceName,
+  selectedFileType
 ) => {
   let rawData = [];
   let limit = 100;
@@ -144,7 +145,9 @@ export const getWatchlistTable2Data = (
           document_type: selectedFileTypes,
           selected_type: selectedType,
           ...(countryCode && { country_code: countryCode }),
-          ...(sourceName && { source_name: sourceName })
+          ...(sourceName && { source_name: sourceName }),
+          ...(selectedType === 'global' &&
+            (selectedFileType === 'FIN-SUPP' || selectedFileType === 'OTH-FIN') && { source_name: 'SEDAR' })
         }
       });
 
