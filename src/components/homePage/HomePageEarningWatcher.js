@@ -1,7 +1,38 @@
 import { Card } from "@material-ui/core";
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setIsFromThemex } from '../../reducers/Topic';
+import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 
 const HomePageEarningWatcher = () => {
+    const dispatch = useDispatch();
+    const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
+
+    const setCompany = useCallback(
+        async ticker => {
+            let company = await getCompanyByIndex(ticker, completeCompaniesData, completeCompaniesDataGlobal);
+
+            if (company) {
+                let last10k = new Date(company['last10k']);
+                let last10q = new Date(company['last10q']);
+                company.recentId = last10k > last10q ? company.recentId10k : company.recentId10q;
+            }
+
+            // if recent id not set
+            if (company.recentId === undefined || company.recentId === null) {
+                company = {};
+            }
+
+            dispatch(setIsFromThemex(false));
+            dispatch(setSelectedWatchlist(company));
+            dispatch(setSidebarToggle(false));
+            dispatch(setSidebarToggleMobile(false));
+        },
+        [dispatch, completeCompaniesData, completeCompaniesDataGlobal]
+    );
+
     const factorsData = {
         "description": { "text": "Company Name" },
         "sscore": { "text": "Social Sentiment", "neg": "#c33f40", "pos": "#3fc380", "hover": "S-Score is a normalized representation over Twitter social sentiment over a lookback period" },
@@ -10,7 +41,7 @@ const HomePageEarningWatcher = () => {
         "sdispersion": { "text": "Dispersion", "hover": "S-Dispersion represents the diversity of Twitter conversations. It is the percentage of conversations coming from unique Twitter users" }
     };
 
-  const filter = 'svolume+gt+12';
+    const filter = 'svolume+gt+12';
 
     useEffect(() => {
         window.SMA.SMAEarningsWatchers({
@@ -23,9 +54,16 @@ const HomePageEarningWatcher = () => {
             order: 'top',
             factor: factorsData,
             filters: filter,
-            serverDomain: 'stocktwits'
+            serverDomain: 'stocktwits',
+            onItemClick: function (ticker) {
+                if (ticker) {
+                    console.log("ticker")
+                    console.log(ticker)
+                    setCompany(ticker);
+                }
+            }
         });
-    }, [factorsData , filter]);
+    }, [factorsData, filter, setCompany]);
 
 
     return (
@@ -33,7 +71,7 @@ const HomePageEarningWatcher = () => {
             <div className="card-header">
                 <div className="card-header--title font-weight-bold drag-handle">Earnings Watcher</div>
             </div>
-            <div style={{ height: '100%'}} id="sma_warning_widget">
+            <div style={{ height: '100%' }} id="sma_warning_widget">
             </div>
         </Card>
     );
