@@ -57,8 +57,6 @@ const HomePageEarningWatcher = () => {
             serverDomain: 'stocktwits',
             onItemClick: function (ticker) {
                 if (ticker) {
-                    console.log("ticker")
-                    console.log(ticker)
                     setCompany(ticker);
                 }
             }
@@ -71,8 +69,9 @@ const HomePageEarningWatcher = () => {
             <div className="card-header">
                 <div className="card-header--title font-weight-bold drag-handle">Earnings Watcher</div>
             </div>
-            <div style={{ height: '100%' }} id="sma_warning_widget">
+            <div style={{ height: 'calc(100% - 60px)', marginRight: 8, overflow: 'hidden' }} id="sma_warning_widget">
             </div>
+            <div class="card-footer"></div>
         </Card>
     );
 
