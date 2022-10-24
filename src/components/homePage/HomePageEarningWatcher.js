@@ -69,7 +69,7 @@ const HomePageEarningWatcher = () => {
             <div className="card-header">
                 <div className="card-header--title font-weight-bold drag-handle">Earnings Watcher</div>
             </div>
-            <div style={{ height: 'calc(100% - 60px)', marginRight: 8, overflow: 'hidden' }} id="sma_warning_widget">
+            <div style={{ height: 'calc(100% - 60px)', overflow: 'hidden' }} id="sma_warning_widget">
             </div>
             <div class="card-footer"></div>
         </Card>
