@@ -154,8 +154,7 @@ const Watchlist = () => {
           fileTypes.join(','),
           selectedType,
           countryCode,
-          sourceName,
-          selectedFileType
+          sourceName
         )
       );
       setLoading(false);

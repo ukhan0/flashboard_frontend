@@ -656,7 +656,8 @@ export const FileTypes = {
         mda: [],
         rf: [],
         notes: []
-      }
+      },
+      sourceName: 'SEDAR'
     },
     {
       label: 'OTH-FIN',
@@ -674,7 +675,8 @@ export const FileTypes = {
         mda: [],
         rf: [],
         notes: []
-      }
+      },
+      sourceName: 'SEDAR'
     },
     {
       label: 'ESG',
