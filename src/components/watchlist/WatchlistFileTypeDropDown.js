@@ -5,11 +5,6 @@ import { FormControl, TextField, Popper } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { setWatchlistFileType } from '../../reducers/Watchlist';
-import {} from '../../reducers/Sentiment';
-import {} from '../Filings/FillingsHelper';
-import {} from '../watchlist/WatchlistHelpers';
-
-// import CloseIcon from '@material-ui/icons/Close';
 import { FileTypes } from '../../config/watchlistFileTyes';
 
 const createOptionLabel = option => {

@@ -1,10 +1,7 @@
 import React from 'react';
 import { matchPath } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
-
 import { List, Typography } from '@material-ui/core';
-
 import useRouter from 'utils/useRouter';
 import SidebarMenuListItem from './SidebarMenuListItem';
 import { useSelector } from 'react-redux';
