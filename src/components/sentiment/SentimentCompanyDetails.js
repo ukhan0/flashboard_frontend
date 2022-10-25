@@ -34,11 +34,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentCompanyDetails = props => {
+const SentimentCompanyDetails = ({
+  handleClickSentimentVersion,
+  highlightsData,
+  clickHandle,
+  newTest,
+  is_first_iteration
+}) => {
   const { data, isHighLightedText } = useSelector(state => state.Sentiment);
-  const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
-  const isDisabled = (item, sentimentV) => {
+  const isDisabled = sentimentV => {
     let status = false;
     status =
       get(data, 'document_type', '').toLowerCase() === 'FMP-Transcript'.toLowerCase() && sentimentV.key === 'original'
@@ -113,9 +118,9 @@ const SentimentCompanyDetails = props => {
                     <Button
                       size="small"
                       key={`sent_${i}`}
-                      disabled={isDisabled(selectedItem, sentimentV)}
-                      onClick={() => props.handleClickSentimentVersion(sentimentV.key)}
-                      variant={sentimentV.key === 'flatText' ? 'contained' : 'outlined'}>
+                      disabled={isDisabled(sentimentV)}
+                      onClick={() => handleClickSentimentVersion(sentimentV.key)}
+                      variant={'outlined'}>
                       {sentimentV.label}
                     </Button>
                   ))}
@@ -129,15 +134,15 @@ const SentimentCompanyDetails = props => {
                 </label>
               </Grid>
               <Grid item>
-                <SentimentFilters disable={props.disable} />
+                <SentimentFilters />
               </Grid>
             </Grid>
             {isHighLightedText ? (
               <SentimentHighlights
-                highlightsData={props.highlightsData}
-                clickHandle={props.clickHandle}
-                newTest={props.newTest}
-                is_first_iteration={props.is_first_iteration}
+                highlightsData={highlightsData}
+                clickHandle={clickHandle}
+                newTest={newTest}
+                is_first_iteration={is_first_iteration}
               />
             ) : null}
           </Grid>

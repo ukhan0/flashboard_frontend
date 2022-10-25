@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { saveSentimentSettings } from './SentimentHelpers';
 import { setSentimentFilters } from '../../reducers/Sentiment';
 
-const SentimentFilters = props => {
+const SentimentFilters = () => {
   const dispatch = useDispatch();
 
   const { sentiment } = useSelector(state => state.Sentiment);
@@ -23,7 +23,7 @@ const SentimentFilters = props => {
           <Button
             size="small"
             key={`sent_${i}`}
-            disabled={props.disable}
+            disabled={false}
             onClick={() => handleClickSentimentType(sentimentType.key)}
             variant={sentiment === sentimentType.key ? 'contained' : 'outlined'}>
             {sentimentType.label}
