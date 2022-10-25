@@ -14,10 +14,9 @@ const SocialSentiment = () => {
       2: `${selectedItem.ticker}?ontology=ticker`,
       6: `${selectedItem.ticker}?ontology=etf`,
       13: `${selectedItem.ticker}?ontology=spac`,
-      15: `${selectedItem.ticker}.TO?ontology=tsx`,
-
-    }
-    return socailArr[selectedItem.flag]??null
+      15: `${selectedItem.ticker}.TO?ontology=tsx`
+    };
+    return socailArr[selectedItem.flag] ?? null;
   };
   return (
     <div>
