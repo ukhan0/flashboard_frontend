@@ -6,7 +6,7 @@ export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
   return company;
 };
 export const getColorByDocType = type => {
-  let color;
+  let color = 'rgb(120,91,91';
   let docType = documentTypesData.find(v => v.documentTypeGroup === type);
   let docTypeValue = get(docType, 'value', null);
   if (docTypeValue) {
@@ -14,7 +14,7 @@ export const getColorByDocType = type => {
     color = filterType.color;
   }
 
-  return color ? color : 'rgb(120,91,91)';
+  return color;
 };
 
 export const sectionIds = {
