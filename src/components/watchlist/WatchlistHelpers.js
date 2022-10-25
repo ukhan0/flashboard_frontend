@@ -212,14 +212,20 @@ export const saveWatchlistSettings = setting => {
 };
 
 export const isActive = (page, selectedItem) => {
-  let status = page.disabled;
+  let disableButton = page.disabled;
   if (page.label === 'Comparison' && !selectedItem.oldId) {
-    status = true;
+    disableButton = true;
   }
-  if (page.label === 'Social Sentiment' && (selectedItem.flag === '0' || selectedItem.flag === undefined)) {
-    status = true;
+  const showSocialSentimentButton = {
+    2: true,
+    6: true,
+    13: true,
+    15: true
+  };
+  if (page.label === 'Social Sentiment' && !showSocialSentimentButton[selectedItem.flag]) {
+    disableButton = true;
   }
-  return status;
+  return disableButton;
 };
 
 export const indexedDB = () => {
