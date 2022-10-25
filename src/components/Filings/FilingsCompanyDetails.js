@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentCompanyDetails = props => {
+const FilingsCompanyDetails = props => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const classes = useStyles();
 
@@ -71,4 +71,4 @@ const SentimentCompanyDetails = props => {
     </Fragment>
   );
 };
-export default SentimentCompanyDetails;
+export default FilingsCompanyDetails;
