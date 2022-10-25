@@ -48,7 +48,7 @@ export const searchVersionTypes = [
   { label: 'Advanced', key: false }
 ];
 export const sentimentVersions = [
-  { label: 'See Original', key: 'original' }
+  { label: 'Show Original', key: 'original' }
 ];
 export const homePageTypesSelection = [
   { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 },
