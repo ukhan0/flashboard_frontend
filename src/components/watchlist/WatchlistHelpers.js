@@ -222,9 +222,6 @@ export const isActive = (page, selectedItem) => {
     13: true,
     15: true
   };
-  if (page.label === 'Social Sentiment') {
-    console.log(selectedItem.flag);
-  }
   if (page.label === 'Social Sentiment' && !showSocialSentimentButton[selectedItem.flag]) {
     disableButton = true;
   }
