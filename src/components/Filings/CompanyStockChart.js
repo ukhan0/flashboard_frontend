@@ -115,7 +115,7 @@ export default function FillingCompanyPriceOverlay(props) {
               click: handleEventClick
             },
             onSeries: 'dataseries',
-            width: 16,
+            width: null,
             style: {
               color: 'white',
               cursor: 'pointer'
