@@ -1021,6 +1021,7 @@ export default [
     value: [{ value: 'FMP-Transcript', color: 'rgb(244,91,91)' }],
     globalFlag: 0,
     documentTypeGroup: 'EC-FMP',
+    documentTypeFillingGraph: ['FMP-Transcript'],
     domestic: 1,
     canadian: 1,
     global: null,
@@ -1103,6 +1104,7 @@ export default [
 
     globalFlag: 1,
     documentTypeGroup: 'FIN-SUPP',
+    documentTypeFillingGraph: ['FIN SUPP'],
     domestic: 1,
     canadian: 1,
     global: null,
@@ -1120,6 +1122,7 @@ export default [
 
     globalFlag: 1,
     documentTypeGroup: 'OTH-FIN',
+    documentTypeFillingGraph: ['OTH FIN'],
     domestic: 1,
     canadian: 1,
     global: null,
@@ -1219,15 +1222,16 @@ export default [
   {
     label: 'ESG',
     value: [
-      { value: 'TCFD Report', color: 'rgb(120,91,105)' },
-      { value: 'Sustainability Report', color: 'rgb(120,91,105)' },
-      { value: 'Environmental Report', color: 'rgb(120,91,105)' },
-      { value: 'Corporate Governance Report', color: 'rgb(120,91,105)' },
-      { value: 'Corporate Social Responsibility Report', color: 'rgb(120,91,105)' }
+      { value: 'TCFD Report', color: 'rgb(139 92 246)' },
+      { value: 'Sustainability Report', color: 'rgb(139 92 246)' },
+      { value: 'Environmental Report', color: 'rgb(139 92 246)' },
+      { value: 'Corporate Governance Report', color: 'rgb(139 92 246)' },
+      { value: 'Corporate Social Responsibility Report', color: 'rgb(139 92 246)' }
     ],
 
     globalFlag: 1,
     documentTypeGroup: 'ESG',
+    documentTypeFillingGraph: ['Sustainability Report', 'Corporate Social Responsibility Report', 'Corporate Governance Report', 'Environmental Report', 'TCFD Report'],
     domestic: 1,
     canadian: 1,
     global: null,
@@ -1262,7 +1266,7 @@ export default [
   },
   {
     label: 'SR',
-    value: [{ value: 'SR', color: 'rgb(110,91,91' }],
+    value: [{ value: 'SR', color: 'rgb(110,91,91)'}],
 
     globalFlag: 1,
     documentTypeGroup: 'SR',

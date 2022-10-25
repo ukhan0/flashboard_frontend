@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highstock';
 import moment from 'moment';
 import { renameDocumentTypes } from '../topic/topicHelpers';
-import { getColorByDocType } from './FillingsHelper';
+import { getColorByDocType, getGroupType } from './FillingsHelper';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from 'reducers/Topic';
@@ -28,17 +28,18 @@ export default function FillingCompanyPriceOverlay(props) {
     const newData = props.chartData.map(v => {
       let date = new Date(v.document_date).getTime();
       let rename = renameDocumentTypes(v.document_type);
-      let title = rename;
-      if (rename === 'Earning Call') {
-        title = 'EC';
-      } else if (title === '8-K') {
-        title = '8K';
-      } else if (title === '10-K') {
-        title = 'K';
-      } else if (title === '10-Q') {
-        title = 'Q';
-      }
+      // let title = rename;
+      // if (rename === 'Earning Call') {
+      //   title = 'EC';
+      // } else if (title === '8-K') {
+      //   title = '8K';
+      // } else if (title === '10-K') {
+      //   title = 'K';
+      // } else if (title === '10-Q') {
+      //   title = 'Q';
+      // }
 
+      let title = getGroupType(v.document_type);
       return {
         x: date,
         ticker: v.ticker,
@@ -114,7 +115,7 @@ export default function FillingCompanyPriceOverlay(props) {
               click: handleEventClick
             },
             onSeries: 'dataseries',
-            width: 16,
+            width: null,
             style: {
               color: 'white',
               cursor: 'pointer'
