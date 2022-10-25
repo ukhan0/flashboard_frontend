@@ -16,6 +16,7 @@ import { Paper, Grid, Button } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 import { setSnackBarObj } from '../../reducers/Alerts';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 
 const useStyle = makeStyles({
@@ -145,7 +146,7 @@ export default function HomePage() {
             variant="contained"
             className={clsx([classes.button, classes.btn])}
           >
-            Customize Dashboard
+            <SettingsIcon/>
           </Button>
         </Grid>
       </Grid>
