@@ -71,7 +71,7 @@ const HomePageEarningWatcher = () => {
             </div>
             <div style={{ height: 'calc(100% - 60px)', overflow: 'hidden' }} id="sma_warning_widget">
             </div>
-            <div class="card-footer"></div>
+            <div className="card-footer"></div>
         </Card>
     );
 
