@@ -41,7 +41,7 @@ const HomePageWidgetDrawer = ({
 
   return (
     <div className={classes.mainContainer}>
-      <div class="">
+      <div>
         <span className={clsx([classes.pageHeading, 'font-weight-bold'])}>Dashboard Widgets</span>
       </div>
 

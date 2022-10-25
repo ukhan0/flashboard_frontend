@@ -12,7 +12,7 @@ import HomeGridLayout from './HomeGridLayout';
 import axios from 'axios';
 import config from '../../config/config';
 import HomePageWidgetDrawer from './HomePageWidgetDrawer';
-import { Paper, Grid, Button } from '@material-ui/core';
+import { Paper, Button } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 import { setSnackBarObj } from '../../reducers/Alerts';
@@ -40,7 +40,7 @@ const useStyle = makeStyles({
     zIndex: 1000
   },
   gridLayoutContainer: {
-    marginTop: 8
+    marginTop: 2
   },
   drawerContainer: {
     zIndex: 900,
