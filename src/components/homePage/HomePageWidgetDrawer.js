@@ -41,6 +41,10 @@ const HomePageWidgetDrawer = ({
 
   return (
     <div className={classes.mainContainer}>
+      <div>
+        <span className={clsx([classes.pageHeading, 'font-weight-bold'])}>Dashboard Widgets</span>
+      </div>
+
       <FormControl component="fieldset" className={classes.formControl} fullWidth>
         <FormGroup className={classes.formGroup}>
           <Grid container>

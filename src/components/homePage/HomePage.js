@@ -12,10 +12,11 @@ import HomeGridLayout from './HomeGridLayout';
 import axios from 'axios';
 import config from '../../config/config';
 import HomePageWidgetDrawer from './HomePageWidgetDrawer';
-import { Paper, Grid, Button } from '@material-ui/core';
+import { Paper, Button } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 import { setSnackBarObj } from '../../reducers/Alerts';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 
 const useStyle = makeStyles({
@@ -27,28 +28,24 @@ const useStyle = makeStyles({
     left: 0,
     right: 0
   },
-  pageHeader: {
-    padding: '8px 4px',
-    zIndex: 10000,
-    backgroundColor: '#ffffff',
-    top: '60px',
-    position: 'sticky'
-  },
-  pageHeading: {
-    fontSize: 14
-  },
   btn: {
-    padding: '4px 8px',
-    fontSize: '13px',
-    borderRadius: '0.3rem'
+    padding: 20,
+    borderRadius: '50%',
+    minWidth: 'unset',
+    width: 32,
+    height: 32,
+    position: 'fixed',
+    right: 0,
+    top: 64,
+    zIndex: 1000
   },
   gridLayoutContainer: {
-    marginTop: 8
+    marginTop: 2
   },
   drawerContainer: {
-    zIndex: 10000,
+    zIndex: 900,
     backgroundColor: '#ffffff',
-    top: '106px',
+    top: 64,
     position: 'sticky'
   }
 });
@@ -134,21 +131,13 @@ export default function HomePage() {
   return (
     <div className="home-page">
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
-
-      <Grid container justify="space-between" alignItems='center' className={classes.pageHeader}>
-        <Grid item>
-          <span className={clsx([classes.pageHeading, 'font-weight-bold'])}>Dashboard Widgets</span>
-        </Grid>
-        <Grid item>
-          <Button onClick={handleDrawer}
-            color="primary"
-            variant="contained"
-            className={clsx([classes.button, classes.btn])}
-          >
-            Customize Dashboard
-          </Button>
-        </Grid>
-      </Grid>
+      <Button onClick={handleDrawer}
+        color="primary"
+        variant="contained"
+        className={clsx([classes.button, classes.btn])}
+      >
+        <SettingsIcon />
+      </Button>
 
       <Slide direction="down" in={isHomePageDrawerOpen} mountOnEnter unmountOnExit>
         <Paper className={classes.drawerContainer} id='widget-drawer-container'>
