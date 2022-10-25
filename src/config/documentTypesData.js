@@ -1125,7 +1125,7 @@ export default [
 
     globalFlag: 1,
     documentTypeGroup: 'OTH-FIN',
-    documentTypeFillingGraph: ['OTH FIN'],
+    documentTypeFillingGraph: ['OTH FIN', 'Other Financials'],
     domestic: 1,
     canadian: 1,
     global: null,
