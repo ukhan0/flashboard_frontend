@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import documentTypesData from '../../config/documentTypesData';
 export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
   let rawData = completeWatchListData;
@@ -5,8 +6,15 @@ export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
   return company;
 };
 export const getColorByDocType = type => {
+  let color;
   let docType = documentTypesData.find(v => v.documentTypeGroup === type);
-  return docType ? docType['color'] : 'rgb(120,91,91)';
+  let docTypeValue = get(docType, 'value', null);
+  if (docTypeValue) {
+    const filterType = docTypeValue.find((item) => item.value === type)
+    color = filterType.color;
+  }
+
+  return color ? color : 'rgb(120,91,91)';
 };
 
 export const sectionIds = {
