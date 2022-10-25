@@ -19,7 +19,7 @@ export const getColorByDocType = type => {
   let docTypeValue = get(docType, 'value', null);
   if (docTypeValue) {
     const filterType = docTypeValue.find((item) => item.value === type)
-    color = filterType.color;
+    color = filterType?.color;
   }
 
   return color ? color : 'rgb(120,91,91';
