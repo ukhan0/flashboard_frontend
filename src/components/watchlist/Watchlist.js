@@ -4,7 +4,14 @@ import { Grid, Button, Box } from '@material-ui/core';
 import axios from 'axios';
 import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';
-import { formatData, getColumnState, getFilteringState, isBigAgGrid, setTickerActiveStatus } from './WatchlistHelpers';
+import {
+  formatData,
+  getColumnState,
+  getFilteringState,
+  isBigAgGrid,
+  setTickerActiveStatus,
+  isItSocialCompany
+} from './WatchlistHelpers';
 import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
@@ -440,7 +447,7 @@ const Watchlist = () => {
   const onColumnClick = (rowData, columnId) => {
     dispatch(setIsFromThemex(false));
     rowData.documentType = selectedFileType;
-    if (columnId === 'tweetsFlag' && parseInt(rowData.flag) !== 0) {
+    if (columnId === 'tweetsFlag' && isItSocialCompany(rowData.flag)) {
       dispatch(setSelectedWatchlist(rowData));
       history.push('/socialSentiment');
     }

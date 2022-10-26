@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get, forEach } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
@@ -94,14 +94,14 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     completeCompaniesData,
     completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
-  const gridApi = React.useRef(null);
-  const gridRef = React.useRef();
-  const [isFilterData, setIsFilterData] = React.useState(false);
-  const [isClear, setIsClear] = React.useState(false);
+  const gridApi = useRef(null);
+  const gridRef = useRef();
+  const [isFilterData, setIsFilterData] = useState(false);
+  const [isClear, setIsClear] = useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
-  let isTicker = React.useRef(false);
+  let isTicker = useRef(false);
   const [columnDefination, setColumnDefination] = useState([]);
-  const [rowCount, setRowCount] = React.useState(0);
+  const [rowCount, setRowCount] = useState(0);
 
   useEffect(() => {
     isBigAgGrid(selectedFileType)
@@ -128,7 +128,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     storeColumnsStateComman(params);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!gridApi.current) {
       return;
     }
@@ -300,7 +300,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isClear && isTicker.current) {
       dispatch(setSelectedTickerSymbol(null));
       setIsClear(false);
@@ -308,7 +308,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     }
   }, [isClear, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!gridApi.current) {
       return;
     }

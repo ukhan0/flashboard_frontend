@@ -211,18 +211,21 @@ export const saveWatchlistSettings = setting => {
   localStorage.setItem('watchlistSetting', JSON.stringify(setting));
 };
 
+export const isItSocialCompany = flag => {
+  const socialCompanyFlags = ['2', '6', '13', '15'];
+  if (flag) {
+    return socialCompanyFlags.includes(flag);
+  } else {
+    return false;
+  }
+};
+
 export const isActive = (page, selectedItem) => {
   let disableButton = page.disabled;
   if (page.label === 'Comparison' && !selectedItem.oldId) {
     disableButton = true;
   }
-  const showSocialSentimentButton = {
-    2: true,
-    6: true,
-    13: true,
-    15: true
-  };
-  if (page.label === 'Social Sentiment' && !showSocialSentimentButton[selectedItem.flag]) {
+  if (page.label === 'Social Sentiment' && !isItSocialCompany(selectedItem.flag)) {
     disableButton = true;
   }
   return disableButton;
