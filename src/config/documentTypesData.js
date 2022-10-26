@@ -1103,7 +1103,10 @@ export default [
   },
   {
     label: 'FIN-SUPP',
-    value: [{ value: 'FIN-SUPP', color: 'rgb(50,91,91)' }],
+    value: [
+      { value: 'FIN-SUPP', color: 'rgb(50,91,91)' },
+      { value: 'FIN SUPP', color: 'rgb(50,91,91)' },
+    ],
 
     globalFlag: 1,
     documentTypeGroup: 'FIN-SUPP',
@@ -1159,7 +1162,7 @@ export default [
   {
     label: '6-K',
     value: [
-      { value: '6-k', color: 'rgb(210,91,148)' },
+      { value: '6-K', color: 'rgb(210,91,148)' },
       { value: '6-K/A', color: 'rgb(210,91,148)' }
     ],
     globalFlag: 0,

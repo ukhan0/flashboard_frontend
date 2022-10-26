@@ -6,11 +6,12 @@ export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
   return company;
 };
 export const getColorByDocType = type => {
+  console.log('type' , type);
   let color;
   let docType = documentTypesData.find(v => v.documentTypeGroup === type);
 
   // if not found by documentTypeGroup
-  if (docType === undefined) {
+  if (!docType) {
     docType = documentTypesData.find(v => {
       return isArray(v.documentTypeFillingGraph) && v.documentTypeFillingGraph.includes(type)
     });
@@ -52,7 +53,7 @@ export const getGroupType = type => {
   let docType = documentTypesData.find(v => v.documentTypeGroup === type);
 
   // if not found by documentTypeGroup
-  if (docType === undefined) {
+  if (!docType) {
     docType = documentTypesData.find(v => {
       return isArray(v.documentTypeFillingGraph) && v.documentTypeFillingGraph.includes(type)
     });
