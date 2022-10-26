@@ -74,7 +74,7 @@ export default function HomePageSmaLime1(props) {
       width: '100%',
       height: '100%',
       title: 'Real Time Social Sentiment Market Snapshot',
-      apikey: 'eb521eaa75f8e0b28b88c81a6e272d9ee03f75ee',
+      apikey: '907cdf5f789e613d36f0b4dda38930fb1dc590bf',
       customCSS:
         'h1,h2{display:none;} .button-group{display:none;} body{background:#fff;}.Table-holder{margin:0;}.new-btn{border-radius:0;border:1px solid #fff;color:#fff;padding:5px;font-size:12px;height:25px}.button-group{padding:10px 0} .newTable thead>tr {    color: #000000;    background-color: #f0f0f0;    text-align: center;}  .newTable .tbody-row {    background-color: #ffffff;    height: 40px;   margin-bottom: 1px;}.newTable tr{color:#ffffff;}.tbody-row td {    color: #535353;} .Table-holder{padding: 0px;!important} .newTable{width:100%!important;} .newTable .tbody-row:hover{background: #e7f4fe;} .newTable {background:#e7f4fe;} ',
       ontology: 'ticker',
