@@ -1238,11 +1238,11 @@ export default [
   {
     label: 'ESG',
     value: [
-      { value: 'TCFD Report', color: 'rgb(139 92 246)' },
-      { value: 'Sustainability Report', color: 'rgb(139 92 246)' },
-      { value: 'Environmental Report', color: 'rgb(139 92 246)' },
-      { value: 'Corporate Governance Report', color: 'rgb(139 92 246)' },
-      { value: 'Corporate Social Responsibility Report', color: 'rgb(139 92 246)' }
+      { value: 'TCFD Report', color: 'rgb(139,92,246)' },
+      { value: 'Sustainability Report', color: 'rgb(139,92,246)' },
+      { value: 'Environmental Report', color: 'rgb(139,92,246)' },
+      { value: 'Corporate Governance Report', color: 'rgb(139,92,246)' },
+      { value: 'Corporate Social Responsibility Report', color: 'rgb(139,92,246)' }
     ],
 
     globalFlag: 1,
