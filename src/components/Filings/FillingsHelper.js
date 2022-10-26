@@ -15,7 +15,7 @@ export const getColorByDocType = type => {
       return isArray(v.documentTypeFillingGraph) && v.documentTypeFillingGraph.includes(type)
     });
   }
-  color = docType?.color ? docType.color : 'rgb(120,91,91';
+  color = docType?.color ? docType.color : 'rgb(120,91,91)';
 
   return color;
 };
