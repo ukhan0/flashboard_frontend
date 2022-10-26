@@ -212,8 +212,9 @@ export const saveWatchlistSettings = setting => {
 };
 
 export const isItSocialCompany = flag => {
-  const socialCompanyFlags = ['2', '6', '13', '15'];
+  const socialCompanyFlags = [2, 6, 13, 15];
   if (flag) {
+    flag = parseInt(flag);
     return socialCompanyFlags.includes(flag);
   } else {
     return false;
