@@ -29,7 +29,7 @@ const useStyle = makeStyles({
     right: 0
   },
   btn: {
-    padding: 20,
+    padding: 24,
     borderRadius: '50%',
     minWidth: 'unset',
     width: 32,
@@ -37,7 +37,9 @@ const useStyle = makeStyles({
     position: 'fixed',
     right: 0,
     top: 64,
-    zIndex: 1000
+    zIndex: 1000,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0
   },
   gridLayoutContainer: {
     marginTop: 2
