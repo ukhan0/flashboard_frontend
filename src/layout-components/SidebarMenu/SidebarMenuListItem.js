@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { ListItem, Button, Collapse } from '@material-ui/core';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import { useSelector } from 'react-redux';
 
 const CustomRouterLink = forwardRef(function CustomLink(props, ref) {
   return (
@@ -28,7 +27,6 @@ const SidebarMenuListItem = props => {
     ...rest
   } = props;
   const [open, setOpen] = useState(openProp);
-  const { selectedFileType } = useSelector(state => state.Watchlist);
   const handleToggle = () => {
     setOpen(open => !open);
   };
@@ -48,10 +46,6 @@ const SidebarMenuListItem = props => {
       return 'Overview';
     } else if (title === 'Sentiment') {
       return 'View Document';
-    } else if (title === 'Comparison' && selectedFileType === '10-K') {
-      return 'Compare (10Ks)';
-    } else if (title === 'Comparison' && selectedFileType === '10-Q') {
-      return 'Compare (10Qs)';
     } else {
       return title;
     }
