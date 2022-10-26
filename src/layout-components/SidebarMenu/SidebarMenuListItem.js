@@ -2,10 +2,9 @@ import React, { useState, forwardRef } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
 import { ListItem, Button, Collapse } from '@material-ui/core';
-
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { useSelector } from 'react-redux';
 
 const CustomRouterLink = forwardRef(function CustomLink(props, ref) {
   return (
@@ -28,9 +27,8 @@ const SidebarMenuListItem = props => {
     disabled,
     ...rest
   } = props;
-
   const [open, setOpen] = useState(openProp);
-
+  const { selectedFileType } = useSelector(state => state.Watchlist);
   const handleToggle = () => {
     setOpen(open => !open);
   };
@@ -45,12 +43,23 @@ const SidebarMenuListItem = props => {
     paddingLeft
   };
 
+  const getCustomizedTitle = title => {
+    if (title === 'Filings') {
+      return 'Overview';
+    } else if (title === 'Sentiment') {
+      return 'View Document';
+    } else if (title === 'Comparison' && selectedFileType === '10-K') {
+      return 'Compare (10Ks)';
+    } else if (title === 'Comparison' && selectedFileType === '10-Q') {
+      return 'Compare (10Qs)';
+    } else {
+      return title;
+    }
+  };
+
   if (children) {
     return (
-      <ListItem
-        {...rest}
-        className={clsx('app-sidebar-item', className)}
-        disableGutters>
+      <ListItem {...rest} className={clsx('app-sidebar-item', className)} disableGutters>
         <Button
           color="primary"
           className={clsx('app-sidebar-button', { active: open })}
@@ -61,10 +70,7 @@ const SidebarMenuListItem = props => {
           {open ? (
             <ExpandLessIcon className="sidebar-expand-icon" color="inherit" />
           ) : (
-            <ExpandLessIcon
-              className="sidebar-expand-icon sidebar-expand-icon-rotate"
-              color="inherit"
-            />
+            <ExpandLessIcon className="sidebar-expand-icon sidebar-expand-icon-rotate" color="inherit" />
           )}
         </Button>
         <Collapse in={open}>{children}</Collapse>
@@ -72,10 +78,7 @@ const SidebarMenuListItem = props => {
     );
   } else {
     return (
-      <ListItem
-        {...rest}
-        className={clsx('app-sidebar-item', className)}
-        disableGutters>
+      <ListItem {...rest} className={clsx('app-sidebar-item', className)} disableGutters>
         <Button
           activeClassName="active-item"
           color="primary"
@@ -88,7 +91,7 @@ const SidebarMenuListItem = props => {
           style={style}
           to={href}>
           {Icon && <Icon className="app-sidebar-icon" />}
-          {title}
+          {getCustomizedTitle(title)}
           {Label && (
             <span className="menu-item-label">
               <Label />

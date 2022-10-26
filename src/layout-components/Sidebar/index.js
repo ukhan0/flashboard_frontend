@@ -1,21 +1,15 @@
 import React, { Fragment } from 'react';
-
 import clsx from 'clsx';
-
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Hidden, Drawer, Paper } from '@material-ui/core';
-
 import { connect } from 'react-redux';
-
 import SidebarHeader from '../../layout-components/SidebarHeader';
 import SidebarUserbox from '../../layout-components/SidebarUserbox';
 import SidebarMenu from '../../layout-components/SidebarMenu';
 import { setIsFromSideBar } from '../../reducers/Topic';
 import { useDispatch } from 'react-redux';
-
 import navItems from './navItems';
 import { hoverTime } from '../../config/appConfig';
-
 import {
   setSidebarToggleMobile,
   setSidebarHover,
@@ -25,21 +19,18 @@ import {
 } from '../../reducers/ThemeOptions';
 import './SidebarMenu.css';
 
-const Sidebar = props => {
+const Sidebar = ({
+  setSidebarToggleMobile,
+  sidebarToggleMobile,
+  sidebarFixed,
+  sidebarHover,
+  setSidebarHover,
+  sidebarToggle,
+  sidebarUserbox,
+  sidebarShadow,
+  selectedItem
+}) => {
   const dispatch = useDispatch();
-  const {
-    setSidebarToggleMobile,
-    sidebarToggleMobile,
-    sidebarFixed,
-
-    sidebarHover,
-    setSidebarHover,
-    sidebarToggle,
-    sidebarUserbox,
-    sidebarShadow,
-
-    selectedItem
-  } = props;
   const toggleTimer = React.useRef(null);
   const toggleHoverOn = event => {
     let { currentTarget } = event;
