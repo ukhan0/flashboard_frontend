@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { isArray } from 'lodash';
 import documentTypesData from '../../config/documentTypesData';
 export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
   let rawData = completeWatchListData;
@@ -6,13 +6,16 @@ export const getCompanyByTickerUniverse = (ticker, completeWatchListData) => {
   return company;
 };
 export const getColorByDocType = type => {
-  let color = 'rgb(120,91,91';
+  let color;
   let docType = documentTypesData.find(v => v.documentTypeGroup === type);
-  let docTypeValue = get(docType, 'value', null);
-  if (docTypeValue) {
-    const filterType = docTypeValue.find((item) => item.value === type)
-    color = filterType.color;
+
+  // if not found by documentTypeGroup
+  if (!docType) {
+    docType = documentTypesData.find(v => {
+      return isArray(v.documentTypeFillingGraph) && v.documentTypeFillingGraph.includes(type)
+    });
   }
+  color = docType?.color ? docType.color : 'rgb(120,91,91)';
 
   return color;
 };
@@ -38,3 +41,17 @@ export const getColumnState = () => {
   }
   return columnState;
 };
+
+
+export const getGroupType = type => {
+  let docType = documentTypesData.find(v => v.documentTypeGroup === type);
+
+  // if not found by documentTypeGroup
+  if (!docType) {
+    docType = documentTypesData.find(v => {
+      return isArray(v.documentTypeFillingGraph) && v.documentTypeFillingGraph.includes(type)
+    });
+  }
+
+  return docType?.documentTypeGroup;
+}
