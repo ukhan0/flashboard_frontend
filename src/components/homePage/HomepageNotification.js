@@ -97,7 +97,7 @@ export default function HomepageNotification() {
           {earningsCallType.map((type, i) => (
             <Button
               size="small"
-              key={`diff_${i}`}
+              key={`heatmap_button_${i}`}
               onClick={() => handleUpType(type.key)}
               variant={type.key === upComingCallType ? 'contained' : 'outlined'}>
               {type.label}
