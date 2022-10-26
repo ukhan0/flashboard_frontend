@@ -38,7 +38,7 @@ const HomePageAccountStock = () => {
             container: 'sma_account_stock_widget',
             width: '100%',
             height: '100%',
-            apikey: 'a43ba9d17b54090fc5fd179ed7c427838ba0817f',
+            apikey: '907cdf5f789e613d36f0b4dda38930fb1dc590bf',
             dates: 'datetime+eq+recent',
             frequency: '1',
             sort: 'positive+desc',
