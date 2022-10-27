@@ -14,7 +14,7 @@ const getDefaultState = () => {
   const userStr = localStorage.getItem(`user`);
   return {
     user: userStr ? JSON.parse(userStr) : null,
-    isNewEmailNotification: true,
+    isNewEmailNotification: true
   };
 };
 
