@@ -131,7 +131,7 @@ const HeaderMenu = props => {
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/guideline' ? 'btn-active' : '')}>
           Help
         </Button>
-        {openHelp &&
+        {openHelp ?
           <Popover
             id={helpId}
             open={true}
@@ -152,6 +152,7 @@ const HeaderMenu = props => {
               <Help onClose={handleCloseHelp} />
             </div>
           </Popover>
+          : null
         }
       </div>
     </Fragment>
