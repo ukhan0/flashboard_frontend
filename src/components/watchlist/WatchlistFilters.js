@@ -60,13 +60,13 @@ const WatchlistFilters = props => {
       props.clearFilterHandler();
       dispatch(setSelectedWatchlist(null));
 
-      if (selectedFileType !== '10-K' && key === 'domestic') {
-        dispatch(setWatchlistFileType('10-K'));
-      }
-      if (key === 'global') {
-        dispatch(setWatchlistFileType('10-K'));
-      }
-
+      // if (selectedFileType !== '10-K' && key === 'domestic') {
+      //   dispatch(setWatchlistFileType('10-K'));
+      // }
+      // if (key === 'global') {
+      //   dispatch(setWatchlistFileType('10-K'));
+      // }
+      dispatch(setWatchlistFileType('10-K'));
       dispatch(setWatchlistType(key));
       if (cancelExistingDocumentTypeCalls) {
         cancelExistingDocumentTypeCalls.cancel();

@@ -261,7 +261,7 @@ export default function reducer(
         ...state,
         selectedType: action.watchlistType,
         selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric,
-        selectedFileType: action.watchlistType === 'global' ? '10-K' : state.selectedFileType
+        // selectedFileType: action.watchlistType === 'global' ? '10-K' : state.selectedFileType
       };
     case SET_UNIVERSE:
       return { ...state, selectedUniverse: action.universe };
