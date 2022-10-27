@@ -26,7 +26,7 @@
     "framer-motion": "1.8.4",
     "highcharts": "^9.0.1",
     "highcharts-custom-events": "^3.0.10",
-    "highcharts-react-official": "^3.0.0",
+    "highcharts-react-official": "3.0.0",
     "highcharts-tooltip-delay": "^1.4.1",
     "localbase": "^0.7.5",
     "lodash": "^4.17.20",
