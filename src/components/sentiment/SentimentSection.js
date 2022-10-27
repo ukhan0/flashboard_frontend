@@ -58,6 +58,9 @@ const useStyles = makeStyles(theme => ({
       paddingRight: 2,
       borderRadius: 4
     }
+  },
+  mainContainer: {
+    backgroundColor: 'white'
   }
 }));
 
@@ -146,7 +149,7 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
 
   let signatureIterator = 1;
   return (
-    <div>
+    <div className={clsx({[classes.mainContainer]: !isLoading})}>
       {isLoading ? (
         <div className={classes.loaderSection}>
           <BeatLoader color={'var(--primary)'} size={15} />
