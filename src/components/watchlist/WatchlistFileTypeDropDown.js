@@ -1,27 +1,17 @@
-import React, { useState, useEffect, useTransition, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField, Popper } from '@material-ui/core';
+import { FormControl, TextField, Popper, ClickAwayListener } from '@material-ui/core';
 import useStyles from './watchlistStyles';
-import { debounce, get } from 'lodash';
 import { setWatchlistFileType } from '../../reducers/Watchlist';
 import { FileTypes } from '../../config/watchlistFileTyes';
 
-const createOptionLabel = option => {
-  return option.labelToShow;
-};
-
-const WatchlistFileTypeDropDown = props => {
+const WatchlistFileTypeDropDown = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [isPending, startTransition] = useTransition();
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
   const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(state => state.Watchlist);
-
-  const CustomPopper = props => {
-    return <Popper {...props} className={classes.root} placement="bottom" />;
-  };
 
   const getFileTypes = useCallback(() => {
     if (selectedType === 'global') {
@@ -34,27 +24,11 @@ const WatchlistFileTypeDropDown = props => {
       return [];
     }
   }, [selectedType]);
-  const handleSearchTextChange = debounce(async text => {
-    // free text search for Watchlist table
-    if (!text || text.length < 1) {
-      setAvailableSymbols(getFileTypes());
-      setData(getFileTypes());
-      return;
-    }
-    const searchabletext = text.toLowerCase();
-    const filteredWatchlist = data.filter(c =>
-      get(c, 'label', '')
-        .toLowerCase()
-        .includes(searchabletext)
-    );
-    startTransition(() => {
-      setAvailableSymbols(filteredWatchlist);
-    });
-  }, 500);
+
   useEffect(() => {
     setAvailableSymbols(getFileTypes());
-    setData(getFileTypes());
-  }, [selectedType, getFileTypes]);
+  }, [getFileTypes]);
+
   const selectionChanged = (e, newSelectedSymbol) => {
     if (newSelectedSymbol) {
       dispatch(setWatchlistFileType(newSelectedSymbol.documentTypeGroup));
@@ -63,6 +37,7 @@ const WatchlistFileTypeDropDown = props => {
       }
     }
   };
+
   const getSelectedFileTypeLabel = selectedFileType => {
     let type = getFileTypes().find(
       v => v.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
@@ -73,38 +48,44 @@ const WatchlistFileTypeDropDown = props => {
     return type;
   };
 
+  const closeDropdown = () => {
+    setOpen(false);
+  };
+
   return (
     <FormControl style={{ width: '200px' }}>
-      <Autocomplete
-        loading={isPending}
-        style={{ backgroundColor: 'white', borderRadius: '12px' }}
-        loadingText={'Loading...'}
-        className={classes.searchField}
-        onChange={selectionChanged}
-        options={availableSymbols}
-        value={getSelectedFileTypeLabel(selectedFileType)}
-        // closeIcon={<CloseIcon onClick={() => {}} fontSize="small" />}
-        closeIcon={false}
-        getOptionLabel={option => createOptionLabel(option)}
-        PopperComponent={CustomPopper}
-        renderInput={params => (
-          <TextField
-            onBlur={() => {}}
-            {...params}
-            variant="outlined"
-            placeholder="Type Document Name or  Symbol"
-            onChange={e => {
-              handleSearchTextChange(e.target.value);
-            }}
-            fullWidth
-            size="small"
-            inputProps={{
-              ...params.inputProps,
-              autoComplete: 'new-password'
-            }}
-          />
-        )}
-      />
+      <ClickAwayListener onClickAway={closeDropdown}>
+        <Autocomplete
+          open={open}
+          style={{ backgroundColor: 'white', borderRadius: '12px' }}
+          className={classes.searchField}
+          onChange={selectionChanged}
+          options={availableSymbols}
+          value={getSelectedFileTypeLabel(selectedFileType)}
+          closeIcon={false}
+          getOptionLabel={option => option.labelToShow}
+          PopperComponent={props => (
+            <Popper {...props} className={classes.root} placement="bottom" onClick={closeDropdown} />
+          )}
+          renderInput={params => (
+            <TextField
+              onClick={() => {
+                setOpen(prevState => !prevState);
+              }}
+              {...params}
+              variant="outlined"
+              placeholder="Type Document Name or  Symbol"
+              fullWidth
+              size="small"
+              inputProps={{
+                ...params.inputProps,
+                autoComplete: 'new-password',
+                readOnly: true
+              }}
+            />
+          )}
+        />
+      </ClickAwayListener>
     </FormControl>
   );
 };
