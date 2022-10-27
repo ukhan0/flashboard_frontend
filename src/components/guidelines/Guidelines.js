@@ -4,11 +4,13 @@ import { videosData } from './videosData';
 import { useSelector } from 'react-redux';
 
 const Guidelines = () => {
-  const { selectedVideo } = useSelector(state => state.User);
+  const { selectedVideo } = useSelector(state => state.Guidelines);
   useEffect(() => {
-    const element = document.getElementById(selectedVideo);
-    if (element) {
-      element.scrollIntoView();
+    if (selectedVideo) {
+      const element = document.getElementById(selectedVideo);
+      if (element) {
+        element.scrollIntoView();
+      };
     };
   }, [selectedVideo]);
   return (

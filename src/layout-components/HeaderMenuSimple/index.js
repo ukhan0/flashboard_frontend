@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import { Button, Popover } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -24,7 +24,7 @@ const HeaderMenu = props => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorHelp, setAnchorHelp] = useState(null);
   const dispatch = useDispatch();
-  const hoverTimer = React.useRef(null);
+  const hoverTimer = useRef(null);
 
   const handleMouseEnter = event => {
     const { currentTarget } = event;
@@ -134,7 +134,7 @@ const HeaderMenu = props => {
         {openHelp &&
           <Popover
             id={helpId}
-            open={openHelp}
+            open={true}
             anchorEl={anchorHelp}
             onClose={handleCloseHelp}
             anchorOrigin={{
