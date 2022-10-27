@@ -6,6 +6,7 @@ import Sentiment from './Sentiment';
 import Filings from './Filings';
 import HomePage from './HomePage';
 import Alerts from './Alerts';
+import Guidelines from './Guidelines';
 
 export default {
   ThemeOptions,
@@ -15,5 +16,6 @@ export default {
   Sentiment,
   Filings,
   HomePage,
-  Alerts
+  Alerts,
+  Guidelines,
 };
