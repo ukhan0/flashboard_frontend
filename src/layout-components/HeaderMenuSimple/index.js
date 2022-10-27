@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Button, Popover } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -21,8 +21,8 @@ const HeaderMenu = props => {
   const history = useHistory();
   const { setSidebarToggle } = props;
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [anchorHelp, setAnchorHelp] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorHelp, setAnchorHelp] = useState(null);
   const dispatch = useDispatch();
   const hoverTimer = React.useRef(null);
 
@@ -131,26 +131,28 @@ const HeaderMenu = props => {
           className={clsx('btn-inverse font-size-xs mx-2', location.pathname === '/guideline' ? 'btn-active' : '')}>
           Help
         </Button>
-        <Popover
-          id={helpId}
-          open={openHelp}
-          anchorEl={anchorHelp}
-          onClose={handleCloseHelp}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
-          PaperProps={{
-            style: { width: 'auto' }
-          }}>
-          <div className={classes.paper}>
-            <Help onClose={handleCloseHelp} />
-          </div>
-        </Popover>
+        {openHelp &&
+          <Popover
+            id={helpId}
+            open={openHelp}
+            anchorEl={anchorHelp}
+            onClose={handleCloseHelp}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left'
+            }}
+            PaperProps={{
+              style: { width: 'auto' }
+            }}>
+            <div className={classes.paper}>
+              <Help onClose={handleCloseHelp} />
+            </div>
+          </Popover>
+        }
       </div>
     </Fragment>
   );

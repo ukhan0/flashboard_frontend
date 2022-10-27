@@ -8,8 +8,8 @@ const GuidelineVideo = props => {
         <Container className="py-3">
           <div className="card shadow-xxl mb-4">
             <div className="p-3 p-xl-5">
-              <div class="d-flex card-header" id={props.id}>
-                <div class="card-header--title font-size-md font-weight-bold py-2">{props.title}</div>
+              <div className="d-flex card-header" id={props.id}>
+                <div className="card-header--title font-size-md font-weight-bold py-2">{props.title}</div>
               </div>
 
               <div className="d-flex flex-column align-items-center">

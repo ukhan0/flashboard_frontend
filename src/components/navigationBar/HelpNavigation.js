@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { useHistory } from 'react-router-dom';
 import { Box, Typography, Grid } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { setSelectedVideo } from '../../reducers/User';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -21,16 +23,13 @@ TabPanel.propTypes = {
 };
 
 export default function HelpNavigation(props) {
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const handleSelection = path => {
     props.onClose();
-    setTimeout(() => {
-      history.push('/guideline');
-    }, 100);
-    setTimeout(() => {
-      document.getElementById(path).scrollIntoView();
-    }, 150);
+    history.push('/guideline');
+    dispatch(setSelectedVideo(path));
   };
   return (
     <Fragment>
