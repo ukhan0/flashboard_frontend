@@ -264,6 +264,13 @@ export const FileTypes = {
   ],
   usFileTypes: [
     {
+      label: 'all',
+      labelToShow: 'All Types',
+      value: [],
+      documentTypeGroup: 'all',
+      index: 'fillings_sec*'
+    },
+    {
       label: '10-K',
       labelToShow: 'SEC 10-K',
       value: [
@@ -503,6 +510,13 @@ export const FileTypes = {
   ],
   canadaFileTypes: [
     {
+      label: 'all',
+      labelToShow: 'All Types',
+      value: [],
+      documentTypeGroup: 'all',
+      index: 'fillings_sedar*'
+    },
+    {
       label: 'AR',
       labelToShow: 'Sedar - AR',
       value: [
@@ -705,6 +719,13 @@ export const FileTypes = {
     }
   ],
   globalFileTypes: [
+    {
+      label: 'all',
+      labelToShow: 'All Types',
+      value: [],
+      documentTypeGroup: 'all',
+      index: 'fillings_*'
+    },
     {
       label: '10-K',
       labelToShow: '10-K',

@@ -151,18 +151,15 @@ const Watchlist = () => {
           e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
         );
       }
+      let index = 'fillings_*';
+      if (selectedFileType === 'all') {
+        index = fileTypes.index;
+      }
       const countryCode = get(fileTypes, 'countryCode', null);
       const sourceName = get(fileTypes, 'sourceName', null);
       fileTypes = get(fileTypes, 'value', []).map(e => e.value);
       let data = await dispatch(
-        getWatchlistTable2Data(
-          'fillings_*',
-          selectedUniverse,
-          fileTypes.join(','),
-          selectedType,
-          countryCode,
-          sourceName
-        )
+        getWatchlistTable2Data(index, selectedUniverse, fileTypes.join(','), selectedType, countryCode, sourceName)
       );
       setLoading(false);
       setGridData2(data);
