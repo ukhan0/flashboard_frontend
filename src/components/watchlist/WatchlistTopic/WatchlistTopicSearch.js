@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect , useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, Chip, TextField } from '@material-ui/core';
 import useStyles from './WatchlistTopicStyles';
@@ -16,7 +16,10 @@ const WatchlistTopicSearch = props => {
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const { completeCompaniesData } = useSelector(state => state.Watchlist);
 
-  const handleSearchTextChange = debounce(async text => {
+
+  const handleSearchTextChange = debounce(async (text, e) => {
+
+
     const searchabletext = text.toLowerCase();
     const filteredWatchlist = completeCompaniesData
       .filter(
@@ -33,15 +36,25 @@ const WatchlistTopicSearch = props => {
   }, 1000);
 
   const selectionChanged = (e, newSelectedSymbols) => {
+    setOpen(true);
+    console.log('selectionChanged')
+    console.log(e.ctrlKey)
+    if (e.ctrlKey) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
     setWatchlistSelectedSymbols(newSelectedSymbols);
   };
 
   return (
     <FormControl className={classes.formControl}>
       <Autocomplete
+        disableClearable={true}
         multiple
         id="watchlist-topic-search"
         loading={true}
+        disableCloseOnSelect
         onChange={selectionChanged}
         options={availableSymbols}
         getOptionLabel={option => createOptionLabel(option)}
@@ -55,7 +68,7 @@ const WatchlistTopicSearch = props => {
             label="Search"
             variant="outlined"
             placeholder="Type Company Name or Symbol"
-            onChange={e => handleSearchTextChange(e.target.value)}
+            onChange={e => handleSearchTextChange(e.target.value, e)}
             fullWidth
           />
         )}

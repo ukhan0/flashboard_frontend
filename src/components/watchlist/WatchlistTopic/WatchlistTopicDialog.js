@@ -40,7 +40,8 @@ const WatchlistTopicDialog = props => {
   }
 
   return (
-    <Dialog open={props.open} onClose={handleClose} keepMounted={false}>
+    <Dialog open={props.open} onClose={handleClose} keepMounted={false}
+      disableEscapeKeyDown={true} disableBackdropClick={true}>
       <DialogTitle>{'Add to Watchlist'}</DialogTitle>
       <DialogContent>
         <WatchlistTopicTabs />
