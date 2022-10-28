@@ -332,7 +332,7 @@ export default function HomePageTable() {
               documentType: get(d, 'document_type', null),
               sentiment: round(get(d, 'sentiment', null), 2),
               // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
-              docDate: get(d, 'document_date', null),
+              // docDate: get(d, 'document_date', null),
               wordCount: round(get(d, 'word_count', null), 2),
               isTickerActive: false
               // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)

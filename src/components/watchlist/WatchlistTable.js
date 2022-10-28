@@ -26,12 +26,7 @@ import {
   storeFilteringState,
   getFilteringState
 } from './WatchlistHelpers';
-import {
-  setIsFilterActive,
-  setSelectedTickerSymbol,
-  setIsTickerSelected,
-  setSelectedWatchlist
-} from '../../reducers/Watchlist';
+import { setIsFilterActive, setIsTickerSelected, setSelectedWatchlist } from '../../reducers/Watchlist';
 import {
   watchlistTableColDefs,
   watchlistTableColDefs1,
@@ -302,7 +297,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
 
   useEffect(() => {
     if (isClear && isTicker.current) {
-      dispatch(setSelectedTickerSymbol(null));
       setIsClear(false);
       dispatch(setIsTickerSelected(false));
     }

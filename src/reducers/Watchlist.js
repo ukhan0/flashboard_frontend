@@ -12,7 +12,6 @@ export const SET_COMPELTE_DATALOADED_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_F
 export const SET_COMPELTE_DATALOADED_GLOBAL_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_GLOBAL_FLAG';
 export const SET_COUNT = 'WATCHLIST/SET_COUNT';
 export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
-export const SET_SELECTED_TICKER_SYMBOL = 'WATCHLIST/SET_SELECTED_TICKER_SYMBOL';
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
 export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
@@ -103,10 +102,6 @@ export const setRecentDataLoadedFlag = recentDataLoaded => ({
 });
 export const resetWatchlist = () => ({
   type: RESET_WATCHLIST
-});
-export const setSelectedTickerSymbol = selectedTickerSymbol => ({
-  type: SET_SELECTED_TICKER_SYMBOL,
-  selectedTickerSymbol
 });
 
 export const setIsOneHourComplete = isOneHourComplete => ({
@@ -215,7 +210,6 @@ const getDefaultState = () => {
     selectedItem: null,
     recentDataLoaded: false,
     overwriteCheckBox: false,
-    selectedTickerSymbol: null,
     isOneHourComplete: false,
     isColorEnable: user ? (user.enable_watchlist_color ? user.enable_watchlist_color : false) : false,
     isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
@@ -234,7 +228,7 @@ const getDefaultState = () => {
     userWatchlist: [],
     completeCompaniesDataIndexs: {},
     completeCompaniesDataGlobalIndexs: {},
-    watchlistFileTypeEmailAlerts: [],
+    watchlistFileTypeEmailAlerts: []
   };
 };
 
@@ -260,7 +254,7 @@ export default function reducer(
       return {
         ...state,
         selectedType: action.watchlistType,
-        selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric,
+        selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric
         // selectedFileType: action.watchlistType === 'global' ? '10-K' : state.selectedFileType
       };
     case SET_UNIVERSE:
@@ -277,8 +271,6 @@ export default function reducer(
       return { ...state, recentDataLoaded: action.recentDataLoaded };
     case RESET_WATCHLIST:
       return { ...state, ...getDefaultState() };
-    case SET_SELECTED_TICKER_SYMBOL:
-      return { ...state, selectedTickerSymbol: action.selectedTickerSymbol };
     case SET_IS_ONE_HOUR_COMPLETE:
       return { ...state, isOneHourComplete: action.isOneHourComplete };
     case SET_IS_COLOR_ENABLE:

@@ -71,4 +71,4 @@ const FilingsCompanyDetails = props => {
     </Fragment>
   );
 };
-export default FilingsCompanyDetails;
+export default React.memo(FilingsCompanyDetails);

@@ -506,7 +506,6 @@ export const watchlistTableColDefs1 = [
       return getCellStyle({});
     }
   },
-
   {
     headerName: 'Aggregate Sentiment',
     field: 'sentiment',
@@ -547,8 +546,8 @@ export const watchlistTableColDefs1 = [
     field: 'document_date',
     colId: 'document_date',
     sortable: true,
-    valueGetter: params => parseDateStrMoment(get(params, 'data.docDate', null)),
-    valueFormatter: params => dateFormaterMoment(params.value),
+    valueFormatter: params =>
+      params.data.docDate ? dateFormaterMoment(parseDateStrMoment(params.data.docDate.split('.')[0])) : '',
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     width: 120,
@@ -587,7 +586,6 @@ export const watchlistTableColDefs1 = [
     colId: 'gics_industry',
     width: 150
   },
-
   {
     headerName: 'Source',
     headerTooltip: 'Source',
