@@ -7,52 +7,59 @@ import { debounce, get } from 'lodash';
 import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
 const createOptionLabel = option => {
-  return `${option.ticker} - ${option.name}`;
+  return `${option.ticker} - ${option.name} ${option.code ? `- ${option.code}` : ''} `;
 };
 
 const WatchlistTopicSearch = props => {
   const classes = useStyles();
   const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
-    state => state.Watchlist
-  );
+  const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
 
-
-
-  const handleSearchTextChange = debounce(async (text, e) => {
-
-
-    const searchabletext = text.toLowerCase();
-    const filteredWatchlist = completeCompaniesData
+  const getSearchFilteredData = (dataArray, textToSearch) => {
+    textToSearch = textToSearch.toLowerCase();
+    return dataArray
       .filter(
         c =>
           get(c, 'b', '')
             .toLowerCase()
-            .includes(searchabletext) ||
+            .includes(textToSearch) ||
           get(c, 'ticker', '')
             .toLowerCase()
-            .includes(searchabletext)
+            .includes(textToSearch)
       )
-      .map(c => ({ ticker: c.ticker, name: c.b }));
+      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+  };
+
+
+  const handleSearchTextChange = debounce(async (text, e) => {
+
+    if (!text || text.length < 1) {
+      return;
+    }
+
+    let filteredWatchlist = getSearchFilteredData(completeCompaniesData, text);
+    if (filteredWatchlist.length < 1) {
+      filteredWatchlist = getSearchFilteredData(completeCompaniesDataGlobal, text);
+    }
     setAvailableSymbols(filteredWatchlist);
-  }, 1000);
+  }, 800);
 
   const selectionChanged = (e, newSelectedSymbols) => {
     setWatchlistSelectedSymbols(newSelectedSymbols);
   };
 
-  // useEffect(() => {
-  //   if (availableSymbols.length === 0) {
-  //     const filteredWatchlist = completeCompaniesData
-  //       .concat(completeCompaniesDataGlobal)
-  //       .slice(0, 100)
-  //       .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
-  //       .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+  useEffect(() => {
+    if (availableSymbols.length === 0) {
+      const filteredWatchlist = completeCompaniesData
+        .concat(completeCompaniesDataGlobal)
+        .slice(0, 50)
+        .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
+        .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
 
-  //     setAvailableSymbols(filteredWatchlist);
-  //   }
-  // }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols.length]);
+      setAvailableSymbols(filteredWatchlist);
+    }
+  }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols.length]);
 
   return (
     <FormControl className={classes.formControl}>
@@ -63,7 +70,6 @@ const WatchlistTopicSearch = props => {
         loading={true}
         disableCloseOnSelect
         onChange={selectionChanged}
-        onClose={() => setAvailableSymbols([])}
         options={availableSymbols}
         getOptionLabel={option => createOptionLabel(option)}
         defaultValue={selectedSymbols}
