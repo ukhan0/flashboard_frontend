@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, Chip, TextField } from '@material-ui/core';
@@ -14,7 +14,10 @@ const WatchlistTopicSearch = props => {
   const classes = useStyles();
   const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { completeCompaniesData } = useSelector(state => state.Watchlist);
+  const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
+    state => state.Watchlist
+  );
+
 
 
   const handleSearchTextChange = debounce(async (text, e) => {
@@ -36,16 +39,20 @@ const WatchlistTopicSearch = props => {
   }, 1000);
 
   const selectionChanged = (e, newSelectedSymbols) => {
-    setOpen(true);
-    console.log('selectionChanged')
-    console.log(e.ctrlKey)
-    if (e.ctrlKey) {
-      setOpen(true);
-    } else {
-      setOpen(false);
-    }
     setWatchlistSelectedSymbols(newSelectedSymbols);
   };
+
+  // useEffect(() => {
+  //   if (availableSymbols.length === 0) {
+  //     const filteredWatchlist = completeCompaniesData
+  //       .concat(completeCompaniesDataGlobal)
+  //       .slice(0, 100)
+  //       .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
+  //       .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+
+  //     setAvailableSymbols(filteredWatchlist);
+  //   }
+  // }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols.length]);
 
   return (
     <FormControl className={classes.formControl}>
@@ -56,6 +63,7 @@ const WatchlistTopicSearch = props => {
         loading={true}
         disableCloseOnSelect
         onChange={selectionChanged}
+        onClose={() => setAvailableSymbols([])}
         options={availableSymbols}
         getOptionLabel={option => createOptionLabel(option)}
         defaultValue={selectedSymbols}
@@ -68,7 +76,7 @@ const WatchlistTopicSearch = props => {
             label="Search"
             variant="outlined"
             placeholder="Type Company Name or Symbol"
-            onChange={e => handleSearchTextChange(e.target.value, e)}
+            onChange={e => handleSearchTextChange(e.target.value)}
             fullWidth
           />
         )}
