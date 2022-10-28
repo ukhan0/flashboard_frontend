@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, TextField } from '@material-ui/core';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
-import { setSelectedTickerSymbol, setSelectedWatchlist, setIsTickerSelected } from '../../reducers/Watchlist';
+import { setSelectedWatchlist, setIsTickerSelected } from '../../reducers/Watchlist';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { useHistory } from 'react-router-dom';
 
@@ -12,13 +12,14 @@ const createOptionLabel = option => {
   return `${option.ticker} - ${option.name} ${option.code ? `- ${option.code}` : ''} `;
 };
 
-const WatchlistTopicSearch = props => {
+const WatchlistTopicSearch = () => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
-  const { selectedTickerSymbol, selectedFileType, completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
+  const [selectedTickerSymbol, setSelectedTickerSymbol] = useState(null);
+  const { selectedFileType, completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
     state => state.Watchlist
   );
 
@@ -54,7 +55,7 @@ const WatchlistTopicSearch = props => {
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
       dispatch(setIsTickerSelected(true));
-      dispatch(setSelectedTickerSymbol(newSelectedSymbol));
+      setSelectedTickerSymbol(newSelectedSymbol);
 
       let company = await getCompanyByIndex(
         newSelectedSymbol.ticker,
@@ -67,7 +68,7 @@ const WatchlistTopicSearch = props => {
       dispatch(setSelectedWatchlist(company));
       setAvailableSymbols([]);
       setTimeout(() => {
-        dispatch(setSelectedTickerSymbol(null));
+        setSelectedTickerSymbol(null);
         history.push('/filings');
       }, [100]);
     }

@@ -17,7 +17,6 @@ import {
   setWatchlistSelectedSymbols,
   setOverwriteCheckBox,
   setCount,
-  setSelectedTickerSymbol,
   setIsTickerSelected,
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData,
@@ -74,7 +73,6 @@ const Watchlist = () => {
     selectedSymbols,
     count,
     isFilterActive,
-    selectedTickerSymbol,
     isColorEnable,
     overwriteCheckBox,
     completeCompaniesData,
@@ -426,7 +424,6 @@ const Watchlist = () => {
   };
 
   const clearFilterHandler = state => {
-    dispatch(setSelectedTickerSymbol(null));
     WatchlistService.clearFilter();
     dispatch(setIsTickerSelected(false));
     dispatch(setSelectedFilter(null));
@@ -612,9 +609,7 @@ const Watchlist = () => {
               variant="contained"
               className={classes.button}
               size="small"
-              onClick={
-                selectedTickerSymbol ? () => handleUpload(selectedTickerSymbol.ticker) : () => setTopicDialogOpen(true)
-              }>
+              onClick={() => setTopicDialogOpen(true)}>
               Add Watchlist
             </Button>
           </Box>

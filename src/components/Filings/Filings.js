@@ -30,12 +30,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FilingsTimelineChartMemo = React.memo(FillingCompanyStockChart, (prevProps, nextProps) => {
-  // compare props to decide either prev and next props are equal are not.
-  // currently we don't have have any props.
-  return true; // true means, don't re-render the component.
-});
-
 const Filings = () => {
   const dispatch = useDispatch();
   const { fillingsGraphData } = useSelector(state => state.Filings);
@@ -65,7 +59,7 @@ const Filings = () => {
         </div>
       )}
       <div className={classes.companyTimelineChart}>
-        <FilingsTimelineChartMemo />
+        <FillingCompanyStockChart />
       </div>
       <div>{fillingsGraphData.length > 0 ? <FilingsCards /> : null}</div>
       <div className={classes.filingsDetailsGraph}>
