@@ -16,7 +16,7 @@ import io from 'socket.io-client';
 import SocketService from './socketService';
 import { orderBy } from 'lodash';
 import { indexedDB } from './components/watchlist/WatchlistHelpers';
-const REFREST_TIME = 3600000; // one hour
+const REFREST_TIME = 3600000000; // one hour
 
 const Cache = () => {
   const { user, isNewEmailNotification } = useSelector(state => state.User);
