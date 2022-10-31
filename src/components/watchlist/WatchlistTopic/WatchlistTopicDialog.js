@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import WatchlistTopicTabs from './WatchlistTopicTabs';
 import WatchlistTopicSearch from './WatchlistTopicSearch';
@@ -9,18 +9,20 @@ import WatchlistTopicPaste from './WatchlistTopicPaste';
 import useStyles from './WatchlistTopicStyles';
 import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
-const WatchlistTopicDialog = props => {
+const WatchlistTopicDialog = ({ error, onClose, onUpload, open }) => {
   // const [errMsg, setErrMsg] = useState('');
-  const { selectedTab, selectedSymbols, error, setWatchlistSelectedSymbols } = props;
+  const disptach = useDispatch();
+  const { selectedTab, selectedSymbols } = useSelector(state => state.Watchlist);
+
   const classes = useStyles();
 
   const handleClose = () => {
-    setWatchlistSelectedSymbols([]);
-    props.onClose();
+    disptach(setWatchlistSelectedSymbols([]));
+    onClose();
   };
 
   const handleUpload = () => {
-    props.onUpload();
+    onUpload();
   };
 
   let selectedComponent = null;
@@ -40,7 +42,7 @@ const WatchlistTopicDialog = props => {
   }
 
   return (
-    <Dialog open={props.open} onClose={handleClose} keepMounted={false}
+    <Dialog open={open} onClose={handleClose} keepMounted={false}
       disableEscapeKeyDown={true} disableBackdropClick={true}>
       <DialogTitle>{'Add to Watchlist'}</DialogTitle>
       <DialogContent>
@@ -71,13 +73,4 @@ WatchlistTopicDialog.propTypes = {
   onUpload: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  selectedTab: state.Watchlist.selectedTab,
-  selectedSymbols: state.Watchlist.selectedSymbols
-});
-
-const mapDispatchToProps = dispatch => ({
-  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicDialog);
+export default WatchlistTopicDialog;
