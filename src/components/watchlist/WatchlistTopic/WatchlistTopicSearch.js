@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FormControl, Chip, TextField } from '@material-ui/core';
 import useStyles from './WatchlistTopicStyles';
@@ -10,9 +10,9 @@ const createOptionLabel = option => {
   return `${option.ticker} - ${option.name} ${option.code ? `- ${option.code}` : ''} `;
 };
 
-const WatchlistTopicSearch = props => {
+const WatchlistTopicSearch = () => {
+  const disptach = useDispatch();
   const classes = useStyles();
-  const { selectedSymbols, setWatchlistSelectedSymbols } = props;
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
 
@@ -46,7 +46,7 @@ const WatchlistTopicSearch = props => {
   }, 800);
 
   const selectionChanged = (e, newSelectedSymbols) => {
-    setWatchlistSelectedSymbols(newSelectedSymbols);
+    disptach(setWatchlistSelectedSymbols(newSelectedSymbols));
   };
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const WatchlistTopicSearch = props => {
         onChange={selectionChanged}
         options={availableSymbols}
         getOptionLabel={option => createOptionLabel(option)}
-        defaultValue={selectedSymbols}
+        // defaultValue={selectedSymbols}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => <Chip label={createOptionLabel(option)} {...getTagProps({ index })} />)
         }
@@ -91,12 +91,4 @@ const WatchlistTopicSearch = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  selectedSymbols: state.Watchlist.selectedSymbols
-});
-
-const mapDispatchToProps = dispatch => ({
-  setWatchlistSelectedSymbols: value => dispatch(setWatchlistSelectedSymbols(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(WatchlistTopicSearch);
+export default WatchlistTopicSearch;
