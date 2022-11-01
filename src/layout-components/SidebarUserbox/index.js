@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
-import { Avatar, Box } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import config from '../../config/config';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import "./SidebarUserbox.css"
 const useStyles = makeStyles(theme => ({
   tickerLogo: {

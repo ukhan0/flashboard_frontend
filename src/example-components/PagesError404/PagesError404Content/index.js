@@ -2,14 +2,12 @@ import React, { Fragment } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {
-  Grid,
-  InputAdornment,
-  IconButton,
-  Button,
-  Tooltip,
-  TextField
-} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+import TextField from '@material-ui/core/TextField';
 
 import SearchIcon from '@material-ui/icons/Search';
 

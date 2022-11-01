@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Button, CircularProgress, Backdrop} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchBackdrop,setSearchBackdropHighlights } from '../../reducers/Topic';
 import topicStyles from './leftSidebarStyles';

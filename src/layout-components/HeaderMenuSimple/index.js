@@ -1,12 +1,13 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { Button, Popover } from '@material-ui/core';
+import Popover from '@material-ui/core/Popover';
+import Button from '@material-ui/core/Button';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { setSidebarToggle } from '../../reducers/ThemeOptions';
 import { useHistory } from 'react-router-dom';
 import Help from '../../components/navigationBar/Navigation';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import HomePageSearch from '../../components/homePage/HomePageSearch';
 import { resetAllSearchParams } from '../../reducers/Topic';
 import { hoverTime } from '../../config/appConfig';

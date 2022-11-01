@@ -1,12 +1,8 @@
 import React, { Fragment } from 'react';
-
 import clsx from 'clsx';
-
-import { Paper } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import SnPLogo from '../../assets/images/logos/SP_Global_logo.png';
-
 import { connect } from 'react-redux';
-
 const Footer = props => {
   const { footerShadow, sidebarToggle, footerFixed } = props;
   return (
