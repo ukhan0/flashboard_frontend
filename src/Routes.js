@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider } from '@material-ui/styles';
 import { ClimbingBoxLoader } from 'react-spinners';
 import MuiTheme from './theme';
-import { connect } from 'react-redux';
 import config from './config/config';
 // Layout Blueprints
 import { LeftSidebar, MinimalLayout, PresentationLayout } from './layout-blueprints';
@@ -175,6 +174,4 @@ const Routes = () => {
   );
 };
 
-const mapStateToProps = () => ({});
-
-export default connect(mapStateToProps)(Routes);
+export default Routes;

@@ -2,7 +2,6 @@ import React, { Fragment, useState, useRef } from 'react';
 import { Button, Popover } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
 import { setSidebarToggle } from '../../reducers/ThemeOptions';
 import { useHistory } from 'react-router-dom';
 import Help from '../../components/navigationBar/Navigation';
@@ -16,10 +15,9 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1)
   }
 }));
-const HeaderMenu = props => {
+const HeaderMenu = () => {
   const location = useLocation();
   const history = useHistory();
-  const { setSidebarToggle } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorHelp, setAnchorHelp] = useState(null);
@@ -48,18 +46,18 @@ const HeaderMenu = props => {
   };
 
   const goToDashboard = () => {
-    setSidebarToggle(true);
+    dispatch(setSidebarToggle(true));
     history.push('/home');
   };
 
   const goToWatchlist = () => {
-    setSidebarToggle(true);
+    dispatch(setSidebarToggle(true));
     history.push('/watchlist');
   };
 
   const gotToTopic = e => {
     e.currentTarget.style.cursor = 'pointer';
-    setSidebarToggle(true);
+    dispatch(setSidebarToggle(true));
     history.push('/topic');
   };
 
@@ -159,15 +157,4 @@ const HeaderMenu = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  headerShadow: state.ThemeOptions.headerShadow,
-  headerFixed: state.ThemeOptions.headerFixed,
-  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile,
-  sidebarToggle: state.Watchlist.sidebarToggle
-});
-
-const mapDispatchToProps = dispatch => ({
-  setSidebarToggle: value => dispatch(setSidebarToggle(value))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderMenu);
+export default HeaderMenu;

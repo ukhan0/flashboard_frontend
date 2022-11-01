@@ -1,51 +1,40 @@
-import React, { Fragment } from 'react';
+import React, { useRef, Fragment } from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Hidden, Drawer, Paper } from '@material-ui/core';
-import { connect } from 'react-redux';
 import SidebarHeader from '../../layout-components/SidebarHeader';
 import SidebarUserbox from '../../layout-components/SidebarUserbox';
 import SidebarMenu from '../../layout-components/SidebarMenu';
 import { setIsFromSideBar } from '../../reducers/Topic';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import navItems from './navItems';
 import { hoverTime } from '../../config/appConfig';
 import {
   setSidebarToggleMobile,
-  setSidebarHover,
-  setSidebarToggle,
-  setSidebarFooter,
-  setSidebarUserbox
+  setSidebarHover
 } from '../../reducers/ThemeOptions';
 import './SidebarMenu.css';
 
-const Sidebar = ({
-  setSidebarToggleMobile,
-  sidebarToggleMobile,
-  sidebarFixed,
-  sidebarHover,
-  setSidebarHover,
-  sidebarToggle,
-  sidebarUserbox,
-  sidebarShadow,
-  selectedItem
-}) => {
+const Sidebar = () => {
   const dispatch = useDispatch();
-  const toggleTimer = React.useRef(null);
+  const { sidebarFixed, sidebarToggle, sidebarHover, sidebarShadow, sidebarUserbox, sidebarToggleMobile } = useSelector(state => state.ThemeOptions);
+  const { selectedItem } = useSelector(state => state.Watchlist);
+
+  const toggleTimer = useRef(null);
   const toggleHoverOn = event => {
     let { currentTarget } = event;
     currentTarget.style.cursor = 'wait';
-    toggleTimer.current = setTimeout(function() {
-      setSidebarHover(true);
+    toggleTimer.current = setTimeout(function () {
+      dispatch(setSidebarHover(true));
       currentTarget.style.cursor = 'default';
     }, hoverTime);
   };
   const toggleHoverOff = () => {
     clearTimeout(toggleTimer.current);
-    setSidebarHover(false);
+    dispatch(setSidebarHover(false));
   };
 
-  const closeDrawer = () => setSidebarToggleMobile(!sidebarToggleMobile);
+  const closeDrawer = () => dispatch(setSidebarToggleMobile(!sidebarToggleMobile));
   const handleSearchTerm = () => {
     dispatch(setIsFromSideBar(true));
   };
@@ -118,24 +107,4 @@ const Sidebar = ({
   );
 };
 
-const mapStateToProps = state => ({
-  sidebarFixed: state.ThemeOptions.sidebarFixed,
-  headerFixed: state.ThemeOptions.headerFixed,
-  sidebarToggle: state.ThemeOptions.sidebarToggle,
-  sidebarHover: state.ThemeOptions.sidebarHover,
-  sidebarShadow: state.ThemeOptions.sidebarShadow,
-  sidebarFooter: state.ThemeOptions.sidebarFooter,
-  sidebarUserbox: state.ThemeOptions.sidebarUserbox,
-  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile,
-  selectedItem: state.Watchlist.selectedItem
-});
-
-const mapDispatchToProps = dispatch => ({
-  setSidebarToggleMobile: enable => dispatch(setSidebarToggleMobile(enable)),
-  setSidebarToggle: enable => dispatch(setSidebarToggle(enable)),
-  setSidebarHover: enable => dispatch(setSidebarHover(enable)),
-  setSidebarFooter: enable => dispatch(setSidebarFooter(enable)),
-  setSidebarUserbox: enable => dispatch(setSidebarUserbox(enable))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
+export default Sidebar;
