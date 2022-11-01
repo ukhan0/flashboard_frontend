@@ -2,11 +2,8 @@ import React, { Fragment } from 'react';
 
 import { Grid, Container, Button } from '@material-ui/core';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
 import projectLogo from '../../assets/images/logos/ca-logo-white.png';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { Link } from 'react-router-dom';
 
 import desktopImage from '../../assets/images/composed-bg/sma_filing_desktop.png';
@@ -118,8 +115,5 @@ const LandingPage = () => {
     </Fragment>
   );
 };
-const mapStateToProps = state => ({
-  footerFixed: state.ThemeOptions.footerFixed
-});
 
-export default connect(mapStateToProps)(LandingPage);
+export default LandingPage;

@@ -7,7 +7,7 @@ import SnPLogo from '../../assets/images/logos/SP_Global_logo.png';
 
 import { useSelector } from 'react-redux';
 
-const Footer = props => {
+const Footer = () => {
   const { footerShadow, sidebarToggle, footerFixed } = useSelector(state => state.ThemeOptions);
 
   return (

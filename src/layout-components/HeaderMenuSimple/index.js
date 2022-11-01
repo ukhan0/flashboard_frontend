@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 const HeaderMenu = () => {
-  const disptach = useDispatch();
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
@@ -47,18 +46,18 @@ const HeaderMenu = () => {
   };
 
   const goToDashboard = () => {
-    setSidebarToggle(true);
+    dispatch(setSidebarToggle(true));
     history.push('/home');
   };
 
   const goToWatchlist = () => {
-    disptach(setSidebarToggle(true));
+    dispatch(setSidebarToggle(true));
     history.push('/watchlist');
   };
 
   const gotToTopic = e => {
     e.currentTarget.style.cursor = 'pointer';
-    disptach(setSidebarToggle(true));
+    dispatch(setSidebarToggle(true));
     history.push('/topic');
   };
 
