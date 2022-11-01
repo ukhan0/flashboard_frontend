@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, Fragment } from 'react';
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ThemeProvider } from '@material-ui/styles';
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import { ClimbingBoxLoader } from 'react-spinners';
 import MuiTheme from './theme';
 import { connect } from 'react-redux';

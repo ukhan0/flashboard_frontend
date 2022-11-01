@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Card from '@material-ui/core/Card';
 import InputBase from '@material-ui/core/InputBase';

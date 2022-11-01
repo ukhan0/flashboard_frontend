@@ -14,7 +14,9 @@ import io from 'socket.io-client';
 import config from 'config/config';
 import { lastTweets } from './HomePageHelpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Repeat, SmsOutlined, FavoriteBorderOutlined } from '@material-ui/icons';
+import Repeat from '@material-ui/icons/Repeat';
+import SmsOutlined from '@material-ui/icons/SmsOutlined';
+import FavoriteBorderOutlined from '@material-ui/icons/FavoriteBorderOutlined';
 const socket = io.connect(config.socketUrl);
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -149,16 +151,7 @@ const TopicSearchResults = () => {
             {uniqBy(tweetsUpdate, 'actor.id').map((v, index) => {
               return (
                 <Fragment key={`rs${index}`}>
-                  <Box
-                    p={2}
-                    elevation={6}
-                    style={{
-                      width: '99%',
-                      border: '1px solid lightgrey',
-                      marginBottom: '5px',
-                      borderRadius: '20px',
-                      boxShadow: 'rgba(0,0,0,0.16) 0px 3px 6px,rgba(0,0,0,0.23) 0px 3px 6px'
-                    }}>
+                  <Box p={2} elevation={6}>
                     <div>
                       <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                         <Grid item>
