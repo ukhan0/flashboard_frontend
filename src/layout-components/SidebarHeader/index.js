@@ -5,30 +5,25 @@ import { Link } from 'react-router-dom';
 
 import { IconButton, Box, Tooltip } from '@material-ui/core';
 
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import projectLogo from '../../assets/images/logos/ca-logo-color-256.png';
 
-import { setSidebarToggleMobile } from '../../reducers/ThemeOptions';
+import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 
-const SidebarHeader = props => {
+const SidebarHeader = () => {
+  const disptach = useDispatch();
   const toggleSidebar = () => {
-    setSidebarToggle(!sidebarToggle);
+    disptach(setSidebarToggle(!sidebarToggle));
   };
   const toggleSidebarMobile = () => {
-    setSidebarToggleMobile(!sidebarToggleMobile);
+    disptach(setSidebarToggleMobile(!sidebarToggleMobile));
   };
 
-  const {
-    sidebarToggleMobile,
-    setSidebarToggleMobile,
-    setSidebarToggle,
-    sidebarToggle,
-    sidebarHover
-  } = props;
+  const { sidebarToggleMobile, sidebarHover, sidebarToggle } = useSelector(state => state.ThemeOptions);
 
   return (
     <Fragment>
@@ -36,12 +31,12 @@ const SidebarHeader = props => {
         className={clsx('app-sidebar-header', {
           'app-sidebar-header-close': sidebarToggle && !sidebarHover
         })}
-        style={{width:"100%"}}
-        >
+        style={{ width: "100%" }}
+      >
         <Box className="header-logo-wrapper" title="SMA">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton color="primary" className='pt-0 py-0'>
-              <img className="app-sidebar-logo" alt="SMA" style={{width:"108px"}} src={projectLogo} />
+              <img className="app-sidebar-logo" alt="SMA" style={{ width: "108px" }} src={projectLogo} />
             </IconButton>
           </Link>
         </Box>
@@ -73,14 +68,5 @@ const SidebarHeader = props => {
     </Fragment>
   );
 };
-const mapStateToProps = state => ({
-  sidebarToggle: state.ThemeOptions.sidebarToggle,
-  sidebarHover: state.ThemeOptions.sidebarHover,
-  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile
-});
 
-const mapDispatchToProps = dispatch => ({
-  setSidebarToggleMobile: enable => dispatch(setSidebarToggleMobile(enable))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SidebarHeader);
+export default SidebarHeader;

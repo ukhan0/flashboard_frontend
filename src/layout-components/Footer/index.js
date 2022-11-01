@@ -5,10 +5,11 @@ import clsx from 'clsx';
 import { Paper } from '@material-ui/core';
 import SnPLogo from '../../assets/images/logos/SP_Global_logo.png';
 
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Footer = props => {
-  const { footerShadow, sidebarToggle, footerFixed } = props;
+  const { footerShadow, sidebarToggle, footerFixed } = useSelector(state => state.ThemeOptions);
+
   return (
     <Fragment>
       <Paper
@@ -34,9 +35,4 @@ const Footer = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  footerFixed: state.ThemeOptions.footerFixed,
-  footerShadow: state.ThemeOptions.footerShadow,
-  sidebarToggle: state.ThemeOptions.sidebarToggle
-});
-export default connect(mapStateToProps)(Footer);
+export default Footer;
