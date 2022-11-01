@@ -9,30 +9,25 @@ import MaskedInput from 'react-text-mask';
 import { setIsColorEnable, setIsWatchlistEmailAlertEnable } from '../../reducers/Watchlist';
 import SmaDescription from './SmaDescription';
 import { homepageWidgetsKey } from 'components/homePage/homePageConfig';
-
-import {
-  Grid,
-  Container,
-  Input,
-  InputLabel,
-  InputAdornment,
-  FormControlLabel,
-  Box,
-  Typography,
-  Checkbox,
-  Tabs,
-  Tab,
-  Card,
-  CardContent,
-  Button,
-  TextField,
-  FormControl
-} from '@material-ui/core';
-
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Checkbox from '@material-ui/core/Checkbox';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
 import MailOutlineTwoToneIcon from '@material-ui/icons/MailOutlineTwoTone';
 import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
-
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../reducers/User';
 

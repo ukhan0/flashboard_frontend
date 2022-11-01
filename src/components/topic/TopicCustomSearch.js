@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField, Chip } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Chip from '@material-ui/core/Chip';
 import useStyles from '../watchlist/watchlistStyles';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';

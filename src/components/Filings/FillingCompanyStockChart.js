@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Paper } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import clsx from 'clsx';
 import CompanyStockChart from './CompanyStockChart';
 

@@ -1,4 +1,4 @@
-import { Card } from "@material-ui/core";
+import Card from '@material-ui/core/Card';
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';

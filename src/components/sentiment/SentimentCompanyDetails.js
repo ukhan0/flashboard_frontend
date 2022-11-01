@@ -1,8 +1,13 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import { Paper, Box, Grid, Avatar, ButtonGroup, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { get } from 'lodash';
 import config from '../../config/config';
 import { renameDocumentTypes } from '../topic/topicHelpers';

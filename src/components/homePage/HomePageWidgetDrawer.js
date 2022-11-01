@@ -1,12 +1,11 @@
 import React from 'react';
-import {
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  makeStyles,
-  Grid, Button
-} from "@material-ui/core";
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import { homePageWidgets } from './homePageConfig';
 import clsx from 'clsx';
 
@@ -25,15 +24,10 @@ const useStyles = makeStyles(theme => ({
 
 const homePageWidgetsList = Object.keys(homePageWidgets);
 
-const HomePageWidgetDrawer = ({
-  widgets,
-  handleDrawer,
-  handleColumns,
-  handleSaveSelected
-}) => {
+const HomePageWidgetDrawer = ({ widgets, handleDrawer, handleColumns, handleSaveSelected }) => {
   const classes = useStyles();
   const getWidgetStatus = key => {
-    const status = widgets.find((item) => {
+    const status = widgets.find(item => {
       return item.name === key;
     });
     return status ? status.show : false;
@@ -67,7 +61,6 @@ const HomePageWidgetDrawer = ({
           </Grid>
         </FormGroup>
 
-
         <Grid container spacing={2}>
           <Grid item>
             <Button
@@ -91,10 +84,9 @@ const HomePageWidgetDrawer = ({
             </Button>
           </Grid>
         </Grid>
-
       </FormControl>
     </div>
   );
-}
+};
 
 export default HomePageWidgetDrawer;

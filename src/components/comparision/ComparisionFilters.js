@@ -1,9 +1,7 @@
 import React from 'react';
-
-import { Grid, } from '@material-ui/core';
-
-import { ButtonGroup, Button } from '@material-ui/core';
-
+import Grid from '@material-ui/core/Grid';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
 import { metricsSelection, comparisionMethodTypes, comparisionDifferenceTypes } from '../../config/filterTypes';
 
 const ComparisionFilters = props => {

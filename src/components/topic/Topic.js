@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Snackbar } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
 import TopicPieChart from './TopicPieChart';
 import TopicCompanyResultsTable from './TopicCompanyResultsTable';
 import TopicSearchResults from './TopicSearchResults';

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Card, InputBase } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import InputBase from '@material-ui/core/InputBase';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, uniq, isEmpty, orderBy } from 'lodash';
 import SearchIcon from '@material-ui/icons/Search';

@@ -1,6 +1,10 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Tooltip, Box, Avatar, Card } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
+import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { cloneDeep, get, uniqBy } from 'lodash';
@@ -86,7 +90,7 @@ const TopicSearchResults = () => {
   useEffect(() => {
     return () => {
       socket.close();
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -94,15 +98,15 @@ const TopicSearchResults = () => {
 
     for (let i = 0; i < userWatchlist.length; i++) {
       socket.emit('join_room', userWatchlist[i].ticker);
-      socket.on(userWatchlist[i].ticker, function (data) {
+      socket.on(userWatchlist[i].ticker, function(data) {
         let tweetObj = JSON.parse(data);
         tweetObj.namx = userWatchlist[i].ticker;
 
-        setTweetsUpdate((prevState) => {
+        setTweetsUpdate(prevState => {
           let tweets = cloneDeep(prevState);
           tweets = tweets.slice(0, 70);
           tweets.unshift(tweetObj);
-          return tweets
+          return tweets;
         });
       });
     }
@@ -140,119 +144,121 @@ const TopicSearchResults = () => {
           </Grid>
         </Grid>
 
-        {tweetsUpdate.length > 0 && <div style={{ height: 'calc(100% - 60px)', margin: ' 0', overflowY: 'auto' }}>
-          {uniqBy(tweetsUpdate, 'actor.id').map((v, index) => {
-            return (
-              <Fragment key={`rs${index}`}>
-                <Box
-                  p={2}
-                  elevation={6}
-                  style={{
-                    width: '99%',
-                    border: '1px solid lightgrey',
-                    marginBottom: '5px',
-                    borderRadius: '20px',
-                    boxShadow: 'rgba(0,0,0,0.16) 0px 3px 6px,rgba(0,0,0,0.23) 0px 3px 6px'
-                  }}>
-                  <div>
-                    <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-                      <Grid item>
-                        <Avatar
-                          alt="TwitterLogo"
-                          src={`${get(v, 'actor.image', '')}`}
-                          className="app-sidebar-userbox-avatar"
-                          style={{ float: 'left' }}
-                        />
-                        <div style={{ float: 'left', paddingLeft: '5px' }}>
-                          <a target="_blank" rel="noopener noreferrer" href={v.actor.link}>
-                            <span className={classes.topic}>{v.actor.displayName}</span>
-                            <span className="text-black-50 pt-1 pr-2"> @{v.account.name} </span>
-                          </a>
-                          <Tooltip
-                            placement="top"
-                            title={
-                              v.object ? moment(v.object.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A') : ''
-                            }>
-                            <span className="text-black-50 pt-1 pr-2">
-                              . {v.object ? moment(v.object.postedTime).fromNow() : ''}
-                            </span>
-                          </Tooltip>
-                        </div>
+        {tweetsUpdate.length > 0 && (
+          <div style={{ height: 'calc(100% - 60px)', margin: ' 0', overflowY: 'auto' }}>
+            {uniqBy(tweetsUpdate, 'actor.id').map((v, index) => {
+              return (
+                <Fragment key={`rs${index}`}>
+                  <Box
+                    p={2}
+                    elevation={6}
+                    style={{
+                      width: '99%',
+                      border: '1px solid lightgrey',
+                      marginBottom: '5px',
+                      borderRadius: '20px',
+                      boxShadow: 'rgba(0,0,0,0.16) 0px 3px 6px,rgba(0,0,0,0.23) 0px 3px 6px'
+                    }}>
+                    <div>
+                      <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                        <Grid item>
+                          <Avatar
+                            alt="TwitterLogo"
+                            src={`${get(v, 'actor.image', '')}`}
+                            className="app-sidebar-userbox-avatar"
+                            style={{ float: 'left' }}
+                          />
+                          <div style={{ float: 'left', paddingLeft: '5px' }}>
+                            <a target="_blank" rel="noopener noreferrer" href={v.actor.link}>
+                              <span className={classes.topic}>{v.actor.displayName}</span>
+                              <span className="text-black-50 pt-1 pr-2"> @{v.account.name} </span>
+                            </a>
+                            <Tooltip
+                              placement="top"
+                              title={
+                                v.object ? moment(v.object.postedTime).format('dddd, MMMM Do, YYYY h:mm:ss A') : ''
+                              }>
+                              <span className="text-black-50 pt-1 pr-2">
+                                . {v.object ? moment(v.object.postedTime).fromNow() : ''}
+                              </span>
+                            </Tooltip>
+                          </div>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <p
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <p
+                            onClick={() => {
+                              goToTweet(v.object.link);
+                            }}
+                            key={`rstc`}
+                            style={{
+                              paddingLeft: '50px',
+                              position: 'relative',
+                              bottom: '5px',
+                              cursor: 'pointer'
+                            }}>
+                            {v.long_object ? v.long_object.body : v.body}
+                          </p>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" justify="space-around" alignItems="center" spacing={5}>
+                        <Grid
+                          style={{ cursor: 'pointer', textAlign: 'center' }}
+                          item
+                          xs={4}
                           onClick={() => {
-                            goToTweet(v.object.link);
+                            tweetActions('REPLY', v.object.id);
                           }}
-                          key={`rstc`}
-                          style={{
-                            paddingLeft: '50px',
-                            position: 'relative',
-                            bottom: '5px',
-                            cursor: 'pointer'
+                          onMouseEnter={e => {
+                            e.target.style.color = 'blue';
+                          }}
+                          onMouseLeave={e => {
+                            e.target.style.color = 'black';
                           }}>
-                          {v.long_object ? v.long_object.body : v.body}
-                        </p>
+                          <SmsOutlined />
+                          <span> Reply</span>
+                        </Grid>
+                        <Grid
+                          style={{ cursor: 'pointer', textAlign: 'center' }}
+                          item
+                          xs={4}
+                          onClick={() => {
+                            tweetActions('RETWEET', v.object.id);
+                          }}
+                          onMouseEnter={e => {
+                            e.target.style.color = 'blue';
+                          }}
+                          onMouseLeave={e => {
+                            e.target.style.color = 'black';
+                          }}>
+                          <Repeat />
+                          <span> Retweet</span>
+                        </Grid>
+                        <Grid
+                          style={{ cursor: 'pointer', textAlign: 'center' }}
+                          item
+                          xs={4}
+                          onClick={() => {
+                            tweetActions('LIKE', v.object.id);
+                          }}
+                          onMouseEnter={e => {
+                            e.target.style.color = 'blue';
+                          }}
+                          onMouseLeave={e => {
+                            e.target.style.color = 'black';
+                          }}>
+                          <FavoriteBorderOutlined />
+                          <span> Like</span>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid container direction="row" justify="space-around" alignItems="center" spacing={5}>
-                      <Grid
-                        style={{ cursor: 'pointer', textAlign: 'center' }}
-                        item
-                        xs={4}
-                        onClick={() => {
-                          tweetActions('REPLY', v.object.id);
-                        }}
-                        onMouseEnter={e => {
-                          e.target.style.color = 'blue';
-                        }}
-                        onMouseLeave={e => {
-                          e.target.style.color = 'black';
-                        }}>
-                        <SmsOutlined />
-                        <span> Reply</span>
-                      </Grid>
-                      <Grid
-                        style={{ cursor: 'pointer', textAlign: 'center' }}
-                        item
-                        xs={4}
-                        onClick={() => {
-                          tweetActions('RETWEET', v.object.id);
-                        }}
-                        onMouseEnter={e => {
-                          e.target.style.color = 'blue';
-                        }}
-                        onMouseLeave={e => {
-                          e.target.style.color = 'black';
-                        }}>
-                        <Repeat />
-                        <span> Retweet</span>
-                      </Grid>
-                      <Grid
-                        style={{ cursor: 'pointer', textAlign: 'center' }}
-                        item
-                        xs={4}
-                        onClick={() => {
-                          tweetActions('LIKE', v.object.id);
-                        }}
-                        onMouseEnter={e => {
-                          e.target.style.color = 'blue';
-                        }}
-                        onMouseLeave={e => {
-                          e.target.style.color = 'black';
-                        }}>
-                        <FavoriteBorderOutlined />
-                        <span> Like</span>
-                      </Grid>
-                    </Grid>
-                  </div>
-                </Box>
-              </Fragment>
-            );
-          })}
-        </div>}
+                    </div>
+                  </Box>
+                </Fragment>
+              );
+            })}
+          </div>
+        )}
         <p className="text-black-50 pt-2 pb-2 pr-2" style={{ textAlign: 'right', marginRight: 20 }}>
           <span>
             <FontAwesomeIcon icon={['fab', 'twitter']} className="font-size-md" />

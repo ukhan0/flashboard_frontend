@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
-import { Card, ButtonGroup, Button } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
 
 const tableTypes = [

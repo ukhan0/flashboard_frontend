@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Card, ButtonGroup, Button } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { ButtonGroup, Button } from '@material-ui/core';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
 import { sentimentTypes } from '../../config/filterTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveSentimentSettings } from './SentimentHelpers';
