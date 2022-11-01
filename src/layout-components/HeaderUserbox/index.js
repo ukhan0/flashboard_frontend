@@ -1,9 +1,16 @@
 import React, { Fragment } from 'react';
 import { get } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Box, Badge, Menu, Button, List, ListItem, Divider } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Badge from '@material-ui/core/Badge';
+import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
 import avatar4 from '../../assets/images/avatars/avatar8.png';
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { deleteToken } from '../../utils/helpers';
 import SocketService from '../../socketService';
 const StyledBadge = withStyles({

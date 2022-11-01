@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, Chip, TextField } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import Chip from '@material-ui/core/Chip';
+import TextField from '@material-ui/core/TextField';
+
 import useStyles from './WatchlistTopicStyles';
 import { debounce, get } from 'lodash';
 import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
