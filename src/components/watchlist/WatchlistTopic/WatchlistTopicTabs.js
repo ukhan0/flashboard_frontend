@@ -1,6 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tabs, Tab } from '@material-ui/core';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+
 import { setWatchlistTopicTab, setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
 const WatchlistTopicTabs = () => {
