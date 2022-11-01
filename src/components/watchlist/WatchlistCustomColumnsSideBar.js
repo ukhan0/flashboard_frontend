@@ -1,16 +1,14 @@
 import React from 'react';
 import Action from './WatchlistActions/WatchlistActions';
-import {
-  Drawer,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  makeStyles,
-  IconButton,
-  Grid
-} from '@material-ui/core';
+import Drawer from '@material-ui/core/Drawer';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(theme => ({

@@ -1,6 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, Typography, Switch, ButtonGroup } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Switch from '@material-ui/core/Switch';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import TopicSearchTextField from './TopicSearchTextField';
 import TopicDocumentTypeDropdown from './TopicDocumentTypeDropdown';
 import TopicUniverseGroup from './TopicUniverseGroup';
@@ -261,7 +265,7 @@ const TopicFilters = props => {
       </Grid>
 
       <Grid item xs={12} md={12} lg={12}>
-        <Grid container direction="row" justify="flex-start" alignItems="center" style={{paddingBottom: '5px'}}>
+        <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
           <Grid item>
             <h6 style={{ marginBottom: 0 }}>Enable Email Alert</h6>
           </Grid>

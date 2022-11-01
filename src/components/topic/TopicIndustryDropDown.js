@@ -1,6 +1,10 @@
 import React from 'react';
-import { MenuItem, Select, Checkbox, ListItemText, Input } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+import Input from '@material-ui/core/Input';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedIndustries } from '../../reducers/Topic';
 import sectorsData from '../../config/gicsData';

@@ -1,7 +1,7 @@
 import React from 'react';
-import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import clsx from 'clsx';
 import WbIncandescentOutlinedIcon from '@material-ui/icons/WbIncandescentOutlined';

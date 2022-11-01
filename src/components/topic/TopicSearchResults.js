@@ -1,7 +1,11 @@
 import React, { useState, Fragment, useEffect, useRef, useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Grid, Paper, Box, Switch, Tooltip } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Switch from '@material-ui/core/Switch';
+import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { sortBy, uniqBy, filter, flatten, flattenDeep, uniq, isEmpty, reverse, get, findIndex } from 'lodash';
 import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';

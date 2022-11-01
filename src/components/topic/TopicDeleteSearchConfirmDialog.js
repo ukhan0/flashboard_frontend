@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dialog, Button } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const TopicDeleteSearchConfirmDialog = props => {
   return (

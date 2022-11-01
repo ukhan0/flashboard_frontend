@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import TopicSectorChart from './TopicSectorChart';
 import TopicIndustryChart from './TopicIndustryChart';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, findIndex } from 'lodash';
-import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {
   setSelectedSector,

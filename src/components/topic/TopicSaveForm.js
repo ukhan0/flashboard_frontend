@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 
 export default function TopicSaveDialog(props) {
   const { searchText } = useSelector(state => state.Topic);

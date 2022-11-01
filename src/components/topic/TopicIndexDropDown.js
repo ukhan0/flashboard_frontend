@@ -4,8 +4,9 @@ import { setSearchIndex, setSelectedDocumentTypes } from '../../reducers/Topic';
 import searchIndexs from '../../config/searchIndexs';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
-import { MenuItem, ListItemText } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { setTopicIndexDropDownSearchCombineReducer } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   select: {
