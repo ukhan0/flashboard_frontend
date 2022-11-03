@@ -20,9 +20,9 @@ const LandingPage = () => {
           <Container className="d-flex" fixed>
             <div className="header-nav-logo align-items-center d-flex justify-content-end">
               <div className="nav-logo">
-                <Link to="/" title="SMA">
+                <Link to="/" title="CA">
                   <i>
-                    <img alt="SMA" src={projectLogo} style={{ paddingTop: 3 }} />
+                    <img alt="CA" src={projectLogo} style={{ paddingTop: 3 }} />
                   </i>
                 </Link>
               </div>
@@ -44,9 +44,9 @@ const LandingPage = () => {
                       <h1 className="display-2 mb-3 font-weight-bold">
                         Unstructured Data Terminal <br /> (UDT)
                       </h1>
-                      <p className="font-size-lg text-black-50"> by Social Market Analytics, Inc. (SMA)</p>
+                      <p className="font-size-lg text-black-50"> by Context Analytics, Inc. (CA)</p>
                       <p className="text-black">
-                        SMA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF
+                        CA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF
                         has turned SEC Edgar Filings into Textual Data at the Item, Section, Sub-Section, and Note level
                         with Historical Baselines going back to 2006. UDT is the first product using MRF to
                         allow for quick sorting by Sentiment, Change in Sentiment, and Change in Word Count.
@@ -86,9 +86,9 @@ const LandingPage = () => {
                         )}
                       </div>
                       <small className="d-block pt-3">
-                        Disclaimer: Social Market Analytics, Inc. is not an investment advisor, broker, or dealer, and
+                        Disclaimer: Context Analytics, Inc. is not an investment advisor, broker, or dealer, and
                         therefore does not provide any investment advice, nor does it participate in the offer, sale, or
-                        distribution of securities. SMA does not provide trading or investment advice. SMA is not liable
+                        distribution of securities. CA does not provide trading or investment advice. CA is not liable
                         for any loss or damage caused by any reliance on information obtained in this report , in our
                         website, or in our communications.
                       </small>

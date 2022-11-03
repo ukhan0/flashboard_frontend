@@ -2907,7 +2907,7 @@ const get = (object, path, defaultValue=null) => {
             },
             {
               headerName: 'Aggregated Sentiment',
-              headerTooltip: `The aggregated sentiment of the parsed text using \n SMA\`s proprietary Financial NLP`,
+              headerTooltip: `The aggregated sentiment of the parsed text using \n CA\`s proprietary Financial NLP`,
               field: 'sentiment',
               width: 112,
               colId: 'sentiment',
