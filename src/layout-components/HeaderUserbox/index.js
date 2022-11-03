@@ -13,6 +13,7 @@ import avatar4 from '../../assets/images/avatars/avatar8.png';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { deleteToken } from '../../utils/helpers';
 import SocketService from '../../socketService';
+import { Link } from "react-router-dom"
 const StyledBadge = withStyles({
   badge: {
     backgroundColor: 'var(--success)',
@@ -118,6 +119,9 @@ export default function HeaderUserbox() {
               <span className="text-black-50 text-center">{get(user, 'email', '')}</span>
             </div>
             <Divider className="w-100 mt-2" />
+            <ListItem button color="secondary">
+              <Link to={"/settings"}>Settings</Link>
+            </ListItem>
             <ListItem button color="secondary" onClick={signout}>
               Sign Out
             </ListItem>
