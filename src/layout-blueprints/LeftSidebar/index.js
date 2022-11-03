@@ -5,31 +5,29 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchBackdrop,setSearchBackdropHighlights } from '../../reducers/Topic';
+import { setSearchBackdrop, setSearchBackdropHighlights } from '../../reducers/Topic';
 import topicStyles from './leftSidebarStyles';
-import { connect } from 'react-redux';
 import { Sidebar, Header, Footer } from '../../layout-components';
 import { useLocation } from 'react-router-dom';
 import { get } from 'lodash';
 
-const LeftSidebar = props => {
-  const { children, sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = props;
+const LeftSidebar = ({ children }) => {
   const { cancelTokenSource, showBackdrop, cancelTokenSourceHighlights, isCompanyClick } = useSelector(state => state.Topic);
+  const { sidebarToggle, sidebarFixed, footerFixed, contentBackground, showSidebar } = useSelector(state => state.ThemeOptions);
   const location = useLocation();
 
   const dispatch = useDispatch()
   const classes = topicStyles();
   const closeBackdrop = () => {
-    if(!cancelTokenSource){
+    if (!cancelTokenSource) {
       cancelTokenSourceHighlights.cancel()
       dispatch(setSearchBackdropHighlights(null))
-    } else 
-    {
-    cancelTokenSource.cancel()
-    // cancelTokenSourceHighlights.cancel()
-    dispatch(setSearchBackdrop(null, false))
-    dispatch(setSearchBackdropHighlights(null))
-   }
+    } else {
+      cancelTokenSource.cancel()
+      // cancelTokenSourceHighlights.cancel()
+      dispatch(setSearchBackdrop(null, false))
+      dispatch(setSearchBackdropHighlights(null))
+    }
   }
 
   return (
@@ -81,19 +79,4 @@ LeftSidebar.propTypes = {
   children: PropTypes.node
 };
 
-const mapStateToProps = state => ({
-  sidebarToggle: state.ThemeOptions.sidebarToggle,
-  sidebarToggleMobile: state.ThemeOptions.sidebarToggleMobile,
-  sidebarFixed: state.ThemeOptions.sidebarFixed,
-
-  headerFixed: state.ThemeOptions.headerFixed,
-  headerSearchHover: state.ThemeOptions.headerSearchHover,
-  headerDrawerToggle: state.ThemeOptions.headerDrawerToggle,
-
-  footerFixed: state.ThemeOptions.footerFixed,
-
-  contentBackground: state.ThemeOptions.contentBackground,
-  showSidebar: state.ThemeOptions.showSidebar
-});
-
-export default connect(mapStateToProps)(LeftSidebar);
+export default LeftSidebar;

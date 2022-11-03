@@ -41,7 +41,7 @@ export default function HomePageHeatMap() {
           <BeatLoader color={'var(--primary)'} loading={true} size={10} />
         </div>
       ) : null}
-      <div className="card-header">
+      <div className="card-header" style={{ padding: '6px 20px' }}>
         <div className="card-header--title font-weight-bold drag-handle">Heat Map</div>
         <ButtonGroup color="primary">
           {tableTypes.map((type, i) => (

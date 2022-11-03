@@ -24,21 +24,18 @@ export default function FillingCompanyPriceOverlay(props) {
     setPirceData(data);
   }, [props.chartPriceData]);
 
+  const formatDate = value => {
+    if (value) {
+      return moment(value.split('.')[0]).format('DD MMMM, YYYY');
+    } else {
+      return '';
+    }
+  };
+
   useEffect(() => {
     const newData = props.chartData.map(v => {
       let date = new Date(v.document_date).getTime();
       let rename = renameDocumentTypes(v.document_type);
-      // let title = rename;
-      // if (rename === 'Earning Call') {
-      //   title = 'EC';
-      // } else if (title === '8-K') {
-      //   title = '8K';
-      // } else if (title === '10-K') {
-      //   title = 'K';
-      // } else if (title === '10-Q') {
-      //   title = 'Q';
-      // }
-
       let title = getGroupType(v.document_type);
       return {
         x: date,
@@ -46,11 +43,8 @@ export default function FillingCompanyPriceOverlay(props) {
         document_id: v.document_id,
         title: title,
         color: getColorByDocType(v.document_type),
-        text: `<strong >${rename}</strong><br/>Document Date: ${moment(v.document_date).format(
-          'DD MMMM, YYYY'
-        )}<br/>Period Date:
-        ${moment(v.period_date).format('DD MMMM, YYYY')}
-         `
+        text: `<strong >${rename}</strong><br/>Document Date: ${formatDate(v.document_date)}<br/>Period Date:
+        ${formatDate(v.period_date)}`
       };
     });
 

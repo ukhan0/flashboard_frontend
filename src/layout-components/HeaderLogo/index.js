@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
-import { connect } from 'react-redux';
 import smaLogo from '../../assets/images/logos/ca-logo-white.png';
+import { useSelector } from 'react-redux';
 
-const HeaderLogo = props => {
-  const { sidebarToggle, sidebarHover } = props;
+const HeaderLogo = () => {
+  const { sidebarToggle, sidebarHover } = useSelector(state => state.ThemeOptions);
   return (
     <Fragment>
       <div
@@ -27,9 +27,4 @@ const HeaderLogo = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  sidebarToggle: state.ThemeOptions.sidebarToggle,
-  sidebarHover: state.ThemeOptions.sidebarHover
-});
-
-export default connect(mapStateToProps)(HeaderLogo);
+export default HeaderLogo;
