@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
-
-import { Grid, Container, Button } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import projectLogo from '../../assets/images/logos/ca-logo-white.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-
 import desktopImage from '../../assets/images/composed-bg/sma_filing_desktop.png';
 import mobileImage from '../../assets/images/composed-bg/SMA_Filings_mobile.png';
 import Footer from '../../layout-components/Footer';

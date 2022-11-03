@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { setTopicSearchText } from '../../reducers/Topic';
 import { useDispatch } from 'react-redux';
 const useStyles = makeStyles(theme => ({

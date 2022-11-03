@@ -1,6 +1,7 @@
 import React from 'react';
-import { Avatar, Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import config from '../../config/config';
 
 const useStyles = makeStyles(theme => ({

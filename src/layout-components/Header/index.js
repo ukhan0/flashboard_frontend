@@ -2,8 +2,11 @@ import React, { Fragment, useState } from 'react';
 
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-
-import { Hidden, IconButton, AppBar, Box, Tooltip } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import projectLogo from '../../assets/images/logos/ca-logo-white.png';

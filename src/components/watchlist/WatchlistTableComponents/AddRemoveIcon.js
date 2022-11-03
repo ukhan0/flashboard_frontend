@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
-import { Tooltip } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles(() => ({
   star: {

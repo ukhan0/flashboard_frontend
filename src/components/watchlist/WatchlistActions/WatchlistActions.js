@@ -1,5 +1,10 @@
 import React from 'react';
-import { ListItem, List, ListItemText, Switch, Grid, Typography } from '@material-ui/core';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import Switch from '@material-ui/core/Switch';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import WatchlistService from '../WatchlistService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsColorEnable, setIsActiveCompanies } from '../../../reducers/Watchlist';
@@ -53,7 +58,6 @@ export default function WatchListActions() {
     user.enable_watchlist_color = status;
     saveUser(user);
   };
-
 
   return (
     <>

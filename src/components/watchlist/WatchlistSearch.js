@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { setSelectedWatchlist, setIsTickerSelected } from '../../reducers/Watchlist';

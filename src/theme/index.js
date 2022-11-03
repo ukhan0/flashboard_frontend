@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import typography from './typography';
 
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax */

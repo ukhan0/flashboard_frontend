@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Paper } from '@material-ui/core';
 import TopicFilters from './TopicFilters';
-import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Slide from '@material-ui/core/Slide';
 import { useSelector, useDispatch } from 'react-redux';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import { setOpenTopicSearchDialog, resetSuggestions } from '../../reducers/Topic';
-import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
   dialog: {

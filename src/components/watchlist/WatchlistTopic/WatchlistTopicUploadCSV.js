@@ -1,6 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { TextField, FormControl, FormControlLabel, Checkbox } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Dropzone from 'react-dropzone';
 import useStyles from './WatchlistTopicStyles';
 import { setWatchlistSelectedSymbols, setOverwriteCheckBox } from '../../../reducers/Watchlist';

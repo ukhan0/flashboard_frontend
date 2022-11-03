@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { MenuItem, Select, Checkbox, ListItemText, Input } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+import Input from '@material-ui/core/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedWatchlistCompanyNames } from '../../reducers/Topic';
 import { getWatchlist } from '../watchlist/watchlistApiCalls';

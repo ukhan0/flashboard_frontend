@@ -1,7 +1,9 @@
 import React, { useRef, Fragment } from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Hidden, Drawer, Paper } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
+import Drawer from '@material-ui/core/Drawer';
+import Paper from '@material-ui/core/Paper';
 import SidebarHeader from '../../layout-components/SidebarHeader';
 import SidebarUserbox from '../../layout-components/SidebarUserbox';
 import SidebarMenu from '../../layout-components/SidebarMenu';

@@ -1,8 +1,7 @@
 import React from 'react';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { Dialog, Button } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 
 const TopicClearAdvanceSearch = props => {
   const handleDialog = v => {

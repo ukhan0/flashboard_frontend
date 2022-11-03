@@ -1,7 +1,7 @@
 import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

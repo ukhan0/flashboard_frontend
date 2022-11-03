@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Grid, Paper, Box, Avatar } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -97,7 +100,10 @@ const TopicSearchResults = () => {
                           style={{ float: 'left' }}
                         />
                         <div style={{ float: 'left', paddingLeft: '5px' }}>
-                          <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${v.posting_account}`}>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={`https://twitter.com/${v.posting_account}`}>
                             <span className={classes.topic}> {v.topic_names}</span>
                             &nbsp;
                             {v.posting_account}

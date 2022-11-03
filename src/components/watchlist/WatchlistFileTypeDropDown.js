@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField, Popper, ClickAwayListener } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Popper from '@material-ui/core/Popper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import useStyles from './watchlistStyles';
 import { setWatchlistFileType } from '../../reducers/Watchlist';
 import { FileTypes } from '../../config/watchlistFileTyes';

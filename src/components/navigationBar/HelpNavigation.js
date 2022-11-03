@@ -2,7 +2,9 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { useHistory } from 'react-router-dom';
-import { Box, Typography, Grid } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import { useDispatch } from 'react-redux';
 import { setSelectedVideo } from '../../reducers/Guidelines';
 

@@ -1,16 +1,12 @@
 import React, { Fragment } from 'react';
-
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-
-import { IconButton, Box, Tooltip } from '@material-ui/core';
-
-import { useSelector, useDispatch } from 'react-redux';
-
+import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip';
 import projectLogo from '../../assets/images/logos/ca-logo-color-256.png';
-
+import { useSelector, useDispatch } from 'react-redux';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
-
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 
