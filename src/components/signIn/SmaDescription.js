@@ -17,13 +17,13 @@ const SmaDescription = () => {
           <div className="bg-composed-wrapper--bg bg-premium-dark opacity-5" />
           <div className="bg-composed-wrapper--content p-5">
             <div className="mt-3 mb-5 d-flex align-items-center justify-content-center">
-              <img alt={'SMA'} src={smaLogo} width={150} />
+              <img alt={'CA'} src={smaLogo} width={150} />
             </div>
             <div className="text-white mt-3">
-              <h1 className="display-2 mb-3 font-weight-bold">UDT© using Machine Readable Filings (MRF)</h1>
-              <p className="font-size-lg text-white-100">by Social Market Analytics, Inc. (SMA)</p>
+              <h1 className="display-2 mb-3 font-weight-bold">UDT<sup>©</sup> using Machine Readable Filings (MRF)</h1>
+              <p className="font-size-lg text-white-100">by Context Analytics, Inc. (CA)</p>
               <p className="font-size-md mb-0 text-white-100">
-                SMA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF has
+                CA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF has
                 turned SEC Edgar Filings into Textual Data at the Item, Section, Sub-Section, and Note level with
                 Historical Baselines going back to 2006. Unstructured Data Terminal is the first product using MRF to allow for quick
                 sorting by Sentiment, Change in Sentiment, and Change in Word Count. UDT also provides
@@ -45,9 +45,9 @@ const SmaDescription = () => {
                   <span className="btn-wrapper--label">Back to dashboard</span>
                 </Button>
                 <small className="d-block pt-3">
-                  Disclaimer: Social Market Analytics, Inc. is not an investment advisor, broker, or dealer, and
+                  Disclaimer: Context Analytics, Inc. is not an investment advisor, broker, or dealer, and
                   therefore does not provide any investment advice, nor does it participate in the offer, sale, or
-                  distribution of securities. SMA does not provide trading or investment advice. SMA is not liable for
+                  distribution of securities. CA does not provide trading or investment advice. CA is not liable for
                   any loss or damage caused by any reliance on information obtained in this report , in our website, or
                   in our communications.
                 </small>

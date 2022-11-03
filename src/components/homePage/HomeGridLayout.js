@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
+import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react';
 import HomePageTable from './HomePageTable';
 import HomePageNotification from './HomepageNotification';
 import HomePageSmaLime1 from './HomePageSmaLime1';
@@ -13,6 +13,7 @@ import { get, maxBy } from 'lodash';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
+  const componentDidMount = useRef(false);
   const [xAxis, setXAxis] = useState(0);
 
   const handleLayoutChange = (layout, layouts) => {
@@ -100,7 +101,11 @@ const HomeGridLayout = ({ enableDragResizeWidgets, drawerSelectedWidget }) => {
 
   useEffect(() => {
     // scroll layout when widget selection updated
-    layoutScroll();
+    if (componentDidMount.current) {
+      layoutScroll();
+    } else {
+      componentDidMount.current = true
+    }
   }, [layoutScroll])
 
 
