@@ -18,7 +18,7 @@ const SmaDescription = () => {
               <img alt={'CA'} src={smaLogo} width={150} />
             </div>
             <div className="text-white mt-3">
-              <h1 className="display-2 mb-3 font-weight-bold">UDT<sup>©</sup> using Machine Readable Filings (MRF)</h1>
+              <h1 className="display-3 mb-3 font-weight-bold">UDT<sup>©</sup> using Machine Readable Filings (MRF)</h1>
               <p className="font-size-lg text-white-100">by Context Analytics, Inc. (CA)</p>
               <p className="font-size-md mb-0 text-white-100">
                 CA has partnered with S&P Global Market Intelligence on 'Machine Readable Filings' (MRF). MRF has
