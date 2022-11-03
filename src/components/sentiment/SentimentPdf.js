@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import config from '../../config/config';
 import { BeatLoader } from 'react-spinners';
 import Dialog from '@material-ui/core/Dialog';
-import { Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import CloseIcon from '@material-ui/icons/Close';
 
 const SentimentPdf = ({ closeOpenPdfPopup }) => {

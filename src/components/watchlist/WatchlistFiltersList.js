@@ -1,26 +1,25 @@
 import React from 'react';
-import {
-  Drawer,
-  Typography,
-  makeStyles,
-  IconButton,
-  Grid,
-  ListItem,
-  ListItemText,
-  List,
-  ListItemSecondaryAction
-} from '@material-ui/core';
+import Drawer from '@material-ui/core/Drawer';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import List from '@material-ui/core/List';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import CloseIcon from '@material-ui/icons/Close';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import WatchlistService from './WatchlistService';
-import { 
+import {
   setIsFilterUpdate,
   setSelectedFilter,
   setFilterLabel,
   setWatchlistType,
   setWatchlistFileType,
   setWatchlistMetric,
-  setWatchlistUniverse } from '../../reducers/Watchlist';
+  setWatchlistUniverse
+} from '../../reducers/Watchlist';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 

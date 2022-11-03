@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
@@ -149,7 +149,7 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
 
   let signatureIterator = 1;
   return (
-    <div className={clsx({[classes.mainContainer]: !isLoading})}>
+    <div className={clsx({ [classes.mainContainer]: !isLoading })}>
       {isLoading ? (
         <div className={classes.loaderSection}>
           <BeatLoader color={'var(--primary)'} size={15} />

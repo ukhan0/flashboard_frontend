@@ -1,6 +1,9 @@
 import React from 'react';
-import { MenuItem, Select, ListItemText, Input } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import ListItemText from '@material-ui/core/ListItemText';
+import Input from '@material-ui/core/Input';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedSector, setSelectedIndustries } from '../../reducers/Topic';
 import sectors from '../../config/gicsData';

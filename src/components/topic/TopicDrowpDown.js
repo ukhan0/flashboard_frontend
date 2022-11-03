@@ -1,6 +1,10 @@
 import React, { Fragment } from 'react';
 import TopicSearchHistory from './TopicSearchHistory';
-import { Grid, Menu, Button, ButtonGroup, List } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import List from '@material-ui/core/List';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { preventParentClick } from './topicHelpers';

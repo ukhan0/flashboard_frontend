@@ -1,21 +1,16 @@
 import React, { Fragment } from 'react';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import {
-  Grid,
-  Container,
-  Input,
-  InputLabel,
-  InputAdornment,
-  FormControlLabel,
-  Checkbox,
-  Card,
-  CardContent,
-  Button,
-  FormControl
-} from '@material-ui/core';
-
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
 import MailOutlineTwoToneIcon from '@material-ui/icons/MailOutlineTwoTone';
 import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchText, resetSuggestions } from '../../reducers/Topic';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
 import TopicHelpPopup from './TopicHelpPopup';
 import { get } from 'lodash';
 const TopicSearchTextField = props => {

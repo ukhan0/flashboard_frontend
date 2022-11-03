@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import {
-  ButtonGroup,
-  Button,
-  Popper,
-  ClickAwayListener,
-  Paper,
-  Grow,
-  MenuList,
-  MenuItem,
-  ListItemText
-} from '@material-ui/core';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+import Popper from '@material-ui/core/Popper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Paper from '@material-ui/core/Paper';
+import Grow from '@material-ui/core/Grow';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import {
   setSelectedUniverse,
   setSelectedSector,

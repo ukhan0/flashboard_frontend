@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer } from '@material-ui/core';
+import Drawer from '@material-ui/core/Drawer';
 import { useSelector, useDispatch } from 'react-redux';
 import SentimentTableOfContent from './SentimentTableOfContent';
 import { setSentimentDrawerOpen, setCurrentToc } from '../../reducers/Sentiment';

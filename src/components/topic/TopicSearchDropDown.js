@@ -1,6 +1,7 @@
 import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormControl, TextField } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
 import useStyles from '../watchlist/watchlistStyles';
 import CloseIcon from '@material-ui/icons/Close';
 const TopicSearchDropDown = props => {

@@ -1,8 +1,10 @@
 import React, { Fragment, useState } from 'react';
-import { Grid, Dialog, IconButton } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import CloseIcon from '@material-ui/icons/Close';
 import TopicFilters from './TopicFilters';
-import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import TopicSuggestionsDialog from './TopicSuggestionsDialog';
 import { setOpenTopicSearchDialog } from '../../reducers/Topic';

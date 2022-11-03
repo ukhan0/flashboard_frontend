@@ -1,5 +1,9 @@
 import React from 'react';
-import { Drawer, Typography, makeStyles, IconButton, Grid } from '@material-ui/core';
+import Drawer from '@material-ui/core/Drawer';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import CloseIcon from '@material-ui/icons/Close';
 import WatchlistFiletypeEmail from './WatchlistFileTypeEmail';
 

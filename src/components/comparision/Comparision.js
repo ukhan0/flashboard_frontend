@@ -10,7 +10,7 @@ import { BeatLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import FilingsCompanyDetails from '../Filings/FilingsCompanyDetails';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import queryString from 'query-string';
 
 const useStyles = makeStyles(theme => ({

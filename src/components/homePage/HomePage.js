@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { BeatLoader } from 'react-spinners';
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { get } from 'lodash';
 import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import './HomePage.css';
-import { homePageWidgets, homepageWidgetsKey } from "./homePageConfig";
+import { homePageWidgets, homepageWidgetsKey } from './homePageConfig';
 import HomeGridLayout from './HomeGridLayout';
 import axios from 'axios';
 import config from '../../config/config';
 import HomePageWidgetDrawer from './HomePageWidgetDrawer';
-import { Paper, Button } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 import { setSnackBarObj } from '../../reducers/Alerts';
 import SettingsIcon from '@material-ui/icons/Settings';
-
 
 const useStyle = makeStyles({
   loader: {
@@ -62,10 +62,9 @@ const getHomepageWidgets = () => {
   let finalWidgets = [];
 
   // convert saved widgets into array
-  Object.keys(savedWidgets).forEach((item) => {
-    if (savedWidgets[item].show)
-      finalWidgets.push({ name: item, ...savedWidgets[item] });
-  })
+  Object.keys(savedWidgets).forEach(item => {
+    if (savedWidgets[item].show) finalWidgets.push({ name: item, ...savedWidgets[item] });
+  });
 
   return finalWidgets;
 };
@@ -80,11 +79,11 @@ export default function HomePage() {
   const { user } = useSelector(state => state.User);
 
   const handleDrawer = () => {
-    setIsHomePageDrawerOpen((prevState) => {
-      return !prevState
+    setIsHomePageDrawerOpen(prevState => {
+      return !prevState;
     });
-    setEnableDragResizeWidgets((prevState) => {
-      return !prevState
+    setEnableDragResizeWidgets(prevState => {
+      return !prevState;
     });
   };
 
@@ -95,8 +94,8 @@ export default function HomePage() {
       });
     } else {
       setSidebarSelectedWidget(prevState => {
-        return prevState.filter((item) => {
-          return item.name !== selectedWidget.name
+        return prevState.filter(item => {
+          return item.name !== selectedWidget.name;
         });
       });
     }
@@ -104,13 +103,15 @@ export default function HomePage() {
 
   const handleSaveSelected = async () => {
     const convertSelectWidgetData = {};
-    drawerSelectedWidget.forEach((item) => {
-      convertSelectWidgetData[item.name] = item
+    drawerSelectedWidget.forEach(item => {
+      convertSelectWidgetData[item.name] = item;
     });
 
     try {
-      const response = await axios.post(`${config.apiUrl}/api/users/update_user`,
-        { id: user.id, home_widgets: convertSelectWidgetData });
+      const response = await axios.post(`${config.apiUrl}/api/users/update_user`, {
+        id: user.id,
+        home_widgets: convertSelectWidgetData
+      });
 
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
@@ -133,16 +134,16 @@ export default function HomePage() {
   return (
     <div className="home-page">
       <div className={classes.loader}> {<BeatLoader color={'var(--primary)'} loading={isLoading} size={10} />}</div>
-      <Button onClick={handleDrawer}
+      <Button
+        onClick={handleDrawer}
         color="primary"
         variant="contained"
-        className={clsx([classes.button, classes.btn])}
-      >
+        className={clsx([classes.button, classes.btn])}>
         <SettingsIcon />
       </Button>
 
       <Slide direction="down" in={isHomePageDrawerOpen} mountOnEnter unmountOnExit>
-        <Paper className={classes.drawerContainer} id='widget-drawer-container'>
+        <Paper className={classes.drawerContainer} id="widget-drawer-container">
           <HomePageWidgetDrawer
             open={isHomePageDrawerOpen}
             handleDrawer={handleDrawer}

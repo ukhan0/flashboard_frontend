@@ -1,6 +1,9 @@
 import React, { Fragment, useState, useEffect, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Hidden, IconButton, Box, Popover } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
+import Popover from '@material-ui/core/Popover';
 import NotificationsActiveTwoToneIcon from '@material-ui/icons/NotificationsActiveTwoTone';
 // import SocketService from '../../socketService';
 // import sound from './Tones.mp3';

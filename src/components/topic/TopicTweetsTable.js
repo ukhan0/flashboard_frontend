@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Card, InputBase } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import InputBase from '@material-ui/core/InputBase';
 import { useSelector } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';

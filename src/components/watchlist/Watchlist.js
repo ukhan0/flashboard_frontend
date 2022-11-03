@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { get, cloneDeep } from 'lodash';
-import { Grid, Button, Box } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import axios from 'axios';
 import config from '../../config/config';
 import { parseDateStrMoment, dateFormaterMoment } from './WatchlistTableHelpers';

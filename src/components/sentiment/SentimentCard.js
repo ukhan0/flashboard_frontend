@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import CardContent from '@material-ui/core/CardContent';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';

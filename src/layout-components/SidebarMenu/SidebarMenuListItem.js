@@ -2,7 +2,10 @@ import React, { useState, forwardRef } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { ListItem, Button, Collapse } from '@material-ui/core';
+import ListItem from '@material-ui/core/ListItem';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 const CustomRouterLink = forwardRef(function CustomLink(props, ref) {

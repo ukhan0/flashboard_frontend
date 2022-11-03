@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import WatchlistTopicTabs from './WatchlistTopicTabs';
 import WatchlistTopicSearch from './WatchlistTopicSearch';
 import WatchlistTopicUploadCSV from './WatchlistTopicUploadCSV';
@@ -42,8 +47,12 @@ const WatchlistTopicDialog = ({ error, onClose, onUpload, open }) => {
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} keepMounted={false}
-      disableEscapeKeyDown={true} disableBackdropClick={true}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      keepMounted={false}
+      disableEscapeKeyDown={true}
+      disableBackdropClick={true}>
       <DialogTitle>{'Add to Watchlist'}</DialogTitle>
       <DialogContent>
         <WatchlistTopicTabs />

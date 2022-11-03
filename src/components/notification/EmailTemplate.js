@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Container } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import { get } from 'lodash';
 const EmailTemplate = () => {
   const history = useHistory();

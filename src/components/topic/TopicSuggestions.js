@@ -1,5 +1,8 @@
 import React, { useEffect, Fragment } from 'react';
-import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { forEach, isEmpty, remove, cloneDeep } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,7 +12,6 @@ import {
   setIgnoreSearchTextArray
 } from '../../reducers/Topic';
 import { findSuggestions } from './topicActions';
-import { makeStyles } from '@material-ui/core/styles';
 import { searchSuggestionTypeConfig } from '../../config/appConfig';
 
 const useStyles = makeStyles(_theme => ({
