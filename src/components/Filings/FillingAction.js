@@ -10,6 +10,9 @@ import {
 import { get } from 'lodash';
 import config from '../../config/config';
 import { getOldId, getRecentId } from '../comparision/ComparisionHelper';
+import { renameDocumentTypes } from '../topic/topicHelpers';
+import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
+
 let cancelTokens = [];
 
 export const getCompanyFilingListing = () => {
@@ -32,9 +35,18 @@ export const getCompanyFilingListing = () => {
         }
       );
 
-      const data = get(response, 'data', []);
-      if (response) {
-        dispatch(setCompanyFillingData(data.data));
+      const dataArr = get(response, 'data.data', []);
+      if (dataArr.length) {
+        dataArr.forEach((data, i) => {
+          dataArr[i].document_type = renameDocumentTypes(data.document_type);
+          dataArr[i].document_date = data.document_date
+            ? dateFormaterMoment(parseDateStrMoment(data.document_date.split('.')[0]))
+            : '';
+          dataArr[i].period_date = data.period_date
+            ? dateFormaterMoment(parseDateStrMoment(data.period_date.split('.')[0]))
+            : '';
+        });
+        dispatch(setCompanyFillingData(dataArr));
       } else {
         dispatch(setCompanyFillingData([]));
       }
