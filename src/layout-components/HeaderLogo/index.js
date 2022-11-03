@@ -15,10 +15,10 @@ const HeaderLogo = () => {
           'app-header-logo-close': sidebarToggle,
           'app-header-logo-open': sidebarHover
         })}>
-        <Box className="header-logo-wrapper" title="SMA">
+        <Box className="header-logo-wrapper" title="CA">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton color="primary" size="medium">
-              <img className={`app-header-logo-img-${sidebarToggle ? 'small' : 'big'}`} alt="SMA" src={smaLogo} />
+              <img className={`app-header-logo-img-${sidebarToggle ? 'small' : 'big'}`} alt="CA" src={smaLogo} />
             </IconButton>
           </Link>
         </Box>

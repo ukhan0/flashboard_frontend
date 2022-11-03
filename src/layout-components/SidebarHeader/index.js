@@ -33,10 +33,10 @@ const SidebarHeader = () => {
         })}
         style={{ width: "100%" }}
       >
-        <Box className="header-logo-wrapper" title="SMA">
+        <Box className="header-logo-wrapper" title="CA">
           <Link to="/" className="header-logo-wrapper-link">
             <IconButton color="primary" className='pt-0 py-0'>
-              <img className="app-sidebar-logo" alt="SMA" style={{ width: "108px" }} src={projectLogo} />
+              <img className="app-sidebar-logo" alt="CA" style={{ width: "108px" }} src={projectLogo} />
             </IconButton>
           </Link>
         </Box>
