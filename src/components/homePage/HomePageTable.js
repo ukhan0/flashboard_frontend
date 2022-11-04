@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { get, round, cloneDeep } from 'lodash';
-import { parseDateStrMoment, dateFormaterMoment } from '../watchlist/WatchlistTableHelpers';
+import { parseDateAndFormatMoment } from '../watchlist/WatchlistTableHelpers';
 import TickerLogo from '../watchlist/WatchlistTableComponents/TickerLogo';
 import Card from '@material-ui/core/Card';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -113,8 +113,7 @@ const columnDefs = [
     field: 'document_date',
     colId: 'document_date',
     sortable: true,
-    valueFormatter: params =>
-      params.data.document_date ? dateFormaterMoment(parseDateStrMoment(params.data.document_date.split('.')[0])) : '',
+    valueFormatter: params => (params.data.document_date ? parseDateAndFormatMoment(params.data.document_date) : ''),
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     minWidth: 50,

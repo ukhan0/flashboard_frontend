@@ -95,7 +95,7 @@ export const formatData = rawDataArr => {
   return rawDataArr.map(rawData => formatComapnyData(rawData));
 };
 
-export const formatComapnyData = rawData => {
+export const formatComapnyData = rawData => {//?
   let isActive = Boolean(parseInt(get(rawData, 'cq', '0')));
   return {
     isActiveFlag: isActive,
