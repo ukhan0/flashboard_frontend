@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { get } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Avatar from '@material-ui/core/Avatar';
@@ -13,7 +13,6 @@ import avatar4 from '../../assets/images/avatars/avatar8.png';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { deleteToken } from '../../utils/helpers';
 import SocketService from '../../socketService';
-import { Link } from "react-router-dom"
 const StyledBadge = withStyles({
   badge: {
     backgroundColor: 'var(--success)',
@@ -44,7 +43,7 @@ const StyledBadge = withStyles({
 })(Badge);
 export default function HeaderUserbox() {
   const user = JSON.parse(localStorage.getItem('user'));
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -60,6 +59,11 @@ export default function HeaderUserbox() {
     localStorage.clear();
     window.location.href = '/PagesRegister';
   };
+
+  const gotoSettings = () => {
+    window.location.href = '/settings';
+  };
+
   return (
     <Fragment>
       <Button
@@ -119,8 +123,8 @@ export default function HeaderUserbox() {
               <span className="text-black-50 text-center">{get(user, 'email', '')}</span>
             </div>
             <Divider className="w-100 mt-2" />
-            <ListItem button color="secondary">
-              <Link to={"/settings"}>Settings</Link>
+            <ListItem button color="secondary" onClick={gotoSettings}>
+              Settings
             </ListItem>
             <ListItem button color="secondary" onClick={signout}>
               Sign Out
