@@ -24,7 +24,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="app-footer--second">
-            <span>© 2021 by Social Market Analytics, Inc All rights reserved.</span>
+            <span>© 2021 by Context Analytics, Inc All rights reserved.</span>
           </div>
         </div>
       </Paper>

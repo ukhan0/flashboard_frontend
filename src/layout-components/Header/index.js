@@ -53,7 +53,7 @@ const Header = props => {
             <Box className="app-logo-wrapper">
               <Link to="/" className="header-logo-wrapper-link">
                 <IconButton color="primary" size="medium">
-                  <img className="app-header-logo-img-small" alt="SMA" src={projectLogo} />
+                  <img className="app-header-logo-img-small" alt="CA" src={projectLogo} />
                 </IconButton>
               </Link>
               <Hidden smDown>
