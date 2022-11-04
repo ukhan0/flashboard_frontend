@@ -121,16 +121,18 @@ const Watchlist = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    let rawData = [];
-    if (selectedUniverse === 'all') {
-      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-        rawData = completeCompaniesData;
-      } else if (selectedType === 'global' && (selectedFileType === '10-K' || selectedFileType === '10-Q')) {
-        rawData = completeCompaniesData.filter(company => company.co === 'CA');
-      } else {
-        rawData = completeCompaniesDataGlobal;
+    if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
+      let rawData = [];
+      if (selectedUniverse === 'all') {
+        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+          rawData = completeCompaniesData;
+        } else if (selectedType === 'global' && (selectedFileType === '10-K' || selectedFileType === '10-Q')) {
+          rawData = completeCompaniesData.filter(company => company.co === 'CA');
+        } else {
+          rawData = completeCompaniesDataGlobal;
+        }
+        setWatchlistData(formatData(rawData));
       }
-      setWatchlistData(formatData(rawData));
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal, selectedFileType]);
 
