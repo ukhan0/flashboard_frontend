@@ -5,8 +5,6 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
 import { useHistory } from 'react-router-dom';
-import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
-import { renameDocumentTypes } from '../topic/topicHelpers';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex } from '../../reducers/Topic';
@@ -33,8 +31,7 @@ const columnDefs = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'documentType',
-    valueFormatter: params => renameDocumentTypes(params.data.document_type)
+    colId: 'documentType'
   },
   {
     headerName: 'Document Date',
@@ -43,10 +40,7 @@ const columnDefs = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'documentDate',
-    // filter: 'agDateColumnFilter',
-    valueFormatter: params =>
-      params.data.document_date ? dateFormaterMoment(parseDateStrMoment(params.data.document_date.split('.')[0])) : ''
+    colId: 'documentDate'
   },
   {
     headerName: 'Period Date',
@@ -55,10 +49,7 @@ const columnDefs = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'periodDate',
-    // filter: 'agDateColumnFilter',
-    valueFormatter: params =>
-      params.data.period_date ? dateFormaterMoment(parseDateStrMoment(params.data.period_date.split('.')[0])) : ''
+    colId: 'periodDate'
   },
   {
     headerName: 'Sentiment',
