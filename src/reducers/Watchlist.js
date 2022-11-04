@@ -10,7 +10,6 @@ export const RESET_WATCHLIST = 'WATCHLIST/RESET_WATCHLIST';
 export const SET_RECENT_DATALOADED_FLAG = 'WATCHLIST/SET_RECENT_DATALOADED_FLAG';
 export const SET_COMPELTE_DATALOADED_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_FLAG';
 export const SET_COMPELTE_DATALOADED_GLOBAL_FLAG = 'WATCHLIST/SET_COMPELTE_DATALOADED_GLOBAL_FLAG';
-export const SET_COUNT = 'WATCHLIST/SET_COUNT';
 export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
 export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
@@ -60,11 +59,6 @@ export const setEmailTemplate = emailTemplate => ({
 export const setOverwriteCheckBox = overwriteCheckBox => ({
   type: SET_OVERWRITE_CHECK_BOX,
   overwriteCheckBox
-});
-
-export const setCount = count => ({
-  type: SET_COUNT,
-  count
 });
 
 export const setWatchlistType = watchlistType => ({
@@ -205,7 +199,6 @@ const getDefaultState = () => {
         : 'totdoc'
       : 'totdoc',
     selectedTab: 0,
-    count: 0,
     selectedSymbols: [],
     selectedItem: null,
     recentDataLoaded: false,
@@ -246,8 +239,6 @@ export default function reducer(
       return { ...state, isActiveCompanies: action.isActiveCompanies };
     case SET_OVERWRITE_CHECK_BOX:
       return { ...state, overwriteCheckBox: action.overwriteCheckBox };
-    case SET_COUNT:
-      return { ...state, count: action.count };
     case SET_FILE_TYPE:
       return { ...state, selectedFileType: action.fileType };
     case SET_TYPE:
