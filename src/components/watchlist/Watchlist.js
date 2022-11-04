@@ -178,11 +178,11 @@ const Watchlist = () => {
           setLoading(true);
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          dispatch(syncCompleteDataOnPage(selectedType, rawData));
           if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
             setTopicDialogOpen(true);
           }
           if (rawData && rawData.length) {
+            dispatch(syncCompleteDataOnPage(selectedType, rawData));
             setWatchlistData(formatData(rawData));
           }
         }
