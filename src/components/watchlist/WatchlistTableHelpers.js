@@ -96,6 +96,20 @@ export const parseDateStrMoment = dateStr => {
   return dateObj;
 };
 
+export const parseDateAndFormatMoment = dateStr => {
+  if (dateStr) {
+    try {
+      dateStr = moment(dateStr.split('.')[0]);
+      return dateStr.format('MM/DD/YYYY');
+    } catch (e) {
+      console.log(e);
+      return '';
+    }
+  } else {
+    return '';
+  }
+};
+
 export const parseNumber = number => {
   let parsedNumber = null;
   if (number) {

@@ -7,6 +7,8 @@ import {
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData
 } from './../../reducers/Watchlist';
+import { renameDocumentTypes } from '../topic/topicHelpers';
+import { parseDateAndFormatMoment } from './WatchlistTableHelpers';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -157,15 +159,13 @@ export const getWatchlistTable2Data = (
       return {
         ...d,
         companyName: get(d, 'company_name', null),
-        documentType: get(d, 'document_type', null),
-        sentiment: round(get(d, 'sentiment', null), 2),
-        // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
-        docDate: get(d, 'document_date', null),
+        documentType: renameDocumentTypes(d.document_type),
+        sentiment: round(get(d, 'sentiment', null), 2) ?? 0,
+        document_date: parseDateAndFormatMoment(d.document_date),
         wordCount: round(get(d, 'word_count', null), 2),
         countryCode: get(d, 'countrycode', null),
         sector: get(d, 'sector', null),
         industry: get(d, 'industry', null)
-        // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
       };
     });
 
