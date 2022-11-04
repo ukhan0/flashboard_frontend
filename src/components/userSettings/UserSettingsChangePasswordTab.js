@@ -1,41 +1,23 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { useForm, Controller } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles(theme => ({
-    generalTabImage: {
-        [
-            theme.breakpoints.down('xs')]: {
-            padding: '20px 8px',
-        },
-
-        [
-            theme.breakpoints.up('sm')]: {
-            padding: '20px 8px',
-
-        },
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%'
-    },
-    generalTabImageForm: {
-        maxWidth: 300
-    },
     generalTabForm: {
         height: '100%',
         padding: 20
+    },
+    tabMainContainer: {
+        marginTop: '20px'
     },
 }));
 
 const UserSettingsChangePasswordTab = () => {
     const classes = useStyles();
-    const { user } = useSelector(state => state.User);
     const { control, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {
             currentPassword: '',
@@ -43,13 +25,16 @@ const UserSettingsChangePasswordTab = () => {
             confirmNewPassword: ''
         }
     });
+
     const newPassword = useRef({});
     newPassword.current = watch("newPassword", "");
 
-    const onSubmit = data => console.log('data', data);
+    const onSubmit = (data) => {
+        console.log('onSubmit data', data)
+    };
 
     return (
-        <div className={classes.generalTabMainContainer}>
+        <div className={classes.tabMainContainer}>
             <Paper className={classes.generalTabForm}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>

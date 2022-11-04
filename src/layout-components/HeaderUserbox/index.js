@@ -13,6 +13,7 @@ import avatar4 from '../../assets/images/avatars/avatar8.png';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { deleteToken } from '../../utils/helpers';
 import SocketService from '../../socketService';
+import { useHistory } from 'react-router-dom';
 const StyledBadge = withStyles({
   badge: {
     backgroundColor: 'var(--success)',
@@ -44,7 +45,7 @@ const StyledBadge = withStyles({
 export default function HeaderUserbox() {
   const user = JSON.parse(localStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const history = useHistory();
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -61,7 +62,8 @@ export default function HeaderUserbox() {
   };
 
   const gotoSettings = () => {
-    window.location.href = '/settings';
+    setAnchorEl(null);
+    history.push("/settings");
   };
 
   return (
