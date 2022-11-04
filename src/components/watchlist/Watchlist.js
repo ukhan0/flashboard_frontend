@@ -18,7 +18,6 @@ import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
   setOverwriteCheckBox,
-  setCount,
   setIsTickerSelected,
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData,
@@ -73,7 +72,6 @@ const Watchlist = () => {
     selectedUniverse,
     selectedMetric,
     selectedSymbols,
-    count,
     isFilterActive,
     isColorEnable,
     overwriteCheckBox,
@@ -181,13 +179,12 @@ const Watchlist = () => {
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
           dispatch(syncCompleteDataOnPage(selectedType, rawData));
-        }
-        if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
-          setTopicDialogOpen(true);
-          dispatch(setCount(count + 1));
-        }
-        if (selectedUniverse !== 'all') {
-          setWatchlistData(formatData(rawData));
+          if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
+            setTopicDialogOpen(true);
+          }
+          if (rawData && rawData.length) {
+            setWatchlistData(formatData(rawData));
+          }
         }
         setLoading(false);
       } catch (error) {
@@ -195,7 +192,7 @@ const Watchlist = () => {
         // log exception here
       }
     }
-  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
+  }, [selectedUniverse, selectedFileType, selectedType, dispatch]);
 
   useEffect(() => {
     fetchData();
