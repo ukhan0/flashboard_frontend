@@ -30,7 +30,7 @@ import {
 } from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
 import { renameDocumentTypes } from './topicHelpers';
-import { parseDateAndFormatMoment } from '../watchlist/WatchlistTableHelpers';
+import { dateFormaterMoment, parseDateStrMoment } from '../watchlist/WatchlistTableHelpers';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles(theme => ({
@@ -344,7 +344,7 @@ const TopicSearchResults = () => {
                               &nbsp; &nbsp;
                               {companyResult.document_date ? (
                                 <span className={clsx(classes.documentDate, 'text-black-50')}>
-                                  {parseDateAndFormatMoment(companyResult.document_date)}
+                                  {dateFormaterMoment(parseDateStrMoment(companyResult.document_date))}
                                 </span>
                               ) : null}
                             </h2>
