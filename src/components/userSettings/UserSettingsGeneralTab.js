@@ -20,7 +20,7 @@ import { maxFileSize, acceptedFileTypes } from "./userSettingsConfig"
 
 const useStyles = makeStyles(theme => ({
     generalTabImage: {
-        padding: '20px 8px'
+        padding: '20px 8px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
