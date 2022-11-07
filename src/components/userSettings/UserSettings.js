@@ -4,9 +4,9 @@ import Tab from '@material-ui/core/Tab';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import UserSettingsGeneralTab from './UserSettingsGeneralTab';
-import UserSettingsChangePasswordTab from './UserSettingsChangePasswordTab';
+// import UserSettingsChangePasswordTab from './UserSettingsChangePasswordTab';
 import UserSettingsTabpanel from './UserSettingsTabpanel';
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
+// import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
@@ -59,17 +59,17 @@ const UserSettings = () => {
           <div className={classes.tabContainer}>
             <Tabs value={tab} onChange={handleTab} indicatorColor="primary" textColor="primary">
               <Tab label="General" icon={<AccountBoxIcon />} className={classes.tab} />
-              <Tab label="Change Password" icon={<VpnKeyIcon />} className={classes.tab} />
+              {/* <Tab label="Change Password" icon={<VpnKeyIcon />} className={classes.tab} /> */}
             </Tabs>
 
             <UserSettingsTabpanel value={tab} index={0}>
               {' '}
               <UserSettingsGeneralTab />
             </UserSettingsTabpanel>
-            <UserSettingsTabpanel value={tab} index={1}>
+            {/* <UserSettingsTabpanel value={tab} index={1}>
               {' '}
               <UserSettingsChangePasswordTab />
-            </UserSettingsTabpanel>
+            </UserSettingsTabpanel> */}
           </div>
         </div>
       </Container>
