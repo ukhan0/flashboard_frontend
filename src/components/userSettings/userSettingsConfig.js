@@ -1,4 +1,4 @@
-export const maxFileSize = 3000000; // 3mb
+export const maxFileSize = 3072000; // 3mb
 export const acceptedFileTypes = [
     {
         label: 'png',

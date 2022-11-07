@@ -20,13 +20,7 @@ import { maxFileSize, acceptedFileTypes } from "./userSettingsConfig"
 
 const useStyles = makeStyles(theme => ({
     generalTabImage: {
-        [theme.breakpoints.down('xs')]: {
-            padding: '20px 8px'
-        },
-
-        [theme.breakpoints.up('sm')]: {
-            padding: '20px 8px'
-        },
+        padding: '20px 8px'
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -210,7 +204,7 @@ const UserSettingsGeneralTab = () => {
             }
 
         } catch (error) {
-            console.log('erro', error);
+            console.log('error', error);
         }
     };
 

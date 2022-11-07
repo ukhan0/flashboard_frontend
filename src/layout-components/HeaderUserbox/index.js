@@ -44,6 +44,7 @@ const StyledBadge = withStyles({
 })(Badge);
 export default function HeaderUserbox() {
   const user = JSON.parse(localStorage.getItem('user'));
+  const profilePic = get(user , 'profile_pic' , null)
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const handleClick = event => {
@@ -80,7 +81,7 @@ export default function HeaderUserbox() {
               horizontal: 'right'
             }}
             variant="dot">
-            <Avatar sizes="44" alt="Dustin Watson" src={avatar4} />
+            <Avatar sizes="44" alt="Dustin Watson" src={profilePic ? profilePic : avatar4} />
           </StyledBadge>
         </Box>
         <div className="d-xl-block pl-3">
