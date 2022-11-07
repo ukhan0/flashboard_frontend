@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import UserSettingsGeneralTab from './UserSettingsGeneralTab';
 import UserSettingsChangePasswordTab from './UserSettingsChangePasswordTab';
 import UserSettingsTabpanel from './UserSettingsTabpanel';
@@ -9,6 +11,12 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles(theme => ({
+  userSettingsContainer: {
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  },
   mainContainer: {
     padding: '4px 0 20px 0'
   },
@@ -20,10 +28,16 @@ const useStyles = makeStyles(theme => ({
   },
   tab: {
     '& .MuiTab-wrapper': {
-      flexDirection: 'row'
-    },
-    '& .MuiSvgIcon-root': {
-      marginRight: '8px'
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column'
+      },
+      [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row'
+      },
+
+      '& .MuiSvgIcon-root': {
+        marginRight: '8px'
+      }
     }
   }
 }));
@@ -38,25 +52,27 @@ const UserSettings = () => {
 
   return (
     <div className="user-settings-page bg-light">
-      <div className={classes.mainContainer}>
-        <h2 className={classes.settingsHeading}>Account Settings</h2>
+      <Container className={classes.userSettingsContainer}>
+        <div className={classes.mainContainer}>
+          <Typography variant='h2' className={classes.settingsHeading}>Account Settings</Typography>
 
-        <div className={classes.tabContainer}>
-          <Tabs value={tab} onChange={handleTab} indicatorColor="primary" textColor="primary">
-            <Tab label="General" icon={<AccountBoxIcon />} className={classes.tab} />
-            <Tab label="Change Password" icon={<VpnKeyIcon />} className={classes.tab} />
-          </Tabs>
+          <div className={classes.tabContainer}>
+            <Tabs value={tab} onChange={handleTab} indicatorColor="primary" textColor="primary">
+              <Tab label="General" icon={<AccountBoxIcon />} className={classes.tab} />
+              <Tab label="Change Password" icon={<VpnKeyIcon />} className={classes.tab} />
+            </Tabs>
 
-          <UserSettingsTabpanel value={tab} index={0}>
-            {' '}
-            <UserSettingsGeneralTab />
-          </UserSettingsTabpanel>
-          <UserSettingsTabpanel value={tab} index={1}>
-            {' '}
-            <UserSettingsChangePasswordTab />
-          </UserSettingsTabpanel>
+            <UserSettingsTabpanel value={tab} index={0}>
+              {' '}
+              <UserSettingsGeneralTab />
+            </UserSettingsTabpanel>
+            <UserSettingsTabpanel value={tab} index={1}>
+              {' '}
+              <UserSettingsChangePasswordTab />
+            </UserSettingsTabpanel>
+          </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };
