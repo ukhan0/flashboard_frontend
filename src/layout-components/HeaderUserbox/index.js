@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { get } from 'lodash';
+import { useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
@@ -44,6 +45,7 @@ const StyledBadge = withStyles({
 export default function HeaderUserbox() {
   const user = JSON.parse(localStorage.getItem('user'));
   const [anchorEl, setAnchorEl] = useState(null);
+  const history = useHistory();
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,12 +58,12 @@ export default function HeaderUserbox() {
     SocketService.socket.close();
     deleteToken();
     localStorage.clear();
-    window.location.href = '/PagesRegister';
+    history.push('/PagesRegister');
   };
 
   const gotoSettings = () => {
     setAnchorEl(null);
-    window.location.href = '/settings';
+    history.push('/settings');
   };
 
   return (
@@ -90,48 +92,50 @@ export default function HeaderUserbox() {
         </span>
       </Button>
 
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        getContentAnchorEl={null}
-        open={Boolean(anchorEl)}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center'
-        }}
-        transformOrigin={{
-          vertical: 'center',
-          horizontal: 'center'
-        }}
-        onClose={handleClose}
-        className="ml-2">
-        <div className="dropdown-menu-right dropdown-menu-lg overflow-hidden p-0">
-          <List className="text-left bg-transparent d-flex align-items-center flex-column pt-0">
-            <Box>
-              <StyledBadge
-                overlap="circle"
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right'
-                }}
-                variant="dot">
-                <Avatar sizes="44" alt="Dustin Watson" src={avatar4} />
-              </StyledBadge>
-            </Box>
-            <div className="pl-3 ">
-              <div className="font-weight-bold text-center pt-2 line-height-1">{get(user, 'name', '')}</div>
-              <span className="text-black-50 text-center">{get(user, 'email', '')}</span>
-            </div>
-            <Divider className="w-100 mt-2" />
-            <ListItem button color="secondary" onClick={gotoSettings}>
-              Settings
-            </ListItem>
-            <ListItem button color="secondary" onClick={signout}>
-              Sign Out
-            </ListItem>
-          </List>
-        </div>
-      </Menu>
+      {Boolean(anchorEl) ?
+        (<Menu
+          anchorEl={anchorEl}
+          keepMounted
+          getContentAnchorEl={null}
+          open={true}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'center',
+            horizontal: 'center'
+          }}
+          onClose={handleClose}
+          className="ml-2">
+          <div className="dropdown-menu-right dropdown-menu-lg overflow-hidden p-0">
+            <List className="text-left bg-transparent d-flex align-items-center flex-column pt-0">
+              <Box>
+                <StyledBadge
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                  }}
+                  variant="dot">
+                  <Avatar sizes="44" alt="Dustin Watson" src={avatar4} />
+                </StyledBadge>
+              </Box>
+              <div className="pl-3 ">
+                <div className="font-weight-bold text-center pt-2 line-height-1">{get(user, 'name', '')}</div>
+                <span className="text-black-50 text-center">{get(user, 'email', '')}</span>
+              </div>
+              <Divider className="w-100 mt-2" />
+              <ListItem button color="secondary" onClick={gotoSettings}>
+                Settings
+              </ListItem>
+              <ListItem button color="secondary" onClick={signout}>
+                Sign Out
+              </ListItem>
+            </List>
+          </div>
+        </Menu>)
+        : null}
     </Fragment>
   );
 }
