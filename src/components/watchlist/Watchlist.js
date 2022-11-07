@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { get, cloneDeep } from 'lodash';
+import { get, cloneDeep, isObject, isEmpty } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -33,7 +33,6 @@ import WatchlistService from './WatchlistService';
 import WatchlistFilters from './WatchlistFilters';
 import WatchlistTable from './WatchlistTable';
 import useStyles from './watchlistStyles';
-import { isObject, isEmpty } from 'lodash';
 import {
   getWatchlist,
   getWatchlistTable2Data,
@@ -313,7 +312,6 @@ const Watchlist = () => {
         if (!isTable2) {
           updateChacheData(ticker, isTicker);
         }
-        setTopicDialogOpen(false);
         dispatch(setSnackBarObj({ message: 'Ticker removed from Watchlist', severity: 'info' }));
         if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
           setTickerActiveStatus(ticker, false);
@@ -346,7 +344,6 @@ const Watchlist = () => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         let isTicker = true;
-        setTopicDialogOpen(false);
         setLoading(false);
         if (!isTable2) {
           updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
@@ -519,8 +516,7 @@ const Watchlist = () => {
         saveFilter={saveFilter}
         updateFilter={updateFilter}
         isFilterLabelOpen={isFilterLabelOpen}
-        handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
-        filterLabel={filterLabel}
+        closeDialog={handleCloseAgGridFilterLabelDialog}
       />
       <WatchlistFiltersList
         deleteFilter={deleteFilter}
@@ -541,9 +537,7 @@ const Watchlist = () => {
       )}
       <WatchListCustomEmailAlertsSideBar
         open={isAgGridEmailAlerts}
-        handleCloseAgGridSideBar={() => {
-          setIsAgGridEmailAlerts(false);
-        }}
+        handleCloseAgGridSideBar={() => setIsAgGridEmailAlerts(false)}
         title="Enable Email Alerts for Watchlist"
       />
       {loading ? (
@@ -575,9 +569,7 @@ const Watchlist = () => {
                       variant="contained"
                       className={classes.button}
                       size="small"
-                      onClick={() => {
-                        handleOpenAgGridFilterLabelDialog();
-                      }}>
+                      onClick={handleOpenAgGridFilterLabelDialog}>
                       Update Screen
                     </Button>
                   </>
@@ -587,9 +579,7 @@ const Watchlist = () => {
                     variant="contained"
                     className={classes.button}
                     size="small"
-                    onClick={() => {
-                      handleOpenAgGridFilterLabelDialog();
-                    }}>
+                    onClick={handleOpenAgGridFilterLabelDialog}>
                     Save Screen
                   </Button>
                 )}
@@ -598,9 +588,7 @@ const Watchlist = () => {
                   className={classes.button}
                   size="small"
                   variant="contained"
-                  onClick={() => {
-                    clearFilterHandler();
-                  }}>
+                  onClick={clearFilterHandler}>
                   Clear Filters
                 </Button>
               </>
@@ -625,35 +613,20 @@ const Watchlist = () => {
             handleWatchlistTickers={handleWatchlistTickers}
           />
           <div style={{ width: 20, marginTop: 5 }}>
-            <div
-              className={classes.agButtons}
-              onClick={() => {
-                handleOpenAgGridSideBar(false);
-              }}>
+            <div className={classes.agButtons} onClick={() => handleOpenAgGridSideBar(false)}>
               Columns
             </div>
             <br />
-            <div
-              className={classes.agButtons}
-              onClick={() => {
-                handleOpenAgGridSideBar(true);
-              }}>
+            <div className={classes.agButtons} onClick={() => handleOpenAgGridSideBar(true)}>
               Actions
             </div>
-            <div
-              className={classes.agButtons}
-              style={{ marginTop: '20px' }}
-              onClick={() => {
-                handleOpenAgGridFilterDialog();
-              }}>
+            <div className={classes.agButtons} style={{ marginTop: '20px' }} onClick={handleOpenAgGridFilterDialog}>
               Screens
             </div>
             <div
               className={classes.agButtons}
               style={{ marginTop: '20px' }}
-              onClick={() => {
-                setIsAgGridEmailAlerts(true);
-              }}>
+              onClick={() => setIsAgGridEmailAlerts(true)}>
               Email Alerts
             </div>
           </div>
