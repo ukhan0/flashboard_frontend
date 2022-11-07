@@ -81,7 +81,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       rawData = get(response, 'data.data.content', []);
       dispatch(setCancelExistingDocumentTypeCalls(null));
     } catch (e) {
-      rawData = [];
+      rawData = null; // null will indicate, api call is cancelled or there is some error
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
       rawData = rawData.filter(item => item.co === 'CA');

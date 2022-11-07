@@ -18,7 +18,6 @@ import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
   setOverwriteCheckBox,
-  setCount,
   setIsTickerSelected,
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData,
@@ -73,7 +72,6 @@ const Watchlist = () => {
     selectedUniverse,
     selectedMetric,
     selectedSymbols,
-    count,
     isFilterActive,
     isColorEnable,
     overwriteCheckBox,
@@ -121,16 +119,18 @@ const Watchlist = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    let rawData = [];
-    if (selectedUniverse === 'all') {
-      if (selectedType === 'domestic' || selectedType === 'newGlobal') {
-        rawData = completeCompaniesData;
-      } else if (selectedType === 'global' && (selectedFileType === '10-K' || selectedFileType === '10-Q')) {
-        rawData = completeCompaniesData.filter(company => company.co === 'CA');
-      } else {
-        rawData = completeCompaniesDataGlobal;
+    if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
+      let rawData = [];
+      if (selectedUniverse === 'all') {
+        if (selectedType === 'domestic' || selectedType === 'newGlobal') {
+          rawData = completeCompaniesData;
+        } else if (selectedType === 'global' && (selectedFileType === '10-K' || selectedFileType === '10-Q')) {
+          rawData = completeCompaniesData.filter(company => company.co === 'CA');
+        } else {
+          rawData = completeCompaniesDataGlobal;
+        }
+        setWatchlistData(formatData(rawData));
       }
-      setWatchlistData(formatData(rawData));
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal, selectedFileType]);
 
@@ -180,14 +180,13 @@ const Watchlist = () => {
           setLoading(true);
           setWatchlistData([]);
           rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          dispatch(syncCompleteDataOnPage(selectedType, rawData));
-        }
-        if (rawData.length === 0 && selectedUniverse === 'watchlist' && count === 0) {
-          setTopicDialogOpen(true);
-          dispatch(setCount(count + 1));
-        }
-        if (selectedUniverse !== 'all') {
-          setWatchlistData(formatData(rawData));
+          if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
+            setTopicDialogOpen(true);
+          }
+          if (rawData && rawData.length) {
+            dispatch(syncCompleteDataOnPage(selectedType, rawData));
+            setWatchlistData(formatData(rawData));
+          }
         }
         setLoading(false);
       } catch (error) {
@@ -195,7 +194,7 @@ const Watchlist = () => {
         // log exception here
       }
     }
-  }, [selectedUniverse, selectedFileType, selectedType, count, dispatch]);
+  }, [selectedUniverse, selectedFileType, selectedType, dispatch]);
 
   useEffect(() => {
     fetchData();
