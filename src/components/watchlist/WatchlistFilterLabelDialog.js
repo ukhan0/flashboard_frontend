@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AlertDialog(props) {
+export default function AlertDialog({ saveFilter, updateFilter, isFilterLabelOpen, closeDialog }) {
   const dispatch = useDispatch();
   const [text, setText] = React.useState('');
   const { filterLabel, isFilterUpdate } = useSelector(state => state.Watchlist);
@@ -36,10 +36,8 @@ export default function AlertDialog(props) {
   return (
     <div>
       <Dialog
-        open={props.isFilterLabelOpen}
-        onClose={() => {
-          props.handleCloseAgGridFilterLabelDialog();
-        }}
+        open={isFilterLabelOpen}
+        onClose={closeDialog}
         classes={{ paper: classes.paper }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
@@ -66,9 +64,9 @@ export default function AlertDialog(props) {
             color="primary"
             onClick={() => {
               if (isFilterUpdate) {
-                props.updateFilter(text);
+                updateFilter(text);
               } else {
-                props.saveFilter(text);
+                saveFilter(text);
               }
               dispatch(setIsFilterUpdate(false));
               dispatch(setFilterLabel(text));
@@ -82,7 +80,7 @@ export default function AlertDialog(props) {
             variant="contained"
             color="primary"
             onClick={() => {
-              props.handleCloseAgGridFilterLabelDialog();
+              closeDialog();
               if (!isFilterUpdate) {
                 setText('');
               }

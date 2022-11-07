@@ -516,7 +516,7 @@ const Watchlist = () => {
         saveFilter={saveFilter}
         updateFilter={updateFilter}
         isFilterLabelOpen={isFilterLabelOpen}
-        handleCloseAgGridFilterLabelDialog={handleCloseAgGridFilterLabelDialog}
+        closeDialog={handleCloseAgGridFilterLabelDialog}
       />
       <WatchlistFiltersList
         deleteFilter={deleteFilter}
