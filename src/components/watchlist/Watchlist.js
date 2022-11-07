@@ -312,7 +312,6 @@ const Watchlist = () => {
         if (!isTable2) {
           updateChacheData(ticker, isTicker);
         }
-        setTopicDialogOpen(false);
         dispatch(setSnackBarObj({ message: 'Ticker removed from Watchlist', severity: 'info' }));
         if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
           setTickerActiveStatus(ticker, false);
@@ -345,7 +344,6 @@ const Watchlist = () => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         let isTicker = true;
-        setTopicDialogOpen(false);
         setLoading(false);
         if (!isTable2) {
           updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
