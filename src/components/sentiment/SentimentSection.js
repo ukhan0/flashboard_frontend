@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { BeatLoader } from 'react-spinners';
 import { createHash } from '../../utils/helpers';
 import clsx from 'clsx';
@@ -349,7 +349,7 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
           ) : null;
         })
       )}
-    </div >
+    </div>
   );
 };
 
