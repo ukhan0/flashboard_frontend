@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -98,10 +98,14 @@ const UserSettingsGeneralTab = () => {
     const [profileImg, setProfileImg] = useState(null);
     const [profileImgError, setProfileImgError] = useState('');
     const imgInputRef = useRef();
+    const [profileImgSubmit, setProfileImgSubmit] = useState(false);
+    const [profileDataSubmit, setProfileDataSubmit] = useState(false);
+
     const {
         control,
         handleSubmit,
-        formState: { errors },
+        reset,
+        formState: { errors, isDirty, isValid },
         setValue
     } = useForm({
         defaultValues: {
@@ -112,6 +116,7 @@ const UserSettingsGeneralTab = () => {
     });
 
     const onSubmit = async data => {
+        setProfileDataSubmit(true);
         try {
             const response = await axios.post(`${config.apiUrl}/api/users/update_user`, {
                 id: user.id,
@@ -123,12 +128,16 @@ const UserSettingsGeneralTab = () => {
             if (responsePayload && !responsePayload.error) {
                 const userData = { ...user, name: data.name, enable_watchlist_color: data.watchlistColor };
                 localStorage.setItem('user', JSON.stringify(userData));
+                reset(data);
                 dispatch(setUser(userData));
                 dispatch(setSnackBarObj({ message: 'User settings have been saved successfully.', severity: 'success' }));
             } else {
                 dispatch(setSnackBarObj({ message: responsePayload.message, severity: 'error' }));
+                setProfileDataSubmit(false);
             }
         } catch (error) {
+            console.log(error)
+            setProfileDataSubmit(false);
             dispatch(setSnackBarObj({ message: 'An error has occurred. Please try again.', severity: 'error' }));
         }
     };
@@ -209,7 +218,7 @@ const UserSettingsGeneralTab = () => {
     };
 
     const submitProfileImg = async () => {
-
+        setProfileImgSubmit(true);
         try {
             const formData = new FormData();
             formData.append("id", user.id)
@@ -222,14 +231,22 @@ const UserSettingsGeneralTab = () => {
                 localStorage.setItem('user', JSON.stringify(userData));
                 dispatch(setUser(userData));
                 dispatch(setSnackBarObj({ message: 'User settings have been saved successfully.', severity: 'success' }));
+                setProfileImg(null);
+                setProfileImgSubmit(false);
             } else {
                 dispatch(setSnackBarObj({ message: responsePayload.message, severity: 'error' }));
             }
         } catch (error) {
             console.log(error)
             dispatch(setSnackBarObj({ message: 'An error has occurred. Please try again.', severity: 'error' }));
+            setProfileImgSubmit(false);
+
         }
     }
+
+    useEffect(() => {
+        setProfileDataSubmit(false);
+    }, [isDirty, isValid]);
 
     return (
         <div className={classes.tabMainContainer}>
@@ -267,7 +284,7 @@ const UserSettingsGeneralTab = () => {
                             </div>
                             <div className={"mt-3"}>
                                 <Button color="primary" variant="contained" onClick={submitProfileImg}
-                                    disabled={!profileImg ? true : false}
+                                    disabled={!profileImg ? true : false || profileImgSubmit}
                                 >
                                     {' '}
                                     Save Changes
@@ -288,7 +305,7 @@ const UserSettingsGeneralTab = () => {
                                         rules={{
                                             required: 'Please enter your name'
                                         }}
-                                        render={({ field: { ref, ...field } }) => (
+                                        render={({ field: { ref, onChange, ...field } }) => (
                                             <TextField
                                                 inputRef={ref}
                                                 variant="outlined"
@@ -296,6 +313,7 @@ const UserSettingsGeneralTab = () => {
                                                 fullWidth
                                                 error={Boolean(errors.name)}
                                                 helperText={errors.name ? errors.name.message : ''}
+                                                onChange={(e) => onChange(e.target.value.trimStart())}
                                                 {...field}
                                             />
                                         )}
@@ -348,7 +366,9 @@ const UserSettingsGeneralTab = () => {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <Button color="primary" variant="contained" type="submit">
+                                    <Button color="primary" variant="contained" type="submit"
+                                        disabled={!isDirty || !isValid || profileDataSubmit}
+                                    >
                                         {' '}
                                         Save Changes
                                     </Button>

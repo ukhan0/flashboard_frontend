@@ -119,7 +119,7 @@ export default function HeaderUserbox() {
                     horizontal: 'right'
                   }}
                   variant="dot">
-                  <Avatar sizes="44" alt="Dustin Watson" src={avatar4} />
+                  <Avatar sizes="44" alt="Dustin Watson" src={profilePic ? profilePic : avatar4} />
                 </StyledBadge>
               </Box>
               <div className="pl-3 ">
