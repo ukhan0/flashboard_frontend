@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, memo } from 'react';
 import axios from 'axios';
 import { get } from 'lodash';
 import config from './config/config';
@@ -10,7 +10,7 @@ import {
   setNotificationData
 } from './reducers/Watchlist';
 import { setIsNewEmailNotification } from './reducers/User';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import io from 'socket.io-client';
 import SocketService from './socketService';
@@ -18,8 +18,7 @@ import { orderBy } from 'lodash';
 import { indexedDB } from './components/watchlist/WatchlistHelpers';
 const REFREST_TIME = 3600000; // one hour
 
-const Cache = () => {
-  const { user, isNewEmailNotification } = useSelector(state => state.User);
+const Cache = ({ isNewEmailNotification, authentication_token, id }) => {
   const dispatch = useDispatch();
   const domesticKey = 'lastTimeCompleteDataUpdatereal';
   const globalKey = 'lastTimeCompleteGlobalDataUpdatereal';
@@ -28,9 +27,9 @@ const Cache = () => {
     async apiParam => {
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
         params: {
-          auth_token: user.authentication_token,
+          auth_token: authentication_token,
           selected_type: apiParam,
-          user_id: user.id,
+          user_id: id,
           subject: 'all'
         }
       });
@@ -52,7 +51,7 @@ const Cache = () => {
         }
       }
     },
-    [dispatch, user]
+    [dispatch, authentication_token, id]
   );
 
   const cacheData = useCallback(
@@ -116,7 +115,7 @@ const Cache = () => {
   );
 
   useEffect(() => {
-    if (isNewEmailNotification && user) {
+    if (isNewEmailNotification) {
       const apiUrl = `${config.apiUrl}/api/email/notification`;
       axios
         .get(`${apiUrl}`)
@@ -136,24 +135,22 @@ const Cache = () => {
 
       dispatch(setIsNewEmailNotification(false));
     }
-  }, [dispatch, isNewEmailNotification, user]);
+  }, [dispatch, isNewEmailNotification]);
 
   useEffect(() => {
-    if (user) {
-      const socket = io.connect(config.socketUrl);
-      SocketService.init(socket);
-      cacheData(true);
-      cacheDataGlobal(true);
+    const socket = io.connect(config.socketUrl);
+    SocketService.init(socket);
+    cacheData(true);
+    cacheDataGlobal(true);
 
-      const refreshDataAfterInterval = setInterval(() => {
-        cacheData(false);
-        cacheDataGlobal(false);
-      }, [600000]); // 10 minutes
-      return () => clearInterval(refreshDataAfterInterval);
-    }
-  }, [cacheData, cacheDataGlobal, user]);
+    const refreshDataAfterInterval = setInterval(() => {
+      cacheData(false);
+      cacheDataGlobal(false);
+    }, [600000]); // 10 minutes
+    return () => clearInterval(refreshDataAfterInterval);
+  }, [cacheData, cacheDataGlobal]);
 
   return <></>;
 };
 
-export default Cache;
+export default memo(Cache);
