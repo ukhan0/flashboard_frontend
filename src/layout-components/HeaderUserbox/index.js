@@ -14,6 +14,7 @@ import avatar4 from '../../assets/images/avatars/avatar8.png';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { deleteToken } from '../../utils/helpers';
 import SocketService from '../../socketService';
+import { useSelector } from 'react-redux';
 const StyledBadge = withStyles({
   badge: {
     backgroundColor: 'var(--success)',
@@ -43,7 +44,7 @@ const StyledBadge = withStyles({
   }
 })(Badge);
 export default function HeaderUserbox() {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const {user} = useSelector(state => state.User);
   const profilePic = get(user , 'profile_pic' , null)
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
