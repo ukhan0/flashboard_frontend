@@ -1021,7 +1021,7 @@ export default [
     value: [{ value: 'FMP-Transcript', color: 'rgb(244,91,91)' }],
     globalFlag: 0,
     documentTypeGroup: 'EC-FMP',
-    documentTypeFillingGraph: ['FMP-Transcript'],
+    documentTypeFillingGraph: ['FMP-Transcript', 'Earning Call'],
     color: 'rgb(244,91,91)',
     domestic: 1,
     canadian: 1,
@@ -1111,7 +1111,7 @@ export default [
 
     globalFlag: 1,
     documentTypeGroup: 'FIN-SUPP',
-    documentTypeFillingGraph: ['FIN SUPP'],
+    documentTypeFillingGraph: ['FIN SUPP', 'FS'],
     color: 'rgb(50,91,91)',
     domestic: 1,
     canadian: 1,
@@ -1130,7 +1130,7 @@ export default [
 
     globalFlag: 1,
     documentTypeGroup: 'OTH-FIN',
-    documentTypeFillingGraph: ['OTH FIN', 'Other Financials'],
+    documentTypeFillingGraph: ['OTH FIN', 'Other Financials', 'OF'],
     color: 'rgb(248,91,91)',
     domestic: 1,
     canadian: 1,
@@ -1247,7 +1247,13 @@ export default [
 
     globalFlag: 1,
     documentTypeGroup: 'ESG',
-    documentTypeFillingGraph: ['Sustainability Report', 'Corporate Social Responsibility Report', 'Corporate Governance Report', 'Environmental Report', 'TCFD Report'],
+    documentTypeFillingGraph: [
+      'Sustainability Report',
+      'Corporate Social Responsibility Report',
+      'Corporate Governance Report',
+      'Environmental Report',
+      'TCFD Report'
+    ],
     color: 'rgb(139 92 246)',
     domestic: 1,
     canadian: 1,
