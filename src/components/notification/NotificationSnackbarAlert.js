@@ -50,7 +50,7 @@ const NewNotificationSnackbarAlert = () => {
             <Snackbar
               style={{ marginBottom: index * 55 }}
               open={true}
-              autoHideDuration={50000}
+              autoHideDuration={5000}
               onClose={(event, reason) => {
                 autoHideHandler(index, reason);
               }}
