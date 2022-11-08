@@ -17,7 +17,6 @@ import { get } from 'lodash';
 import { setUser } from '../../reducers/User';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import { maxFileSize, acceptedFileTypes } from "./userSettingsConfig"
-import { useEffect } from 'react';
 
 const useStyles = makeStyles(theme => ({
     generalTabImage: {
@@ -244,10 +243,6 @@ const UserSettingsGeneralTab = () => {
 
         }
     }
-
-    useEffect(() => {
-        setProfileDataSubmit(false);
-    }, [isDirty, isValid]);
 
     return (
         <div className={classes.tabMainContainer}>
