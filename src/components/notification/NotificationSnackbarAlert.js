@@ -29,10 +29,12 @@ const NewNotificationSnackbarAlert = () => {
   useEffect(() => {
     if (doNotShowOnReload.current === 2) {
       const unreadNoti = notifications.filter(notification => !notification.is_read);
-      setUnreadNotifications(unreadNoti.slice(0, 2));
-      const audio = new Audio(notificationTune);
-      audio.volume = 0.5;
-      audio.play();
+      if (unreadNoti.length) {
+        setUnreadNotifications(unreadNoti.slice(0, 2));
+        const audio = new Audio(notificationTune);
+        audio.volume = 0.5;
+        audio.play();
+      }
     } else if (doNotShowOnReload.current === 0) {
       doNotShowOnReload.current = 1;
     } else {
