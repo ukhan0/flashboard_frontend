@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -243,6 +243,10 @@ const UserSettingsGeneralTab = () => {
 
         }
     }
+
+    useEffect(() => {
+        setProfileDataSubmit(false);
+    }, [isDirty, isValid]);
 
     return (
         <div className={classes.tabMainContainer}>
