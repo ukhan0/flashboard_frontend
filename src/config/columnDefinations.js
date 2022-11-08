@@ -9,11 +9,8 @@ import {
   numberWordComparator,
   lastReportedState,
   dateComparator,
-  getCellStyle,
-  parseDateStrMoment,
-  dateFormaterMoment
+  getCellStyle
 } from '../components/watchlist/WatchlistTableHelpers';
-import { renameDocumentTypes } from '../components/topic/topicHelpers';
 import countriesCode from './countriesCode';
 
 export const watchlistTableColDefs = [
@@ -496,11 +493,6 @@ export const watchlistTableColDefs1 = [
     colId: 'countryCode',
     width: 158,
     filter: 'agTextColumnFilter',
-    valueGetter: params => {
-      const filteredWatchlist = countriesCode.find(c => get(c, 'code') === get(params, 'data.countrycode'));
-
-      return get(filteredWatchlist, 'name', '');
-    },
     cellRenderer: 'CountryCodeRenderer',
     cellStyle: params => {
       return getCellStyle({});
@@ -517,11 +509,7 @@ export const watchlistTableColDefs1 = [
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
     width: 100,
-    sortingOrder: ['desc', 'asc'],
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.sentiment', 0);
-      return sentimentValue;
-    }
+    sortingOrder: ['desc', 'asc']
   },
   {
     headerName: 'Word Count',
@@ -534,11 +522,7 @@ export const watchlistTableColDefs1 = [
     colId: 'word_count',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    width: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.wordCount', 0);
-      return sentimentValue;
-    }
+    width: 100
   },
   {
     headerName: 'Document Date',
@@ -546,8 +530,6 @@ export const watchlistTableColDefs1 = [
     field: 'document_date',
     colId: 'document_date',
     sortable: true,
-    valueFormatter: params =>
-      params.data.docDate ? dateFormaterMoment(parseDateStrMoment(params.data.docDate.split('.')[0])) : '',
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     width: 120,
@@ -561,8 +543,7 @@ export const watchlistTableColDefs1 = [
     sortable: true,
     flex: 1,
     colId: 'document_type',
-    width: 100,
-    valueFormatter: params => renameDocumentTypes(params.data.document_type)
+    width: 100
   },
   {
     headerName: 'Sector',

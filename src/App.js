@@ -4,7 +4,7 @@ import configureStore from './config/configureStore';
 import MuiPickersUtilsProvider from '@material-ui/pickers/MuiPickersUtilsProvider';
 import { Provider } from 'react-redux';
 import Routes from './Routes';
-import Cache from './Cache';
+import CacheBridge from './CacheBridge';
 import NotificationAlerts from './components/notification/NotificationAlerts';
 import ScrollToTop from './utils/ScrollToTop';
 import DateFnsUtils from '@date-io/date-fns';
@@ -30,7 +30,7 @@ class App extends Component {
             <CssBaseline />
             <ScrollToTop>
               <NotificationAlerts />
-              <Cache />
+              <CacheBridge />
               <Routes />
             </ScrollToTop>
           </MuiPickersUtilsProvider>
