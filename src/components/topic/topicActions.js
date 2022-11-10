@@ -845,15 +845,13 @@ export const getMapDataByCountry = country => {
 
 
 const createSearchPayloadTwitter = (topicState, freshSearch) => {
-  console.log('topicState', topicState.isSimpleSearch)
   // const startDate = new URLSearchParams(window.location.search).get('startDate');
   // const endDate = new URLSearchParams(window.location.search).get('endDate');
   // const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
 
-  console.log('searchTextWithAnd' , topicState.searchTextWithAnd)
   let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
-  searchTerm = searchTerm + ' '+topicState.searchTextWithAnd.map(item => `"${item}"`).join( )
-  searchTerm = searchTerm + ' '+topicState.ignoreSearchTextArray.map(item => `-${item}`).join( )
+  searchTerm = searchTerm + ' '+topicState.searchTextWithAnd.map(item => `"${item}"`).join(' ')
+  searchTerm = searchTerm + ' '+topicState.ignoreSearchTextArray.map(item => `-${item}`).join(' ')
   console.log(searchTerm)
   const data = {
     searchTerm: topicState.isSimpleSearch ? searchTerm : topicState.searchText,

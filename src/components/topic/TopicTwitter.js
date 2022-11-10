@@ -97,6 +97,8 @@ const getHrefAndAnchorText = (text) => {
 
           const statusLink = `https://twitter.com/${v?.user?.screen_name}/status/${v?.id_str}`
           let source = getHrefAndAnchorText(v.source);
+          let tweetFullText = get(v, 'extended_tweet.full_text' , null);
+          
           return (
             <Fragment key={`rs${index}`}>
               <Paper elevation={4} className={classes.margin}>
@@ -150,7 +152,7 @@ const getHrefAndAnchorText = (text) => {
                         classes.line,
                         'font-size-mg mb-2 text-black-50'
                       )}
-                      dangerouslySetInnerHTML={{ __html: v.text }}></p>
+                      dangerouslySetInnerHTML={{ __html: tweetFullText ? tweetFullText : v.text }}></p>
 
                   </div>
                 </Box>
