@@ -19,5 +19,10 @@ export default [
     id: 4,
     label: 'Tweet',
     value: config.twitterSearchIndex
+  },
+  {
+    id: 5,
+    label: 'Twitter',
+    value: 'twitter'
   }
 ];

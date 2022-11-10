@@ -21,6 +21,7 @@ import TopicTweetsWorldMap from './TopicTweetsWorldMap';
 import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
+import TopicTwitter from './TopicTwitter';
 import TopicTweetTable from './TopicTweetsTable';
 import { setItemInLocalStorage } from '../../utils/helpers';
 const Topic = () => {
@@ -67,7 +68,7 @@ const Topic = () => {
       <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          {searchIndex['id'] === 4 ? null : (
+          {searchIndex['id'] === 4 || searchIndex['id'] === 5 ? null : (
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <TopicHistoryChart handleSearch={handleSearch} />
@@ -101,10 +102,36 @@ const Topic = () => {
                 <TopicTweets />
               </Grid>
             </Grid>
-          ) : (
-            <TopicSearchResults />
-          )}
+          ) : null}
         </Grid>
+        <Grid item xs={12}>
+          {searchIndex['id'] === 5 ? (
+            <Grid container>
+              <Grid item xs={12}>
+                {/* <Grid container>
+                  <Grid item xs={4}>
+                    <TopicTweetsWorldMap />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TopicTweetTable />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TopicTweetsPieChart />
+                  </Grid>
+                </Grid> */}
+              </Grid>
+              <Grid item xs={12}>
+                <TopicTwitter />
+              </Grid>
+            </Grid>
+          ) : null}
+        </Grid>
+
+        {searchIndex['id'] !== 4 && searchIndex['id'] !== 5 ? (
+          <Grid item xs={12}>
+            <TopicSearchResults />
+          </Grid>
+        ) : null}
       </Grid>
       <TopicSnackbar
         open={isSnackBarActive}

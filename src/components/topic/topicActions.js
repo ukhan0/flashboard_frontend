@@ -37,7 +37,8 @@ import {
   setTweetsTableData,
   setAllSearchParams,
   setIsnNewlySavedSearch,
-  setTopicSearchCompany
+  setTopicSearchCompany,
+  setTwitterData
 } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import axios from 'axios';
@@ -48,6 +49,8 @@ import documentTypesData from '../../config/documentTypesData';
 import { metricsSelection } from '../../config/filterTypes';
 import moment from 'moment';
 import { searchSuggestionTypeConfig } from '../../config/appConfig';
+import { setSnackBarObj } from '../../reducers/Alerts';
+
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false, historyBy = 'month') => {
   return async (dispatch, getState) => {
@@ -95,10 +98,10 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           : moment().subtract(12, 'months')
         : startDate
       : getState().Topic.isDate
-      ? getState().Topic.startDate
         ? getState().Topic.startDate
-        : null
-      : moment().subtract(12, 'months');
+          ? getState().Topic.startDate
+          : null
+        : moment().subtract(12, 'months');
 
     currentSearchDetail.endDate = endDate
       ? endDate && getState().Topic.isDate
@@ -109,10 +112,10 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           : currentDate
         : endDate
       : getState().Topic.isDate
-      ? getState().Topic.endDate
         ? getState().Topic.endDate
-        : null
-      : currentDate;
+          ? getState().Topic.endDate
+          : null
+        : currentDate;
     currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
     currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
     dispatch(setCurrentSearchtDetail(currentSearchDetail));
@@ -134,7 +137,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     //     });
     //   });
     // }
-    if (getState().Topic.searchIndex['id'] === 4) {
+    if (getState().Topic.searchIndex['id'] === 4 || getState().Topic.searchIndex['id'] === 5) {
       return;
     }
     try {
@@ -272,16 +275,16 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
     startDate: startTime
       ? undefined
       : topicState.isDate
-      ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
-      : moment()
+        ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
+        : moment()
           .subtract(12, 'months')
           .format('YYYY-MM-DD HH:mm:ss'),
 
     endDate: endTime
       ? undefined
       : topicState.isDate
-      ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
-      : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
+        : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     document_types: getDocTypes(topicState.selectedDocumentTypes, documentTypesData),
     orderBy: topicState.orderBy,
     sortBy: topicState.sortBy,
@@ -291,8 +294,8 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
     company_arr: companyName
       ? [companyName]
       : topicState.selectedWatchlistCompanyNames.length
-      ? topicState.selectedWatchlistCompanyNames
-      : undefined,
+        ? topicState.selectedWatchlistCompanyNames
+        : undefined,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     searchIndex: topicState.searchIndex ? topicState.searchIndex['value'] : undefined,
@@ -630,10 +633,10 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           : moment().subtract(12, 'months')
         : startDate
       : getState().Topic.isDate
-      ? getState().Topic.startDate
         ? getState().Topic.startDate
-        : null
-      : moment().subtract(12, 'months');
+          ? getState().Topic.startDate
+          : null
+        : moment().subtract(12, 'months');
 
     currentSearchDetail.endDate = endDate
       ? endDate && getState().Topic.isDate
@@ -644,10 +647,10 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           : currentDate
         : endDate
       : getState().Topic.isDate
-      ? getState().Topic.endDate
         ? getState().Topic.endDate
-        : null
-      : currentDate;
+          ? getState().Topic.endDate
+          : null
+        : currentDate;
     currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
     currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
 
@@ -697,6 +700,59 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
           dispatch(setTweetsData(newSearchResults.data));
           dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
+
+          dispatch(setSearchBackdrop(null, false));
+        } else {
+          dispatch(isDateSet(false));
+          dispatch(setSearchBackdrop(null, false));
+          dispatch(setSearchError(true));
+          dispatch(setTweetsMapData([]));
+          dispatch(setTweetsData([]));
+          dispatch(setTweetsCountryStatesMapData([]));
+          dispatch(setTweetsTableData([]));
+        }
+      } catch (error) {
+        dispatch(isDateSet(false));
+        dispatch(setSearchBackdrop(null, false));
+        dispatch(setSearchError(true));
+        dispatch(setTweetsMapData([]));
+        dispatch(setTweetsData([]));
+        dispatch(setTweetsCountryStatesMapData([]));
+        dispatch(setTweetsTableData([]));
+      }
+    }
+
+    if (getState().Topic.searchIndex['id'] === 5) {
+      try {
+        const response = await axios.post(
+          `${config.apiUrl}/api/dictionary/search_twitter_data`,
+          {
+            ...createSearchPayloadTwitter(getState().Topic, freshSearch)
+          },
+          {
+            cancelToken: cancelTokenSource.token
+          }
+        );
+        let newSearchResults = get(response, 'data', null);
+        if (newSearchResults.error) {
+          let isErrorr = newSearchResults.error;
+          if (isErrorr) {
+            dispatch(setSearchBackdrop(null, false));
+            dispatch(setSearchError(true));
+            let errorMessage =
+              'There are too many results for this search. Try refining your search with more specific keywords';
+            // dispatch(setSnackBarActive(true, 'error', errorMessage));
+        dispatch(setSnackBarObj({ message: errorMessage, severity: 'error' }));
+
+          }
+          return;
+        }
+
+        if (newSearchResults.data) {
+          // dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
+          // dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
+          dispatch(setTwitterData(newSearchResults.data.results));
+          // dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
 
           dispatch(setSearchBackdrop(null, false));
         } else {
@@ -785,4 +841,34 @@ export const getMapDataByCountry = country => {
       dispatch(setTweetsCountryMapData({}));
     }
   };
+};
+
+
+const createSearchPayloadTwitter = (topicState, freshSearch) => {
+  console.log('topicState', topicState.isSimpleSearch)
+  // const startDate = new URLSearchParams(window.location.search).get('startDate');
+  // const endDate = new URLSearchParams(window.location.search).get('endDate');
+  // const { onlySuggestionSingleArr } = getSelectedSuggestionAsArr(topicState.selectedSuggestions, topicState.searchText);
+
+  console.log('searchTextWithAnd' , topicState.searchTextWithAnd)
+  let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
+  searchTerm = searchTerm + ' '+topicState.searchTextWithAnd.map(item => `"${item}"`).join( )
+  searchTerm = searchTerm + ' '+topicState.ignoreSearchTextArray.map(item => `-${item}`).join( )
+  console.log(searchTerm)
+  const data = {
+    searchTerm: topicState.isSimpleSearch ? searchTerm : topicState.searchText,
+    startDate: moment()
+      .subtract(12, 'months')
+      .format('yyyyMMDDHHmm'),
+
+    endDate: moment().utc().format('yyyyMMDDHHmm'),
+    maxResults: 500
+    // orderBy: topicState.orderBy,
+    // page: topicState.pageNo,
+    // refresh_search: false,
+    // searchIndex: topicState.searchIndex['value'],
+    // document_type: '',
+    // ticker: ''
+  };
+  return data;
 };
