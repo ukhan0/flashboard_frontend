@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import hero9 from '../../assets/images/hero-bg/hero-9.jpg';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { Link, NavLink as RouterLink } from 'react-router-dom';
 import smaLogo from '../../assets/images/logos/ca-logo-white.png';
 const SmaDescription = () => {
   return (
@@ -15,7 +15,7 @@ const SmaDescription = () => {
           <div className="bg-composed-wrapper--bg bg-premium-dark opacity-5" />
           <div className="bg-composed-wrapper--content p-5">
             <div className="mt-3 mb-5 d-flex align-items-center justify-content-center">
-              <img alt={'CA'} src={smaLogo} width={150} />
+              <Link to="/"><img alt={'CA'} src={smaLogo} width={150} /></Link>
             </div>
             <div className="text-white mt-3">
               <h1 className="display-3 mb-3 font-weight-bold">UDT<sup>©</sup> using Machine Readable Filings (MRF)</h1>
@@ -40,7 +40,7 @@ const SmaDescription = () => {
                   <span className="btn-wrapper--icon">
                     <FontAwesomeIcon icon={['fas', 'arrow-left']} />
                   </span>
-                  <span className="btn-wrapper--label">Back to dashboard</span>
+                  <span className="btn-wrapper--label">Back to Home</span>
                 </Button>
                 <small className="d-block pt-3">
                   Disclaimer: Context Analytics, Inc. is not an investment advisor, broker, or dealer, and
