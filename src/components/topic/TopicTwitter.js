@@ -8,7 +8,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { get } from 'lodash';
+import { get, union } from 'lodash';
+import Highlighter from 'react-highlight-words';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -73,32 +74,47 @@ const TopicTwitterSearchResults = () => {
   const classes = useStyles();
 
   const { twitterData } = useSelector(state => state.Topic);
+  const { searchText, searchTextWithAnd, simpleSearchTextArray, isSimpleSearch } = useSelector(state => state.Topic);
 
+  const searchWords = () => {
+    let words = [];
+    if (isSimpleSearch) {
+      words = union(simpleSearchTextArray, searchTextWithAnd);
+    } else {
+      words = searchText.split(' ');
+      words = words.filter(item => {
+        return item !== 'OR' && item !== 'AND';
+      });
+    }
+    return words;
+  };
 
-const getHrefAndAnchorText = (text) => {
-  let partitionArr = text.replace('<a ',';').replace('>',';').replace('</a>','').split(';');
-  let hrefTextArr = partitionArr[1].split(' ');
-  let hrefText = '';
-  hrefTextArr.forEach(item => {
-    if(item.startsWith('href')) {
-      let temp = item.split('href=');
-      hrefText = (temp[1].replace(/"/g,''));
-    };
-  });
-  let anchorText = partitionArr[partitionArr.length-1];
-  return {hrefText: hrefText, anchorText: anchorText};
-};
-
+  const getHrefAndAnchorText = text => {
+    let partitionArr = text
+      .replace('<a ', ';')
+      .replace('>', ';')
+      .replace('</a>', '')
+      .split(';');
+    let hrefTextArr = partitionArr[1].split(' ');
+    let hrefText = '';
+    hrefTextArr.forEach(item => {
+      if (item.startsWith('href')) {
+        let temp = item.split('href=');
+        hrefText = temp[1].replace(/"/g, '');
+      }
+    });
+    let anchorText = partitionArr[partitionArr.length - 1];
+    return { hrefText: hrefText, anchorText: anchorText };
+  };
 
   return (
     <div>
       <PerfectScrollbar>
         {twitterData.map((v, index) => {
-
-          const statusLink = `https://twitter.com/${v?.user?.screen_name}/status/${v?.id_str}`
+          const statusLink = `https://twitter.com/${v?.user?.screen_name}/status/${v?.id_str}`;
           let source = getHrefAndAnchorText(v.source);
-          let tweetFullText = get(v, 'extended_tweet.full_text' , null);
-          
+          let tweetFullText = get(v, 'extended_tweet.full_text', null);
+
           return (
             <Fragment key={`rs${index}`}>
               <Paper elevation={4} className={classes.margin}>
@@ -129,8 +145,7 @@ const getHrefAndAnchorText = (text) => {
                       </Grid>
                       <Grid item>
                         <small className="text-black-50 pt-1 pr-2">
-                          Posting Account ID:{' '}
-                          <b className={clsx(classes.clickable, 'text-first')}>{v.user.id}</b>
+                          Posting Account ID: <b className={clsx(classes.clickable, 'text-first')}>{v.user.id}</b>
                         </small>
                         <small className="text-black-50 pt-1 pr-2">
                           Tweet ID: <b className="text-first">{v.id_str}</b>
@@ -138,13 +153,17 @@ const getHrefAndAnchorText = (text) => {
                         <small className="text-black-50 pt-1 pr-2">
                           Date Posted:{' '}
                           <b className="text-first">
-                            {v.created_at ? moment(v.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY').format('dddd, MMMM Do, YYYY h:mm:ss A') : ''}
+                            {v.created_at
+                              ? moment(v.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY').format(
+                                  'dddd, MMMM Do, YYYY h:mm:ss A'
+                                )
+                              : ''}
                           </b>
                         </small>
                       </Grid>
                     </Grid>
 
-                    <p
+                    <Highlighter
                       className={clsx(
                         classes.searchResultText,
                         classes.paragraphHeading,
@@ -152,8 +171,11 @@ const getHrefAndAnchorText = (text) => {
                         classes.line,
                         'font-size-mg mb-2 text-black-50'
                       )}
-                      dangerouslySetInnerHTML={{ __html: tweetFullText ? tweetFullText : v.text }}></p>
-
+                      highlightClassName="yellowColor"
+                      searchWords={searchWords()}
+                      autoEscape={true}
+                      textToHighlight={tweetFullText ? tweetFullText : v.text}
+                    />
                   </div>
                 </Box>
               </Paper>

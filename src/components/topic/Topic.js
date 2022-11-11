@@ -21,8 +21,10 @@ import TopicTweetsWorldMap from './TopicTweetsWorldMap';
 import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
-import TopicTwitter from './TopicTwitter';
 import TopicTweetTable from './TopicTweetsTable';
+import TopicTwitter from './TopicTwitter';
+import TopicTwitterWorldMap from './TopicTwitterWorldMap';
+import TopicTwitterPieChart from './TopicTwitterPieChart';
 import { setItemInLocalStorage } from '../../utils/helpers';
 const Topic = () => {
   const classes = topicStyles();
@@ -108,17 +110,15 @@ const Topic = () => {
           {searchIndex['id'] === 5 ? (
             <Grid container>
               <Grid item xs={12}>
-                {/* <Grid container>
-                  <Grid item xs={4}>
-                    <TopicTweetsWorldMap />
+                <Grid container>
+                  <Grid item xs={6}>
+                    <TopicTwitterWorldMap />
                   </Grid>
-                  <Grid item xs={4}>
-                    <TopicTweetTable />
+                 
+                  <Grid item xs={6}>
+                    <TopicTwitterPieChart />
                   </Grid>
-                  <Grid item xs={4}>
-                    <TopicTweetsPieChart />
-                  </Grid>
-                </Grid> */}
+                </Grid>
               </Grid>
               <Grid item xs={12}>
                 <TopicTwitter />

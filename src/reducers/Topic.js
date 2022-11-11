@@ -71,6 +71,7 @@ export const SET_TOPIC_HISTORY_CHART_IS_DAYS = 'TOPIC/SET_TOPIC_HISTORY_CHART_IS
 export const SET_SEARCH_ID = 'TOPIC/SET_SEARCH_ID';
 export const SET_SEARCH_SUGGESTION_TYPE = 'TOPIC/SET_SEARCH_SUGGESTION_TYPE';
 export const SET_TWITTER_DATA = 'TOPIC/SET_TWITTER_DATA';
+export const SET_TWITTER_MAP_DATA = 'TOPIC/SET_TWITTER_MAP_DATA';
 
 export const setSearchId = linkSearchId => ({
   type: SET_SEARCH_ID,
@@ -395,6 +396,10 @@ export const setTwitterData = twitterData => ({
   twitterData
 });
 
+export const setTwitterMapData = twitterMapData => ({
+  type: SET_TWITTER_MAP_DATA,
+  twitterMapData
+});
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
@@ -408,8 +413,24 @@ const searchDefaultState = () => ({
   selectedSuggestions: {},
   tweetsCountryStatesMapData: [],
   tweetsTableData: [],
-  selectedDocumentTypes: ['10-K','10-Q','20-F','40-F','6-K','8-K','AR','EC-FMP','ESG','FIN-SUPP','OTH-FIN','QR','SR'],
+  selectedDocumentTypes: [
+    '10-K',
+    '10-Q',
+    '20-F',
+    '40-F',
+    '6-K',
+    '8-K',
+    'AR',
+    'EC-FMP',
+    'ESG',
+    'FIN-SUPP',
+    'OTH-FIN',
+    'QR',
+    'SR'
+  ],
   twitterData: [],
+  twitterCountryMapData: {},
+  twitterMapData: [],
   // 'FMP-transcript',
   // '10-K',
   // '10-Q',
@@ -748,8 +769,10 @@ export default function reducer(
       return { ...state, linkSearchId: action.linkSearchId };
     case SET_SEARCH_SUGGESTION_TYPE:
       return { ...state, searchSuggestionType: action.searchSuggestionType };
-      case SET_TWITTER_DATA:
+    case SET_TWITTER_DATA:
       return { ...state, twitterData: action.twitterData };
+    case SET_TWITTER_MAP_DATA:
+      return { ...state, twitterMapData: action.twitterMapData };
 
     default:
       break;
