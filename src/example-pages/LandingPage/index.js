@@ -63,8 +63,8 @@ const LandingPage = () => {
                             className="py-3 px-5 mt-2"
                             color="primary"
                             variant="contained"
-                            title="Dashboard">
-                            <span className="btn-wrapper--label">Dashboard</span>
+                            title="Terminal">
+                            <span className="btn-wrapper--label">Terminal</span>
                             <span className="btn-wrapper--icon">
                               <FontAwesomeIcon icon={['fas', 'arrow-right']} />
                             </span>
