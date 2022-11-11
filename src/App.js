@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from './config/configureStore';
-import MuiPickersUtilsProvider from '@material-ui/pickers/MuiPickersUtilsProvider';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Provider } from 'react-redux';
 import Routes from './Routes';
 import CacheBridge from './CacheBridge';
