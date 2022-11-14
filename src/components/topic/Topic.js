@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import TopicPieChart from './TopicPieChart';
@@ -54,7 +54,7 @@ const Topic = () => {
       dispatch(cancelExistingHightlightsCalls(false));
     }, 1000);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchTopicsList());
   }, [dispatch]);
   const handleCloseSnackBar = () => {
@@ -122,7 +122,7 @@ const Topic = () => {
         message="Sorry, we are unable to delete search"
       />
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={isTopicDeleteError}
         autoHideDuration={6000}
         onClose={() => dispatch(setIsTopicDeleteErr(false))}
