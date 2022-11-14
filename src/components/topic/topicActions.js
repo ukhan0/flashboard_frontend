@@ -39,7 +39,8 @@ import {
   setIsnNewlySavedSearch,
   setTopicSearchCompany,
   setTwitterData,
-  setTwitterMapData
+  setTwitterMapData,
+  setTwitterFetchData
 } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import axios from 'axios';
@@ -750,17 +751,22 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           dispatch(setTwitterMapData(Object.entries(newSearchResults.countryCount)));
           dispatch(setTwitterData(newSearchResults.data.results));
           dispatch(setSearchBackdrop(null, false));
+          dispatch(setTwitterFetchData(true));
         } else {
           dispatch(isDateSet(false));
           dispatch(setSearchBackdrop(null, false));
           dispatch(setSearchError(true));
           dispatch(setTwitterData([]));
+          dispatch(setTwitterMapData([]));
+          dispatch(setTwitterFetchData(true));
         }
       } catch (error) {
         dispatch(isDateSet(false));
         dispatch(setSearchBackdrop(null, false));
         dispatch(setSearchError(true));
         dispatch(setTwitterData([]));
+        dispatch(setTwitterMapData([]));
+        dispatch(setTwitterFetchData(true));
       }
     }
   };
@@ -867,7 +873,7 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
         .subtract(1, 'minutes')
         .utc();
 
-  let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
+  let searchTerm = topicState.simpleSearchTextArray.join(' ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.searchTextWithAnd.map(item => `"${item}"`).join(' ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.ignoreSearchTextArray.map(item => `-${item}`).join(' ');
   if (topicState.selectedCountry) {

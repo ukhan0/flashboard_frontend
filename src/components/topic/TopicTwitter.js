@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
+import Alert from '@material-ui/lab/Alert';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
@@ -16,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex'
   },
   searchResultText: {
+    display: 'block',
     '& .yellowColor': {
       backgroundColor: 'orange',
       paddingLeft: 2,
@@ -73,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 const TopicTwitterSearchResults = () => {
   const classes = useStyles();
 
-  const { twitterData } = useSelector(state => state.Topic);
+  const { twitterData, twitterDataFetch } = useSelector(state => state.Topic);
   const { searchText, searchTextWithAnd, simpleSearchTextArray, isSimpleSearch } = useSelector(state => state.Topic);
 
   const searchWords = useCallback(() => {
@@ -169,7 +171,7 @@ const TopicTwitterSearchResults = () => {
                         classes.paragraphHeading,
                         classes.clickable,
                         classes.line,
-                        'font-size-mg mb-2 text-black-50'
+                        'font-size-mg mb-2 mt-2 text-black-50'
                       )}
                       highlightClassName="yellowColor"
                       searchWords={searchWords()}
@@ -182,6 +184,10 @@ const TopicTwitterSearchResults = () => {
             </Fragment>
           );
         })}
+
+        {twitterData.length === 0 && twitterDataFetch === true ? (
+          <Alert severity="info">No result found against your search terms. </Alert>
+        ) : null}
       </PerfectScrollbar>
     </div>
   );

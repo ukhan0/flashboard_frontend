@@ -37,7 +37,8 @@ const Topic = () => {
     snackBarSeverity,
     openTopicSearchDialog,
     showUpdateButton,
-    searchIndex
+    searchIndex,
+    twitterData
   } = useSelector(state => state.Topic);
 
   const dispatch = useDispatch();
@@ -109,17 +110,19 @@ const Topic = () => {
         <Grid item xs={12}>
           {searchIndex['id'] === 5 ? (
             <Grid container>
-              <Grid item xs={12}>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <TopicTwitterWorldMap />
-                  </Grid>
-                 
-                  <Grid item xs={6}>
-                    <TopicTwitterPieChart />
+              {twitterData.length ? (
+                <Grid item xs={12}>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <TopicTwitterWorldMap />
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <TopicTwitterPieChart />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              ) : null}
               <Grid item xs={12}>
                 <TopicTwitter />
               </Grid>
