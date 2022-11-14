@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -76,7 +76,7 @@ const TopicTwitterSearchResults = () => {
   const { twitterData } = useSelector(state => state.Topic);
   const { searchText, searchTextWithAnd, simpleSearchTextArray, isSimpleSearch } = useSelector(state => state.Topic);
 
-  const searchWords = () => {
+  const searchWords = useCallback(() => {
     let words = [];
     if (isSimpleSearch) {
       words = union(simpleSearchTextArray, searchTextWithAnd);
@@ -87,7 +87,7 @@ const TopicTwitterSearchResults = () => {
       });
     }
     return words;
-  };
+  }, [isSimpleSearch, simpleSearchTextArray, searchTextWithAnd, searchText]);
 
   const getHrefAndAnchorText = text => {
     let partitionArr = text
