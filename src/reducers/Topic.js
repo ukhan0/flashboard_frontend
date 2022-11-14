@@ -72,7 +72,7 @@ export const SET_SEARCH_ID = 'TOPIC/SET_SEARCH_ID';
 export const SET_SEARCH_SUGGESTION_TYPE = 'TOPIC/SET_SEARCH_SUGGESTION_TYPE';
 export const SET_TWITTER_DATA = 'TOPIC/SET_TWITTER_DATA';
 export const SET_TWITTER_MAP_DATA = 'TOPIC/SET_TWITTER_MAP_DATA';
-export const SET_TWITTER_DATA_FETCH = 'TOPIC/SET_TWITTER_DATA_FETCH';
+export const SET_TWITTER_FETCH_DATA = 'TOPIC/SET_TWITTER_FETCH_DATA';
 
 export const setSearchId = linkSearchId => ({
   type: SET_SEARCH_ID,
@@ -403,7 +403,7 @@ export const setTwitterMapData = twitterMapData => ({
 });
 
 export const setTwitterFetchData = twitterFetchData => ({
-  type: SET_TWITTER_DATA_FETCH,
+  type: SET_TWITTER_FETCH_DATA,
   twitterFetchData
 });
 
@@ -437,7 +437,7 @@ const searchDefaultState = () => ({
   ],
   twitterData: [],
   twitterMapData: [],
-  twitterDataFetch: false,
+  twitterFetchData: false,
   // 'FMP-transcript',
   // '10-K',
   // '10-Q',
@@ -780,8 +780,8 @@ export default function reducer(
       return { ...state, twitterData: action.twitterData };
     case SET_TWITTER_MAP_DATA:
       return { ...state, twitterMapData: action.twitterMapData };
-    case SET_TWITTER_DATA_FETCH:
-      return { ...state, twitterDataFetch: action.twitterDataFetch };
+    case SET_TWITTER_FETCH_DATA:
+      return { ...state, twitterFetchData: action.twitterFetchData };
 
     default:
       break;

@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 const TopicTwitterSearchResults = () => {
   const classes = useStyles();
 
-  const { twitterData, twitterDataFetch } = useSelector(state => state.Topic);
+  const { twitterData, twitterFetchData } = useSelector(state => state.Topic);
   const { searchText, searchTextWithAnd, simpleSearchTextArray, isSimpleSearch } = useSelector(state => state.Topic);
 
   const searchWords = useCallback(() => {
@@ -185,7 +185,7 @@ const TopicTwitterSearchResults = () => {
           );
         })}
 
-        {twitterData.length === 0 && twitterDataFetch === true ? (
+        {twitterData.length === 0 && twitterFetchData === true ? (
           <Alert severity="info">No result found against your search terms. </Alert>
         ) : null}
       </PerfectScrollbar>
