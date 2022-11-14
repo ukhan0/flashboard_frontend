@@ -743,6 +743,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
             let errorMessage =
               'There are too many results for this search. Try refining your search with more specific keywords';
             dispatch(setSnackBarObj({ message: errorMessage, severity: 'error' }));
+            dispatch(setTwitterFetchData(true));
           }
           return;
         }
@@ -873,7 +874,7 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
         .subtract(1, 'minutes')
         .utc();
 
-  let searchTerm = topicState.simpleSearchTextArray.join(' ');
+  let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.searchTextWithAnd.map(item => `"${item}"`).join(' ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.ignoreSearchTextArray.map(item => `-${item}`).join(' ');
   if (topicState.selectedCountry) {
