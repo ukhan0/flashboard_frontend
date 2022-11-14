@@ -149,7 +149,7 @@ const Topic = () => {
         message="Sorry, we are unable to delete search"
       />
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={isTopicDeleteError}
         autoHideDuration={6000}
         onClose={() => dispatch(setIsTopicDeleteErr(false))}
