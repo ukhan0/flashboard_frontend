@@ -22,7 +22,7 @@ export default [
   },
   {
     id: 5,
-    label: 'Twitter',
-    value: 'twitter'
+    label: 'Twitter API',
+    value: 'twitter-api'
   }
 ];
