@@ -860,6 +860,13 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
         .subtract(1, 'minutes')
         .utc();
 
+  // twiiter api allow only current-date for end-date
+  endDate = endDate.isBefore(new Date())
+    ? endDate
+    : moment(new Date())
+        .subtract(1, 'minutes')
+        .utc();
+
   let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.searchTextWithAnd.map(item => `"${item}"`).join(' ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.ignoreSearchTextArray.map(item => `-${item}`).join(' ');
