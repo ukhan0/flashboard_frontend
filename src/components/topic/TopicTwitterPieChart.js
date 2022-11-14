@@ -42,7 +42,7 @@ const baseGraphOptions = {
   }
 };
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles(theme => ({
   clickable: {
     cursor: 'pointer'
   },

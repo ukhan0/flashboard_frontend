@@ -429,7 +429,6 @@ const searchDefaultState = () => ({
     'SR'
   ],
   twitterData: [],
-  twitterCountryMapData: {},
   twitterMapData: [],
   // 'FMP-transcript',
   // '10-K',
