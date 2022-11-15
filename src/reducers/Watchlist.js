@@ -16,7 +16,6 @@ export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
 export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_DOCUMENT_TYPE_CALLS';
 export const SET_IS_FILTER_ACTIVE = 'WATCHLIST/SET_IS_FILTER_ACTIVE';
-export const SET_IS_TICKER_SELECTED = 'WATCHLIST/SET_IS_TICKER_SELECTED';
 export const SET_COMPLETE_COMPANIES_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA';
 export const SET_COMPLETE_COMPANIES_GLOBAL_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_GLOBAL_DATA';
 export const SET_NOTIFICATION_DATA = 'WATCHLIST/SET_NOTIFICATION_DATA';
@@ -123,11 +122,6 @@ export const setIsFilterActive = isFilterActive => ({
   isFilterActive
 });
 
-export const setIsTickerSelected = isTickerSelected => ({
-  type: SET_IS_TICKER_SELECTED,
-  isTickerSelected
-});
-
 export const setCompleteDataLoadedFlag = isCompleteCompaniesDataLoaded => ({
   type: SET_COMPELTE_DATALOADED_FLAG,
   isCompleteCompaniesDataLoaded
@@ -177,11 +171,7 @@ const getWatchlistSettings = () => {
 const getDefaultState = () => {
   const user = getUser();
   const watchlistSetting = getWatchlistSettings();
-  const selectedTypeWatchList = !isEmpty(watchlistSetting)
-    ? watchlistSetting.selectedType
-      ? watchlistSetting.selectedType
-      : 'domestic'
-    : 'domestic';
+  const selectedTypeWatchList = !isEmpty(watchlistSetting) ? watchlistSetting.selectedType : 'domestic';
   const selectedFileTypeWatchList = !isEmpty(watchlistSetting)
     ? get(watchlistSetting, 'selectedFileType', '10-K')
     : selectedTypeWatchList === 'domestic'
@@ -208,7 +198,6 @@ const getDefaultState = () => {
     isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
     cancelExistingDocumentTypeCalls: null,
     isFilterActive: false,
-    isTickerSelected: false,
     isCompleteCompaniesDataLoaded: false,
     isCompleteCompaniesDataGlobalLoaded: false,
     completeCompaniesData: [],
@@ -232,7 +221,6 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    // watchlist
     case SET_USER_WATCHLIST:
       return { ...state, userWatchlist: action.userWatchlist };
     case SET_IS_ACTIVE_COMPANIES:
@@ -246,7 +234,6 @@ export default function reducer(
         ...state,
         selectedType: action.watchlistType,
         selectedMetric: action.watchlistType === 'global' ? 'totdoc' : state.selectedMetric
-        // selectedFileType: action.watchlistType === 'global' ? '10-K' : state.selectedFileType
       };
     case SET_UNIVERSE:
       return { ...state, selectedUniverse: action.universe };
@@ -272,8 +259,6 @@ export default function reducer(
       return { ...state, cancelExistingDocumentTypeCalls: action.cancelExistingDocumentTypeCalls };
     case SET_IS_FILTER_ACTIVE:
       return { ...state, isFilterActive: action.isFilterActive };
-    case SET_IS_TICKER_SELECTED:
-      return { ...state, isTickerSelected: action.isTickerSelected };
     case SET_COMPELTE_DATALOADED_FLAG:
       return { ...state, isCompleteCompaniesDataLoaded: action.isCompleteCompaniesDataLoaded };
     case SET_COMPELTE_DATALOADED_GLOBAL_FLAG:
