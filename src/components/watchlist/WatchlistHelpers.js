@@ -2,6 +2,7 @@ import { forEach, get, isEmpty } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 import Localbase from 'localbase';
 import config from '../../config/config';
+import countriesCode from '../../config/countriesCode';
 
 const watchlistStateKey1 = 'watchlistBigGridState';
 const watchlistStateKey2 = 'watchlistSmallGridState';
@@ -122,7 +123,12 @@ export const formatComapnyData = rawData => {
     documentId: get(rawData, 'document_id', null),
     cid: get(rawData, 'cid', null),
     companyId: get(rawData, 'cid', null),
-    countryCode: get(rawData, 'co', null),
+    countryCode: get(rawData, 'co', ''),
+    countryName: get(
+      countriesCode.find(c => c.code === get(rawData, 'co', '')),
+      'name',
+      ''
+    ),
     flag: get(rawData, 'cp', null)
   };
 };

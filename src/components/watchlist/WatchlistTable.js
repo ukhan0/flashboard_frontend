@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get, forEach } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
-import countriesCode from '../../config/countriesCode';
+// import countriesCode from '../../config/countriesCode';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -91,10 +91,10 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
   } = useSelector(state => state.Watchlist);
   const gridApi = useRef(null);
   const gridRef = useRef();
+  const isTicker = useRef(false);
   const [isFilterData, setIsFilterData] = useState(false);
   const [isClear, setIsClear] = useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
-  let isTicker = useRef(false);
   const [columnDefination, setColumnDefination] = useState([]);
   const [rowCount, setRowCount] = useState(0);
 
@@ -353,7 +353,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         onSortChanged={storeChangedColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
-        context={countriesCode}
+        // context={countriesCode}
         overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
         onFilterChanged={filterChangeHandler}></AgGridReact>
       <div style={tableFooter}>Total Rows : {rowCount}</div>
