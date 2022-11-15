@@ -11,7 +11,6 @@ import {
   dateComparator,
   getCellStyle
 } from '../components/watchlist/WatchlistTableHelpers';
-import countriesCode from './countriesCode';
 
 export const watchlistTableColDefs = [
   {
@@ -427,14 +426,10 @@ export const watchlistTableColDefs = [
   {
     headerName: 'Country',
     headerTooltip: 'Country',
-    field: 'countryCode',
+    field: 'countryName',
     colId: 'countryCode',
     width: 158,
     filter: 'agTextColumnFilter',
-    valueGetter: params => {
-      const filteredWatchlist = countriesCode.find(c => get(c, 'code') === get(params, 'data.countryCode'));
-      return get(filteredWatchlist, 'name', '');
-    },
     cellRenderer: 'CountryCodeRenderer',
     cellStyle: params => {
       return getCellStyle({});
@@ -489,7 +484,7 @@ export const watchlistTableColDefs1 = [
   {
     headerName: 'Country',
     headerTooltip: 'Country',
-    field: 'countryCode',
+    field: 'countryName',
     colId: 'countryCode',
     width: 158,
     filter: 'agTextColumnFilter',

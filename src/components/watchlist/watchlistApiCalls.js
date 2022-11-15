@@ -9,6 +9,7 @@ import {
 } from './../../reducers/Watchlist';
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { parseDateAndFormatMoment } from './WatchlistTableHelpers';
+import countriesCode from '../../config/countriesCode';
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -163,7 +164,12 @@ export const getWatchlistTable2Data = (
         sentiment: round(get(d, 'sentiment', null), 2) ?? 0,
         document_date: parseDateAndFormatMoment(d.document_date),
         wordCount: round(get(d, 'word_count', null), 2),
-        countryCode: get(d, 'countrycode', null),
+        countryCode: get(d, 'countrycode', ''),
+        countryName: get(
+          countriesCode.find(c => c.code === get(d, 'countrycode', '')),
+          'name',
+          ''
+        ),
         sector: get(d, 'sector', null),
         industry: get(d, 'industry', null)
       };
