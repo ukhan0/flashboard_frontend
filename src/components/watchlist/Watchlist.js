@@ -18,7 +18,6 @@ import {
   setSelectedWatchlist,
   setWatchlistSelectedSymbols,
   setOverwriteCheckBox,
-  setIsTickerSelected,
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData,
   setSelectedFilter,
@@ -423,7 +422,6 @@ const Watchlist = () => {
 
   const clearFilterHandler = state => {
     WatchlistService.clearFilter();
-    dispatch(setIsTickerSelected(false));
     dispatch(setSelectedFilter(null));
     dispatch(setIsFilterUpdate(false));
     dispatch(setFilterLabel(''));

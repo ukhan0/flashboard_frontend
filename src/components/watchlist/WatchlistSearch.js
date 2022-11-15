@@ -5,7 +5,7 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
-import { setSelectedWatchlist, setIsTickerSelected } from '../../reducers/Watchlist';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import { useHistory } from 'react-router-dom';
 
@@ -55,7 +55,6 @@ const WatchlistTopicSearch = () => {
 
   const selectionChanged = async (e, newSelectedSymbol) => {
     if (newSelectedSymbol && newSelectedSymbol.ticker) {
-      dispatch(setIsTickerSelected(true));
       setSelectedTickerSymbol(newSelectedSymbol);
 
       let company = await getCompanyByIndex(

@@ -26,7 +26,7 @@ import {
   storeFilteringState,
   getFilteringState
 } from './WatchlistHelpers';
-import { setIsFilterActive, setIsTickerSelected, setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setIsFilterActive, setSelectedWatchlist } from '../../reducers/Watchlist';
 import {
   watchlistTableColDefs,
   watchlistTableColDefs1,
@@ -83,7 +83,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
   const dispatch = useDispatch();
   const {
     selectedMetric,
-    isTickerSelected,
     selectedType,
     selectedFileType,
     completeCompaniesData,
@@ -91,9 +90,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
   } = useSelector(state => state.Watchlist);
   const gridApi = useRef(null);
   const gridRef = useRef();
-  const isTicker = useRef(false);
   const [isFilterData, setIsFilterData] = useState(false);
-  const [isClear, setIsClear] = useState(false);
   let getQueryParams = new URLSearchParams(useLocation().search);
   const [columnDefination, setColumnDefination] = useState([]);
   const [rowCount, setRowCount] = useState(0);
@@ -123,21 +120,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     storeColumnsStateComman(params);
   };
 
-  useEffect(() => {
-    if (!gridApi.current) {
-      return;
-    }
-    isTicker.current = false;
-    const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
-    if (isTickerSelected) {
-      isTicker.current = true;
-      tickerFilterInstance.setModel({
-        type: 'equals',
-        filter: ''
-      });
-    }
-    gridApi.current.onFilterChanged();
-  }, [isTickerSelected]);
   const handleColumnHideForSedar = useCallback(
     gridApiLocal => {
       let columnDefs = columnDefination;
@@ -227,7 +209,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         gridApi.current.hideOverlay();
       }
     }
-    setIsClear(WatchlistService.getTickerState());
     const filteringModel = params.api.getFilterModel();
     const watchlistSetting = getWatchlistSettings();
     let selectedType, selectedFileType, selectedUniverse, selectedMetric;
@@ -295,12 +276,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     }
   };
 
-  useEffect(() => {
-    if (isClear && isTicker.current) {
-      setIsClear(false);
-      dispatch(setIsTickerSelected(false));
-    }
-  }, [isClear, dispatch]);
 
   useEffect(() => {
     if (!gridApi.current) {
