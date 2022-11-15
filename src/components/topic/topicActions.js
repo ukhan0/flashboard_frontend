@@ -725,10 +725,12 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
 
     if (getState().Topic.searchIndex['id'] === 5) {
       try {
+        const {user} = getState().User;
         const response = await axios.post(
           `${config.apiUrl}/api/dictionary/search_twitter_data`,
           {
-            ...createSearchPayloadTwitter(getState().Topic, freshSearch)
+            ...createSearchPayloadTwitter(getState().Topic, freshSearch),
+            userId: user.id,
           },
           {
             cancelToken: cancelTokenSource.token

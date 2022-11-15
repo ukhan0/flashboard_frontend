@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
@@ -22,9 +22,10 @@ const TopicUniverseGroup = () => {
   const { selectedUniverse, selectedSector } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   const [isSectorDropdownOpen, setIsSectorDropdownOpen] = useState(false);
-  const sectorDropdownRef = React.useRef(null);
+  const sectorDropdownRef = useRef(null);
   let showSelectedSector = selectedSector ? selectedSector : 'Sector';
   const sectorValues = sectors.map(s => s.value);
+  const {searchIndex} = useSelector(state => state.Topic);
 
   const universeSelection = [
     { label: 'All', key: 'all', disabled: false },
@@ -60,7 +61,7 @@ const TopicUniverseGroup = () => {
   };
   return (
     <>
-      <ButtonGroup color="primary">
+      <ButtonGroup color="primary" disabled={searchIndex['id'] === 5 ? true : false}>
         {universeSelection.map((universe, i) => {
           return universe.key === 'sector' ? (
             <Button

@@ -17,12 +17,12 @@ export default [
   },
   {
     id: 4,
-    label: 'Tweet',
+    label: 'Financial Tweets',
     value: config.twitterSearchIndex
   },
   {
     id: 5,
-    label: 'Twitter API',
-    value: 'twitter-api'
+    label: 'Twitter Firehose',
+    value: 'twitter-firehose'
   }
 ];

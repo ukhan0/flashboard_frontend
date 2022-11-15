@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -74,7 +74,7 @@ const isSearchAllowed = (searchText, simpleSearchTextArray) => {
 const TopicFilters = props => {
   const classes = useStyles();
 
-  const [isOpenThemelabelDialog, setOpenThemeDialog] = React.useState(false);
+  const [isOpenThemelabelDialog, setOpenThemeDialog] = useState(false);
   const dispatch = useDispatch();
   const {
     searchText,
@@ -87,7 +87,8 @@ const TopicFilters = props => {
     simpleSearchTextArray,
     ignoreSearchTextArray,
     isSimpleSearch,
-    searchTextWithAnd
+    searchTextWithAnd,
+    searchIndex
   } = useSelector(state => state.Topic);
 
   const handleUpdateSaveSearch = () => {
@@ -276,6 +277,7 @@ const TopicFilters = props => {
               color="primary"
               name="checkedB"
               inputProps={{ 'aria-label': 'primary checkbox' }}
+              disabled={searchIndex['id'] === 5 ? true : false}
             />
           </Grid>
           <Grid item>
