@@ -4,7 +4,17 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import useStyles from '../watchlist/watchlistStyles';
 import CloseIcon from '@material-ui/icons/Close';
-const TopicSearchDropDown = ({ onClose, ...props }) => {
+const TopicSearchDropDown = ({
+  onClose,
+  loading,
+  selectionChanged,
+  availableSymbols,
+  selectedValue,
+  closeIcon,
+  createOptionLabel,
+  placeholder,
+  handleSearchTextChange
+}) => {
 
   useEffect(() => {
     const clearBtn = document.getElementById("country_autocomplete_close_btn").parentElement.parentElement;
@@ -23,22 +33,22 @@ const TopicSearchDropDown = ({ onClose, ...props }) => {
   return (
     <FormControl className={classes.formControl}>
       <Autocomplete
-        loading={props.loading}
+        loading={loading}
         style={{ backgroundColor: 'white', borderRadius: '12px', width: '300px' }}
         loadingText={'Loading...'}
         className={classes.searchField}
-        onChange={props.selectionChanged}
-        options={props.availableSymbols}
-        value={props.selectedValue}
+        onChange={selectionChanged}
+        options={availableSymbols}
+        value={selectedValue}
         closeIcon={
-          props.closeIcon ? (
+          closeIcon ? (
             <CloseIcon
               id='country_autocomplete_close_btn'   //do not change or delete ID, an event is being listned through this ID
               fontSize="small"
             />
           ) : null
         }
-        getOptionLabel={option => props.createOptionLabel(option)}
+        getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (
           <TextField
             onBlur={() => {
@@ -47,8 +57,8 @@ const TopicSearchDropDown = ({ onClose, ...props }) => {
             }}
             {...params}
             variant="outlined"
-            placeholder={props.placeholder}
-            onChange={e => props.handleSearchTextChange(e.target.value)}
+            placeholder={placeholder}
+            onChange={e => handleSearchTextChange(e.target.value)}
             fullWidth
             size="small"
             InputProps={{
