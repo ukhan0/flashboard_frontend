@@ -50,7 +50,9 @@ function WatchlistFiltersList(props) {
       dispatch(setSelectedFilter(filter));
       dispatch(setIsFilterUpdate(true));
       dispatch(setFilterLabel(filter.filter_label));
-      dispatch(setIsFilterActive(true));
+      setTimeout(() => {
+        dispatch(setIsFilterActive(true));
+      }, 300);
       props.handleCloseAgGridFilterDialog();
     }
   };
