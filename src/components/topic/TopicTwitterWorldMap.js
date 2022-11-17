@@ -5,8 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import Map from 'highcharts/modules/map';
-import { setTweetsCountryMapData } from '../../reducers/Topic';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import { worldMapData } from '../../config/worldMapData';
 const useStyles = makeStyles(theme => ({
@@ -22,7 +21,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicTwitterWorldMap() {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [states, setState] = useState(false);
   const { twitterMapData } = useSelector(state => state.Topic);
 
@@ -80,7 +78,6 @@ export default function TopicTwitterWorldMap() {
             <span
               onClick={() => {
                 setState(false);
-                dispatch(setTweetsCountryMapData({}));
               }}
               className={clsx('font-weight-bold', classes.btnHover)}>
               Reset

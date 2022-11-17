@@ -73,6 +73,8 @@ export const SET_SEARCH_SUGGESTION_TYPE = 'TOPIC/SET_SEARCH_SUGGESTION_TYPE';
 export const SET_TWITTER_DATA = 'TOPIC/SET_TWITTER_DATA';
 export const SET_TWITTER_MAP_DATA = 'TOPIC/SET_TWITTER_MAP_DATA';
 export const SET_TWITTER_FETCH_DATA = 'TOPIC/SET_TWITTER_FETCH_DATA';
+export const SET_TWITTER_GEO_LOCATION_ENABLE = 'TOPIC/SET_TWITTER_GEO_LOCATION_ENABLE';
+
 
 export const setSearchId = linkSearchId => ({
   type: SET_SEARCH_ID,
@@ -407,6 +409,11 @@ export const setTwitterFetchData = twitterFetchData => ({
   twitterFetchData
 });
 
+export const setTwitterGeoLocationEnable = twitterGeoLocationEnable => ({
+  type: SET_TWITTER_GEO_LOCATION_ENABLE,
+  twitterGeoLocationEnable
+});
+
 const searchDefaultState = () => ({
   searchText: '',
   tweetsCountryMapData: {},
@@ -438,6 +445,7 @@ const searchDefaultState = () => ({
   twitterData: [],
   twitterMapData: [],
   twitterFetchData: false,
+  twitterGeoLocationEnable: false,
   // 'FMP-transcript',
   // '10-K',
   // '10-Q',
@@ -782,6 +790,8 @@ export default function reducer(
       return { ...state, twitterMapData: action.twitterMapData };
     case SET_TWITTER_FETCH_DATA:
       return { ...state, twitterFetchData: action.twitterFetchData };
+    case SET_TWITTER_GEO_LOCATION_ENABLE:
+      return { ...state, twitterGeoLocationEnable: action.twitterGeoLocationEnable };
 
     default:
       break;

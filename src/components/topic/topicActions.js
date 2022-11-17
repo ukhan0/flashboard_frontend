@@ -725,12 +725,12 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
 
     if (getState().Topic.searchIndex['id'] === 5) {
       try {
-        const {user} = getState().User;
+        const { user } = getState().User;
         const response = await axios.post(
           `${config.apiUrl}/api/dictionary/search_twitter_data`,
           {
             ...createSearchPayloadTwitter(getState().Topic, freshSearch),
-            userId: user.id,
+            userId: user.id
           },
           {
             cancelToken: cancelTokenSource.token
@@ -883,10 +883,12 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
     searchTerm = searchTerm.trimEnd() + ' place_country:' + topicState.selectedCountry.code;
   }
 
-  searchTerm = searchTerm.trimEnd() + ' has:geo';
+  if (topicState.twitterGeoLocationEnable) {
+    searchTerm = searchTerm.trimEnd() + ' has:geo';
+  }
 
   const data = {
-    searchTerm: topicState.isSimpleSearch ? searchTerm : topicState.searchText,
+    searchTerm: topicState.isSimpleSearch ? searchTerm.trim() : topicState.searchText,
     startDate: startDate.format('yyyyMMDDHHmm'),
     endDate: endDate.format('yyyyMMDDHHmm'),
     maxResults: 500

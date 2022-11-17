@@ -31,7 +31,8 @@ import {
   setIsSimpleSearch,
   setIsUnsavedSearch,
   setIsDays,
-  setSearchSuggestionType
+  setSearchSuggestionType,
+  setTwitterGeoLocationEnable
 } from '../../reducers/Topic';
 import { searchVersionTypes } from '../../config/filterTypes';
 
@@ -88,7 +89,8 @@ const TopicFilters = props => {
     ignoreSearchTextArray,
     isSimpleSearch,
     searchTextWithAnd,
-    searchIndex
+    searchIndex,
+    twitterGeoLocationEnable
   } = useSelector(state => state.Topic);
 
   const handleUpdateSaveSearch = () => {
@@ -164,6 +166,14 @@ const TopicFilters = props => {
     dispatch(resetSuggestions());
     dispatch(setSearchSuggestionType(type));
     props.onShowSuggestions(true);
+  };
+
+  const handleTwitterGeoLocation = event => {
+    if (event.target.checked) {
+      dispatch(setTwitterGeoLocationEnable(true));
+    } else {
+      dispatch(setTwitterGeoLocationEnable(false));
+    }
   };
 
   return (
@@ -289,6 +299,24 @@ const TopicFilters = props => {
           </Grid>{' '}
         </Grid>
       </Grid>
+      {searchIndex['id'] === 5 ? (
+        <Grid item xs={12} md={12} lg={12}>
+          <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
+            <Grid item>
+              <h6 style={{ marginBottom: 0 }}>Tweets with location data only</h6>
+            </Grid>
+            <Grid item>
+              <Switch
+                checked={twitterGeoLocationEnable}
+                onChange={handleTwitterGeoLocation}
+                color="primary"
+                name="checkedTwitterGeoLocation"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      ) : null}
       <Grid item xs={12} md={12} lg={12}>
         <Grid container direction="row" justify="flex-start" alignItems="center">
           <Grid item>
