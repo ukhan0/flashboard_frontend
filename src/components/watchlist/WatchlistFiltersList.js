@@ -36,14 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 function WatchlistFiltersList(props) {
   const classes = useStyles();
-  const {
-    selectedFilter,
-    isFilterActive,
-    selectedType,
-    selectedFileType,
-    selectedMetric,
-    selectedUniverse,
-  } = useSelector(state => state.Watchlist);
+  const { selectedFilter } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const setFilters = (filter, isUpdate) => {
     if (!isEmpty(filter.search_json)) {
@@ -57,10 +50,7 @@ function WatchlistFiltersList(props) {
       dispatch(setSelectedFilter(filter));
       dispatch(setIsFilterUpdate(true));
       dispatch(setFilterLabel(filter.filter_label));
-      setTimeout(() => {
-        WatchlistService.agGridAPI.setFilterModel(filter.search_json);
-        dispatch(setIsFilterActive(true));
-      }, 100);
+      dispatch(setIsFilterActive(true));
       props.handleCloseAgGridFilterDialog();
     }
   };
