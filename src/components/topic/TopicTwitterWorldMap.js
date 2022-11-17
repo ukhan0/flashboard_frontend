@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Card from '@material-ui/core/Card';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -21,7 +21,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicTwitterWorldMap() {
   const classes = useStyles();
-  const [states, setState] = useState(false);
   const { twitterMapData } = useSelector(state => state.Topic);
 
   const options = {
@@ -74,15 +73,6 @@ export default function TopicTwitterWorldMap() {
           <div className="card-header--title">
             <span className={'font-weight-bold'}>Tweets Count</span>
           </div>
-          {states ? (
-            <span
-              onClick={() => {
-                setState(false);
-              }}
-              className={clsx('font-weight-bold', classes.btnHover)}>
-              Reset
-            </span>
-          ) : null}
         </div>
         <div className={clsx('mb-2', classes.contentSection)}>
           <HighchartsReact options={options} constructorType={'mapChart'} highcharts={Map(Highcharts)} />
