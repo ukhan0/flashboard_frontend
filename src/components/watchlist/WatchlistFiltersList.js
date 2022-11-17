@@ -12,6 +12,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import WatchlistService from './WatchlistService';
 import {
+  setIsFilterActive,
   setIsFilterUpdate,
   setSelectedFilter,
   setFilterLabel,
@@ -42,13 +43,16 @@ function WatchlistFiltersList(props) {
       WatchlistService.agGridAPI.setFilterModel(filter.search_json);
     }
     if (isUpdate) {
-      dispatch(setWatchlistType(filter.search_json.selectedType));
-      dispatch(setWatchlistFileType(filter.search_json.selectedFileType));
-      dispatch(setWatchlistMetric(filter.search_json.selectedMetric));
-      dispatch(setWatchlistUniverse(filter.search_json.selectedUniverse));
+      filter.search_json?.selectedType && dispatch(setWatchlistType(filter.search_json.selectedType));
+      filter.search_json?.selectedFileType && dispatch(setWatchlistFileType(filter.search_json.selectedFileType));
+      filter.search_json?.selectedMetric && dispatch(setWatchlistMetric(filter.search_json.selectedMetric));
+      filter.search_json?.selectedUniverse && dispatch(setWatchlistUniverse(filter.search_json.selectedUniverse));
       dispatch(setSelectedFilter(filter));
       dispatch(setIsFilterUpdate(true));
       dispatch(setFilterLabel(filter.filter_label));
+      setTimeout(() => {
+        dispatch(setIsFilterActive(true));
+      }, 300);
       props.handleCloseAgGridFilterDialog();
     }
   };
