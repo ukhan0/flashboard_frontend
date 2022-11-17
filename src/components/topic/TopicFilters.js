@@ -299,7 +299,7 @@ const TopicFilters = props => {
           </Grid>{' '}
         </Grid>
       </Grid>
-      {searchIndex['id'] === 5 ? (
+      {searchIndex['id'] === 5 && isSimpleSearch ? (
         <Grid item xs={12} md={12} lg={12}>
           <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
             <Grid item>

@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 export default function TopicTwitterPieChart() {
   const classes = useStyles();
   const { twitterMapData } = useSelector(state => state.Topic);
-  const mapData = twitterMapData.filter(v => (v[0] !== "" ? { name: v[0].toUpperCase(), y: v[1] } : null));
+  const mapData = twitterMapData.map(v => ({ name: v[0] === "" ? "N/A": v[0].toUpperCase(), y: v[1] }));
 
   const newGraphOptions = cloneDeep(baseGraphOptions);
   newGraphOptions.series[0].data = mapData;
