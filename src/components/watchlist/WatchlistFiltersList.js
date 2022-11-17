@@ -12,6 +12,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import WatchlistService from './WatchlistService';
 import {
+  setIsFilterActive,
   setIsFilterUpdate,
   setSelectedFilter,
   setFilterLabel,
@@ -35,20 +36,63 @@ const useStyles = makeStyles(theme => ({
 }));
 function WatchlistFiltersList(props) {
   const classes = useStyles();
-  const { selectedFilter } = useSelector(state => state.Watchlist);
+  const {
+    selectedFilter,
+    isFilterActive,
+    selectedType,
+    selectedFileType,
+    selectedMetric,
+    selectedUniverse,
+  } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
   const setFilters = (filter, isUpdate) => {
     if (!isEmpty(filter.search_json)) {
       WatchlistService.agGridAPI.setFilterModel(filter.search_json);
     }
     if (isUpdate) {
-      dispatch(setWatchlistType(filter.search_json.selectedType));
-      dispatch(setWatchlistFileType(filter.search_json.selectedFileType));
-      dispatch(setWatchlistMetric(filter.search_json.selectedMetric));
-      dispatch(setWatchlistUniverse(filter.search_json.selectedUniverse));
       dispatch(setSelectedFilter(filter));
       dispatch(setIsFilterUpdate(true));
       dispatch(setFilterLabel(filter.filter_label));
+      dispatch(setWatchlistType(
+        filter.search_json.selectedType ?
+          filter.search_json.selectedType
+          :
+          isFilterActive ?
+            selectedType
+            :
+            'domestic'
+      ));
+      dispatch(setWatchlistFileType(
+        filter.search_json.selectedFileType ?
+          filter.search_json.selectedFileType
+          :
+          isFilterActive ?
+            selectedFileType
+            :
+            '10-K'
+      ));
+      dispatch(setWatchlistMetric(
+        filter.search_json.selectedMetric ?
+          filter.search_json.selectedMetric
+          :
+          isFilterActive ?
+            selectedMetric
+            :
+            'totdoc'
+      ));
+      dispatch(setWatchlistUniverse(
+        filter.search_json.selectedUniverse ?
+          filter.search_json.selectedUniverse
+          :
+          isFilterActive ?
+            selectedUniverse
+            :
+            'all'
+      ));
+      setTimeout(() => {
+        WatchlistService.agGridAPI.setFilterModel(filter.search_json);
+        dispatch(setIsFilterActive(true));
+      }, 100);
       props.handleCloseAgGridFilterDialog();
     }
   };
