@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { debounce, get } from 'lodash';
 import countriesCode from '../../config/countriesCode';
@@ -36,10 +36,10 @@ const TopicCountryDropDown = props => {
       setAvailableSymbols([]);
     }
   };
-  const onClose = () => {
+  const onClose = useCallback(() => {
     dispatch(setSelectedCountry(null));
     setAvailableSymbols(countriesCode);
-  };
+  }, [dispatch]);
 
   return (
     <TopicSearchDropDown
