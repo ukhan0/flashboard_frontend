@@ -590,7 +590,7 @@ export const findSuggestions = () => {
     }
   };
 };
-export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false) => {
+export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false, ticker= '') => {
   return async (dispatch, getState) => {
     const {
       // selectedDocumentTypes,
@@ -677,7 +677,8 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         const response = await axios.post(
           `${config.apiUrl}/api/dictionary/search_tweets_data`,
           {
-            ...createSearchPayloadTweets(getState().Topic, freshSearch)
+            ...createSearchPayloadTweets(getState().Topic, freshSearch),
+            ticker: ticker
           },
           {
             cancelToken: cancelTokenSource.token
@@ -816,8 +817,7 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
     page: topicState.pageNo,
     refresh_search: false,
     searchIndex: topicState.searchIndex['value'],
-    document_type: '',
-    ticker: ''
+    document_type: ''
   };
   return data;
 };
@@ -883,7 +883,7 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
     searchTerm = searchTerm.trimEnd() + ' place_country:' + topicState.selectedCountry.code;
   }
 
-  if (topicState.twitterGeoLocationEnable) {
+  if (topicState.twitterGeoLocationEnable && topicState.isSimpleSearch) {
     searchTerm = searchTerm.trimEnd() + ' has:geo';
   }
 
