@@ -36,7 +36,8 @@ import {
   getWatchlist,
   getWatchlistTable2Data,
   getWatchlistFileTypeEmailAlertStatus,
-  syncCompleteDataOnPage
+  syncCompleteDataOnPage,
+  cancelGridApiCalls
 } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from '../../reducers/Topic';
@@ -106,12 +107,6 @@ const Watchlist = () => {
     setCurrentCol(WatchlistService.getAgGridAColunms().columns);
   }, [col, isAgGridSideBarOpen, selectedFileType]);
 
-  const handleColumns = (e, status) => {
-    const coldId = e.target.value;
-    setCol(`${coldId}${status}`);
-    WatchlistService.mangeAgGridColunms(coldId, status);
-  };
-
   useEffect(() => {
     dispatch(getWatchlistFileTypeEmailAlertStatus());
   }, [dispatch]);
@@ -131,6 +126,28 @@ const Watchlist = () => {
       }
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal, selectedFileType]);
+
+  const getSavedFilters = useCallback(async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        let respData = get(responsePayload, 'data', []);
+        setSavedFilters(respData);
+        if (respData.length < 1) {
+          dispatch(setFilterLabel(''));
+        }
+      } else {
+        setSavedFilters([]);
+      }
+    } catch (error) {
+      setSavedFilters([]);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    getSavedFilters();
+  }, [getSavedFilters]);
 
   const getWatchlistTable2Dataa = useCallback(async () => {
     if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
@@ -163,6 +180,7 @@ const Watchlist = () => {
       setGridData2(data);
     }
   }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
+
   useEffect(() => {
     getWatchlistTable2Dataa();
     return () => {
@@ -222,6 +240,7 @@ const Watchlist = () => {
     },
     [isColorEnable, selectedFileType, selectedMetric]
   );
+
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
 
@@ -243,27 +262,23 @@ const Watchlist = () => {
     return filteredData;
   }, [watchlistData, isActiveCompanies, preProcess]);
 
-  const getSavedFilters = useCallback(async () => {
-    try {
-      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
-      const responsePayload = get(response, 'data', null);
-      if (responsePayload && !responsePayload.error) {
-        let respData = get(responsePayload, 'data', []);
-        setSavedFilters(respData);
-        if (respData.length < 1) {
-          dispatch(setFilterLabel(''));
-        }
-      } else {
-        setSavedFilters([]);
-      }
-    } catch (error) {
-      setSavedFilters([]);
+  useEffect(() => {
+    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
+      setGridData(processWatchlistData());
     }
-  }, [dispatch]);
+  }, [processWatchlistData, selectedFileType]);
 
   useEffect(() => {
-    getSavedFilters();
-  }, [getSavedFilters]);
+    return () => {
+      cancelGridApiCalls(); // it will run on un-mount
+    };
+  }, []);
+
+  const handleColumns = (e, status) => {
+    const coldId = e.target.value;
+    setCol(`${coldId}${status}`);
+    WatchlistService.mangeAgGridColunms(coldId, status);
+  };
 
   const updateTickerValue = useCallback(
     (rawCompleteData, ticker, isTicker) => {
@@ -431,9 +446,11 @@ const Watchlist = () => {
     setIsAgGridActions(isActions);
     setIsAgGridSideBarOpen(true);
   };
+
   const handleCloseAgGridSideBar = () => {
     setIsAgGridSideBarOpen(false);
   };
+
   const onColumnClick = (rowData, columnId) => {
     dispatch(setIsFromThemex(false));
     rowData.documentType = selectedFileType;
@@ -476,6 +493,7 @@ const Watchlist = () => {
   const handleOpenAgGridFilterDialog = () => {
     setIsSavedFilterDialog(true);
   };
+
   const handleCloseAgGridFilterDialog = () => {
     setIsSavedFilterDialog(false);
   };
@@ -483,6 +501,7 @@ const Watchlist = () => {
   const handleOpenAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(true);
   };
+
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
@@ -503,11 +522,7 @@ const Watchlist = () => {
     }
     setGridData2(data);
   };
-  useEffect(() => {
-    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
-      setGridData(processWatchlistData());
-    }
-  }, [processWatchlistData, selectedFileType]);
+
   return (
     <>
       <WatchlistFilterLabelDialog
