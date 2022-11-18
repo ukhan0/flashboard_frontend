@@ -150,9 +150,8 @@ const Watchlist = () => {
   }, [getSavedFilters]);
 
   const getWatchlistTable2Dataa = useCallback(async () => {
-    if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
+    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
       try {
-        setLoading(prev => prev + 1);
         let fileTypes = [];
         if (selectedType === 'domestic') {
           fileTypes = FileTypes.usFileTypes.find(
@@ -174,6 +173,7 @@ const Watchlist = () => {
         const countryCode = get(fileTypes, 'countryCode', null);
         const sourceName = get(fileTypes, 'sourceName', null);
         fileTypes = get(fileTypes, 'value', []).map(e => e.value);
+        setLoading(prev => prev + 1);
         let data = await dispatch(
           getWatchlistTable2Data(index, selectedUniverse, fileTypes.join(','), selectedType, countryCode, sourceName)
         );
@@ -273,7 +273,6 @@ const Watchlist = () => {
       setGridData(processWatchlistData());
     }
   }, [processWatchlistData, selectedFileType]);
-
 
   const handleColumns = (e, status) => {
     const coldId = e.target.value;
