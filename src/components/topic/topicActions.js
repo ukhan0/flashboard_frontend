@@ -590,7 +590,7 @@ export const findSuggestions = () => {
     }
   };
 };
-export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false, ticker= '') => {
+export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false, ticker = '') => {
   return async (dispatch, getState) => {
     const {
       // selectedDocumentTypes,
@@ -698,11 +698,13 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         }
 
         if (newSearchResults.data) {
-          dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
-          dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
-          dispatch(setTweetsData(newSearchResults.data));
-          dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
-
+          if (freshSearch) {
+            dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
+            dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
+            dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
+          } else {
+            dispatch(setTweetsData(newSearchResults.data));
+          }
           dispatch(setSearchBackdrop(null, false));
         } else {
           dispatch(isDateSet(false));
