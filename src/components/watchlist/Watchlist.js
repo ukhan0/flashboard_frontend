@@ -36,7 +36,8 @@ import {
   getWatchlist,
   getWatchlistTable2Data,
   getWatchlistFileTypeEmailAlertStatus,
-  syncCompleteDataOnPage
+  syncCompleteDataOnPage,
+  cancelGridApiCalls
 } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from '../../reducers/Topic';
@@ -84,7 +85,7 @@ const Watchlist = () => {
   const [watchlistData, setWatchlistData] = useState([]);
   const [topicDialogOpen, setTopicDialogOpen] = useState(false);
   const [topicAddingError, setTopicAddingError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(0);
   const [isAgGridSideBarOpen, setIsAgGridSideBarOpen] = useState(false);
   const [isAgGridActions, setIsAgGridActions] = useState(false);
   const [isAgGridEmailAlerts, setIsAgGridEmailAlerts] = useState(false);
@@ -106,12 +107,6 @@ const Watchlist = () => {
     setCurrentCol(WatchlistService.getAgGridAColunms().columns);
   }, [col, isAgGridSideBarOpen, selectedFileType]);
 
-  const handleColumns = (e, status) => {
-    const coldId = e.target.value;
-    setCol(`${coldId}${status}`);
-    WatchlistService.mangeAgGridColunms(coldId, status);
-  };
-
   useEffect(() => {
     dispatch(getWatchlistFileTypeEmailAlertStatus());
   }, [dispatch]);
@@ -132,70 +127,99 @@ const Watchlist = () => {
     }
   }, [selectedUniverse, selectedType, completeCompaniesData, completeCompaniesDataGlobal, selectedFileType]);
 
+  const getSavedFilters = useCallback(async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
+      const responsePayload = get(response, 'data', null);
+      if (responsePayload && !responsePayload.error) {
+        let respData = get(responsePayload, 'data', []);
+        setSavedFilters(respData);
+        if (respData.length < 1) {
+          dispatch(setFilterLabel(''));
+        }
+      } else {
+        setSavedFilters([]);
+      }
+    } catch (error) {
+      setSavedFilters([]);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    getSavedFilters();
+  }, [getSavedFilters]);
+
   const getWatchlistTable2Dataa = useCallback(async () => {
-    if (selectedFileType !== '10-Q' && selectedFileType !== '10-K') {
-      setLoading(true);
-      let fileTypes = [];
-      if (selectedType === 'domestic') {
-        fileTypes = FileTypes.usFileTypes.find(
-          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
+      try {
+        let fileTypes = [];
+        if (selectedType === 'domestic') {
+          fileTypes = FileTypes.usFileTypes.find(
+            e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+          );
+        } else if (selectedType === 'global') {
+          fileTypes = FileTypes.canadaFileTypes.find(
+            e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+          );
+        } else if (selectedType === 'newGlobal') {
+          fileTypes = FileTypes.globalFileTypes.find(
+            e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+          );
+        }
+        let index = 'fillings_*';
+        if (selectedFileType === 'all') {
+          index = fileTypes.index;
+        }
+        const countryCode = get(fileTypes, 'countryCode', null);
+        const sourceName = get(fileTypes, 'sourceName', null);
+        fileTypes = get(fileTypes, 'value', []).map(e => e.value);
+        setLoading(prev => prev + 1);
+        let data = await dispatch(
+          getWatchlistTable2Data(index, selectedUniverse, fileTypes.join(','), selectedType, countryCode, sourceName)
         );
-      } else if (selectedType === 'global') {
-        fileTypes = FileTypes.canadaFileTypes.find(
-          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-        );
-      } else if (selectedType === 'newGlobal') {
-        fileTypes = FileTypes.globalFileTypes.find(
-          e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-        );
+        setGridData2(data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(prev => prev - 1);
       }
-      let index = 'fillings_*';
-      if (selectedFileType === 'all') {
-        index = fileTypes.index;
-      }
-      const countryCode = get(fileTypes, 'countryCode', null);
-      const sourceName = get(fileTypes, 'sourceName', null);
-      fileTypes = get(fileTypes, 'value', []).map(e => e.value);
-      let data = await dispatch(
-        getWatchlistTable2Data(index, selectedUniverse, fileTypes.join(','), selectedType, countryCode, sourceName)
-      );
-      setLoading(false);
-      setGridData2(data);
     }
   }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
+
   useEffect(() => {
     getWatchlistTable2Dataa();
     return () => {
+      cancelGridApiCalls();
       setGridData2([]);
     };
   }, [getWatchlistTable2Dataa]);
 
   const fetchData = useCallback(async () => {
-    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
+    if ((selectedFileType === '10-Q' || selectedFileType === '10-K') && selectedUniverse !== 'all') {
       try {
-        let rawData = [];
-        if (selectedUniverse !== 'all') {
-          setLoading(true);
-          setWatchlistData([]);
-          rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
-          if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
-            setTopicDialogOpen(true);
-          }
-          if (rawData && rawData.length) {
-            dispatch(syncCompleteDataOnPage(selectedType, rawData));
-            setWatchlistData(formatData(rawData));
-          }
+        setLoading(prev => prev + 1);
+        let rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
+        if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
+          setTopicDialogOpen(true);
         }
-        setLoading(false);
+        if (rawData && rawData.length) {
+          dispatch(syncCompleteDataOnPage(selectedType, rawData));
+          setWatchlistData(formatData(rawData));
+        }
       } catch (error) {
-        setLoading(false);
-        // log exception here
+        console.log(error);
+      } finally {
+        setLoading(prev => prev - 1);
       }
     }
   }, [selectedUniverse, selectedFileType, selectedType, dispatch]);
 
   useEffect(() => {
     fetchData();
+    return () => {
+      cancelGridApiCalls();
+      setWatchlistData([]);
+    };
   }, [fetchData]);
 
   const preProcess = useCallback(
@@ -222,6 +246,7 @@ const Watchlist = () => {
     },
     [isColorEnable, selectedFileType, selectedMetric]
   );
+
   const processWatchlistData = useCallback(() => {
     const filteredData = [];
 
@@ -243,27 +268,17 @@ const Watchlist = () => {
     return filteredData;
   }, [watchlistData, isActiveCompanies, preProcess]);
 
-  const getSavedFilters = useCallback(async () => {
-    try {
-      const response = await axios.get(`${config.apiUrl}/api/user_watchlist_searches`);
-      const responsePayload = get(response, 'data', null);
-      if (responsePayload && !responsePayload.error) {
-        let respData = get(responsePayload, 'data', []);
-        setSavedFilters(respData);
-        if (respData.length < 1) {
-          dispatch(setFilterLabel(''));
-        }
-      } else {
-        setSavedFilters([]);
-      }
-    } catch (error) {
-      setSavedFilters([]);
-    }
-  }, [dispatch]);
-
   useEffect(() => {
-    getSavedFilters();
-  }, [getSavedFilters]);
+    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
+      setGridData(processWatchlistData());
+    }
+  }, [processWatchlistData, selectedFileType]);
+
+  const handleColumns = (e, status) => {
+    const coldId = e.target.value;
+    setCol(`${coldId}${status}`);
+    WatchlistService.mangeAgGridColunms(coldId, status);
+  };
 
   const updateTickerValue = useCallback(
     (rawCompleteData, ticker, isTicker) => {
@@ -333,7 +348,7 @@ const Watchlist = () => {
   const handleUpload = async (ticker, isTable2 = false) => {
     const user = JSON.parse(localStorage.getItem('user'));
     try {
-      setLoading(true);
+      setLoading(prev => prev + 1);
       const response = await axios.post(`${config.apiUrl}/api/save_watchlist`, {
         user_id: user.id,
         ticker: ticker ? ticker : compileTikcerData(selectedSymbols).join(','),
@@ -343,7 +358,6 @@ const Watchlist = () => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload && !responsePayload.error) {
         let isTicker = true;
-        setLoading(false);
         if (!isTable2) {
           updateChacheData(ticker ? ticker : compileTikcerData(selectedSymbols), isTicker);
           dispatch(setWatchlistSelectedSymbols([]));
@@ -360,6 +374,8 @@ const Watchlist = () => {
     } catch (error) {
       setTopicAddingError(true);
       dispatch(setSnackBarObj({ message: 'Unable to Add/Remove Ticker To/From Watchlist', severity: 'error' }));
+    } finally {
+      setLoading(prev => prev - 1);
     }
   };
 
@@ -431,9 +447,11 @@ const Watchlist = () => {
     setIsAgGridActions(isActions);
     setIsAgGridSideBarOpen(true);
   };
+
   const handleCloseAgGridSideBar = () => {
     setIsAgGridSideBarOpen(false);
   };
+
   const onColumnClick = (rowData, columnId) => {
     dispatch(setIsFromThemex(false));
     rowData.documentType = selectedFileType;
@@ -476,6 +494,7 @@ const Watchlist = () => {
   const handleOpenAgGridFilterDialog = () => {
     setIsSavedFilterDialog(true);
   };
+
   const handleCloseAgGridFilterDialog = () => {
     setIsSavedFilterDialog(false);
   };
@@ -483,6 +502,7 @@ const Watchlist = () => {
   const handleOpenAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(true);
   };
+
   const handleCloseAgGridFilterLabelDialog = () => {
     setIsFilterLabelOpen(false);
   };
@@ -503,11 +523,7 @@ const Watchlist = () => {
     }
     setGridData2(data);
   };
-  useEffect(() => {
-    if (selectedFileType === '10-Q' || selectedFileType === '10-K') {
-      setGridData(processWatchlistData());
-    }
-  }, [processWatchlistData, selectedFileType]);
+
   return (
     <>
       <WatchlistFilterLabelDialog
