@@ -81,8 +81,8 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
         cancelToken: cancelToken.token
       });
       rawData = get(response, 'data.data.content', []);
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
       rawData = null; // null will indicate, api call is cancelled or there is some error
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
