@@ -65,8 +65,8 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
-      gridCancelTokens.push(cancelToken);
       const user = JSON.parse(localStorage.getItem('user'));
+      gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
         params: {
           auth_token: user.authentication_token,
