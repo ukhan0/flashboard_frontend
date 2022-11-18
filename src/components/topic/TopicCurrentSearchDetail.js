@@ -80,7 +80,7 @@ const TopicDialog = props => {
     let beforeQueryString = afterDomain.split('?')[0];
     history.push(`/${beforeQueryString}`);
 
-    dispatch(setOpenTopicSearchDialog(!openTopicSearchDialog));
+    dispatch(setOpenTopicSearchDialog(true));
     dispatch(setSelectedIndustries([]));
     dispatch(setShowUpdateButton(false));
     dispatch(resetAllSearchParams());
