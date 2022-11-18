@@ -21,7 +21,15 @@ const TopicUniverseSubFilters = props => {
       component = null;
       break;
   }
-  return component;
+  if (component) return (
+    <>
+      <div style={{ marginTop: '50px' }}>
+        {component}
+      </div>
+      <br />
+    </>
+  );
+  else return component
 };
 
 export default TopicUniverseSubFilters;

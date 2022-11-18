@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { setTopicIndexDropDownSearchCombineReducer } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   select: {
+    height: '38px',
     minWidth: 120,
     width: '300px'
   }
