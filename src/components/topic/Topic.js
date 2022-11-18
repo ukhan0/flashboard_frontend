@@ -63,8 +63,7 @@ const Topic = () => {
 
   return (
     <div className={classes.root}>
-      {/* {!openTopicSearchDialog || (openTopicSearchDialog && showUpdateButton) ? <TopicCurrentSearchDetail /> : null} */}
-      <TopicCurrentSearchDetail />
+      {!openTopicSearchDialog || (openTopicSearchDialog && showUpdateButton) ? <TopicCurrentSearchDetail /> : null}
       <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
