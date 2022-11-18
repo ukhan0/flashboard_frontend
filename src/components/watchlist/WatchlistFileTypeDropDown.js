@@ -14,7 +14,7 @@ const WatchlistFileTypeDropDown = () => {
   const dispatch = useDispatch();
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const [open, setOpen] = useState(false);
-  const { selectedType, cancelExistingDocumentTypeCalls, selectedFileType } = useSelector(state => state.Watchlist);
+  const { selectedType, selectedFileType } = useSelector(state => state.Watchlist);
 
   const getFileTypes = useCallback(() => {
     if (selectedType === 'global') {
@@ -35,9 +35,6 @@ const WatchlistFileTypeDropDown = () => {
   const selectionChanged = (e, newSelectedSymbol) => {
     if (newSelectedSymbol) {
       dispatch(setWatchlistFileType(newSelectedSymbol.documentTypeGroup));
-      if (cancelExistingDocumentTypeCalls) {
-        cancelExistingDocumentTypeCalls.cancel();
-      }
     }
   };
 

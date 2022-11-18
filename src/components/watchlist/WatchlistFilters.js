@@ -24,7 +24,6 @@ const WatchlistFilters = props => {
     selectedMetric,
     isCompleteCompaniesDataLoaded,
     isCompleteCompaniesDataGlobalLoaded,
-    cancelExistingDocumentTypeCalls,
     selectedItem
   } = useSelector(state => state.Watchlist);
   const dispatch = useDispatch();
@@ -52,27 +51,14 @@ const WatchlistFilters = props => {
 
   const handleClickUniverse = key => {
     dispatch(setWatchlistUniverse(key));
-    if (cancelExistingDocumentTypeCalls) {
-      cancelExistingDocumentTypeCalls.cancel();
-    }
   };
 
   const handleClickType = key => {
     if (key !== selectedType) {
       props.clearFilterHandler();
       dispatch(setSelectedWatchlist(null));
-
-      // if (selectedFileType !== '10-K' && key === 'domestic') {
-      //   dispatch(setWatchlistFileType('10-K'));
-      // }
-      // if (key === 'global') {
-      //   dispatch(setWatchlistFileType('10-K'));
-      // }
       dispatch(setWatchlistFileType('10-K'));
       dispatch(setWatchlistType(key));
-      if (cancelExistingDocumentTypeCalls) {
-        cancelExistingDocumentTypeCalls.cancel();
-      }
     }
   };
 
