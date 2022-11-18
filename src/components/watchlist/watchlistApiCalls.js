@@ -65,7 +65,6 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
-      cancelGridApiCalls();
       gridCancelTokens.push(cancelToken);
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
@@ -83,6 +82,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       });
       rawData = get(response, 'data.data.content', []);
     } catch (e) {
+      console.log(e)
       rawData = null; // null will indicate, api call is cancelled or there is some error
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
@@ -137,7 +137,6 @@ export const getWatchlistTable2Data = (
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
-      cancelGridApiCalls();
       gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`, {
         cancelToken: cancelToken.token,
