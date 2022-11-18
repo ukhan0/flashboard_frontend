@@ -50,6 +50,7 @@ const HomePageEarningWatcher = () => {
             height: '100%',
             title: 'Social Sentiment Earnings Watcher',
             apikey: '907cdf5f789e613d36f0b4dda38930fb1dc590bf',
+            customCSS:'.box-frame,body{background: #fff;}.Table-holder h2,.Table-holder h1,.box-frame h3{color: #000;}.bg-grey{background: #fff;} .tooltip{background:#fff; color:#000} .scroll-box li:hover {background:#03a9f433} .scroll-box .img-box img{background:lightgray}',
             ontology: 'ticker',
             order: 'top',
             factor: factorsData,
