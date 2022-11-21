@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -31,7 +31,8 @@ import {
   setIsSimpleSearch,
   setIsUnsavedSearch,
   setIsDays,
-  setSearchSuggestionType
+  setSearchSuggestionType,
+  setTwitterGeoLocationEnable
 } from '../../reducers/Topic';
 import { searchVersionTypes } from '../../config/filterTypes';
 
@@ -74,7 +75,7 @@ const isSearchAllowed = (searchText, simpleSearchTextArray) => {
 const TopicFilters = props => {
   const classes = useStyles();
 
-  const [isOpenThemelabelDialog, setOpenThemeDialog] = React.useState(false);
+  const [isOpenThemelabelDialog, setOpenThemeDialog] = useState(false);
   const dispatch = useDispatch();
   const {
     searchText,
@@ -87,7 +88,9 @@ const TopicFilters = props => {
     simpleSearchTextArray,
     ignoreSearchTextArray,
     isSimpleSearch,
-    searchTextWithAnd
+    searchTextWithAnd,
+    searchIndex,
+    twitterGeoLocationEnable
   } = useSelector(state => state.Topic);
 
   const handleUpdateSaveSearch = () => {
@@ -163,6 +166,14 @@ const TopicFilters = props => {
     dispatch(resetSuggestions());
     dispatch(setSearchSuggestionType(type));
     props.onShowSuggestions(true);
+  };
+
+  const handleTwitterGeoLocation = event => {
+    if (event.target.checked) {
+      dispatch(setTwitterGeoLocationEnable(true));
+    } else {
+      dispatch(setTwitterGeoLocationEnable(false));
+    }
   };
 
   return (
@@ -292,6 +303,7 @@ const TopicFilters = props => {
               color="primary"
               name="checkedB"
               inputProps={{ 'aria-label': 'primary checkbox' }}
+              disabled={searchIndex['id'] === 5 ? true : false}
             />
           </Grid>
           <Grid item>
@@ -303,6 +315,24 @@ const TopicFilters = props => {
           </Grid>{' '}
         </Grid>
       </Grid>
+      {searchIndex['id'] === 5 && isSimpleSearch ? (
+        <Grid item xs={12} md={12} lg={12}>
+          <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
+            <Grid item>
+              <h6 style={{ marginBottom: 0 }}>Tweets with location data only</h6>
+            </Grid>
+            <Grid item>
+              <Switch
+                checked={twitterGeoLocationEnable}
+                onChange={handleTwitterGeoLocation}
+                color="primary"
+                name="checkedTwitterGeoLocation"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      ) : null}
       <Grid item xs={12} md={12} lg={12}>
         <Grid container direction="row" justify="flex-start" alignItems="center">
           <Grid item>

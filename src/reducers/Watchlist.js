@@ -14,7 +14,6 @@ export const SET_OVERWRITE_CHECK_BOX = 'WATCHLIST/SET_OVERWRITE_CHECK_BOX';
 export const SET_IS_ONE_HOUR_COMPLETE = 'WATCHLIST/SET_IS_ONE_HOUR_COMPLETE';
 export const SET_IS_COLOR_ENABLE = 'WATCHLIST/SET_IS_COLOR_ENABLE';
 export const SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE = 'WATCHLIST/SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE';
-export const CANCELE_EXISTING_DOCUMENT_TYPE_CALLS = 'WATCHLIST/CANCELE_EXISTING_DOCUMENT_TYPE_CALLS';
 export const SET_IS_FILTER_ACTIVE = 'WATCHLIST/SET_IS_FILTER_ACTIVE';
 export const SET_COMPLETE_COMPANIES_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_DATA';
 export const SET_COMPLETE_COMPANIES_GLOBAL_DATA = 'WATCHLIST/SET_COMPLETE_COMPANIES_GLOBAL_DATA';
@@ -112,11 +111,6 @@ export const setIsWatchlistEmailAlertEnable = isEmailAlertEnable => ({
   isEmailAlertEnable
 });
 
-export const setCancelExistingDocumentTypeCalls = cancelExistingDocumentTypeCalls => ({
-  type: CANCELE_EXISTING_DOCUMENT_TYPE_CALLS,
-  cancelExistingDocumentTypeCalls
-});
-
 export const setIsFilterActive = isFilterActive => ({
   type: SET_IS_FILTER_ACTIVE,
   isFilterActive
@@ -196,7 +190,6 @@ const getDefaultState = () => {
     isOneHourComplete: false,
     isColorEnable: user ? (user.enable_watchlist_color ? user.enable_watchlist_color : false) : false,
     isEmailAlertEnable: user ? (user.send_watchlist_alert_email ? user.send_watchlist_alert_email : false) : false,
-    cancelExistingDocumentTypeCalls: null,
     isFilterActive: false,
     isCompleteCompaniesDataLoaded: false,
     isCompleteCompaniesDataGlobalLoaded: false,
@@ -255,8 +248,6 @@ export default function reducer(
       return { ...state, isColorEnable: action.isColorEnable };
     case SET_IS_WATCHLIST_EMAIL_ALERT_ENABLE:
       return { ...state, isEmailAlertEnable: action.isEmailAlertEnable };
-    case CANCELE_EXISTING_DOCUMENT_TYPE_CALLS:
-      return { ...state, cancelExistingDocumentTypeCalls: action.cancelExistingDocumentTypeCalls };
     case SET_IS_FILTER_ACTIVE:
       return { ...state, isFilterActive: action.isFilterActive };
     case SET_COMPELTE_DATALOADED_FLAG:

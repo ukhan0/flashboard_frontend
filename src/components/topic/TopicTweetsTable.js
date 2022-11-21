@@ -4,13 +4,19 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Card from '@material-ui/core/Card';
 import InputBase from '@material-ui/core/InputBase';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './TopicTableStyles.css';
+import { uniq } from 'lodash';
+import { performTopicTweetsSearchAggregate } from './topicActions';
+import { setSelectedCompanyName, setBackDropOnCompanyClick } from '../../reducers/Topic';
+import { setSelectedWatchlist } from '../../reducers/Watchlist';
+import { setIsFromfilling } from '../../reducers/Sentiment';
+import { setIsFromThemex, isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
   rightAlign: {
@@ -79,7 +85,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function TopicTweetsTable() {
   const classes = useStyles();
-  const { tweetsTableData } = useSelector(state => state.Topic);
+  const dispatch = useDispatch();
+
+  const {
+    tweetsTableData,
+    searchResultHighlights,
+    isDays
+  } = useSelector(state => state.Topic);
   const { completeCompaniesData } = useSelector(state => state.Watchlist);
 
   const getCompanyName = ticker => {
@@ -135,6 +147,31 @@ export default function TopicTweetsTable() {
     gridApi.setQuickFilter(e.target.value);
   };
 
+  const handleCompanyClick = params => {
+    // check if data for this company exists or not
+    const uniqCompanyNames = uniq(searchResultHighlights.map(sr => sr.company_name).filter(n => n));
+    const companyIndex = uniqCompanyNames.indexOf(params.data.key);
+    if (companyIndex === -1) {
+      // get data for this company
+      if (isDays) {
+        dispatch(isDateSet(true));
+      }
+      dispatch(performTopicTweetsSearchAggregate(true, false, params.data.ticker));
+      dispatch(setBackDropOnCompanyClick(true));
+    }
+    if (params.data) {
+      let data = {
+        companyName: params.data.key,
+        ticker: params.data.ticker,
+        companyId: params.data.companyId
+      };
+      dispatch(setSelectedWatchlist(data));
+      dispatch(setIsFromfilling(true));
+      dispatch(setIsFromThemex(false));
+    }
+    dispatch(setSelectedCompanyName(params.data.key));
+  };
+
   return (
     <Card className="card-box mb-4" style={{ marginTop: '20px' }}>
       <div className={clsx(classes.titleheader, 'card-header')}>
@@ -162,7 +199,8 @@ export default function TopicTweetsTable() {
             rowData={tweetsTableData.length > 0 ? tableData : null}
             columnDefs={columnDefs}
             suppressCellSelection={true}
-            multiSortKey={'ctrl'}></AgGridReact>
+            multiSortKey={'ctrl'}
+            onCellClicked={handleCompanyClick}></AgGridReact>
         </div>
       </PerfectScrollbar>
     </Card>

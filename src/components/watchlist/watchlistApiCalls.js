@@ -2,7 +2,6 @@ import config from '../../config/config';
 import { get, round, cloneDeep, isArray } from 'lodash';
 import axios from 'axios';
 import {
-  setCancelExistingDocumentTypeCalls,
   setWatchlistFileTypeEmailAlerts,
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData
@@ -10,6 +9,8 @@ import {
 import { renameDocumentTypes } from '../topic/topicHelpers';
 import { parseDateAndFormatMoment } from './WatchlistTableHelpers';
 import countriesCode from '../../config/countriesCode';
+
+let gridCancelTokens = [];
 
 const getSelectedType = (selectedType, selectedFileType, selectedUniverse) => {
   if (selectedType === 'newGlobal') {
@@ -64,8 +65,8 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
-      dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
       const user = JSON.parse(localStorage.getItem('user'));
+      gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
         params: {
           auth_token: user.authentication_token,
@@ -80,8 +81,8 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
         cancelToken: cancelToken.token
       });
       rawData = get(response, 'data.data.content', []);
-      dispatch(setCancelExistingDocumentTypeCalls(null));
-    } catch (e) {
+    } catch (error) {
+      console.log(error)
       rawData = null; // null will indicate, api call is cancelled or there is some error
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
@@ -136,7 +137,7 @@ export const getWatchlistTable2Data = (
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
-      dispatch(setCancelExistingDocumentTypeCalls(cancelToken));
+      gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`, {
         cancelToken: cancelToken.token,
         params: {
@@ -152,7 +153,6 @@ export const getWatchlistTable2Data = (
       });
 
       rawData = get(response, 'data.data', []);
-      dispatch(setCancelExistingDocumentTypeCalls(null));
     } catch (e) {
       rawData = [];
     }
@@ -177,4 +177,11 @@ export const getWatchlistTable2Data = (
 
     return rawData;
   };
+};
+
+export const cancelGridApiCalls = () => {
+  gridCancelTokens.forEach(token => {
+    token.cancel();
+  });
+  gridCancelTokens = [];
 };
