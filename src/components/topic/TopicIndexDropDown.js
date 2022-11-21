@@ -35,6 +35,7 @@ const TopicIndexDropDown = props => {
   return (
     <FormControl variant="outlined" size="small">
       <Select
+        style={{ width: '321px' }}
         labelId="topicDocumentTypeDropdownLabel"
         id="topicDocumentTypeDropdownId"
         value={searchIndex['value']}

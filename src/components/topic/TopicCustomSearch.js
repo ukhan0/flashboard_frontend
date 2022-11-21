@@ -25,8 +25,8 @@ const TopicCustomSearch = props => {
     searchIndex.id === 1
       ? completeCompaniesData.concat(completeCompaniesDataGlobal)
       : searchIndex.id === 2
-      ? completeCompaniesData
-      : completeCompaniesDataGlobal;
+        ? completeCompaniesData
+        : completeCompaniesDataGlobal;
   const availableCompanies = data.map(e => {
     return { name: e.b, ticker: e.ticker };
   });
@@ -60,6 +60,7 @@ const TopicCustomSearch = props => {
   return (
     <FormControl className={classes.formControl}>
       <Autocomplete
+        style={{ width: '321px' }}
         multiple
         id="topic-custom-search"
         loading={loading}

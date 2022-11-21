@@ -269,11 +269,13 @@ const TopicFilters = props => {
           <div style={{ marginTop: '0px' }}>
             <h6>Search Universe</h6>
             <TopicUniverseGroup />
-            <div style={{ marginTop: '23px' }}>
+            <div style={{ marginTop: '22px' }}>
               <TopicUniverseSubFilters />
             </div>
-            <h6>Search From</h6>
-            <TopicIndexDropDown />
+            <div>
+              <h6>Search From</h6>
+              <TopicIndexDropDown />
+            </div>
           </div>
         </Grid>
       </Grid>
