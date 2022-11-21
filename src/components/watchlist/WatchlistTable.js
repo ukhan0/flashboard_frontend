@@ -201,7 +201,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
       const isApiCallNeeded = filterColumnsFromBackend.some(columnName =>
         Object.keys(filteringModel).includes(columnName)
       );
-      console.log(isApiCallNeeded)
+      console.log(isApiCallNeeded);
       if (isApiCallNeeded) {
         let filtersObject = {};
         Object.keys(filteringModel).forEach(key => {
@@ -243,7 +243,13 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
       universe = 'watchlist';
       metric = 'totdoc';
     }
-    const allSelectedFilters = { ...filteringModel, type, fileType, universe, metric };
+    const allSelectedFilters = {
+      ...filteringModel,
+      selectedType: type,
+      selectedFileType: fileType,
+      selectedUniverse: universe,
+      selectedMetric: metric
+    };
     storeFilteringState(allSelectedFilters);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };

@@ -86,7 +86,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType, f
       console.log(error);
       rawData = null; // null will indicate, api call is cancelled or there is some error
     }
-    if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
+    if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse) && rawData) {
       rawData = rawData.filter(item => item.co === 'CA');
     }
     return rawData;
