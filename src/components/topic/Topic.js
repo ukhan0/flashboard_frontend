@@ -22,6 +22,9 @@ import TopicTweetsPieChart from './TopicTweetsPieChart';
 import TopicCompose from './TopicCompose';
 import TopicTweets from './TopicTweets';
 import TopicTweetTable from './TopicTweetsTable';
+import TopicTwitter from './TopicTwitter';
+import TopicTwitterWorldMap from './TopicTwitterWorldMap';
+import TopicTwitterPieChart from './TopicTwitterPieChart';
 import { setItemInLocalStorage } from '../../utils/helpers';
 const Topic = () => {
   const classes = topicStyles();
@@ -34,7 +37,8 @@ const Topic = () => {
     snackBarSeverity,
     openTopicSearchDialog,
     showUpdateButton,
-    searchIndex
+    searchIndex,
+    twitterData
   } = useSelector(state => state.Topic);
 
   const dispatch = useDispatch();
@@ -67,7 +71,7 @@ const Topic = () => {
       <TopicCompose handleSearch={handleSearch} />
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          {searchIndex['id'] === 4 ? null : (
+          {searchIndex['id'] === 4 || searchIndex['id'] === 5 ? null : (
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <TopicHistoryChart handleSearch={handleSearch} />
@@ -101,10 +105,36 @@ const Topic = () => {
                 <TopicTweets />
               </Grid>
             </Grid>
-          ) : (
-            <TopicSearchResults />
-          )}
+          ) : null}
         </Grid>
+        <Grid item xs={12}>
+          {searchIndex['id'] === 5 ? (
+            <Grid container>
+              {twitterData.length ? (
+                <Grid item xs={12}>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <TopicTwitterWorldMap />
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <TopicTwitterPieChart />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              ) : null}
+              <Grid item xs={12}>
+                <TopicTwitter />
+              </Grid>
+            </Grid>
+          ) : null}
+        </Grid>
+
+        {searchIndex['id'] !== 4 && searchIndex['id'] !== 5 ? (
+          <Grid item xs={12}>
+            <TopicSearchResults />
+          </Grid>
+        ) : null}
       </Grid>
       <TopicSnackbar
         open={isSnackBarActive}
