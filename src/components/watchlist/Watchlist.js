@@ -36,8 +36,7 @@ import {
   getWatchlist,
   getWatchlistTable2Data,
   getWatchlistFileTypeEmailAlertStatus,
-  syncCompleteDataOnPage,
-  cancelGridApiCalls
+  syncCompleteDataOnPage
 } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from '../../reducers/Topic';
@@ -200,7 +199,6 @@ const Watchlist = () => {
   useEffect(() => {
     getWatchlistTable2Dataa();
     return () => {
-      cancelGridApiCalls();
       setGridData2([]);
     };
   }, [getWatchlistTable2Dataa]);
@@ -231,7 +229,6 @@ const Watchlist = () => {
   useEffect(() => {
     fetchData();
     return () => {
-      cancelGridApiCalls();
       setWatchlistData([]);
     };
   }, [fetchData]);

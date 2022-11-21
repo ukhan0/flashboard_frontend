@@ -66,6 +66,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType, f
   return async dispatch => {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
+      cancelGridApiCalls();
       gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
         params: {
@@ -139,6 +140,7 @@ export const getWatchlistTable2Data = (
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
+      cancelGridApiCalls();
       gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`, {
         cancelToken: cancelToken.token,

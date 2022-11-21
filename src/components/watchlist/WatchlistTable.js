@@ -195,20 +195,17 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
 
   const filterChangeHandler = params => {
     const filteringModel = params.api.getFilterModel();
-    console.log('filteringModel', filteringModel);
+    // filter column from backend
     if ((selectedFileType !== '10-K' && selectedFileType !== '10-Q') || selectedUniverse !== 'all') {
       const filterColumnsFromBackend = ['document_type', 'source', 'industry', 'sector'];
       const isApiCallNeeded = filterColumnsFromBackend.some(columnName =>
         Object.keys(filteringModel).includes(columnName)
       );
-      console.log(isApiCallNeeded);
       if (isApiCallNeeded) {
         let filtersObject = {};
         Object.keys(filteringModel).forEach(key => {
           filtersObject[`filter_${key}`] = `*${filteringModel[key].filter}*`;
         });
-        console.log(filtersObject);
-
         if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
           fetchTable1Data(filtersObject);
         } else {
