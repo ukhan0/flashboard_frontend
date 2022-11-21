@@ -60,7 +60,7 @@ export const getWatchlistFileTypeEmailAlertStatus = () => {
     }
   };
 };
-export const getWatchlist = (selectedUniverse, selectedFileType, selectedType, filtersObject) => {
+export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
@@ -77,8 +77,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType, f
           selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse),
           countrycode: isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)
             ? 'ca'
-            : undefined,
-          ...filtersObject
+            : undefined
         },
         cancelToken: cancelToken.token
       });

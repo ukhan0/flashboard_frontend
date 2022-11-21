@@ -77,15 +77,14 @@ const tableFooter = {
   textAlign: 'right',
   width: '100%'
 };
-const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetchTable1Data, fetchTable2Data }) => {
+const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetchTable2Data }) => {
   const dispatch = useDispatch();
   const {
     selectedMetric,
     selectedType,
     selectedFileType,
     completeCompaniesData,
-    completeCompaniesDataGlobal,
-    selectedUniverse
+    completeCompaniesDataGlobal
   } = useSelector(state => state.Watchlist);
   const gridApi = useRef(null);
   const gridRef = useRef();
@@ -196,7 +195,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
   const filterChangeHandler = params => {
     const filteringModel = params.api.getFilterModel();
     // filter column from backend
-    if ((selectedFileType !== '10-K' && selectedFileType !== '10-Q') || selectedUniverse !== 'all') {
+    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
       const filterColumnsFromBackend = ['document_type', 'source', 'industry', 'sector'];
       const isApiCallNeeded = filterColumnsFromBackend.some(columnName =>
         Object.keys(filteringModel).includes(columnName)
@@ -206,11 +205,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
         Object.keys(filteringModel).forEach(key => {
           filtersObject[`filter_${key}`] = `*${filteringModel[key].filter}*`;
         });
-        if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
-          fetchTable1Data(filtersObject);
-        } else {
-          fetchTable2Data(filtersObject);
-        }
+        fetchTable2Data(filtersObject);
       }
     }
 

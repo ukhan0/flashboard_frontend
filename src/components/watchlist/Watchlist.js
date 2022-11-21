@@ -203,28 +203,25 @@ const Watchlist = () => {
     };
   }, [getWatchlistTable2Dataa]);
 
-  const fetchData = useCallback(
-    async (filtersObject = {}) => {
-      if ((selectedFileType === '10-K' || selectedFileType === '10-Q') && selectedUniverse !== 'all') {
-        try {
-          setLoading(prev => prev + 1);
-          let rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType, filtersObject));
-          if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
-            setTopicDialogOpen(true);
-          }
-          if (rawData && rawData.length) {
-            dispatch(syncCompleteDataOnPage(selectedType, rawData));
-            setWatchlistData(formatData(rawData));
-          }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(prev => prev - 1);
+  const fetchData = useCallback(async () => {
+    if ((selectedFileType === '10-K' || selectedFileType === '10-Q') && selectedUniverse !== 'all') {
+      try {
+        setLoading(prev => prev + 1);
+        let rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
+        if (rawData !== null && rawData.length === 0 && selectedUniverse === 'watchlist') {
+          setTopicDialogOpen(true);
         }
+        if (rawData && rawData.length) {
+          dispatch(syncCompleteDataOnPage(selectedType, rawData));
+          setWatchlistData(formatData(rawData));
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(prev => prev - 1);
       }
-    },
-    [selectedUniverse, selectedFileType, selectedType, dispatch]
-  );
+    }
+  }, [selectedUniverse, selectedFileType, selectedType, dispatch]);
 
   useEffect(() => {
     fetchData();
@@ -633,7 +630,6 @@ const Watchlist = () => {
         <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
           <WatchlistTable
-            fetchTable1Data={fetchData}
             fetchTable2Data={getWatchlistTable2Dataa}
             tableData={isBigAgGrid(selectedFileType) ? gridData : gridData2}
             onColumnClick={onColumnClick}
