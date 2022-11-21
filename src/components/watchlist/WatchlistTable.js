@@ -91,6 +91,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
   const [isFilterData, setIsFilterData] = useState(false);
   const [columnDefination, setColumnDefination] = useState([]);
   const [rowCount, setRowCount] = useState(0);
+  const [fetchFiltersFromApiFlag, setFetchFiltersFromApiFlag] = useState(false);
 
   useEffect(() => {
     isBigAgGrid(selectedFileType)
@@ -197,15 +198,19 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
     // filter column from backend
     if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
       const filterColumnsFromBackend = ['document_type', 'source', 'industry', 'sector'];
-      const isApiCallNeeded = filterColumnsFromBackend.some(columnName =>
+      const isCustomFiltering = filterColumnsFromBackend.some(columnName =>
         Object.keys(filteringModel).includes(columnName)
       );
-      if (isApiCallNeeded) {
+      if (isCustomFiltering) {
         let filtersObject = {};
         Object.keys(filteringModel).forEach(key => {
           filtersObject[`filter_${key}`] = `*${filteringModel[key].filter}*`;
         });
+        setFetchFiltersFromApiFlag(true);
         fetchTable2Data(filtersObject);
+      } else if (fetchFiltersFromApiFlag) {
+        setFetchFiltersFromApiFlag(false);
+        fetchTable2Data();
       }
     }
 
