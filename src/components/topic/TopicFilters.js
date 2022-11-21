@@ -63,7 +63,12 @@ const useStyles = makeStyles(theme => ({
   },
   country: {
     marginTop: '28px'
-  }
+  },
+  dateRangeContainer: {
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 21
+    }
+  },
 }));
 
 const isSearchAllowed = (searchText, simpleSearchTextArray) => {
@@ -253,7 +258,7 @@ const TopicFilters = props => {
                   ))}
                 </ButtonGroup>
               </Grid>
-              <Grid item>
+              <Grid item className={classes.dateRangeContainer}>
                 <h6>Date Range</h6>
                 <TopicRangePicker />
               </Grid>
