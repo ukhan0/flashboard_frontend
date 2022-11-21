@@ -548,7 +548,7 @@ export const watchlistTableColDefs1 = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'gics_sector',
+    colId: 'sector',
     width: 150
   },
   {
@@ -559,7 +559,7 @@ export const watchlistTableColDefs1 = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'gics_industry',
+    colId: 'industry',
     width: 150
   },
   {
@@ -570,7 +570,7 @@ export const watchlistTableColDefs1 = [
     editable: false,
     sortable: true,
     flex: 1,
-    colId: 'source_name',
+    colId: 'source',
     width: 150
   }
 ];
