@@ -16,9 +16,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopicDocumentTypeDropdown = props => {
+const TopicDocumentTypeDropdown = () => {
   const classes = useStyles();
-  const { documentTypes, selectedDocumentTypes } = useSelector(state => state.Topic);
+  const { documentTypes, selectedDocumentTypes,  searchIndex } = useSelector(state => state.Topic);
   const dispatch = useDispatch();
   let documentTypeValue = documentTypes.map(e => e.documentTypeGroup);
   const isAllSelected = documentTypeValue.length > 0 && selectedDocumentTypes.length === documentTypeValue.length;
@@ -44,6 +44,7 @@ const TopicDocumentTypeDropdown = props => {
       input={<Input />}
       renderValue={selectedValues => (isAllSelected ? ['All'] : renameDocumentTypes(selectedValues))}
       autoWidth={true}
+      disabled={searchIndex['id'] === 5 ? true : false}
       MenuProps={{
         anchorOrigin: {
           vertical: 'bottom',

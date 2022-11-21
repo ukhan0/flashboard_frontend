@@ -366,6 +366,10 @@ const UserSettingsGeneralTab = () => {
                                 </Grid>
 
                                 <Grid item xs={12}>
+                                    <Typography>ThemeX Searches Count: {get(user, 'themex_search_counter' , 0)}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12}>
                                     <Button color="primary" variant="contained" type="submit"
                                         disabled={!isDirty || !isValid || profileDataSubmit}
                                     >

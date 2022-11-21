@@ -37,7 +37,10 @@ import {
   setTweetsTableData,
   setAllSearchParams,
   setIsnNewlySavedSearch,
-  setTopicSearchCompany
+  setTopicSearchCompany,
+  setTwitterData,
+  setTwitterMapData,
+  setTwitterFetchData
 } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import axios from 'axios';
@@ -48,6 +51,7 @@ import documentTypesData from '../../config/documentTypesData';
 import { metricsSelection } from '../../config/filterTypes';
 import moment from 'moment';
 import { searchSuggestionTypeConfig } from '../../config/appConfig';
+import { setSnackBarObj } from '../../reducers/Alerts';
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false, historyBy = 'month') => {
   return async (dispatch, getState) => {
@@ -134,7 +138,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     //     });
     //   });
     // }
-    if (getState().Topic.searchIndex['id'] === 4) {
+    if (getState().Topic.searchIndex['id'] === 4 || getState().Topic.searchIndex['id'] === 5) {
       return;
     }
     try {
@@ -586,7 +590,7 @@ export const findSuggestions = () => {
     }
   };
 };
-export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false) => {
+export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSearch = false, ticker = '') => {
   return async (dispatch, getState) => {
     const {
       // selectedDocumentTypes,
@@ -673,7 +677,8 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         const response = await axios.post(
           `${config.apiUrl}/api/dictionary/search_tweets_data`,
           {
-            ...createSearchPayloadTweets(getState().Topic, freshSearch)
+            ...createSearchPayloadTweets(getState().Topic, freshSearch),
+            ticker: ticker
           },
           {
             cancelToken: cancelTokenSource.token
@@ -693,11 +698,13 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         }
 
         if (newSearchResults.data) {
-          dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
-          dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
-          dispatch(setTweetsData(newSearchResults.data));
-          dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
-
+          if (freshSearch) {
+            dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
+            dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
+            dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
+          } else {
+            dispatch(setTweetsData(newSearchResults.data));
+          }
           dispatch(setSearchBackdrop(null, false));
         } else {
           dispatch(isDateSet(false));
@@ -716,6 +723,56 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
         dispatch(setTweetsData([]));
         dispatch(setTweetsCountryStatesMapData([]));
         dispatch(setTweetsTableData([]));
+      }
+    }
+
+    if (getState().Topic.searchIndex['id'] === 5) {
+      try {
+        const { user } = getState().User;
+        const response = await axios.post(
+          `${config.apiUrl}/api/dictionary/search_twitter_data`,
+          {
+            ...createSearchPayloadTwitter(getState().Topic, freshSearch),
+            userId: user.id
+          },
+          {
+            cancelToken: cancelTokenSource.token
+          }
+        );
+        let newSearchResults = get(response, 'data', null);
+        if (newSearchResults.error) {
+          let isErrorr = newSearchResults.error;
+          if (isErrorr) {
+            dispatch(setSearchBackdrop(null, false));
+            dispatch(setSearchError(true));
+            let errorMessage =
+              'There are too many results for this search. Try refining your search with more specific keywords';
+            dispatch(setSnackBarObj({ message: errorMessage, severity: 'error' }));
+            dispatch(setTwitterFetchData(true));
+          }
+          return;
+        }
+
+        if (newSearchResults.data) {
+          dispatch(setTwitterMapData(Object.entries(newSearchResults.countryCount)));
+          dispatch(setTwitterData(newSearchResults.data.results));
+          dispatch(setSearchBackdrop(null, false));
+          dispatch(setTwitterFetchData(true));
+        } else {
+          dispatch(isDateSet(false));
+          dispatch(setSearchBackdrop(null, false));
+          dispatch(setSearchError(true));
+          dispatch(setTwitterData([]));
+          dispatch(setTwitterMapData([]));
+          dispatch(setTwitterFetchData(true));
+        }
+      } catch (error) {
+        dispatch(isDateSet(false));
+        dispatch(setSearchBackdrop(null, false));
+        dispatch(setSearchError(true));
+        dispatch(setTwitterData([]));
+        dispatch(setTwitterMapData([]));
+        dispatch(setTwitterFetchData(true));
       }
     }
   };
@@ -762,8 +819,7 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
     page: topicState.pageNo,
     refresh_search: false,
     searchIndex: topicState.searchIndex['value'],
-    document_type: '',
-    ticker: ''
+    document_type: ''
   };
   return data;
 };
@@ -785,4 +841,59 @@ export const getMapDataByCountry = country => {
       dispatch(setTweetsCountryMapData({}));
     }
   };
+};
+
+const createSearchPayloadTwitter = (topicState, freshSearch) => {
+  let startDate = new URLSearchParams(window.location.search).get('startDate');
+  let endDate = new URLSearchParams(window.location.search).get('endDate');
+
+  startDate = startDate
+    ? startDate && topicState.isDate
+      ? topicState.isDate
+        ? moment(topicState.startDate)
+        : moment().subtract(12, 'months')
+      : startDate
+    : topicState.isDate
+    ? moment(topicState.startDate)
+    : moment().subtract(12, 'months');
+
+  endDate = endDate
+    ? endDate && topicState.isDate
+      ? topicState.isDate
+        ? moment(topicState.endDate)
+        : moment(new Date())
+            .subtract(1, 'minutes')
+            .utc()
+      : endDate
+    : topicState.isDate
+    ? moment(topicState.endDate)
+    : moment(new Date())
+        .subtract(1, 'minutes')
+        .utc();
+
+  // twiiter api allow only current-date for end-date
+  endDate = endDate.isBefore(new Date())
+    ? endDate
+    : moment(new Date())
+        .subtract(1, 'minutes')
+        .utc();
+
+  let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
+  searchTerm = searchTerm.trimEnd() + ' ' + topicState.searchTextWithAnd.map(item => `"${item}"`).join(' ');
+  searchTerm = searchTerm.trimEnd() + ' ' + topicState.ignoreSearchTextArray.map(item => `-${item}`).join(' ');
+  if (topicState.selectedCountry) {
+    searchTerm = searchTerm.trimEnd() + ' place_country:' + topicState.selectedCountry.code;
+  }
+
+  if (topicState.twitterGeoLocationEnable && topicState.isSimpleSearch) {
+    searchTerm = searchTerm.trimEnd() + ' has:geo';
+  }
+
+  const data = {
+    searchTerm: topicState.isSimpleSearch ? searchTerm.trim() : topicState.searchText,
+    startDate: startDate.format('yyyyMMDDHHmm'),
+    endDate: endDate.format('yyyyMMDDHHmm'),
+    maxResults: 500
+  };
+  return data;
 };
