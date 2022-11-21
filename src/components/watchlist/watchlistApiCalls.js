@@ -60,7 +60,7 @@ export const getWatchlistFileTypeEmailAlertStatus = () => {
     }
   };
 };
-export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) => {
+export const getWatchlist = (selectedUniverse, selectedFileType, selectedType, filtersObject) => {
   let rawData = [];
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
@@ -76,13 +76,14 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
           selected_type: getSelectedType(selectedType, selectedFileType, selectedUniverse),
           countrycode: isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)
             ? 'ca'
-            : undefined
+            : undefined,
+          ...filtersObject
         },
         cancelToken: cancelToken.token
       });
       rawData = get(response, 'data.data.content', []);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       rawData = null; // null will indicate, api call is cancelled or there is some error
     }
     if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
@@ -124,7 +125,8 @@ export const getWatchlistTable2Data = (
   selectedFileTypes,
   selectedType,
   countryCode,
-  sourceName
+  sourceName,
+  filtersObject
 ) => {
   let rawData = [];
   let limit = 100;
@@ -148,7 +150,8 @@ export const getWatchlistTable2Data = (
           document_type: selectedFileTypes,
           selected_type: selectedType,
           ...(countryCode && { country_code: countryCode }),
-          ...(sourceName && { source_name: sourceName })
+          ...(sourceName && { source_name: sourceName }),
+          ...filtersObject
         }
       });
 

@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get, forEach } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
-// import countriesCode from '../../config/countriesCode';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -13,7 +12,6 @@ import CountryCodeRenderer from './WatchlistTableComponents/CountryCodeRenderer'
 import TweetsIcon from './WatchlistTableComponents/tweet';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
-import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import {
   checkIsFilterActive,
@@ -79,19 +77,19 @@ const tableFooter = {
   textAlign: 'right',
   width: '100%'
 };
-const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) => {
+const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetchTable1Data, fetchTable2Data }) => {
   const dispatch = useDispatch();
   const {
     selectedMetric,
     selectedType,
     selectedFileType,
     completeCompaniesData,
-    completeCompaniesDataGlobal
+    completeCompaniesDataGlobal,
+    selectedUniverse
   } = useSelector(state => state.Watchlist);
   const gridApi = useRef(null);
   const gridRef = useRef();
   const [isFilterData, setIsFilterData] = useState(false);
-  let getQueryParams = new URLSearchParams(useLocation().search);
   const [columnDefination, setColumnDefination] = useState([]);
   const [rowCount, setRowCount] = useState(0);
 
@@ -196,6 +194,28 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
   };
 
   const filterChangeHandler = params => {
+    const filteringModel = params.api.getFilterModel();
+    console.log('filteringModel', filteringModel);
+    if ((selectedFileType !== '10-K' && selectedFileType !== '10-Q') || selectedUniverse !== 'all') {
+      const filterColumnsFromBackend = ['document_type', 'source_name', 'industry', 'sector'];
+      const isApiCallNeeded = filterColumnsFromBackend.some(columnName =>
+        Object.keys(filteringModel).includes(columnName)
+      );
+      if (isApiCallNeeded) {
+        let filtersObject = {};
+        Object.keys(filteringModel).forEach(key => {
+          filtersObject[`filter_${key}`] = `*${filteringModel[key].filter}*`;
+        });
+        console.log(filtersObject);
+
+        if (selectedFileType === '10-K' || selectedFileType === '10-Q') {
+          fetchTable1Data(filtersObject);
+        } else {
+          fetchTable2Data(filtersObject);
+        }
+      }
+    }
+
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params?.api?.rowModel?.rowsToDisplay;
       setRowCount(data.length);
@@ -209,21 +229,20 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         gridApi.current.hideOverlay();
       }
     }
-    const filteringModel = params.api.getFilterModel();
     const watchlistSetting = getWatchlistSettings();
-    let selectedType, selectedFileType, selectedUniverse, selectedMetric;
+    let type, fileType, universe, metric;
     if (watchlistSetting) {
-      selectedType = watchlistSetting.selectedType ? watchlistSetting.selectedType : 'domestic';
-      selectedFileType = watchlistSetting.selectedFileType ? watchlistSetting.selectedFileType : '10-K';
-      selectedUniverse = watchlistSetting.selectedUniverse ? watchlistSetting.selectedUniverse : 'watchlist';
-      selectedMetric = watchlistSetting.selectedMetric ? watchlistSetting.selectedMetric : 'totdoc';
+      type = watchlistSetting.selectedType ?? 'domestic';
+      fileType = watchlistSetting.selectedFileType ?? '10-K';
+      universe = watchlistSetting.selectedUniverse ?? 'watchlist';
+      metric = watchlistSetting.selectedMetric ?? 'totdoc';
     } else {
-      selectedType = 'domestic';
-      selectedFileType = '10-K';
-      selectedUniverse = 'watchlist';
-      selectedMetric = 'totdoc';
+      type = 'domestic';
+      fileType = '10-K';
+      universe = 'watchlist';
+      metric = 'totdoc';
     }
-    const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
+    const allSelectedFilters = { ...filteringModel, type, fileType, universe, metric };
     storeFilteringState(allSelectedFilters);
     dispatch(setIsFilterActive(checkIsFilterActive()));
   };
@@ -259,14 +278,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
-    const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
-    if (getQueryParams.get('ticker')) {
-      tickerFilterInstance.setModel({
-        type: 'equals',
-        filter: getQueryParams.get('ticker')
-      });
-    }
-    gridApi.current.onFilterChanged();
     const columnsState = getColumnState(selectedFileType);
     if (columnsState && columnsState.length) {
       gridRef.current.columnApi.applyColumnState({
@@ -275,7 +286,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
       });
     }
   };
-
 
   useEffect(() => {
     if (!gridApi.current) {
@@ -328,7 +338,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         onSortChanged={storeChangedColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
-        // context={countriesCode}
         overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
         onFilterChanged={filterChangeHandler}></AgGridReact>
       <div style={tableFooter}>Total Rows : {rowCount}</div>
