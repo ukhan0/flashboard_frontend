@@ -9,7 +9,7 @@ export default {
       axiosConfig => {
         const authToken = localStorage.getItem('auth_token');
         if (authToken) {
-          axiosConfig.headers['Authorization'] = `Bearer ${localStorage.getItem('auth_token')}`;
+          axiosConfig.headers['Authorization'] = `Bearer ${authToken}`;
         }
         axiosConfig.headers['Content-Type'] = 'application/json';
         return axiosConfig;
@@ -34,17 +34,17 @@ export default {
         if (get(error, 'response.status', '') === 401) {
           //let res = get(error, 'response.data', '');
           //if (res['invalidToken']) {
-            localStorage.removeItem('auth_token');
-            if (window.location.pathname !== '/PagesRegister') {
-              window.location.href = '/PagesRegister';
-            }
+          localStorage.removeItem('auth_token');
+          if (window.location.pathname !== '/PagesRegister') {
+            window.location.href = '/PagesRegister';
+          }
 
-            // redirect to login page
+          // redirect to login page
           //}
 
           //if (res['TokenExpired']) {
-            //refreshToken();
-            // refresh user token
+          //refreshToken();
+          // refresh user token
           //}
         } else {
           return Promise.reject(error);
