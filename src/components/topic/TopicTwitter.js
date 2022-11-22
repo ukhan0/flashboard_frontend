@@ -172,7 +172,8 @@ const TopicTwitterSearchResults = () => {
           const statusLink = `https://twitter.com/${v?.user?.screen_name}/status/${v?.id_str}`;
           let source = getHrefAndAnchorText(v.source);
           let tweetFullText = get(v, 'extended_tweet.full_text', null);
-
+          let media = get(v , 'extended_tweet.entities.media[0]' , null)
+          
           return (
             <Fragment key={`rs${index}`}>
               <Paper elevation={4} className={classes.margin}>
@@ -235,30 +236,30 @@ const TopicTwitterSearchResults = () => {
                       textToHighlight={tweetFullText ? tweetFullText : v.text}
                     />
 
-                    {v.extended_tweet?.entities?.media[0]?.media_url_https ? (
+                    {media?.media_url_https ? (
                       <Grid container direction="row" justify="space-between" alignItems="flex-start">
                         <Grid
                           item
                           xs={12}
                           className={classes.tweetImg}
-                          data-type={v.extended_tweet?.entities?.media[0].type}>
+                          data-type={media.type}>
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
                             href={statusLink}
                             className={classes.twitterThumbLink}>
                             <div className={classes.twitterThumb}>
-                              {v.extended_tweet?.entities?.media[0].type === 'video' ? (
+                              {media.type === 'video' ? (
                                 <>
                                   {' '}
                                   <PlayCircleOutlineIcon className={classes.twitterThumbIcon} />
                                   <div className={classes.twitterImgVideoContainer}>
-                                    <img src={v.extended_tweet?.entities?.media[0]?.media_url_https} alt="tweet-img" />
+                                    <img src={media.media_url_https} alt="tweet-img" />
                                   </div>
                                 </>
                               ) : (
                                 <div className={classes.twitterImgContainer}>
-                                  <img src={v.extended_tweet?.entities?.media[0]?.media_url_https} alt="tweet-img" />
+                                  <img src={media.media_url_https} alt="tweet-img" />
                                 </div>
                               )}
                             </div>
