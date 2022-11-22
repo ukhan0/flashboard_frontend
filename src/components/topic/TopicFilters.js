@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import TopicSearchTextField from './TopicSearchTextField';
@@ -79,7 +78,6 @@ const TopicFilters = props => {
   const dispatch = useDispatch();
   const {
     searchText,
-    isSearchError,
     selectedSuggestions,
     showUpdateButton,
     selectedSearch,
@@ -274,31 +272,25 @@ const TopicFilters = props => {
           </div>
         </Grid>
       </Grid>
-
-      <Grid item xs={12} md={12} lg={12}>
-        <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
-          <Grid item>
-            <h6 style={{ marginBottom: 0 }}>Enable Email Alert</h6>
+      {searchIndex['id'] !== 5 && searchIndex['id'] !== 4 ? (
+        <Grid item xs={12} md={12} lg={12}>
+          <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
+            <Grid item>
+              <h6 style={{ marginBottom: 0 }}>Enable Email Alert</h6>
+            </Grid>
+            <Grid item>
+              <Switch
+                checked={isTopicEmailAlertEnable}
+                onChange={handleChangeTopicAlert}
+                color="primary"
+                name="checkedB"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <Switch
-              checked={isTopicEmailAlertEnable}
-              onChange={handleChangeTopicAlert}
-              color="primary"
-              name="checkedB"
-              inputProps={{ 'aria-label': 'primary checkbox' }}
-              disabled={searchIndex['id'] === 5 ? true : false}
-            />
-          </Grid>
-          <Grid item>
-            {isSearchError ? (
-              <div style={{ marginBottom: '5px' }}>
-                <Typography color="error">Error Occured</Typography>
-              </div>
-            ) : null}
-          </Grid>{' '}
         </Grid>
-      </Grid>
+      ) : null}
+
       {searchIndex['id'] === 5 && isSimpleSearch ? (
         <Grid item xs={12} md={12} lg={12}>
           <Grid container direction="row" justify="flex-start" alignItems="center" style={{ paddingBottom: '5px' }}>
