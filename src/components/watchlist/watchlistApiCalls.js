@@ -6,7 +6,6 @@ import {
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData
 } from './../../reducers/Watchlist';
-import { renameDocumentTypes } from '../topic/topicHelpers';
 import { parseDateAndFormatMoment } from './WatchlistTableHelpers';
 import countriesCode from '../../config/countriesCode';
 
@@ -167,7 +166,7 @@ export const getWatchlistTable2Data = (
       return {
         ...d,
         companyName: get(d, 'company_name', null),
-        documentType: renameDocumentTypes(d.document_type),
+        documentType: d.document_type?.toLowerCase() === 'fmp-transcript' ? 'Earning Call' : d.document_type,
         sentiment: round(get(d, 'sentiment', null), 2) ?? 0,
         document_date: parseDateAndFormatMoment(d.document_date),
         wordCount: round(get(d, 'word_count', null), 2),
