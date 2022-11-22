@@ -99,7 +99,7 @@ const Notification = () => {
     let tweetDescription = '';
     let tickerArr = get(data, 'tickerArr', null);
     if (tickerArr) {
-      tweetDescription = tickerArr.length > 3 ? tickerArr.slice(0, 3).join(',') + '...' : tickerArr.join(',');
+      tweetDescription = tickerArr.length > 3 ? tickerArr.slice(0, 3).join(', ') + ' ...' : tickerArr.join(',');
     } else {
       tweetDescription = data.description;
     }

@@ -445,7 +445,7 @@ const searchDefaultState = () => ({
   twitterData: [],
   twitterMapData: [],
   twitterFetchData: false,
-  twitterGeoLocationEnable: false,
+  twitterGeoLocationEnable: true,
   // 'FMP-transcript',
   // '10-K',
   // '10-Q',
