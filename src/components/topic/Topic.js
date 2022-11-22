@@ -14,7 +14,8 @@ import {
   setIsTopicDeleteErr,
   cancelExistingHightlightsCalls,
   setSnackBarActive,
-  setTopicHandleSearchCombineReducer
+  setTopicHandleSearchCombineReducer,
+  setSearchError
 } from '../../reducers/Topic';
 import { performTopicSearchAggregate, performTopicTweetsSearchAggregate, fetchTopicsList } from './topicActions';
 import TopicTweetsWorldMap from './TopicTweetsWorldMap';
@@ -60,6 +61,9 @@ const Topic = () => {
   };
   useEffect(() => {
     dispatch(fetchTopicsList());
+    return () => {
+      dispatch(setSearchError(false));
+    };
   }, [dispatch]);
   const handleCloseSnackBar = () => {
     dispatch(setSnackBarActive(false));

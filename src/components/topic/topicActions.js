@@ -745,9 +745,12 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           if (isErrorr) {
             dispatch(setSearchBackdrop(null, false));
             dispatch(setSearchError(true));
-            let errorMessage =
-              'There are too many results for this search. Try refining your search with more specific keywords';
-            dispatch(setSnackBarObj({ message: errorMessage, severity: 'error' }));
+            let errorMessage = get(
+              response,
+              'data.data.error.message',
+              'There are too many results for this search. Try refining your search with more specific keywords.'
+            );
+            dispatch(setSnackBarObj({ message: errorMessage, severity: 'error', autoHideDuration : null }));
             dispatch(setTwitterFetchData(true));
           }
           return;
@@ -767,6 +770,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           dispatch(setTwitterFetchData(true));
         }
       } catch (error) {
+        console.error(error);
         dispatch(isDateSet(false));
         dispatch(setSearchBackdrop(null, false));
         dispatch(setSearchError(true));
@@ -888,9 +892,10 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
   if (topicState.twitterGeoLocationEnable && topicState.isSimpleSearch) {
     searchTerm = searchTerm.trimEnd() + ' has:geo';
   }
+  searchTerm = searchTerm.trim().concat(' -is:retweet');
 
   const data = {
-    searchTerm: topicState.isSimpleSearch ? searchTerm.trim() : topicState.searchText,
+    searchTerm: topicState.isSimpleSearch ? searchTerm : topicState.searchText,
     startDate: startDate.format('yyyyMMDDHHmm'),
     endDate: endDate.format('yyyyMMDDHHmm'),
     maxResults: 500
