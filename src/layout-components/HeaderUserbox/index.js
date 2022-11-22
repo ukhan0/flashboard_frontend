@@ -44,8 +44,8 @@ const StyledBadge = withStyles({
   }
 })(Badge);
 export default function HeaderUserbox() {
-  const {user} = useSelector(state => state.User);
-  const profilePic = get(user , 'profile_pic' , null)
+  const { user } = useSelector(state => state.User);
+  const profilePic = get(user, 'profile_pic', null);
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const handleClick = event => {
@@ -59,7 +59,9 @@ export default function HeaderUserbox() {
   const signout = () => {
     SocketService.socket.close();
     deleteToken();
-    localStorage.clear();
+    setTimeout(() => {
+      localStorage.clear();
+    }, 100);
     history.push('/PagesRegister');
   };
 
@@ -94,8 +96,8 @@ export default function HeaderUserbox() {
         </span>
       </Button>
 
-      {Boolean(anchorEl) ?
-        (<Menu
+      {Boolean(anchorEl) ? (
+        <Menu
           anchorEl={anchorEl}
           keepMounted
           getContentAnchorEl={null}
@@ -136,8 +138,8 @@ export default function HeaderUserbox() {
               </ListItem>
             </List>
           </div>
-        </Menu>)
-        : null}
+        </Menu>
+      ) : null}
     </Fragment>
   );
 }

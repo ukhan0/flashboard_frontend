@@ -68,7 +68,7 @@ export default function Tags(props) {
         handleKeyDown={handleKeyDown}
         handleOnShowSuggestions={props.handleOnShowSuggestions}
         searchSuggestionType={props.searchSuggestionType}
-        key={key}
+        keey={key}
         values={ignoreSearchTextArray}
         inputRef={inputRef}
       />

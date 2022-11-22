@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, memo } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Card from '@material-ui/core/Card';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -22,12 +22,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TopicTweetsWorldMap() {
+const TopicTweetsWorldMap = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [states, setState] = React.useState(false);
-  const [selectedCountry, setSelectedCountry] = React.useState('');
-  const { tweetsMapData, tweetsCountryMapData } = useSelector(state => state.Topic);
+  const [states, setState] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const tweetsMapData = useSelector(state => state.Topic.tweetsMapData);
+  const tweetsCountryMapData = useSelector(state => state.Topic.tweetsCountryMapData);
   let calculateTweets = [];
   tweetsMapData.forEach(v => {
     let isCountry = calculateTweets.find(c => c.key === v.key);
@@ -124,4 +125,6 @@ export default function TopicTweetsWorldMap() {
       </Card>
     </div>
   );
-}
+};
+
+export default memo(TopicTweetsWorldMap);

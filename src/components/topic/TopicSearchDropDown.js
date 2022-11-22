@@ -34,7 +34,7 @@ const TopicSearchDropDown = ({
     <FormControl className={classes.formControl}>
       <Autocomplete
         loading={loading}
-        style={{ backgroundColor: 'white', borderRadius: '12px', width: '300px' }}
+        style={{ backgroundColor: 'white', borderRadius: '12px', width: '100%' }}
         loadingText={'Loading...'}
         className={classes.searchField}
         onChange={selectionChanged}
