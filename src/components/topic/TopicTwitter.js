@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { get, union } from 'lodash';
 import Highlighter from 'react-highlight-words';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -69,6 +70,56 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 2,
     borderRadius: 4,
     color: 'white'
+  },
+  tweetImg: {
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  twitterThumb: {
+    position: 'relative',
+    [theme.breakpoints.up('sm')]: {
+      width: '30%'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: '60%'
+    }
+  },
+  twitterImgVideoContainer: {
+    width: '100%',
+    '&::after': {
+      content: '""',
+      zIndex: 8,
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      position: 'absolute',
+      width: '100%',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0
+    },
+    '& img': {
+      width: '100%'
+    }
+  },
+  twitterThumbIcon: {
+    fontSize: '80px',
+    position: 'absolute',
+    top: 0,
+    zIndex: 222,
+    color: 'white',
+    display: 'flex',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    margin: 'auto'
+  },
+  twitterImgContainer: {
+    width: '100%',
+    '& img': {
+      width: '100%'
+    }
   }
 }));
 
@@ -178,6 +229,34 @@ const TopicTwitterSearchResults = () => {
                       autoEscape={true}
                       textToHighlight={tweetFullText ? tweetFullText : v.text}
                     />
+
+                    {v.extended_tweet?.entities?.media[0]?.media_url_https ? (
+                      <Grid container direction="row" justify="space-between" alignItems="flex-start">
+                        <Grid
+                          item
+                          xs={12}
+                          className={classes.tweetImg}
+                          data-type={v.extended_tweet?.entities?.media[0].type}>
+                          <a target="_blank" rel="noopener noreferrer" href={statusLink}>
+                            <div className={classes.twitterThumb}>
+                              {v.extended_tweet?.entities?.media[0].type === 'video' ? (
+                                <>
+                                  {' '}
+                                  <PlayCircleOutlineIcon className={classes.twitterThumbIcon} />
+                                  <div className={classes.twitterImgVideoContainer}>
+                                    <img src={v.extended_tweet?.entities?.media[0]?.media_url_https} alt="tweet-img" />
+                                  </div>
+                                </>
+                              ) : (
+                                <div className={classes.twitterImgContainer}>
+                                  <img src={v.extended_tweet?.entities?.media[0]?.media_url_https} alt="tweet-img" />
+                                </div>
+                              )}
+                            </div>
+                          </a>
+                        </Grid>
+                      </Grid>
+                    ) : null}
                   </div>
                 </Box>
               </Paper>
