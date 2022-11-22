@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import Map from 'highcharts/modules/map';
@@ -6,10 +6,10 @@ import { isEmpty } from 'lodash';
 import { useSelector } from 'react-redux';
 import { usaStates } from '../../config/worldMapData';
 import { cloneDeep } from 'lodash';
-export default function TopicTweetsCountryMap(props) {
-  const { tweetsCountryStatesMapData } = useSelector(state => state.Topic);
+const TopicTweetsCountryMap = ({ tweetsCountryMapData, selectedCountry }) => {
+  const tweetsCountryStatesMapData = useSelector(state => state.Topic.tweetsCountryStatesMapData);
   const tweetsDataBySelectedCountry = tweetsCountryStatesMapData.filter(
-    v => v.key.gc.toLowerCase() === props.selectedCountry
+    v => v.key.gc.toLowerCase() === selectedCountry
   );
   let data = [];
   tweetsDataBySelectedCountry.forEach(c => {
@@ -42,7 +42,7 @@ export default function TopicTweetsCountryMap(props) {
     series: [
       {
         animation: true,
-        mapData: props.tweetsCountryMapData,
+        mapData: tweetsCountryMapData,
         data: cloneDeep(data),
         name: 'Tweets',
         allowPointSelect: true,
@@ -64,9 +64,11 @@ export default function TopicTweetsCountryMap(props) {
 
   return (
     <>
-      {!isEmpty(props.tweetsCountryMapData) ? (
+      {!isEmpty(tweetsCountryMapData) ? (
         <HighchartsReact options={options} constructorType={'mapChart'} highcharts={Map(Highcharts)} />
       ) : null}
     </>
   );
-}
+};
+
+export default memo(TopicTweetsCountryMap);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Card from '@material-ui/core/Card';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -19,9 +19,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TopicTwitterWorldMap() {
+const TopicTwitterWorldMap = () => {
   const classes = useStyles();
-  const { twitterMapData } = useSelector(state => state.Topic);
+  const twitterMapData = useSelector(state => state.Topic.twitterMapData);
 
   const options = {
     title: {
@@ -80,4 +80,6 @@ export default function TopicTwitterWorldMap() {
       </Card>
     </div>
   );
-}
+};
+
+export default memo(TopicTwitterWorldMap);
