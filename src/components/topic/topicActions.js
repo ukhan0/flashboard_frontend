@@ -748,7 +748,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
             let errorMessage = get(
               response,
               'data.data.error.message',
-              'There are too many results for this search. Try refining your search with more specific keywords'
+              'There are too many results for this search. Try refining your search with more specific keywords.'
             );
             dispatch(setSnackBarObj({ message: errorMessage, severity: 'error', autoHideDuration : null }));
             dispatch(setTwitterFetchData(true));
