@@ -94,6 +94,18 @@ const Notification = () => {
   const getTime = v => {
     return moment.unix(v).format('hh:mm A');
   };
+
+  const getNotificationDescription = data => {
+    let tweetDescription = '';
+    let tickerArr = get(data, 'tickerArr', null);
+    if (tickerArr) {
+      tweetDescription = tickerArr.length > 3 ? tickerArr.slice(0, 3).join(', ') + ' ...' : tickerArr.join(',');
+    } else {
+      tweetDescription = data.description;
+    }
+
+    return tweetDescription;
+  };
   return (
     <Fragment>
       <Hidden>
@@ -139,7 +151,7 @@ const Notification = () => {
                         <div className="timeline-item--content">
                           <div className="timeline-item--icon"></div>
                           <h4 className="timeline-item--label mb-2 font-weight-bold"> {getTitle(data)}</h4>
-                          <p>{data.description}</p>
+                          <p>{getNotificationDescription(data)}</p>
                         </div>
                       </div>
                     </div>

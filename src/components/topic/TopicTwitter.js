@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { get, union } from 'lodash';
 import Highlighter from 'react-highlight-words';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 
 const useStyles = makeStyles(theme => ({
   resultHeader: {
@@ -20,8 +21,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     '& .yellowColor': {
       backgroundColor: 'orange',
-      paddingLeft: 2,
-      paddingRight: 2,
+      padding: '0 2px',
       borderRadius: 4
     }
   },
@@ -69,6 +69,75 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 2,
     borderRadius: 4,
     color: 'white'
+  },
+  twitterThumbLink: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  tweetImg: {
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  twitterVideoThumb: {
+    position: 'relative',
+    [theme.breakpoints.up('sm')]: {
+      width: '30%'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: '60%'
+    }
+  },
+  twitterImgVideoContainer: {
+    width: '100%',
+    '&::after': {
+      content: '""',
+      zIndex: 8,
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      position: 'absolute',
+      width: '100%',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0
+    },
+    '& img': {
+      width: '100%'
+    }
+  },
+  twitterThumbIcon: {
+    fontSize: '80px',
+    position: 'absolute',
+    top: 0,
+    zIndex: 222,
+    color: 'white',
+    display: 'flex',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    margin: 'auto'
+  },
+  twitterImgContainer: {
+    width: '25%',
+    maxHeight: '250px',
+    overflow: 'hidden',
+    '& img': {
+      width: '100%'
+    }
+  },
+  twitterThumb: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& $twitterImgContainer': {
+      marginLeft: 12
+    },
+    '& $twitterImgContainer:first-child': {
+      marginLeft: 0
+    }
   }
 }));
 
@@ -116,12 +185,13 @@ const TopicTwitterSearchResults = () => {
           const statusLink = `https://twitter.com/${v?.user?.screen_name}/status/${v?.id_str}`;
           let source = getHrefAndAnchorText(v.source);
           let tweetFullText = get(v, 'extended_tweet.full_text', null);
+          let media = get(v, 'extended_tweet.entities.media', null);
 
           return (
             <Fragment key={`rs${index}`}>
               <Paper elevation={4} className={classes.margin}>
                 <Box p={4}>
-                  <div className={classes.resultSection}>
+                  <div className={classes.resultSection} style={{ overflow: 'hidden' }}>
                     <Grid container direction="row" justify="space-between" alignItems="flex-start">
                       <Grid item>
                         <Avatar
@@ -178,6 +248,37 @@ const TopicTwitterSearchResults = () => {
                       autoEscape={true}
                       textToHighlight={tweetFullText ? tweetFullText : v.text}
                     />
+
+                    {media && media.length && media[0]?.media_url_https ? (
+                      <Grid container direction="row" justify="space-between" alignItems="flex-start">
+                        <Grid item xs={12} className={classes.tweetImg} data-type={media[0].type}>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={statusLink}
+                            className={classes.twitterThumbLink}>
+                            {media[0].type === 'video' ? (
+                              <>
+                                <div className={classes.twitterVideoThumb}>
+                                  <PlayCircleOutlineIcon className={classes.twitterThumbIcon} />
+                                  <div className={classes.twitterImgVideoContainer}>
+                                    <img src={media[0].media_url_https} alt="tweet-img" />
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <div className={classes.twitterThumb}>
+                                {media.map((item, index) => (
+                                  <div className={classes.twitterImgContainer} key={index}>
+                                    <img src={item.media_url_https} alt="tweet-img" />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </a>
+                        </Grid>
+                      </Grid>
+                    ) : null}
                   </div>
                 </Box>
               </Paper>

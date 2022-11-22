@@ -21,7 +21,11 @@ const NotificationAlerts = () => {
   const message = snackBarObj?.message ? snackBarObj.message : '';
 
   return snackBarObj ? (
-    <Snackbar open={true} autoHideDuration={4000} onClose={handleClose} anchorOrigin={anchorOrigin}>
+    <Snackbar
+      open={true}
+      autoHideDuration={snackBarObj?.autoHideDuration ? snackBarObj?.autoHideDuration : 4000}
+      onClose={handleClose}
+      anchorOrigin={anchorOrigin}>
       <MuiAlert onClose={handleClose} severity={severity} elevation={6} variant="filled">
         {message}
       </MuiAlert>
