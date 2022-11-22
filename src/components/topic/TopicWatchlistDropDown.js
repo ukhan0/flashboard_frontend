@@ -38,6 +38,7 @@ const TopicWatchlistDropDown = props => {
 
   return (
     <Select
+      style={{ width: '321px' }}
       labelId="TopicWatchListDropDownLabel"
       id="TopicWatchListDropDownId"
       multiple

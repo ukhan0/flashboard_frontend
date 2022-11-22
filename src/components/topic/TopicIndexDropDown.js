@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { setTopicIndexDropDownSearchCombineReducer } from '../../reducers/Topic';
 const useStyles = makeStyles(theme => ({
   select: {
+    height: '38px',
     minWidth: 120,
     width: '300px'
   }
@@ -34,6 +35,7 @@ const TopicIndexDropDown = props => {
   return (
     <FormControl variant="outlined" size="small">
       <Select
+        style={{ width: '321px' }}
         labelId="topicDocumentTypeDropdownLabel"
         id="topicDocumentTypeDropdownId"
         value={searchIndex['value']}
