@@ -34,7 +34,7 @@ export default function Tags(props) {
   return (
     <div className={clsx(classes.root, classes.rootContainer)}>
       <Autocomplete
-        key={props.key}
+        key={props.keey}
         multiple
         size="small"
         id="tags-outlined"
