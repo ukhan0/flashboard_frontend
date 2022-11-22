@@ -71,6 +71,11 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     color: 'white'
   },
+  twitterThumbLink: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
   tweetImg: {
     textAlign: 'center',
     display: 'flex',
@@ -237,7 +242,11 @@ const TopicTwitterSearchResults = () => {
                           xs={12}
                           className={classes.tweetImg}
                           data-type={v.extended_tweet?.entities?.media[0].type}>
-                          <a target="_blank" rel="noopener noreferrer" href={statusLink}>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={statusLink}
+                            className={classes.twitterThumbLink}>
                             <div className={classes.twitterThumb}>
                               {v.extended_tweet?.entities?.media[0].type === 'video' ? (
                                 <>

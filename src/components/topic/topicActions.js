@@ -892,7 +892,7 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
   if (topicState.twitterGeoLocationEnable && topicState.isSimpleSearch) {
     searchTerm = searchTerm.trimEnd() + ' has:geo';
   }
-  searchTerm = searchTerm.trim().concat(' has:media -is:retweet');
+  searchTerm = searchTerm.trim().concat(' -is:retweet');
 
   const data = {
     searchTerm: topicState.isSimpleSearch ? searchTerm : topicState.searchText,
