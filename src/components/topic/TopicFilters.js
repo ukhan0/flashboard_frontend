@@ -63,7 +63,12 @@ const useStyles = makeStyles(theme => ({
   },
   country: {
     marginTop: '28px'
-  }
+  },
+  dateRangeContainer: {
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 21
+    }
+  },
 }));
 
 const isSearchAllowed = (searchText, simpleSearchTextArray) => {
@@ -185,7 +190,7 @@ const TopicFilters = props => {
         handleUpdateSaveSearch={handleUpdateSaveSearch}
       />
       <Grid container>
-        <Grid item sm={8} xs={8} lg={4} md={4}>
+        <Grid item sm={8} xs={8} lg={3} md={3}>
           <div style={{ marginRight: '20px' }}>
             {isSimpleSearch ? (
               <>
@@ -206,6 +211,7 @@ const TopicFilters = props => {
                   handleOnShowSuggestions={handleOnShowSuggestions}
                   searchSuggestionType={searchSuggestionTypeConfig.ignoreSearchTextArray}
                 />
+                <br />
               </>
             ) : (
               <>
@@ -218,9 +224,11 @@ const TopicFilters = props => {
                 <>
                   <div className={classes.selectedSuggestionsList}>
                     {selectedSuggestionsArr.map((v, index) => (
-                      <span key={`ssa${index}`} className="text-black-50">{`${v}${
-                        index !== selectedSuggestionsArr.length - 1 ? ', ' : ''
-                      }`}</span>
+                      <span key={`ssa${index}`} className="text-black-50">
+                        {
+                          `${v}${index !== selectedSuggestionsArr.length - 1 ? ', ' : ''}`
+                        }
+                      </span>
                     ))}
                   </div>
                   {isSearchAllowed(searchText, simpleSearchTextArray) ? (
@@ -231,31 +239,40 @@ const TopicFilters = props => {
                 </>
               ) : null}
             </div>
-            <h6 className={classes.dateRange}>Document Types</h6>
-            <TopicDocumentTypeDropdown />
           </div>
         </Grid>
-        <Grid item sm={8} xs={8} lg={3} md={3}>
-          <>
-            <h6>Search</h6>
-            <ButtonGroup color="primary">
-              {searchVersionTypes.map((searchVersion, i) => (
-                <Button
-                  size="small"
-                  key={`sent_${i}`}
-                  onClick={() => handleSearchFieldType(searchVersion.key)}
-                  variant={isSimpleSearch === searchVersion.key ? 'contained' : 'outlined'}>
-                  {searchVersion.label}
-                </Button>
-              ))}
-            </ButtonGroup>
-            <h6 className={classes.dateRange}>Date Range</h6>
-            <TopicRangePicker />
-            <h6 className={classes.dateRange}>Search From</h6>
-            <TopicIndexDropDown />
-            <h6 className={classes.country}>Select Country</h6>
-            <TopicCountryDropDown />
-          </>
+        <Grid item sm={8} xs={8} lg={5} md={5}>
+          <div style={{ marginRight: '20px' }}>
+            <Grid container style={{ justifyContent: 'space-between' }}>
+              <Grid item>
+                <h6>Search</h6>
+                <ButtonGroup color="primary" style={{ height: '37px' }}>
+                  {searchVersionTypes.map((searchVersion, i) => (
+                    <Button
+                      size="small"
+                      key={`sent_${i}`}
+                      onClick={() => handleSearchFieldType(searchVersion.key)}
+                      variant={isSimpleSearch === searchVersion.key ? 'contained' : 'outlined'}>
+                      {searchVersion.label}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Grid>
+              <Grid item className={classes.dateRangeContainer}>
+                <h6>Date Range</h6>
+                <TopicRangePicker />
+              </Grid>
+            </Grid>
+            <div style={{ marginTop: '20px' }}>
+              <h6>Document Types</h6>
+              <TopicDocumentTypeDropdown />
+            </div>
+            <div style={{ marginTop: '22px' }}>
+              <h6>Select Country</h6>
+              <TopicCountryDropDown />
+            </div>
+          </div>
+          <br />
         </Grid>
         <Grid item sm={8} xs={8} lg={2} md={2}>
           {!true ? (
@@ -268,8 +285,12 @@ const TopicFilters = props => {
           <div style={{ marginTop: '0px' }}>
             <h6>Search Universe</h6>
             <TopicUniverseGroup />
-            <div style={{ marginTop: '25px' }}>
+            <div style={{ marginTop: '22px' }}>
               <TopicUniverseSubFilters />
+            </div>
+            <div>
+              <h6>Search From</h6>
+              <TopicIndexDropDown />
             </div>
           </div>
         </Grid>
