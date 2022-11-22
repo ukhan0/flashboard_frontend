@@ -136,6 +136,9 @@ export const getWatchlistTable2Data = (
   if (selectedUniverse === 'all') {
     limit = 1000;
   }
+  if (Object.keys(filtersObject).length) {
+    limit = selectedUniverse === 'recent' ? 50 : 100;
+  }
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
