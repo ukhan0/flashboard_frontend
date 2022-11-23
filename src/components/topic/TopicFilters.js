@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       marginTop: 21
     }
-  },
+  }
 }));
 
 const isSearchAllowed = (searchText, simpleSearchTextArray) => {
@@ -109,7 +109,9 @@ const TopicFilters = props => {
     // now perform actual search
     setTimeout(() => {
       dispatch(cancelExistingHightlightsCalls(false));
-      dispatch(performTopicSearchHighlights(true));
+      if (searchIndex['id'] !== 4 && searchIndex['id'] !== 5) {
+        dispatch(performTopicSearchHighlights(true));
+      }
     }, 1000);
 
     dispatch(updateSaveSearch(selectedSearch.searchId));

@@ -393,13 +393,14 @@ const createSearchSaveMiniPayload = topicState => {
 export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText, isTopicEmailAlertEnable, searchLabel } = getState().Topic;
+    const { searchText, isTopicEmailAlertEnable, searchLabel , searchIndex } = getState().Topic;
     dispatch(setIsnNewlySavedSearch(true));
     const payload = {
       userId: user.id,
       searchText: searchText,
       searchJSON: createSearchSaveMiniPayload(getState().Topic),
-      send_topic_alert_email: isTopicEmailAlertEnable,
+      // email alert false for tweets and twitter
+      send_topic_alert_email: searchIndex['id'] !== 4 && searchIndex['id'] !== 5 ? isTopicEmailAlertEnable : false,
       searchLabel: searchLabel
     };
 
@@ -423,12 +424,13 @@ export const handleSaveSearch = () => {
 export const updateSaveSearch = searchId => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText, searchLabel, isTopicEmailAlertEnable } = getState().Topic;
+    const { searchText, searchLabel, isTopicEmailAlertEnable, searchIndex } = getState().Topic;
     const payload = {
       searchText: searchText,
       searchLabel: searchLabel,
       searchJSON: createSearchSaveMiniPayload(getState().Topic),
-      send_topic_alert_email: isTopicEmailAlertEnable
+      // email alert false for tweets and twitter
+      send_topic_alert_email: searchIndex['id'] !== 4 && searchIndex['id'] !== 5 ? isTopicEmailAlertEnable : false,
     };
 
     try {
@@ -702,6 +704,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
             dispatch(setTweetsMapData(newSearchResults.buckets.profileCountryCode));
             dispatch(setTweetsCountryStatesMapData(newSearchResults.buckets.groupProfileCountryRegion));
             dispatch(setTweetsTableData(newSearchResults.buckets.topicNames));
+            dispatch(setTweetsData(newSearchResults.data));
           } else {
             dispatch(setTweetsData(newSearchResults.data));
           }
