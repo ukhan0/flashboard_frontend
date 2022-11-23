@@ -7,8 +7,8 @@ export const fileTypesSelectionGlobal = [
   { label: 'QR', key: '10q' }
 ];
 export const typesSelection = [
-  { label: 'US', key: 'domestic' },
   { label: 'Canada', key: 'global' },
+  { label: 'US', key: 'domestic' },
   { label: 'Global', key: 'newGlobal' }
 ];
 export const universeSelection = [
@@ -47,9 +47,7 @@ export const searchVersionTypes = [
   { label: 'Simple', key: true },
   { label: 'Advanced', key: false }
 ];
-export const sentimentVersions = [
-  { label: 'Show Original', key: 'original' }
-];
+export const sentimentVersions = [{ label: 'Show Original', key: 'original' }];
 export const homePageTypesSelection = [
   { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 },
   { label: 'SEC', key: 'fillings_sec*', type: 'SEC', id: 2 },

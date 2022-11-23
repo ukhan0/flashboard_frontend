@@ -485,7 +485,7 @@ export const watchlistTableColDefs1 = [
     headerName: 'Country',
     headerTooltip: 'Country',
     field: 'countryName',
-    colId: 'countryCode',
+    colId: 'country',
     width: 158,
     filter: 'agTextColumnFilter',
     cellRenderer: 'CountryCodeRenderer',

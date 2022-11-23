@@ -14,7 +14,6 @@ import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import {
-  checkIsFilterActive,
   getWatchlistType,
   isBigAgGrid,
   getWatchlistSettings,
@@ -22,7 +21,8 @@ import {
   storeColumnsState,
   getColumnState,
   storeFilteringState,
-  getFilteringState
+  getFilteringState,
+  getFilterCountriesArray
 } from './WatchlistHelpers';
 import { setIsFilterActive, setSelectedWatchlist } from '../../reducers/Watchlist';
 import {
@@ -77,6 +77,9 @@ const tableFooter = {
   textAlign: 'right',
   width: '100%'
 };
+
+const filterColumnsFromBackend = ['country', 'document_type', 'source', 'industry', 'sector'];
+
 const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetchTable2Data }) => {
   const dispatch = useDispatch();
   const {
@@ -193,27 +196,32 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
     }
   };
 
+  const filterColumnsFromBackendHandler = filteringModel => {
+    let filtersObjectForApiCall = {};
+    Object.keys(filteringModel).forEach(key => {
+      if (filterColumnsFromBackend.includes(key)) {
+        filtersObjectForApiCall[`filter_${key}`] = `*${filteringModel[key].filter}*`;
+      }
+    });
+    if (Object.keys(filtersObjectForApiCall).length) {
+      if (filteringModel.country) {
+        const countryies = getFilterCountriesArray(filteringModel.country.filter);
+        if (countryies) {
+          filtersObjectForApiCall['filter_country'] = countryies;
+        } else {
+          return;
+        }
+      }
+      setFetchFiltersFromApiFlag(true);
+      fetchTable2Data(filtersObjectForApiCall);
+    } else if (fetchFiltersFromApiFlag) {
+      setFetchFiltersFromApiFlag(false);
+      fetchTable2Data();
+    }
+  };
+
   const filterChangeHandler = params => {
     const filteringModel = params.api.getFilterModel();
-    // filter column from backend
-    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
-      const filterColumnsFromBackend = ['document_type', 'source', 'industry', 'sector'];
-      const isCustomFiltering = filterColumnsFromBackend.some(columnName =>
-        Object.keys(filteringModel).includes(columnName)
-      );
-      if (isCustomFiltering) {
-        let filtersObject = {};
-        Object.keys(filteringModel).forEach(key => {
-          filtersObject[`filter_${key}`] = `*${filteringModel[key].filter}*`;
-        });
-        setFetchFiltersFromApiFlag(true);
-        fetchTable2Data(filtersObject);
-      } else if (fetchFiltersFromApiFlag) {
-        setFetchFiltersFromApiFlag(false);
-        fetchTable2Data();
-      }
-    }
-
     if (params?.api?.rowModel?.rowsToDisplay) {
       let data = params.api.rowModel.rowsToDisplay;
       setRowCount(data.length);
@@ -232,7 +240,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
     if (watchlistSetting) {
       type = watchlistSetting.selectedType ?? 'domestic';
       fileType = watchlistSetting.selectedFileType ?? '10-K';
-      universe = watchlistSetting.selectedUniverse ?? 'watchlist';
+      universe = watchlistSetting.selectedUniverse ?? 'all';
       metric = watchlistSetting.selectedMetric ?? 'totdoc';
     } else {
       type = 'domestic';
@@ -247,8 +255,12 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
       selectedUniverse: universe,
       selectedMetric: metric
     };
+    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
+      // filter column from backend
+      filterColumnsFromBackendHandler(filteringModel);
+    }
     storeFilteringState(allSelectedFilters);
-    dispatch(setIsFilterActive(checkIsFilterActive()));
+    dispatch(setIsFilterActive(!isEmpty(filteringModel)));
   };
 
   const handleGridReady = params => {
