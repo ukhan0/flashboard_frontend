@@ -7,7 +7,7 @@ import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import './HomePage.css';
-import { homePageWidgets, homepageWidgetsKey } from './homePageConfig';
+import { homePageWidgetRegion, homePageWidgets, homepageWidgetsKey } from './homePageConfig';
 import HomeGridLayout from './HomeGridLayout';
 import axios from 'axios';
 import config from '../../config/config';
@@ -18,6 +18,8 @@ import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 import { setSnackBarObj } from '../../reducers/Alerts';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { setHomePageSelectedWidgetRegion } from 'reducers/HomePage';
 
 const useStyle = makeStyles({
   loader: {
@@ -75,7 +77,7 @@ export default function HomePage() {
   const [isHomePageDrawerOpen, setIsHomePageDrawerOpen] = useState(false);
   const [drawerSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
   const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
-  const { isLoading } = useSelector(state => state.HomePage);
+  const { isLoading, homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const { user } = useSelector(state => state.User);
 
   const handleDrawer = () => {
@@ -153,6 +155,22 @@ export default function HomePage() {
           />
         </Paper>
       </Slide>
+
+      <div>
+        <ButtonGroup color="primary">
+          {homePageWidgetRegion.map((diff, i) => (
+            <Button
+              size="small"
+              key={`diff_${i}`}
+              onClick={() => {
+                dispatch(setHomePageSelectedWidgetRegion(diff));
+              }}
+              variant={diff.type === homePageSelectedWidgetRegion.type ? 'contained' : 'outlined'}>
+              {diff.label}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </div>
 
       <div className={classes.gridLayoutContainer}>
         <HomeGridLayout enableDragResizeWidgets={enableDragResizeWidgets} drawerSelectedWidget={drawerSelectedWidget} />

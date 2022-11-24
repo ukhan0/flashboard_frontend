@@ -16,7 +16,7 @@ import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHomePageSelectedItem, setHomePageSearchIndex, setHomePageLoader } from '../../reducers/HomePage';
+import { setHomePageSelectedItem, setHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -200,12 +200,17 @@ const useStyles = makeStyles(theme => ({
 export default function HomePageTable() {
   const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
-  const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
+  const { globalWatchlist, domesticWatchlist, homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
   const [cancelToken, setCancelToken] = useState(null);
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
+  const [homePageSelectedSearchIndex, setHomePageSelectedSearchIndex] = useState({
+    label: 'SEDAR',
+    key: 'fillings_sedar*',
+    type: 'SEDAR'
+  });
   const dispatch = useDispatch();
   const tableRef = useRef();
   const selectedType = 'domestic';
@@ -377,7 +382,7 @@ export default function HomePageTable() {
     setRecentDocumentSearchFilter('');
     setRecentCompaniesData([]);
     setRowsOfRecentDocumentsTable(0);
-    dispatch(setHomePageSearchIndex(diff));
+    setHomePageSelectedSearchIndex(diff);
   };
   useEffect(() => {
     if (HomePageService.agGridColumnAPI) {
@@ -437,6 +442,15 @@ export default function HomePageTable() {
       setRecentCompaniesDataTable(userWatchlist);
     }, [100]);
   }, [globalWatchlist, domesticWatchlist, recentCompaniesData]);
+
+  useEffect(() => {
+    if (homePageSelectedWidgetRegion.type === 'Canada') {
+      setHomePageSelectedSearchIndex(homePageTypesSelection[0]);
+    } else {
+      setHomePageSelectedSearchIndex(homePageTypesSelection[1]);
+    }
+  }, [homePageSelectedWidgetRegion]);
+
   return (
     <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div className={clsx('card-header')}>

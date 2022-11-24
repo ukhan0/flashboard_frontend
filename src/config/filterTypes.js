@@ -51,9 +51,9 @@ export const sentimentVersions = [
   { label: 'Show Original', key: 'original' }
 ];
 export const homePageTypesSelection = [
-  { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 },
-  { label: 'SEC', key: 'fillings_sec*', type: 'SEC', id: 2 },
-  { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR', id: 3 }
+  { label: 'Canda', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
+  { label: 'U.S.', key: 'fillings_sec*', type: 'SEC', id: 2 },
+  { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 }
 ];
 
 export const earningsCallType = [
