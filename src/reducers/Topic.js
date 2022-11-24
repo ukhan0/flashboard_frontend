@@ -17,11 +17,6 @@ export const SET_ALL_SEARCH_PARAMS = 'TOPIC/SET_ALL_SEARCH_PARAMS';
 export const SET_IS_SEARCH_LOADING = 'TOPIC/SET_IS_SEARCH_LOADING';
 export const SET_SEARCH_START = 'TOPIC/SET_SEARCH_START';
 export const SET_SEARCH_ERROR = 'TOPIC/SET_SEARCH_ERROR';
-export const SET_TOPICS_LIST = 'TOPIC/SET_TOPICS_LIST';
-export const SET_IS_SAVE_DLG_OPEN = 'TOPIC/SET_IS_SAVE_DLG_OPEN';
-export const SET_IS_SEARCH_SAVE_ERROR = 'TOPIC/SET_IS_SEARCH_SAVE_ERROR';
-export const SET_IS_SAVE_DLG_OPEN_AND_ERROR = 'TOPIC/SET_IS_SAVE_DLG_OPEN_AND_ERROR';
-export const SET_IS_SEARCH_DELETE_ERROR = 'TOPIC/SET_IS_SEARCH_DELETE_ERROR';
 export const SET_IS_TOPIC_DELETE_ERROR = 'TOPIC/SET_IS_TOPIC_DELETE_ERROR';
 export const SET_SELECTED_SEARCH = 'TOPIC/SET_SELECTED_SEARCH';
 export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
@@ -30,9 +25,6 @@ export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
 export const SET_SEARCH_BACKDROP_HIGHLIGHTS = 'TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS';
 export const RESET_SEARCH_RESULTS = 'TOPIC/RESET_SEARCH_RESULTS';
-export const SET_IS_SEARCH_HIGHLIGHT_LOADING = 'TOPIC/SET_IS_SEARCH_HIGHLIGHT_LOADING';
-export const SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS = 'TOPIC/SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS';
-export const SET_SHOW_COMPOSE_NEW = 'TOPIC/SET_SHOW_COMPOSE_NEW';
 export const SET_SHOW_UPDATE_BUTTON = 'TOPIC/SET_BUTTON_UPDATE_BUTTON';
 export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
@@ -75,7 +67,6 @@ export const SET_TWITTER_MAP_DATA = 'TOPIC/SET_TWITTER_MAP_DATA';
 export const SET_TWITTER_FETCH_DATA = 'TOPIC/SET_TWITTER_FETCH_DATA';
 export const SET_TWITTER_GEO_LOCATION_ENABLE = 'TOPIC/SET_TWITTER_GEO_LOCATION_ENABLE';
 
-
 export const setSearchId = linkSearchId => ({
   type: SET_SEARCH_ID,
   linkSearchId
@@ -116,11 +107,6 @@ export const setSelectedSearch = (selectedSearch, selectedTopic) => ({
   type: SET_SELECTED_SEARCH,
   selectedSearch,
   selectedTopic
-});
-
-export const setIsSearchDeleteErr = isSearchDeleteError => ({
-  type: SET_IS_SEARCH_DELETE_ERROR,
-  isSearchDeleteError
 });
 
 export const setIsTopicDeleteErr = isTopicDeleteError => ({
@@ -182,27 +168,6 @@ export const setSearchError = isSearchError => ({
   isSearchError
 });
 
-export const setTopicsList = topicsList => ({
-  type: SET_TOPICS_LIST,
-  topicsList
-});
-
-export const setIsSaveDlgOpen = isSaveDlgOpen => ({
-  type: SET_IS_SAVE_DLG_OPEN,
-  isSaveDlgOpen
-});
-
-export const setIsSaveSearchError = isSearchSaveError => ({
-  type: SET_IS_SEARCH_SAVE_ERROR,
-  isSearchSaveError
-});
-
-export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
-  type: SET_IS_SAVE_DLG_OPEN_AND_ERROR,
-  isSaveDlgOpen,
-  isSearchSaveError
-});
-
 export const resetSuggestions = () => ({
   type: RESET_SUGGESTIONS
 });
@@ -210,21 +175,6 @@ export const resetSuggestions = () => ({
 export const setSearchResultHighlights = searchResult => ({
   type: SET_SEARCH_RESULT_HIGHLIGHTS,
   searchResult
-});
-
-export const setIsSearchHighlightLoading = isHighlightsSearchLoading => ({
-  type: SET_IS_SEARCH_HIGHLIGHT_LOADING,
-  isHighlightsSearchLoading
-});
-
-export const cancelExistingHightlightsCalls = flag => ({
-  type: SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS,
-  flag
-});
-
-export const setShowComposeNew = showFilters => ({
-  type: SET_SHOW_COMPOSE_NEW,
-  showFilters
 });
 
 export const setShowUpdateButton = showUpdateButton => ({
@@ -422,8 +372,6 @@ const searchDefaultState = () => ({
   searchIndex: searchIndexs[0],
   startDate: subMonths(startOfMonth(new Date()), 12),
   endDate: endOfMonth(new Date()),
-  orderBy: 'desc',
-  sortBy: 'document_date',
   selectedSuggestions: {},
   tweetsCountryStatesMapData: [],
   tweetsTableData: [],
@@ -446,85 +394,6 @@ const searchDefaultState = () => ({
   twitterMapData: [],
   twitterFetchData: false,
   twitterGeoLocationEnable: true,
-  // 'FMP-transcript',
-  // '10-K',
-  // '10-Q',
-  // '8-K',
-  // '40-F',
-  // '20-F',
-  // '6-K',
-  // '10-K/A',
-  // '10-K405',
-  // '10-K405/A',
-  // '10-KT',documentTypes
-  // '10-KT/A',
-  // '10-Q/A',
-  // '10-QT',
-  // '10-QT/A',
-  // '10QSB',
-  // '20-F/A',
-  // '40-F/A',
-  // '6-K/A',
-  // '8-K/A',
-  // '8-K12B',
-  // '8-K12B/A',
-  // '8-K12G3',
-  // '8-K12G3/A',
-  // '8-K15D5',
-  // 'AR',
-  // 'ARS',
-  // 'ARS/A',
-  // 'CORR',
-  // 'DEF 14A',
-  // 'EP',
-  // 'ER',
-  // 'FIN SUPP',
-  // 'Intierra SR',
-  // 'Intl Offer',
-  // 'MEG - AR',
-  // 'NT 10-Q',
-  // 'OC',
-  // 'Other Financials',
-  // 'pdf',
-  // 'PR',
-  // 'QR',
-  // 'QR/A',
-  // 'SR',
-  // 'Tanshin',
-  // 'Annual Report of State Filings',
-  // 'Basel 2 P3',
-  // 'Basel Report',
-  // 'Call RPT 041',
-  // 'Corporate Governance Report',
-  // 'Corporate Social Responsibility Report',
-  // 'CP',
-  // 'Credit Research',
-  // 'DEFS 14A',
-  // 'DNP AR',
-  // 'DNP FIN SUPP',
-  // 'DNP Intl Off',
-  // 'DNP PR',
-  // 'DNP QR',
-  // 'DNP SR',
-  // 'Environmental Report',
-  // 'EVR',
-  // 'IncStatement',
-  // 'Industry Document',
-  // 'IP',
-  // 'LCD News',
-  // 'Misc.',
-  // 'MP',
-  // 'MR',
-  // 'Other',
-  // 'Other RNS',
-  // 'PROP SUPP',
-  // 'SFCR',
-  // 'Sustainability Report',
-  // 'US Patriot',
-  // 'Y-9C',
-  // 'Yuho',
-  // 'TCFD Report'
-
   selectedUniverse: 'all',
   selectedSection: 'totdoc',
   selectedSector: null,
@@ -549,10 +418,7 @@ const getDefaultState = () => {
     searchResult: {},
     isSearchLoading: false,
     isSearchError: false,
-    topicsList: [],
-    isSaveDlgOpen: false,
     isSearchSaveError: false,
-    isSearchDeleteError: false,
     isTopicDeleteError: false,
     selectedSearch: null,
     selectedTopic: null,
@@ -561,9 +427,6 @@ const getDefaultState = () => {
     cancelTokenSourceHighlights: null,
     showBackdrop: false,
     searchResultHighlights: [],
-    isHighlightsSearchLoading: false,
-    cancelExistingHighlightCalls: false,
-    showFilters: false,
     showUpdateButton: false,
     selectedCompanyName: null,
     savedSearches: [],
@@ -612,10 +475,6 @@ export default function reducer(
         searchText: action.searchObj.searchText,
         searchLabel: action.searchObj.searchLabel,
         selectedDocumentTypes: action.searchObj.searchJSON.selectedDocumentTypes,
-        // startDate: new Date(action.searchObj.searchJSON.startDate),
-        // endDate: new Date(action.searchObj.searchJSON.endDate),
-        orderBy: action.searchObj.searchJSON.orderBy,
-        sortBy: action.searchObj.searchJSON.sortBy,
         selectedSuggestions: action.searchObj.searchJSON.selectedSuggestions,
         searchIndex: getSearchIndex(get(action.searchObj, 'searchJSON.searchIndex', searchDefaultState().searchIndex)),
         selectedUniverse: get(action.searchObj, 'searchJSON.universe', searchDefaultState().selectedUniverse),
@@ -657,19 +516,9 @@ export default function reducer(
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
     case SET_SEARCH_START:
-      return { ...state, isSearchLoading: true, isHighlightsSearchLoading: true, isSearchError: false };
+      return { ...state, isSearchLoading: true, isSearchError: false };
     case SET_SEARCH_ERROR:
       return { ...state, isSearchLoading: false, isSearchError: action.isSearchError };
-    case SET_TOPICS_LIST:
-      return { ...state, topicsList: action.topicsList };
-    case SET_IS_SAVE_DLG_OPEN:
-      return { ...state, isSaveDlgOpen: action.isSaveDlgOpen };
-    case SET_IS_SEARCH_SAVE_ERROR:
-      return { ...state, isSearchSaveError: action.isSearchSaveError };
-    case SET_IS_SAVE_DLG_OPEN_AND_ERROR:
-      return { ...state, isSearchSaveError: action.isSearchSaveError, isSaveDlgOpen: action.isSaveDlgOpen };
-    case SET_IS_SEARCH_DELETE_ERROR:
-      return { ...state, isSearchDeleteError: action.isSearchDeleteError };
     case SET_IS_TOPIC_DELETE_ERROR:
       return { ...state, isTopicDeleteError: action.isTopicDeleteError };
     case SET_SELECTED_SEARCH:
@@ -684,16 +533,10 @@ export default function reducer(
       return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop };
     case SET_SEARCH_RESULT_HIGHLIGHTS:
       return { ...state, searchResultHighlights: action.searchResult, isSearchError: false };
-    case SET_IS_SEARCH_HIGHLIGHT_LOADING:
-      return { ...state, isHighlightsSearchLoading: action.isHighlightsSearchLoading };
     case SET_SEARCH_BACKDROP_HIGHLIGHTS:
       return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights };
     case RESET_SEARCH_RESULTS:
       return { ...state, searchResultHighlights: [], pageNo: 0 };
-    case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:
-      return { ...state, cancelExistingHighlightCalls: action.flag };
-    case SET_SHOW_COMPOSE_NEW:
-      return { ...state, showFilters: action.showFilters };
     case SET_SHOW_UPDATE_BUTTON:
       return { ...state, showUpdateButton: action.showUpdateButton };
     case SET_SELECTED_COMPANY_NAME:

@@ -16,7 +16,6 @@ import {
   setAllSearchParams,
   setSelectedSearch,
   setSuggestions,
-  setShowComposeNew,
   setShowUpdateButton,
   setSearchLabel,
   setOpenTopicSearchDialog,
@@ -104,7 +103,6 @@ const TopicDialog = props => {
         return;
       }
       dispatch(setShowUpdateButton(true));
-      dispatch(setShowComposeNew(true));
       dispatch(setBackDropOnCompanyClick(false));
       setSearchParamsEdit(searchObj);
     } else {

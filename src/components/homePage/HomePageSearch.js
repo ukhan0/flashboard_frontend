@@ -11,7 +11,6 @@ import { performTopicSearchAggregate, performTopicTweetsSearchAggregate } from '
 import {
   setOpenTopicSearchDialog,
   resetResultsPage,
-  cancelExistingHightlightsCalls,
   setIsSimpleSearch,
   setIsUnsavedSearch,
   setSimpleSearchTextArray,
@@ -83,11 +82,6 @@ const TopicFilters = props => {
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
     }
-    dispatch(cancelExistingHightlightsCalls(true));
-    // now perform actual search
-    setTimeout(() => {
-      dispatch(cancelExistingHightlightsCalls(false));
-    }, 1000);
 
     dispatch(setIsUnsavedSearch(true));
     dispatch(setIsSimpleSearch(true));
