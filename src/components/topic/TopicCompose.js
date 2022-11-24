@@ -47,7 +47,6 @@ const TopicDialog = props => {
         <Paper className={clsx('app-page-title')}>
           <TopicFilters
             onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
-            // onSaveSearch={() => dispatch(setIsSaveDlgOpen(true))}
             onSearch={props.handleSearch}
             handleCloseTopicDialog={handleCloseTopicDialog}
           />
