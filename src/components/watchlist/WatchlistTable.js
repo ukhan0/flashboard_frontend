@@ -26,6 +26,7 @@ import {
 } from './WatchlistHelpers';
 import { setIsFilterActive, setSelectedWatchlist } from '../../reducers/Watchlist';
 import {
+  watchlistTableDefaultColDef,
   watchlistTableColDefs,
   watchlistTableColDefs1,
   watchlistTableSideBarConfiguration
@@ -38,31 +39,6 @@ const frameworkComponents = {
   actions: Action,
   CountryCodeRenderer: CountryCodeRenderer,
   TweetIcon: TweetsIcon
-};
-
-const defaultColDef = {
-  sortable: true,
-  filter: true,
-  resizable: true,
-  floatingFilter: true,
-  suppressMenu: true,
-  filterParams: { newRowsAction: 'keep' },
-  headerClass: ['allColumnHeader'],
-  wrapText: true,
-  headerComponentParams: {
-    template:
-      '<div class="ag-cell-label-container" role="presentation">' +
-      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
-      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
-      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
-      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
-      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
-      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-      '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
-      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
-      '  </div>' +
-      '</div>'
-  }
 };
 
 const gridOptions = {
@@ -260,6 +236,8 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
       filterColumnsFromBackendHandler(filteringModel);
     }
     storeFilteringState(allSelectedFilters);
+    // dispatch(setIsFilterActive(params.api.isAnyFilterPresent()));
+    // dispatch(setIsFilterActive(params.api.isColumnFilterPresent()));
     dispatch(setIsFilterActive(!isEmpty(filteringModel)));
   };
 
@@ -329,6 +307,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
       storeColumnsState(selectedFileType, columnsState);
     }
   }, [selectedFileType]);
+
   return (
     <div className="ag-theme-alpine" style={{ height: '98%', width: '100%' }}>
       <AgGridReact
@@ -339,7 +318,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
         rowData={tableData}
         quickFilterText={''}
         columnDefs={columnDefination}
-        defaultColDef={defaultColDef}
+        defaultColDef={watchlistTableDefaultColDef}
         sideBar={watchlistTableSideBarConfiguration}
         tooltipShowDelay={0}
         pagination={false}
