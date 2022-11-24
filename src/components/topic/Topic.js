@@ -10,9 +10,7 @@ import topicStyles from './topicStyles';
 import TopicSnackbar from './TopicSnackbar';
 import TopicCurrentSearchDetail from './TopicCurrentSearchDetail';
 import {
-  setIsSearchDeleteErr,
   setIsTopicDeleteErr,
-  cancelExistingHightlightsCalls,
   setSnackBarActive,
   setTopicHandleSearchCombineReducer,
   setSearchError
@@ -30,7 +28,6 @@ import { setItemInLocalStorage } from '../../utils/helpers';
 const Topic = () => {
   const classes = topicStyles();
   const {
-    isSearchDeleteError,
     isTopicDeleteError,
     cancelTokenSourceHighlights,
     isSnackBarActive,
@@ -53,11 +50,6 @@ const Topic = () => {
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
     }
-    dispatch(cancelExistingHightlightsCalls(true));
-    // now perform actual search
-    setTimeout(() => {
-      dispatch(cancelExistingHightlightsCalls(false));
-    }, 1000);
   };
   useEffect(() => {
     dispatch(fetchTopicsList());
@@ -147,13 +139,6 @@ const Topic = () => {
         }}
         message={snackBarMessage}
         severity={snackBarSeverity}
-      />
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        open={isSearchDeleteError}
-        autoHideDuration={6000}
-        onClose={() => dispatch(setIsSearchDeleteErr(false))}
-        message="Sorry, we are unable to delete search"
       />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

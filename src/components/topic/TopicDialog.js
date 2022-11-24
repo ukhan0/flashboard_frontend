@@ -50,7 +50,6 @@ const TopicDialog = props => {
         <div className={classes.dialog}>
           <TopicFilters
             onShowSuggestions={() => setIsSuggestionsDlgOpen(true)}
-            // onSaveSearch={() => dispatch(setIsSaveDlgOpen(true))}
             onSearch={props.handleSearch}
           />
           {isSuggestionsDlgOpen ? (

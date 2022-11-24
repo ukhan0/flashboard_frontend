@@ -13,8 +13,6 @@ import {
   setSelectedSearch,
   setSuggestions,
   resetResultsPage,
-  cancelExistingHightlightsCalls,
-  setShowComposeNew,
   setShowUpdateButton,
   setSearchLabel,
   setOpenTopicSearchDialog,
@@ -97,10 +95,6 @@ export default function TopicSearchHistory(props) {
         if (cancelTokenSourceHighlights) {
           cancelTokenSourceHighlights.cancel();
         }
-        // now perform actual search
-        setTimeout(() => {
-          dispatch(cancelExistingHightlightsCalls(false));
-        }, 1000);
       }, 1000);
     },
     [dispatch, cancelTokenSourceHighlights]
@@ -195,7 +189,6 @@ export default function TopicSearchHistory(props) {
     }
     dispatch(setIsUnsavedSearch(false));
     dispatch(setShowUpdateButton(true));
-    dispatch(setShowComposeNew(true));
     dispatch(setBackDropOnCompanyClick(false));
     setSearchParamsEdit(search);
     handleSearch(e, search, false);

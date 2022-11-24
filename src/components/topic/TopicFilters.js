@@ -25,7 +25,6 @@ import {
 import {
   setOpenTopicSearchDialog,
   resetResultsPage,
-  cancelExistingHightlightsCalls,
   setIsTopicEmailAlertEnable,
   setIsSimpleSearch,
   setIsUnsavedSearch,
@@ -105,10 +104,7 @@ const TopicFilters = props => {
     if (cancelTokenSourceHighlights) {
       cancelTokenSourceHighlights.cancel();
     }
-    dispatch(cancelExistingHightlightsCalls(true));
-    // now perform actual search
     setTimeout(() => {
-      dispatch(cancelExistingHightlightsCalls(false));
       if (searchIndex['id'] !== 4 && searchIndex['id'] !== 5) {
         dispatch(performTopicSearchHighlights(true));
       }
