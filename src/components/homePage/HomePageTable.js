@@ -445,9 +445,9 @@ export default function HomePageTable() {
 
   useEffect(() => {
     if (homePageSelectedWidgetRegion.type === 'Canada') {
-      setHomePageSelectedSearchIndex(homePageTypesSelection[0]);
+      setHomePageSelectedSearchIndex(homePageTypesSelection.find(item => item.type === 'SEDAR'));
     } else {
-      setHomePageSelectedSearchIndex(homePageTypesSelection[1]);
+      setHomePageSelectedSearchIndex(homePageTypesSelection.find(item => item.type === 'SEC'));
     }
   }, [homePageSelectedWidgetRegion]);
 
