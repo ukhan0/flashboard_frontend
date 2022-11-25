@@ -103,6 +103,8 @@ export const renameDocumentTypes = type => {
         v = 'FS';
       } else if (v.toLowerCase() === 'other financials') {
         v = 'OF';
+      } else if (v.toLowerCase() === 'ec-fmp') {
+        v = 'Earning call';
       }
       return v;
     });

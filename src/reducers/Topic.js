@@ -420,7 +420,6 @@ const getDefaultState = () => {
     searchResult: {},
     isSearchLoading: false,
     isSearchError: false,
-    isSearchSaveError: false,
     isTopicDeleteError: false,
     selectedSearch: null,
     selectedTopic: null,
