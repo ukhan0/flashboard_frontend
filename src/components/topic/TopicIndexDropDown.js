@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { setTopicIndexDropDownSearchCombineReducer } from '../../reducers/Topic';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -34,7 +34,7 @@ const TopicIndexDropDown = props => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { searchIndex, documentTypes } = useSelector(state => state.Topic);
-  const show = searchIndex['id'] === 5 ? true : false;
+  const show = searchIndex['id'] === 4 || searchIndex['id'] === 5 ? true : false;
   const selectionChanged = selectedIndex => {
     dispatch(setTopicIndexDropDownSearchCombineReducer());
 
@@ -65,7 +65,8 @@ const TopicIndexDropDown = props => {
 
       {show ? (
         <Typography className={classes.twitterNote}>
-          <ErrorOutlineIcon /> Pulling top 500 records
+          <ErrorOutlineIcon />
+          {searchIndex['id'] === 4 ? 'Pulling up latest records' : 'Pulling top 500 records'}
         </Typography>
       ) : null}
     </FormControl>
