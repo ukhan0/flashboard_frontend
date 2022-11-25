@@ -9,14 +9,12 @@ import Card from '@material-ui/core/Card';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
-// import makeStyles from '@material-ui/core/styles/makeStyles';
-// import fade from '@material-ui/core/Fade';
 import clsx from 'clsx';
 import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHomePageSelectedItem, setHomePageSearchIndex, setHomePageLoader } from '../../reducers/HomePage';
+import { setHomePageSelectedItem, setHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -200,12 +198,17 @@ const useStyles = makeStyles(theme => ({
 export default function HomePageTable() {
   const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
-  const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
+  const { globalWatchlist, domesticWatchlist, homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
   const [cancelToken, setCancelToken] = useState(null);
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
+  const [homePageSelectedSearchIndex, setHomePageSelectedSearchIndex] = useState({
+    label: 'SEDAR',
+    key: 'fillings_sedar*',
+    type: 'SEDAR'
+  });
   const dispatch = useDispatch();
   const tableRef = useRef();
   const selectedType = 'domestic';
@@ -316,59 +319,53 @@ export default function HomePageTable() {
     }
   };
 
-  const getRecentCompaniesData = React.useCallback(
-    async searchIndex => {
-      dispatch(setHomePageLoader(true));
-      const cancelToken = axios.CancelToken.source();
-      try {
-        setCancelToken(cancelToken);
-        const response = await axios.get(
-          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}&from=${rowsOfRecentDocumentsTable}`,
-          {
-            cancelToken: cancelToken.token
-          }
-        );
-        const data = get(response, 'data.data', []);
-        if (response) {
-          setCancelToken(null);
-          const recentData = data.map(d => {
-            return {
-              ...d,
-              documentType: get(d, 'document_type', null),
-              sentiment: round(get(d, 'sentiment', null), 2),
-              // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
-              // docDate: get(d, 'document_date', null),
-              wordCount: round(get(d, 'word_count', null), 2),
-              isTickerActive: false
-              // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
-            };
-          });
-
-          setRecentCompaniesData(prevState => [...prevState, ...recentData]);
-          dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
-        } else {
-          dispatch(setHomePageSelectedItem({}));
-          setRecentCompaniesData([]);
-          setRowsOfRecentDocumentsTable(0);
+  const getRecentCompaniesData = React.useCallback(async () => {
+    dispatch(setHomePageLoader(true));
+    const cancelToken = axios.CancelToken.source();
+    try {
+      setCancelToken(cancelToken);
+      const response = await axios.get(
+        `${config.apiUrl}/api/get_company_filing_listing?index=${homePageSelectedSearchIndex.key}&order=DESC&limit=100&type=${homePageSelectedSearchIndex.type}&from=${rowsOfRecentDocumentsTable}`,
+        {
+          cancelToken: cancelToken.token
         }
-      } catch (error) {
+      );
+      const data = get(response, 'data.data', []);
+      if (response) {
+        setCancelToken(null);
+        const recentData = data.map(d => {
+          return {
+            ...d,
+            documentType: get(d, 'document_type', null),
+            sentiment: round(get(d, 'sentiment', null), 2),
+            wordCount: round(get(d, 'word_count', null), 2),
+            isTickerActive: false
+          };
+        });
+
+        setRecentCompaniesData(prevState => [...prevState, ...recentData]);
+        dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
+      } else {
         dispatch(setHomePageSelectedItem({}));
         setRecentCompaniesData([]);
         setRowsOfRecentDocumentsTable(0);
-      } finally {
-        dispatch(setHomePageLoader(false));
       }
-    },
-    [dispatch, rowsOfRecentDocumentsTable]
-  );
+    } catch (error) {
+      dispatch(setHomePageSelectedItem({}));
+      setRecentCompaniesData([]);
+      setRowsOfRecentDocumentsTable(0);
+    } finally {
+      dispatch(setHomePageLoader(false));
+    }
+  }, [dispatch, rowsOfRecentDocumentsTable, homePageSelectedSearchIndex.key, homePageSelectedSearchIndex.type]);
 
   const onSearchTextChange = e => {
     setRecentDocumentSearchFilter(e.target.value);
   };
 
   useEffect(() => {
-    getRecentCompaniesData(homePageSelectedSearchIndex);
-  }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
+    getRecentCompaniesData();
+  }, [getRecentCompaniesData]);
 
   const handleHomePageSearchIndex = diff => {
     if (cancelToken) {
@@ -377,7 +374,7 @@ export default function HomePageTable() {
     setRecentDocumentSearchFilter('');
     setRecentCompaniesData([]);
     setRowsOfRecentDocumentsTable(0);
-    dispatch(setHomePageSearchIndex(diff));
+    setHomePageSelectedSearchIndex(diff);
   };
   useEffect(() => {
     if (HomePageService.agGridColumnAPI) {
@@ -437,6 +434,15 @@ export default function HomePageTable() {
       setRecentCompaniesDataTable(userWatchlist);
     }, [100]);
   }, [globalWatchlist, domesticWatchlist, recentCompaniesData]);
+
+  useEffect(() => {
+    if (homePageSelectedWidgetRegion.type === 'Canada') {
+      setHomePageSelectedSearchIndex(homePageTypesSelection.find(item => item.type === 'SEDAR'));
+    } else {
+      setHomePageSelectedSearchIndex(homePageTypesSelection.find(item => item.type === 'SEC'));
+    }
+  }, [homePageSelectedWidgetRegion]);
+
   return (
     <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div className={clsx('card-header')}>

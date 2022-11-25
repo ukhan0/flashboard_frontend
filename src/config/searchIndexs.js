@@ -1,14 +1,14 @@
 import config from './config';
 export default [
   {
-    id: 1,
-    label: 'SEC Filings',
-    value: config.secSearchIndex
-  },
-  {
     id: 2,
     label: 'SEDAR Filings',
     value: config.sedarSearchIndex
+  },
+  {
+    id: 1,
+    label: 'SEC Filings',
+    value: config.secSearchIndex
   },
   {
     id: 3,
