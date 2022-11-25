@@ -10,7 +10,7 @@ import {
 import { get } from 'lodash';
 import config from '../../config/config';
 import { getOldId, getRecentId } from '../comparision/ComparisionHelper';
-import { renameDocumentTypes } from '../topic/topicHelpers';
+import { renameDocumentTypeNames } from '../topic/topicHelpers';
 import { parseDateAndFormatMoment } from '../watchlist/WatchlistTableHelpers';
 
 let cancelTokens = [];
@@ -38,7 +38,7 @@ export const getCompanyFilingListing = () => {
       const dataArr = get(response, 'data.data', []);
       if (dataArr.length) {
         dataArr.forEach((data, i) => {
-          dataArr[i].document_type = renameDocumentTypes(data.document_type);
+          dataArr[i].document_type = renameDocumentTypeNames(data.document_type);
           dataArr[i].document_date = data.document_date ? parseDateAndFormatMoment(data.document_date) : '';
           dataArr[i].period_date = data.period_date ? parseDateAndFormatMoment(data.period_date) : '';
         });
