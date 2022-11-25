@@ -17,11 +17,6 @@ export const SET_ALL_SEARCH_PARAMS = 'TOPIC/SET_ALL_SEARCH_PARAMS';
 export const SET_IS_SEARCH_LOADING = 'TOPIC/SET_IS_SEARCH_LOADING';
 export const SET_SEARCH_START = 'TOPIC/SET_SEARCH_START';
 export const SET_SEARCH_ERROR = 'TOPIC/SET_SEARCH_ERROR';
-export const SET_TOPICS_LIST = 'TOPIC/SET_TOPICS_LIST';
-export const SET_IS_SAVE_DLG_OPEN = 'TOPIC/SET_IS_SAVE_DLG_OPEN';
-export const SET_IS_SEARCH_SAVE_ERROR = 'TOPIC/SET_IS_SEARCH_SAVE_ERROR';
-export const SET_IS_SAVE_DLG_OPEN_AND_ERROR = 'TOPIC/SET_IS_SAVE_DLG_OPEN_AND_ERROR';
-export const SET_IS_SEARCH_DELETE_ERROR = 'TOPIC/SET_IS_SEARCH_DELETE_ERROR';
 export const SET_IS_TOPIC_DELETE_ERROR = 'TOPIC/SET_IS_TOPIC_DELETE_ERROR';
 export const SET_SELECTED_SEARCH = 'TOPIC/SET_SELECTED_SEARCH';
 export const RESET_SUGGESTIONS = 'TOPIC/RESET_SUGGESTIONS';
@@ -30,9 +25,6 @@ export const SET_SEARCH_PAGE_NO = 'TOPIC/SET_SEARCH_PAGE_NO';
 export const SET_SEARCH_BACKDROP = 'TOPIC/SET_SEARCH_BACKDROP';
 export const SET_SEARCH_BACKDROP_HIGHLIGHTS = 'TOPIC/SET_SEARCH_BACKDROP_HIGHLIGHTS';
 export const RESET_SEARCH_RESULTS = 'TOPIC/RESET_SEARCH_RESULTS';
-export const SET_IS_SEARCH_HIGHLIGHT_LOADING = 'TOPIC/SET_IS_SEARCH_HIGHLIGHT_LOADING';
-export const SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS = 'TOPIC/SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS';
-export const SET_SHOW_COMPOSE_NEW = 'TOPIC/SET_SHOW_COMPOSE_NEW';
 export const SET_SHOW_UPDATE_BUTTON = 'TOPIC/SET_BUTTON_UPDATE_BUTTON';
 export const RESET_ALL_SEARCH_PARAMS = 'TOPIC/RESET_ALL_SEARCH_PARAMS';
 export const SET_SELECTED_COMPANY_NAME = 'TOPIC/SET_SELECTED_COMPANY_NAME';
@@ -117,11 +109,6 @@ export const setSelectedSearch = (selectedSearch, selectedTopic) => ({
   selectedTopic
 });
 
-export const setIsSearchDeleteErr = isSearchDeleteError => ({
-  type: SET_IS_SEARCH_DELETE_ERROR,
-  isSearchDeleteError
-});
-
 export const setIsTopicDeleteErr = isTopicDeleteError => ({
   type: SET_IS_TOPIC_DELETE_ERROR,
   isTopicDeleteError
@@ -181,27 +168,6 @@ export const setSearchError = isSearchError => ({
   isSearchError
 });
 
-export const setTopicsList = topicsList => ({
-  type: SET_TOPICS_LIST,
-  topicsList
-});
-
-export const setIsSaveDlgOpen = isSaveDlgOpen => ({
-  type: SET_IS_SAVE_DLG_OPEN,
-  isSaveDlgOpen
-});
-
-export const setIsSaveSearchError = isSearchSaveError => ({
-  type: SET_IS_SEARCH_SAVE_ERROR,
-  isSearchSaveError
-});
-
-export const setIsSaveDlgOpenAndError = (isSaveDlgOpen, isSearchSaveError) => ({
-  type: SET_IS_SAVE_DLG_OPEN_AND_ERROR,
-  isSaveDlgOpen,
-  isSearchSaveError
-});
-
 export const resetSuggestions = () => ({
   type: RESET_SUGGESTIONS
 });
@@ -209,21 +175,6 @@ export const resetSuggestions = () => ({
 export const setSearchResultHighlights = searchResult => ({
   type: SET_SEARCH_RESULT_HIGHLIGHTS,
   searchResult
-});
-
-export const setIsSearchHighlightLoading = isHighlightsSearchLoading => ({
-  type: SET_IS_SEARCH_HIGHLIGHT_LOADING,
-  isHighlightsSearchLoading
-});
-
-export const cancelExistingHightlightsCalls = flag => ({
-  type: SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS,
-  flag
-});
-
-export const setShowComposeNew = showFilters => ({
-  type: SET_SHOW_COMPOSE_NEW,
-  showFilters
 });
 
 export const setShowUpdateButton = showUpdateButton => ({
@@ -469,10 +420,7 @@ const getDefaultState = () => {
     searchResult: {},
     isSearchLoading: false,
     isSearchError: false,
-    topicsList: [],
-    isSaveDlgOpen: false,
     isSearchSaveError: false,
-    isSearchDeleteError: false,
     isTopicDeleteError: false,
     selectedSearch: null,
     selectedTopic: null,
@@ -481,9 +429,6 @@ const getDefaultState = () => {
     cancelTokenSourceHighlights: null,
     showBackdrop: false,
     searchResultHighlights: [],
-    isHighlightsSearchLoading: false,
-    cancelExistingHighlightCalls: false,
-    showFilters: false,
     showUpdateButton: false,
     selectedCompanyName: null,
     savedSearches: [],
@@ -575,19 +520,9 @@ export default function reducer(
     case SET_IS_SEARCH_LOADING:
       return { ...state, isSearchLoading: action.isSearchLoading };
     case SET_SEARCH_START:
-      return { ...state, isSearchLoading: true, isHighlightsSearchLoading: true, isSearchError: false };
+      return { ...state, isSearchLoading: true, isSearchError: false };
     case SET_SEARCH_ERROR:
       return { ...state, isSearchLoading: false, isSearchError: action.isSearchError };
-    case SET_TOPICS_LIST:
-      return { ...state, topicsList: action.topicsList };
-    case SET_IS_SAVE_DLG_OPEN:
-      return { ...state, isSaveDlgOpen: action.isSaveDlgOpen };
-    case SET_IS_SEARCH_SAVE_ERROR:
-      return { ...state, isSearchSaveError: action.isSearchSaveError };
-    case SET_IS_SAVE_DLG_OPEN_AND_ERROR:
-      return { ...state, isSearchSaveError: action.isSearchSaveError, isSaveDlgOpen: action.isSaveDlgOpen };
-    case SET_IS_SEARCH_DELETE_ERROR:
-      return { ...state, isSearchDeleteError: action.isSearchDeleteError };
     case SET_IS_TOPIC_DELETE_ERROR:
       return { ...state, isTopicDeleteError: action.isTopicDeleteError };
     case SET_SELECTED_SEARCH:
@@ -602,16 +537,10 @@ export default function reducer(
       return { ...state, cancelTokenSource: action.cancelTokenSource, showBackdrop: action.showBackdrop };
     case SET_SEARCH_RESULT_HIGHLIGHTS:
       return { ...state, searchResultHighlights: action.searchResult, isSearchError: false };
-    case SET_IS_SEARCH_HIGHLIGHT_LOADING:
-      return { ...state, isHighlightsSearchLoading: action.isHighlightsSearchLoading };
     case SET_SEARCH_BACKDROP_HIGHLIGHTS:
       return { ...state, cancelTokenSourceHighlights: action.cancelTokenSourceHighlights };
     case RESET_SEARCH_RESULTS:
       return { ...state, searchResultHighlights: [], pageNo: 0 };
-    case SET_CANCEL_EXISTING_HIGHLIGHTS_CALLS:
-      return { ...state, cancelExistingHighlightCalls: action.flag };
-    case SET_SHOW_COMPOSE_NEW:
-      return { ...state, showFilters: action.showFilters };
     case SET_SHOW_UPDATE_BUTTON:
       return { ...state, showUpdateButton: action.showUpdateButton };
     case SET_SELECTED_COMPANY_NAME:
