@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopicIndexDropDown = props => {
+const TopicIndexDropDown = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { searchIndex, documentTypes } = useSelector(state => state.Topic);
