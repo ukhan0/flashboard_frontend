@@ -7,8 +7,8 @@ export const fileTypesSelectionGlobal = [
   { label: 'QR', key: '10q' }
 ];
 export const typesSelection = [
-  { label: 'US', key: 'domestic' },
   { label: 'Canada', key: 'global' },
+  { label: 'U.S.', key: 'domestic' },
   { label: 'Global', key: 'newGlobal' }
 ];
 export const universeSelection = [
@@ -47,9 +47,7 @@ export const searchVersionTypes = [
   { label: 'Simple', key: true },
   { label: 'Advanced', key: false }
 ];
-export const sentimentVersions = [
-  { label: 'Show Original', key: 'original' }
-];
+export const sentimentVersions = [{ label: 'Show Original', key: 'original' }];
 export const homePageTypesSelection = [
   { label: 'Canda', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
   { label: 'U.S.', key: 'fillings_sec*', type: 'SEC', id: 2 },
