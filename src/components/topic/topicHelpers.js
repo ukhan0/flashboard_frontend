@@ -127,6 +127,23 @@ export const renameDocumentTypes = type => {
   return type;
 };
 
+export const renameDocumentTypeNames = type => {
+  if (type) {
+    if (type.toLowerCase() === 'fmp-transcript') {
+      type = 'Earning Call';
+    } else if (type.toLowerCase() === 'fin supp') {
+      type = 'FS';
+    } else if (type.toLowerCase() === 'other financials') {
+      type = 'OF';
+    } else if (type.toUpperCase() === 'AR') {
+      type = 'Annual Report';
+    }
+  } else {
+    type = '';
+  }
+  return type;
+};
+
 export const deleteSearchSuggestionsByKey = (suggestions, deleteKeys, deleteValues) => {
   let searchValues = [];
   if (Array.isArray(deleteValues)) {
