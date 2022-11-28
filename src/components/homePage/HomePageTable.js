@@ -194,6 +194,8 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
+const selectDefaultType = process.env?.REACT_APP_DOMAIN_NAME === 'TMX' ? 'SEDAR' : 'SEC';
+const homePageSelectedIndexFromConfig = homePageTypesSelection.find(item => item.type === selectDefaultType);
 
 export default function HomePageTable() {
   const classes = useStyles();
@@ -204,11 +206,7 @@ export default function HomePageTable() {
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
-  const [homePageSelectedSearchIndex, setHomePageSelectedSearchIndex] = useState({
-    label: 'SEDAR',
-    key: 'fillings_sedar*',
-    type: 'SEDAR'
-  });
+  const [homePageSelectedSearchIndex, setHomePageSelectedSearchIndex] = useState(homePageSelectedIndexFromConfig);
   const dispatch = useDispatch();
   const tableRef = useRef();
   const selectedType = 'domestic';

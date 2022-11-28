@@ -1,9 +1,15 @@
 export const homepageWidgetsKey = 'homepageWidgets';
 export const homepageGridLayoutKey = 'homepageGridLayout';
-export const homePageWidgetRegion = [
-  { id: 1, label: 'Canada', type: 'Canada' },
-  { id: 2, label: 'U.S.', type: 'US' }
-];
+export const homePageWidgetRegion =
+  process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
+    ? [
+        { id: 1, label: 'Canada', type: 'Canada' },
+        { id: 2, label: 'U.S.', type: 'US' }
+      ]
+    : [
+        { id: 2, label: 'U.S.', type: 'US' },
+        { id: 1, label: 'Canada', type: 'Canada' }
+      ];
 
 export const homePageWidgets = {
   homePageTable: { title: 'Recent Documents', show: true },

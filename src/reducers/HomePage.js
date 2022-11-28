@@ -33,7 +33,10 @@ const getDefaultState = () => {
     homePageSelectedSearchIndex: { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR' },
     domesticWatchlist: [],
     globalWatchlist: [],
-    homePageSelectedWidgetRegion: { id: 1, label: 'Canada', type: 'Canada' }
+    homePageSelectedWidgetRegion:
+      process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
+        ? { id: 1, label: 'Canada', type: 'Canada' }
+        : { id: 2, label: 'U.S.', type: 'US' }
   };
 };
 export const setHomePageLoader = isLoading => ({
