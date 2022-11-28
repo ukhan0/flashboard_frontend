@@ -1,6 +1,7 @@
 export const SET_HOMEPAGE_SELECTED_ITEM = 'HOMEPAGE/SET_HOMEPAGE_SELECTED_ITEM';
 export const SET_HOMEPAGE_SEARCH_INDEX = 'HOMEPAGE/SET_HOMEPAGE_SEARCH_INDEX';
 export const SET_HOMEPAGE_LOADER = 'HOMEPAGE/SET_HOMEPAGE_LOADER';
+export const HIDE_HOMEPAGE_LOADER = 'HOMEPAGE/HIDE_HOMEPAGE_LOADER';
 export const SET_HOMEPAGE_WATCHLIST_DOMESTIC = 'HOMEPAGE/SET_HOMEPAGE_DOMESTIC';
 export const SET_HOMEPAGE_WATCHLIST_GLOBAL = 'HOMEPAGE/SET_HOMEPAGE_GLOBAL';
 export const SET_HOMEPAGE_SELECTED_WIDGET_REGION = 'HOMEPAGE/SET_HOMEPAGE_SELECTED_WIDGET_REGION';
@@ -29,7 +30,7 @@ export const setHomePageSelectedWidgetRegion = selectedWidgetRegion => ({
 const getDefaultState = () => {
   return {
     homePageSelectedItem: {},
-    isLoading: false,
+    isLoading: 0,
     homePageSelectedSearchIndex: { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR' },
     domesticWatchlist: [],
     globalWatchlist: [],
@@ -38,6 +39,10 @@ const getDefaultState = () => {
 };
 export const setHomePageLoader = isLoading => ({
   type: SET_HOMEPAGE_LOADER,
+  isLoading
+});
+export const hideHomePageLoader = isLoading => ({
+  type: HIDE_HOMEPAGE_LOADER,
   isLoading
 });
 
@@ -53,7 +58,9 @@ export default function reducer(
     case SET_HOMEPAGE_SEARCH_INDEX:
       return { ...state, homePageSelectedSearchIndex: action.homePageSelectedSearchIndex };
     case SET_HOMEPAGE_LOADER:
-      return { ...state, isLoading: action.isLoading };
+      return { ...state, isLoading: state.isLoading + 1 };
+    case HIDE_HOMEPAGE_LOADER:
+      return { ...state, isLoading: state.isLoading - 1 };
     case SET_HOMEPAGE_WATCHLIST_DOMESTIC:
       return { ...state, domesticWatchlist: action.domesticWatchlist };
     case SET_HOMEPAGE_WATCHLIST_GLOBAL:
