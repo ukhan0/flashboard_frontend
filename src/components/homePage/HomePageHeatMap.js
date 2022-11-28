@@ -5,10 +5,16 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
 
-const tableTypes = [
-  { name: 'Canada', key: 'canada', sort: 'tsx', container: 'heatmap-container2' },
-  { name: 'U.S.', key: 'us', sort: 'ticker', container: 'heatmap-container1' }
-];
+const tableTypes =
+  process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
+    ? [
+        { name: 'Canada', key: 'canada', sort: 'tsx', container: 'heatmap-container2' },
+        { name: 'U.S.', key: 'us', sort: 'ticker', container: 'heatmap-container1' }
+      ]
+    : [
+        { name: 'U.S.', key: 'us', sort: 'ticker', container: 'heatmap-container1' },
+        { name: 'Canada', key: 'canada', sort: 'tsx', container: 'heatmap-container2' }
+      ];
 
 export default function HomePageHeatMap() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,9 +45,9 @@ export default function HomePageHeatMap() {
 
   useEffect(() => {
     if (homePageSelectedWidgetRegion.type === 'Canada') {
-      setTableType(tableTypes[0]);
+      setTableType(tableTypes.find(item => item.key === 'canada'));
     } else {
-      setTableType(tableTypes[1]);
+      setTableType(tableTypes.find(item => item.key === 'us'));
     }
   }, [homePageSelectedWidgetRegion]);
 
