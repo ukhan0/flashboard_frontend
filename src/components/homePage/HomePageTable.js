@@ -27,6 +27,7 @@ import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import AddRemoveIcon from '../watchlist/WatchlistTableComponents/AddRemoveIcon';
 import { getUserWatchlist } from './HomePageAction';
 import { setSnackBarObj } from '../../reducers/Alerts';
+import { homePageTableColumnDefs } from '../../config/columnDefinations';
 
 const frameworkComponents = {
   TickerLogo: TickerLogo,
@@ -49,96 +50,7 @@ const defaultColDef = {
       '</div>'
   }
 };
-//Table headers
 
-const columnDefs = [
-  {
-    headerName: 'Actions',
-    headerTooltip: 'Add/Remove Ticker',
-    field: 'isTickerActive',
-    colId: 'actions',
-    filter: false,
-    cellClass: ['center-align-left'],
-    cellRenderer: 'AddRemoveIcon',
-    width: 50,
-    resizable: false,
-    suppressMenu: false,
-    menuTabs: ['generalMenuTab'],
-    pinned: 'left',
-    headerClass: ['actionColumnHeader']
-  },
-  {
-    headerName: 'Ticker',
-    headerTooltip: 'Ticker',
-    field: 'ticker',
-    colId: 'ticker',
-    width: 100,
-    minWidth: 100,
-    cellClass: ['center-align-text'],
-    filter: 'agTextColumnFilter',
-    suppressMenu: false,
-    menuTabs: ['generalMenuTab'],
-    pinned: 'left',
-    cellRenderer: 'TickerLogo',
-    sortable: true
-  },
-  {
-    headerName: 'Company Name',
-    headerTooltip: 'Company Name',
-    field: 'company_name',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'company_name',
-    minWidth: 150
-  },
-  {
-    headerName: 'Document Type',
-    field: 'documentType',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'document_type',
-    minWidth: 100
-  },
-  {
-    headerName: 'Document Date',
-    headerTooltip: 'document_date',
-    field: 'document_date',
-    colId: 'document_date',
-    sortable: true,
-    filter: 'agDateColumnFilter',
-    cellClass: ['center-align-text'],
-    minWidth: 50,
-    width: 120
-  },
-  {
-    headerName: 'Aggregate Sentiment',
-    field: 'sentiment',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'agrregate_sentiment',
-    type: 'numericColumn',
-    filter: 'agNumberColumnFilter',
-    minWidth: 100
-  },
-  {
-    headerName: 'Word Count',
-    field: 'wordCount',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'word_count',
-    type: 'numericColumn',
-    filter: 'agNumberColumnFilter',
-    minWidth: 100
-  }
-];
 const useStyles = makeStyles(theme => ({
   search: {
     position: 'relative',
@@ -327,7 +239,7 @@ export default function HomePageTable() {
             documentType: renameDocumentTypes(get(d, 'document_type', '')),
             document_date: parseDateAndFormatMoment(get(d, 'document_date', '')),
             sentiment: round(get(d, 'sentiment', null), 2),
-            wordCount: round(get(d, 'word_count', null), 2),
+            wordCount: round(get(d, 'word_count', null), 2)
           };
         });
 
@@ -465,7 +377,7 @@ export default function HomePageTable() {
         <AgGridReact
           ref={tableRef}
           alwaysShowHorizontalScroll={true}
-          columnDefs={columnDefs}
+          columnDefs={homePageTableColumnDefs}
           rowSelection="single"
           rowData={cloneDeep(recentCompaniesDataTable)}
           suppressCellSelection={true}
