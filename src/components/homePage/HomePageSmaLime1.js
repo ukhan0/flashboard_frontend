@@ -84,7 +84,7 @@ export default function HomePageSmaLime1() {
       order: 'top',
       sort: tableType['sort'],
       factor: factorsData,
-      filters: 'svolume+gt+12,lastclose+gt+5',
+      filters: homePageSelectedWidgetRegion.type === 'Canada' ? '' : 'svolume+gt+12,lastclose+gt+5',
       onItemClick: function(ticker) {
         if (ticker) {
           setCompany(ticker);
