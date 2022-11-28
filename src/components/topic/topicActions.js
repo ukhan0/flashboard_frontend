@@ -22,7 +22,7 @@ import {
   setSearchBackdropHighlights,
   setIsSearchLoading,
   setSavedSearches,
-  setSnackBarActive,
+  setSnackBarOBJ,
   setCurrentSearchtDetail,
   setSelectedCompanyName,
   setOpenTopicSearchDialog,
@@ -96,10 +96,10 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           : moment().subtract(12, 'months')
         : startDate
       : getState().Topic.isDate
-      ? getState().Topic.startDate
         ? getState().Topic.startDate
-        : null
-      : moment().subtract(12, 'months');
+          ? getState().Topic.startDate
+          : null
+        : moment().subtract(12, 'months');
 
     currentSearchDetail.endDate = endDate
       ? endDate && getState().Topic.isDate
@@ -110,10 +110,10 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           : currentDate
         : endDate
       : getState().Topic.isDate
-      ? getState().Topic.endDate
         ? getState().Topic.endDate
-        : null
-      : currentDate;
+          ? getState().Topic.endDate
+          : null
+        : currentDate;
     currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
     currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
     dispatch(setCurrentSearchtDetail(currentSearchDetail));
@@ -147,7 +147,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           dispatch(setSearchResultHighlights([]));
           let errorMessage =
             'There are too many results for this search. Try refining your search with more specific keywords';
-          dispatch(setSnackBarActive(true, 'error', errorMessage));
+          dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: errorMessage }));
         }
       }
 
@@ -259,16 +259,16 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
     startDate: startTime
       ? undefined
       : topicState.isDate
-      ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
-      : moment()
+        ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
+        : moment()
           .subtract(12, 'months')
           .format('YYYY-MM-DD HH:mm:ss'),
 
     endDate: endTime
       ? undefined
       : topicState.isDate
-      ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
-      : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
+        : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     document_types: getDocTypes(topicState.selectedDocumentTypes, documentTypesData),
     orderBy: topicState.orderBy,
     sortBy: topicState.sortBy,
@@ -278,8 +278,8 @@ const createSearchPayload = (topicState, freshSearch, searchFrom = null, company
     company_arr: companyName
       ? [companyName]
       : topicState.selectedWatchlistCompanyNames.length
-      ? topicState.selectedWatchlistCompanyNames
-      : undefined,
+        ? topicState.selectedWatchlistCompanyNames
+        : undefined,
     sector: topicState.selectedSector ? topicState.selectedSector : undefined,
     industry_arr: topicState.selectedIndustries.length !== 0 ? topicState.selectedIndustries : undefined,
     searchIndex: topicState.searchIndex ? topicState.searchIndex['value'] : undefined,
@@ -391,9 +391,9 @@ export const handleSaveSearch = () => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload) {
         dispatch(fetchTopicsList());
-        dispatch(setSnackBarActive(true, 'success', 'Search Saved successfully'));
+        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'success', snackBarMessage: 'Search Saved successfully' }));
       } else {
-        dispatch(setSnackBarActive(true, 'error', 'Something wroung'));
+        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Something wrong' }));
       }
     } catch (error) {
       console.log(error)
@@ -418,9 +418,9 @@ export const updateSaveSearch = searchId => {
       const isSuccess = get(response, 'data.data', null);
       if (isSuccess) {
         dispatch(fetchTopicsList());
-        dispatch(setSnackBarActive(true, 'success', 'Search updated successfully'));
+        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'success', snackBarMessage: 'Search updated successfully' }));
       } else {
-        dispatch(setSnackBarActive(true, 'error', 'Search Saved successfully'));
+        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Search Saved successfully' }));
       }
     } catch (error) {
       console.log(error)
@@ -451,10 +451,10 @@ export const deleteSearch = searchId => {
     const response = await axios.delete(`${config.apiUrl}/api/search/delete_search/${searchId}/${user.id}`);
     const isDeleted = get(response, 'data.data.status', false);
     if (isDeleted) {
-      dispatch(setSnackBarActive(true, 'success', 'Search Deleted successfully'));
+      dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'success', snackBarMessage: 'Search Deleted successfully' }));
       dispatch(fetchTopicsList());
     } else {
-      dispatch(setSnackBarActive(true, 'error', 'Something wroung'));
+      dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Something wrong' }));
     }
   };
 };
@@ -614,10 +614,10 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           : moment().subtract(12, 'months')
         : startDate
       : getState().Topic.isDate
-      ? getState().Topic.startDate
         ? getState().Topic.startDate
-        : null
-      : moment().subtract(12, 'months');
+          ? getState().Topic.startDate
+          : null
+        : moment().subtract(12, 'months');
 
     currentSearchDetail.endDate = endDate
       ? endDate && getState().Topic.isDate
@@ -628,10 +628,10 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
           : currentDate
         : endDate
       : getState().Topic.isDate
-      ? getState().Topic.endDate
         ? getState().Topic.endDate
-        : null
-      : currentDate;
+          ? getState().Topic.endDate
+          : null
+        : currentDate;
     currentSearchDetail.documentType = getState().Topic.selectedDocumentTypes;
     currentSearchDetail.selectedUniverse = getState().Topic.selectedUniverse;
 
@@ -661,7 +661,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
             dispatch(setSearchError(true));
             let errorMessage =
               'There are too many results for this search. Try refining your search with more specific keywords';
-            dispatch(setSnackBarActive(true, 'error', errorMessage));
+            dispatch(setSnackBarOBJ(true, 'error', errorMessage));
           }
           return;
         }
@@ -771,12 +771,12 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
         ? topicState.isDate
           ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
           : moment()
-              .subtract(12, 'months')
-              .format('YYYY-MM-DD HH:mm:ss')
+            .subtract(12, 'months')
+            .format('YYYY-MM-DD HH:mm:ss')
         : startDate
       : topicState.isDate
-      ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
-      : moment()
+        ? format(topicState.startDate, 'yyyy-MM-dd HH:mm:ss')
+        : moment()
           .subtract(12, 'months')
           .format('YYYY-MM-DD HH:mm:ss'),
 
@@ -787,8 +787,8 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
           : moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
         : endDate
       : topicState.isDate
-      ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
-      : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
+        : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     page: topicState.pageNo,
     refresh_search: false,
     searchIndex: topicState.searchIndex['value'],
@@ -827,20 +827,20 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
         : moment().subtract(12, 'months')
       : startDate
     : topicState.isDate
-    ? moment(topicState.startDate)
-    : moment().subtract(12, 'months');
+      ? moment(topicState.startDate)
+      : moment().subtract(12, 'months');
 
   endDate = endDate
     ? endDate && topicState.isDate
       ? topicState.isDate
         ? moment(topicState.endDate)
         : moment(new Date())
-            .subtract(1, 'minutes')
-            .utc()
+          .subtract(1, 'minutes')
+          .utc()
       : endDate
     : topicState.isDate
-    ? moment(topicState.endDate)
-    : moment(new Date())
+      ? moment(topicState.endDate)
+      : moment(new Date())
         .subtract(1, 'minutes')
         .utc();
 
@@ -848,8 +848,8 @@ const createSearchPayloadTwitter = (topicState, freshSearch) => {
   endDate = endDate.isBefore(new Date())
     ? endDate
     : moment(new Date())
-        .subtract(1, 'minutes')
-        .utc();
+      .subtract(1, 'minutes')
+      .utc();
 
   let searchTerm = topicState.simpleSearchTextArray.join(' OR ');
   searchTerm = searchTerm.trimEnd() + ' ' + topicState.searchTextWithAnd.map(item => `"${item}"`).join(' ');

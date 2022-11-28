@@ -11,7 +11,7 @@ import TopicSnackbar from './TopicSnackbar';
 import TopicCurrentSearchDetail from './TopicCurrentSearchDetail';
 import {
   setIsTopicDeleteErr,
-  setSnackBarActive,
+  setSnackBarOBJ,
   setTopicHandleSearchCombineReducer,
   setSearchError
 } from '../../reducers/Topic';
@@ -30,9 +30,7 @@ const Topic = () => {
   const {
     isTopicDeleteError,
     cancelTokenSourceHighlights,
-    isSnackBarActive,
-    snackBarMessage,
-    snackBarSeverity,
+    snackBarOBJ,
     openTopicSearchDialog,
     showUpdateButton,
     searchIndex,
@@ -58,7 +56,7 @@ const Topic = () => {
     };
   }, [dispatch]);
   const handleCloseSnackBar = () => {
-    dispatch(setSnackBarActive(false));
+    dispatch(setSnackBarOBJ({ isSnackBarActive: false, snackBarSeverity: '', snackBarMessage: '' }));
   };
 
   return (
@@ -133,12 +131,12 @@ const Topic = () => {
         ) : null}
       </Grid>
       <TopicSnackbar
-        open={isSnackBarActive}
+        open={snackBarOBJ.isSnackBarActive}
         onClose={() => {
           handleCloseSnackBar();
         }}
-        message={snackBarMessage}
-        severity={snackBarSeverity}
+        message={snackBarOBJ.snackBarMessage}
+        severity={snackBarOBJ.snackBarSeverity}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

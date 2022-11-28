@@ -34,7 +34,7 @@ export const SET_SELECTED_INDUSTRIES = 'TOPIC/SET_SELECTED_INDUSTRIES';
 export const SET_SELECTED_WATCHLIST_COMPANY_NAMES = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAMES';
 export const SET_SAVED_SEARCHES = 'TOPIC/SET_SAVED_SEARCHES';
 export const SET_SEARCH_LABEL = 'TOPIC/SET_SEARCHE_LABEL';
-export const SET_SNACKBAR_ACTIVE = 'TOPIC/SET_SNACKBAR_ACTIVE';
+export const SET_SNACKBAR_OBJ = 'TOPIC/SET_SNACKBAR_OBJ';
 export const SET_SELECTED_SECTION = 'TOPIC/SET_SELECTED_SECTION';
 export const SET_OPEN_TOPIC_SEARCH_DIALOG = 'TOPIC/SET_OPEN_TOPIC_SEARCH_DIALOG';
 export const SET_CURRENT_SEARCH_DETAIL = 'TOPIC/SET_CURRENT_SEARCH_DETAIL';
@@ -221,11 +221,9 @@ export const setSearchLabel = searchLabel => ({
   searchLabel
 });
 
-export const setSnackBarActive = (isSnackBarActive, snackBarSeverity, snackBarMessage) => ({
-  type: SET_SNACKBAR_ACTIVE,
-  isSnackBarActive,
-  snackBarSeverity,
-  snackBarMessage
+export const setSnackBarOBJ = (snackBarOBJ) => ({
+  type: SET_SNACKBAR_OBJ,
+  snackBarOBJ
 });
 
 export const setSelectedSection = selectedSection => ({
@@ -432,9 +430,7 @@ const getDefaultState = () => {
     showUpdateButton: false,
     selectedCompanyName: null,
     savedSearches: [],
-    isSnackBarActive: false,
-    snackBarMessage: null,
-    snackBarSeverity: null,
+    snackBarOBJ: {},
     openTopicSearchDialog: false,
     currentSearchDetail: {},
     isCompanyClick: false,
@@ -557,13 +553,8 @@ export default function reducer(
       return { ...state, savedSearches: action.savedSearches };
     case SET_SEARCH_LABEL:
       return { ...state, searchLabel: action.searchLabel };
-    case SET_SNACKBAR_ACTIVE:
-      return {
-        ...state,
-        isSnackBarActive: action.isSnackBarActive,
-        snackBarSeverity: action.snackBarSeverity,
-        snackBarMessage: action.snackBarMessage
-      };
+    case SET_SNACKBAR_OBJ:
+      return { ...state, snackBarOBJ: action.snackBarOBJ };
     case SET_SELECTED_SECTION:
       return {
         ...state,
