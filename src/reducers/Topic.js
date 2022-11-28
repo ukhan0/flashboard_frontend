@@ -473,7 +473,7 @@ export default function reducer(
       return {
         ...state,
         isTopicEmailAlertEnable: action.searchObj.send_topic_alert_email,
-        searchText: action.searchObj.searchText,
+        searchText: action.searchObj.searchText ?? '',
         searchLabel: action.searchObj.searchLabel,
         selectedDocumentTypes: action.searchObj.searchJSON.selectedDocumentTypes,
         orderBy: action.searchObj.searchJSON.orderBy,

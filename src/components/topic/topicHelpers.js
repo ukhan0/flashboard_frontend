@@ -97,14 +97,12 @@ export const renameDocumentTypesLabel = label => {
 export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
     let selected = type.map(v => {
-      if (v.toLowerCase() === 'fmp-transcript') {
+      if (v.toLowerCase() === 'fmp-transcript' || v.toLowerCase() === 'ec-fmp') {
         v = 'Earning Call';
       } else if (v.toLowerCase() === 'fin supp') {
         v = 'FS';
       } else if (v.toLowerCase() === 'other financials') {
         v = 'OF';
-      } else if (v.toLowerCase() === 'ec-fmp') {
-        v = 'Earning call';
       }
       return v;
     });

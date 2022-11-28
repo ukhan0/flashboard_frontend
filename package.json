@@ -73,7 +73,10 @@
     "deploy:sma:live": "aws s3 sync build/ s3://filingsflash.com --acl public-read --profile flashboard",
     "deploy:udt": "aws s3 sync build/ s3://unstructureddataterminal.com --acl public-read --profile flashboard",
     "bd_staging": "yarn build:sma:staging && yarn deploy:sma:staging",
-    "bd_udt": "yarn build:udt && yarn deploy:udt"
+    "bd_udt": "yarn build:udt && yarn deploy:udt",
+    "build:tmx": "env-cmd -f .env.tmx.prod react-scripts build",
+    "deploy:tmx": "aws s3 sync build/ s3://tmx.contextanalytics-ai.com --acl public-read --profile flashboard",
+    "bd_tmx": "yarn build:tmx && yarn deploy:tmx"
   },
   "eslintConfig": {
     "extends": "react-app"
