@@ -35,10 +35,11 @@ const tableTypes = [
     container: 'container3'
   }
 ];
-export default function HomePageSmaLime1(props) {
+export default function HomePageSmaLime1() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
+  const { homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const [tableType, setTableType] = useState(tableTypes[0]);
 
   const setCompany = useCallback(
@@ -79,7 +80,7 @@ export default function HomePageSmaLime1(props) {
       apikey: '907cdf5f789e613d36f0b4dda38930fb1dc590bf',
       customCSS:
         'h1,h2{display:none;} .button-group{display:none;} body{background:#fff;}.Table-holder{margin:0;}.new-btn{border-radius:0;border:1px solid #fff;color:#fff;padding:5px;font-size:12px;height:25px}.button-group{padding:10px 0} .newTable thead>tr {    color: #000000;    background-color: #f0f0f0;    text-align: center;}  .newTable .tbody-row {    background-color: #ffffff;    height: 40px;   margin-bottom: 1px;}.newTable tr{color:#ffffff;}.tbody-row td {    color: #535353;} .Table-holder{padding: 0px;!important} .newTable{width:100%!important;} .newTable .tbody-row:hover{background: #e7f4fe;} .newTable {background:#e7f4fe;} ',
-      ontology: 'ticker',
+      ontology: homePageSelectedWidgetRegion.type === 'Canada' ? 'tsx' : 'ticker',
       order: 'top',
       sort: tableType['sort'],
       factor: factorsData,
@@ -90,7 +91,14 @@ export default function HomePageSmaLime1(props) {
         }
       }
     });
-  }, [tableType, setCompany]);
+
+    return () => {
+      const element = document.getElementById('frame_' + tableType.container);
+      if (element) {
+        element.remove();
+      }
+    };
+  }, [tableType, setCompany, homePageSelectedWidgetRegion]);
 
   return (
     <Card className="card-box mb-4" style={{ height: '100%' }}>
