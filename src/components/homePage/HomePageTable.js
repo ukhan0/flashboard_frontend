@@ -14,7 +14,7 @@ import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHomePageSelectedItem, setHomePageLoader } from '../../reducers/HomePage';
+import { setHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -101,17 +101,14 @@ const columnDefs = [
     sortable: true,
     flex: 1,
     colId: 'document_type',
-    minWidth: 100,
-    valueFormatter: params => renameDocumentTypes(params.data.document_type)
+    minWidth: 100
   },
-
   {
     headerName: 'Document Date',
     headerTooltip: 'document_date',
     field: 'document_date',
     colId: 'document_date',
     sortable: true,
-    valueFormatter: params => (params.data.document_date ? parseDateAndFormatMoment(params.data.document_date) : ''),
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
     minWidth: 50,
@@ -127,11 +124,7 @@ const columnDefs = [
     colId: 'agrregate_sentiment',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    minWidth: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.sentiment', 0);
-      return sentimentValue;
-    }
+    minWidth: 100
   },
   {
     headerName: 'Word Count',
@@ -143,11 +136,7 @@ const columnDefs = [
     colId: 'word_count',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    minWidth: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.wordCount', 0);
-      return sentimentValue;
-    }
+    minWidth: 100
   }
 ];
 const useStyles = makeStyles(theme => ({
@@ -311,7 +300,6 @@ export default function HomePageTable() {
         }
       }
       dispatch(setSelectedWatchlist(item));
-      dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
     }
@@ -333,23 +321,22 @@ export default function HomePageTable() {
         setCancelToken(null);
         const recentData = data.map(d => {
           return {
-            ...d,
-            documentType: get(d, 'document_type', null),
+            isTickerActive: false,
+            ticker: d.ticker,
+            company_name: d.company_name ?? '',
+            documentType: renameDocumentTypes(get(d, 'document_type', '')),
+            document_date: parseDateAndFormatMoment(get(d, 'document_date', '')),
             sentiment: round(get(d, 'sentiment', null), 2),
             wordCount: round(get(d, 'word_count', null), 2),
-            isTickerActive: false
           };
         });
 
         setRecentCompaniesData(prevState => [...prevState, ...recentData]);
-        dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
       } else {
-        dispatch(setHomePageSelectedItem({}));
         setRecentCompaniesData([]);
         setRowsOfRecentDocumentsTable(0);
       }
     } catch (error) {
-      dispatch(setHomePageSelectedItem({}));
       setRecentCompaniesData([]);
       setRowsOfRecentDocumentsTable(0);
     } finally {
