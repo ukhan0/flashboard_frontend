@@ -6,6 +6,7 @@ import { KeyboardDatePicker } from '@material-ui/pickers';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTopicSearchDateRange, isDateSet } from '../../reducers/Topic';
 import moment from 'moment';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -22,11 +23,21 @@ const useStyles = makeStyles(theme => ({
   dateSelection: {
     textAlign: 'center',
     padding: 10,
-    backgroundColor: '#7092e6',
+    backgroundColor: theme.palette.primary.main,
     color: 'white',
     borderRadius: 12,
     cursor: 'pointer',
     width: '200px'
+  },
+  dateSelectionDisabled: {
+    color: theme.palette.action.disabled,
+    backgroundColor: theme.palette.action.disabledBackground,
+    userSelect: 'none',
+    cursor: 'default',
+    '& span': {
+      fontWeight: 'normal !important',
+      color: `${theme.palette.action.disabled} !important`
+    }
   },
   dateRangeSelector: {
     backgroundColor: 'white',
@@ -49,13 +60,14 @@ function isValidDate(d) {
   return d instanceof Date && !isNaN(d);
 }
 
-const TopicRangePicker = props => {
+const TopicRangePicker = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [isDateRangeSelectorOpen, setIsDateRangeSelectorOpen] = React.useState(false);
-  const { startDate, endDate } = useSelector(state => state.Topic);
+  const { startDate, endDate, searchIndex } = useSelector(state => state.Topic);
   const inputDateFormat = 'MM-yyyy';
   const displayDateFormat = 'MMM yyyy';
+  const disabled = searchIndex['id'] === 4 ? true : false;
 
   const handleStartDateChange = newStartDate => {
     if (isValidDate(newStartDate)) {
@@ -87,9 +99,9 @@ const TopicRangePicker = props => {
   return (
     <div>
       <div
-        className={classes.dateSelection}
+        className={clsx(classes.dateSelection, disabled ? classes.dateSelectionDisabled : null)}
         onClick={() => {
-          setIsDateRangeSelectorOpen(true);
+          !disabled && setIsDateRangeSelectorOpen(true);
         }}>
         <span className="font-weight-bold">{moment(startDate).format(displayDateFormat)}</span>
         <span className="text-white">{'  -  '}</span>

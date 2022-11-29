@@ -18,14 +18,11 @@ import {
   setSearchResults,
   setSearchError,
   setSearchStart,
-  setIsSaveDlgOpenAndError,
-  setIsSaveSearchError,
   setSearchResultHighlights,
   setSearchBackdropHighlights,
   setIsSearchLoading,
   setSavedSearches,
   setSnackBarActive,
-  setShowComposeNew,
   setCurrentSearchtDetail,
   setSelectedCompanyName,
   setOpenTopicSearchDialog,
@@ -125,19 +122,6 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
     if (showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true));
     }
-
-    // const documentTypeObjects = selectedDocumentTypes.map(sdt =>
-    //   documentTypesData.find(dtd => dtd.documentTypeGroup === sdt)
-    // );
-    // let searchFroms = [];
-    // if (!getState().Topic.selectedDocumentTypes.length === getState().Topic.documentTypes.length) {
-    //   documentTypeObjects.forEach(documentType => {
-    //     const sections = get(documentType, `sections.${selectedSection}`, []);
-    //     sections.forEach(section => {
-    //       searchFroms.push(`sma_data_json.${section}`);
-    //     });
-    //   });
-    // }
     if (getState().Topic.searchIndex['id'] === 4 || getState().Topic.searchIndex['id'] === 5) {
       return;
     }
@@ -146,7 +130,6 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
         `${config.apiUrl}/api/dictionary/search_aggregate`,
         {
           ...createSearchPayload(getState().Topic, freshSearch),
-          // searchfromArr: searchFroms,
           searchfrom: undefined,
           historyBy: historyBy
         },
@@ -330,7 +313,6 @@ export const fetchTopicsList = () => {
       dispatch(setSavedSearches(savedSearch));
       dispatch(setIsnNewlySavedSearch(false));
     } else {
-      dispatch(setShowComposeNew(true));
       dispatch(setSavedSearches([]));
       dispatch(setOpenTopicSearchDialog(true));
       dispatch(setSearchResults({}));
@@ -393,7 +375,7 @@ const createSearchSaveMiniPayload = topicState => {
 export const handleSaveSearch = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return async (dispatch, getState) => {
-    const { searchText, isTopicEmailAlertEnable, searchLabel , searchIndex } = getState().Topic;
+    const { searchText, isTopicEmailAlertEnable, searchLabel, searchIndex } = getState().Topic;
     dispatch(setIsnNewlySavedSearch(true));
     const payload = {
       userId: user.id,
@@ -408,15 +390,13 @@ export const handleSaveSearch = () => {
       const response = await axios.post(`${config.apiUrl}/api/search/save_search`, payload);
       const responsePayload = get(response, 'data', null);
       if (responsePayload) {
-        dispatch(setIsSaveDlgOpenAndError(false, false));
         dispatch(fetchTopicsList());
         dispatch(setSnackBarActive(true, 'success', 'Search Saved successfully'));
       } else {
-        dispatch(setIsSaveSearchError(true));
         dispatch(setSnackBarActive(true, 'error', 'Something wroung'));
       }
     } catch (error) {
-      dispatch(setIsSaveSearchError(true));
+      console.log(error);
     }
   };
 };
@@ -430,22 +410,20 @@ export const updateSaveSearch = searchId => {
       searchLabel: searchLabel,
       searchJSON: createSearchSaveMiniPayload(getState().Topic),
       // email alert false for tweets and twitter
-      send_topic_alert_email: searchIndex['id'] !== 4 && searchIndex['id'] !== 5 ? isTopicEmailAlertEnable : false,
+      send_topic_alert_email: searchIndex['id'] !== 4 && searchIndex['id'] !== 5 ? isTopicEmailAlertEnable : false
     };
 
     try {
       const response = await axios.put(`${config.apiUrl}/api/search/update_search/${searchId}/${user.id}`, payload);
       const isSuccess = get(response, 'data.data', null);
       if (isSuccess) {
-        dispatch(setIsSaveDlgOpenAndError(false, false));
         dispatch(fetchTopicsList());
         dispatch(setSnackBarActive(true, 'success', 'Search updated successfully'));
       } else {
-        dispatch(setIsSaveSearchError(true));
         dispatch(setSnackBarActive(true, 'error', 'Search Saved successfully'));
       }
     } catch (error) {
-      dispatch(setIsSaveSearchError(true));
+      console.log(error);
     }
   };
 };
@@ -663,17 +641,6 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
     if (showBackdrop) {
       dispatch(setSearchBackdrop(cancelTokenSource, true));
     }
-
-    // const documentTypeObjects = selectedDocumentTypes.map(sdt => documentTypesData.find(dtd => dtd.value === sdt));
-    // let searchFroms = [];
-    // if (!getState().Topic.selectedDocumentTypes.length === getState().Topic.documentTypes.length) {
-    //   documentTypeObjects.forEach(documentType => {
-    //     const sections = get(documentType, `sections.${selectedSection}`, []);
-    //     sections.forEach(section => {
-    //       searchFroms.push(`sma_data_json.${section}`);
-    //     });
-    //   });
-    // }
     if (getState().Topic.searchIndex['id'] === 4) {
       try {
         const response = await axios.post(
@@ -753,7 +720,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
               'data.data.error.message',
               'There are too many results for this search. Try refining your search with more specific keywords.'
             );
-            dispatch(setSnackBarObj({ message: errorMessage, severity: 'error', autoHideDuration : null }));
+            dispatch(setSnackBarObj({ message: errorMessage, severity: 'error', autoHideDuration: null }));
             dispatch(setTwitterFetchData(true));
           }
           return;
@@ -822,7 +789,6 @@ const createSearchPayloadTweets = (topicState, freshSearch) => {
       : topicState.isDate
       ? format(topicState.endDate, 'yyyy-MM-dd HH:mm:ss')
       : moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-    // orderBy: topicState.orderBy,
     page: topicState.pageNo,
     refresh_search: false,
     searchIndex: topicState.searchIndex['value'],

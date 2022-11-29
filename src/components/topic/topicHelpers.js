@@ -97,7 +97,7 @@ export const renameDocumentTypesLabel = label => {
 export const renameDocumentTypes = type => {
   if (Array.isArray(type)) {
     let selected = type.map(v => {
-      if (v.toLowerCase() === 'fmp-transcript') {
+      if (v.toLowerCase() === 'fmp-transcript' || v.toLowerCase() === 'ec-fmp') {
         v = 'Earning Call';
       } else if (v.toLowerCase() === 'fin supp') {
         v = 'FS';
@@ -124,6 +124,23 @@ export const renameDocumentTypes = type => {
     type = '';
   }
 
+  return type;
+};
+
+export const renameDocumentTypeNames = type => {
+  if (type) {
+    if (type.toLowerCase() === 'fmp-transcript') {
+      type = 'Earning Call';
+    } else if (type.toLowerCase() === 'fin supp') {
+      type = 'FS';
+    } else if (type.toLowerCase() === 'other financials') {
+      type = 'OF';
+    } else if (type.toUpperCase() === 'AR') {
+      type = 'Annual Report';
+    }
+  } else {
+    type = '';
+  }
   return type;
 };
 

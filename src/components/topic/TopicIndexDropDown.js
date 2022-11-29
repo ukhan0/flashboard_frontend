@@ -8,18 +8,33 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { setTopicIndexDropDownSearchCombineReducer } from '../../reducers/Topic';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import Typography from '@material-ui/core/Typography';
+
 const useStyles = makeStyles(theme => ({
   select: {
     height: '38px',
     minWidth: 120,
     width: '300px'
+  },
+  twitterNote: {
+    color: theme.palette.text.secondary,
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
+    marginTop: '2px',
+    '& svg': {
+      fontSize: '12px',
+      marginRight: '2px'
+    }
   }
 }));
 
-const TopicIndexDropDown = props => {
+const TopicIndexDropDown = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { searchIndex, documentTypes } = useSelector(state => state.Topic);
+  const show = searchIndex['id'] === 4 || searchIndex['id'] === 5 ? true : false;
   const selectionChanged = selectedIndex => {
     dispatch(setTopicIndexDropDownSearchCombineReducer());
 
@@ -47,6 +62,13 @@ const TopicIndexDropDown = props => {
           </MenuItem>
         ))}
       </Select>
+
+      {show ? (
+        <Typography className={classes.twitterNote}>
+          <ErrorOutlineIcon />
+          {searchIndex['id'] === 4 ? 'Pulling up latest records' : 'Pulling top 500 records'}
+        </Typography>
+      ) : null}
     </FormControl>
   );
 };

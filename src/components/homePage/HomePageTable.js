@@ -9,14 +9,12 @@ import Card from '@material-ui/core/Card';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
-// import makeStyles from '@material-ui/core/styles/makeStyles';
-// import fade from '@material-ui/core/Fade';
 import clsx from 'clsx';
 import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHomePageSelectedItem, setHomePageSearchIndex, setHomePageLoader } from '../../reducers/HomePage';
+import { setHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -29,6 +27,7 @@ import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
 import AddRemoveIcon from '../watchlist/WatchlistTableComponents/AddRemoveIcon';
 import { getUserWatchlist } from './HomePageAction';
 import { setSnackBarObj } from '../../reducers/Alerts';
+import { homePageTableColumnDefs } from '../../config/columnDefinations';
 
 const frameworkComponents = {
   TickerLogo: TickerLogo,
@@ -51,107 +50,7 @@ const defaultColDef = {
       '</div>'
   }
 };
-//Table headers
 
-const columnDefs = [
-  {
-    headerName: 'Actions',
-    headerTooltip: 'Add/Remove Ticker',
-    field: 'isTickerActive',
-    colId: 'actions',
-    filter: false,
-    cellClass: ['center-align-left'],
-    cellRenderer: 'AddRemoveIcon',
-    width: 50,
-    resizable: false,
-    suppressMenu: false,
-    menuTabs: ['generalMenuTab'],
-    pinned: 'left',
-    headerClass: ['actionColumnHeader']
-  },
-  {
-    headerName: 'Ticker',
-    headerTooltip: 'Ticker',
-    field: 'ticker',
-    colId: 'ticker',
-    width: 100,
-    minWidth: 100,
-    cellClass: ['center-align-text'],
-    filter: 'agTextColumnFilter',
-    suppressMenu: false,
-    menuTabs: ['generalMenuTab'],
-    pinned: 'left',
-    cellRenderer: 'TickerLogo',
-    sortable: true
-  },
-  {
-    headerName: 'Company Name',
-    headerTooltip: 'Company Name',
-    field: 'company_name',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'company_name',
-    minWidth: 150
-  },
-  {
-    headerName: 'Document Type',
-    field: 'documentType',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'document_type',
-    minWidth: 100,
-    valueFormatter: params => renameDocumentTypes(params.data.document_type)
-  },
-
-  {
-    headerName: 'Document Date',
-    headerTooltip: 'document_date',
-    field: 'document_date',
-    colId: 'document_date',
-    sortable: true,
-    valueFormatter: params => (params.data.document_date ? parseDateAndFormatMoment(params.data.document_date) : ''),
-    filter: 'agDateColumnFilter',
-    cellClass: ['center-align-text'],
-    minWidth: 50,
-    width: 120
-  },
-  {
-    headerName: 'Aggregate Sentiment',
-    field: 'sentiment',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'agrregate_sentiment',
-    type: 'numericColumn',
-    filter: 'agNumberColumnFilter',
-    minWidth: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.sentiment', 0);
-      return sentimentValue;
-    }
-  },
-  {
-    headerName: 'Word Count',
-    field: 'wordCount',
-    menuTabs: false,
-    editable: false,
-    sortable: true,
-    flex: 1,
-    colId: 'word_count',
-    type: 'numericColumn',
-    filter: 'agNumberColumnFilter',
-    minWidth: 100,
-    valueGetter: params => {
-      const sentimentValue = get(params, 'data.wordCount', 0);
-      return sentimentValue;
-    }
-  }
-];
 const useStyles = makeStyles(theme => ({
   search: {
     position: 'relative',
@@ -196,16 +95,19 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
+const selectDefaultType = process.env?.REACT_APP_DOMAIN_NAME === 'TMX' ? 'SEDAR' : 'SEC';
+const homePageSelectedIndexFromConfig = homePageTypesSelection.find(item => item.type === selectDefaultType);
 
 export default function HomePageTable() {
   const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
-  const { homePageSelectedSearchIndex, globalWatchlist, domesticWatchlist } = useSelector(state => state.HomePage);
+  const { globalWatchlist, domesticWatchlist, homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
   const [cancelToken, setCancelToken] = useState(null);
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
   const [recentDocumentSearchFilter, setRecentDocumentSearchFilter] = useState('');
   const [recentCompaniesDataTable, setRecentCompaniesDataTable] = useState([]);
+  const [homePageSelectedSearchIndex, setHomePageSelectedSearchIndex] = useState(homePageSelectedIndexFromConfig);
   const dispatch = useDispatch();
   const tableRef = useRef();
   const selectedType = 'domestic';
@@ -310,65 +212,57 @@ export default function HomePageTable() {
         }
       }
       dispatch(setSelectedWatchlist(item));
-      dispatch(setHomePageSelectedItem(params.data));
       dispatch(setSidebarToggle(false));
       dispatch(setSidebarToggleMobile(false));
     }
   };
 
-  const getRecentCompaniesData = React.useCallback(
-    async searchIndex => {
-      dispatch(setHomePageLoader(true));
-      const cancelToken = axios.CancelToken.source();
-      try {
-        setCancelToken(cancelToken);
-        const response = await axios.get(
-          `${config.apiUrl}/api/get_company_filing_listing?index=${searchIndex.key}&order=DESC&limit=100&type=${searchIndex.type}&from=${rowsOfRecentDocumentsTable}`,
-          {
-            cancelToken: cancelToken.token
-          }
-        );
-        const data = get(response, 'data.data', []);
-        if (response) {
-          setCancelToken(null);
-          const recentData = data.map(d => {
-            return {
-              ...d,
-              documentType: get(d, 'document_type', null),
-              sentiment: round(get(d, 'sentiment', null), 2),
-              // sentimentWord: get(d['10k'].totdoc, 'sentimentWord', null),
-              // docDate: get(d, 'document_date', null),
-              wordCount: round(get(d, 'word_count', null), 2),
-              isTickerActive: false
-              // wordCountChangePercentWord: get(d['10k'].totdoc, 'wordCountChangePercentWord', null)
-            };
-          });
-
-          setRecentCompaniesData(prevState => [...prevState, ...recentData]);
-          dispatch(setHomePageSelectedItem(get(recentData, '[0]', null)));
-        } else {
-          dispatch(setHomePageSelectedItem({}));
-          setRecentCompaniesData([]);
-          setRowsOfRecentDocumentsTable(0);
+  const getRecentCompaniesData = React.useCallback(async () => {
+    dispatch(setHomePageLoader(true));
+    const cancelToken = axios.CancelToken.source();
+    try {
+      setCancelToken(cancelToken);
+      const response = await axios.get(
+        `${config.apiUrl}/api/get_company_filing_listing?index=${homePageSelectedSearchIndex.key}&order=DESC&limit=100&type=${homePageSelectedSearchIndex.type}&from=${rowsOfRecentDocumentsTable}`,
+        {
+          cancelToken: cancelToken.token
         }
-      } catch (error) {
-        dispatch(setHomePageSelectedItem({}));
+      );
+      const data = get(response, 'data.data', []);
+      if (response) {
+        setCancelToken(null);
+        const recentData = data.map(d => {
+          return {
+            isTickerActive: false,
+            ticker: d.ticker,
+            company_name: d.company_name ?? '',
+            documentType: renameDocumentTypes(get(d, 'document_type', '')),
+            document_date: parseDateAndFormatMoment(get(d, 'document_date', '')),
+            sentiment: round(get(d, 'sentiment', null), 2),
+            wordCount: round(get(d, 'word_count', null), 2)
+          };
+        });
+
+        setRecentCompaniesData(prevState => [...prevState, ...recentData]);
+      } else {
         setRecentCompaniesData([]);
         setRowsOfRecentDocumentsTable(0);
-      } finally {
-        dispatch(setHomePageLoader(false));
       }
-    },
-    [dispatch, rowsOfRecentDocumentsTable]
-  );
+    } catch (error) {
+      setRecentCompaniesData([]);
+      setRowsOfRecentDocumentsTable(0);
+    } finally {
+      dispatch(setHomePageLoader(false));
+    }
+  }, [dispatch, rowsOfRecentDocumentsTable, homePageSelectedSearchIndex.key, homePageSelectedSearchIndex.type]);
 
   const onSearchTextChange = e => {
     setRecentDocumentSearchFilter(e.target.value);
   };
 
   useEffect(() => {
-    getRecentCompaniesData(homePageSelectedSearchIndex);
-  }, [getRecentCompaniesData, homePageSelectedSearchIndex]);
+    getRecentCompaniesData();
+  }, [getRecentCompaniesData]);
 
   const handleHomePageSearchIndex = diff => {
     if (cancelToken) {
@@ -377,7 +271,7 @@ export default function HomePageTable() {
     setRecentDocumentSearchFilter('');
     setRecentCompaniesData([]);
     setRowsOfRecentDocumentsTable(0);
-    dispatch(setHomePageSearchIndex(diff));
+    setHomePageSelectedSearchIndex(diff);
   };
   useEffect(() => {
     if (HomePageService.agGridColumnAPI) {
@@ -437,6 +331,15 @@ export default function HomePageTable() {
       setRecentCompaniesDataTable(userWatchlist);
     }, [100]);
   }, [globalWatchlist, domesticWatchlist, recentCompaniesData]);
+
+  useEffect(() => {
+    if (homePageSelectedWidgetRegion.type === 'Canada') {
+      setHomePageSelectedSearchIndex(homePageTypesSelection.find(item => item.type === 'SEDAR'));
+    } else {
+      setHomePageSelectedSearchIndex(homePageTypesSelection.find(item => item.type === 'SEC'));
+    }
+  }, [homePageSelectedWidgetRegion]);
+
   return (
     <Card className="card-box mb-4" style={{ height: '100%' }}>
       <div className={clsx('card-header')}>
@@ -474,7 +377,7 @@ export default function HomePageTable() {
         <AgGridReact
           ref={tableRef}
           alwaysShowHorizontalScroll={true}
-          columnDefs={columnDefs}
+          columnDefs={homePageTableColumnDefs}
           rowSelection="single"
           rowData={cloneDeep(recentCompaniesDataTable)}
           suppressCellSelection={true}

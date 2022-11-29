@@ -50,7 +50,7 @@ const HomePageEarningWatcher = () => {
             height: '100%',
             title: 'Social Sentiment Earnings Watcher',
             apikey: '907cdf5f789e613d36f0b4dda38930fb1dc590bf',
-            customCSS:'.box-frame,body{background: #fff;}.Table-holder h2,.Table-holder h1,.box-frame h3{color: #000;}.bg-grey{background: #fff;} .tooltip{background:#fff; color:#000} .scroll-box li:hover {background:#03a9f433} .scroll-box .img-box img{background:lightgray}',
+            customCSS:'.box-frame,body{background: #fff;}.Table-holder h2,.Table-holder h1,.box-frame h3{color: #000;}.bg-grey{background: #fff;} .tooltip{background:#fff; color:#000} .scroll-box li:hover {background:#03a9f433} .longEnough{height:92%;max-height:92%;} .scrollOnMobile {height:104%;} .text-center.heading-area {display: none;} .slick-slider .slick-next, .slick-slider .slick-prev{background-color: rgb(0 0 0 / 50%);}',
             ontology: 'ticker',
             order: 'top',
             factor: factorsData,

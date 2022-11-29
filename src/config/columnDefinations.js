@@ -436,6 +436,7 @@ export const watchlistTableColDefs = [
     }
   }
 ];
+
 export const watchlistTableColDefs1 = [
   {
     headerName: 'Actions',
@@ -599,3 +600,92 @@ export const watchlistTableSideBarConfiguration = {
   position: 'right',
   defaultToolPanel: null
 };
+
+export const homePageTableColumnDefs = [
+  {
+    headerName: 'Actions',
+    headerTooltip: 'Add/Remove Ticker',
+    field: 'isTickerActive',
+    colId: 'actions',
+    filter: false,
+    cellClass: ['center-align-left'],
+    cellRenderer: 'AddRemoveIcon',
+    width: 50,
+    resizable: false,
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
+  },
+  {
+    headerName: 'Ticker',
+    headerTooltip: 'Ticker',
+    field: 'ticker',
+    colId: 'ticker',
+    width: 100,
+    minWidth: 100,
+    cellClass: ['center-align-text'],
+    filter: 'agTextColumnFilter',
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    cellRenderer: 'TickerLogo',
+    sortable: true
+  },
+  {
+    headerName: 'Company Name',
+    headerTooltip: 'Company Name',
+    field: 'company_name',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'company_name',
+    minWidth: 150
+  },
+  {
+    headerName: 'Document Type',
+    field: 'documentType',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'document_type',
+    minWidth: 100
+  },
+  {
+    headerName: 'Document Date',
+    headerTooltip: 'document_date',
+    field: 'document_date',
+    colId: 'document_date',
+    sortable: true,
+    filter: 'agDateColumnFilter',
+    cellClass: ['center-align-text'],
+    minWidth: 50,
+    width: 120
+  },
+  {
+    headerName: 'Aggregate Sentiment',
+    field: 'sentiment',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'agrregate_sentiment',
+    type: 'numericColumn',
+    filter: 'agNumberColumnFilter',
+    minWidth: 100
+  },
+  {
+    headerName: 'Word Count',
+    field: 'wordCount',
+    menuTabs: false,
+    editable: false,
+    sortable: true,
+    flex: 1,
+    colId: 'word_count',
+    type: 'numericColumn',
+    filter: 'agNumberColumnFilter',
+    minWidth: 100
+  }
+];

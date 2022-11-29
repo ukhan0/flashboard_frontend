@@ -7,7 +7,7 @@ import { getUserWatchlist } from './HomePageAction';
 import { useDispatch } from 'react-redux';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import './HomePage.css';
-import { homePageWidgets, homepageWidgetsKey } from './homePageConfig';
+import { homePageWidgetRegion, homePageWidgets, homepageWidgetsKey } from './homePageConfig';
 import HomeGridLayout from './HomeGridLayout';
 import axios from 'axios';
 import config from '../../config/config';
@@ -18,6 +18,8 @@ import Slide from '@material-ui/core/Slide';
 import clsx from 'clsx';
 import { setSnackBarObj } from '../../reducers/Alerts';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { setHomePageSelectedWidgetRegion } from 'reducers/HomePage';
 
 const useStyle = makeStyles({
   loader: {
@@ -47,8 +49,18 @@ const useStyle = makeStyles({
   drawerContainer: {
     zIndex: 900,
     backgroundColor: '#ffffff',
-    top: 64,
+    top: 106,
     position: 'sticky'
+  },
+  homePageWidgetRegionContainer: {
+    zIndex: 900,
+    top: 60,
+    backgroundColor: '#ffffff',
+    padding: '10px 4px',
+    position: 'sticky',
+    '& .MuiButtonGroup-root': {
+      backgroundColor: '#ffffff'
+    }
   }
 });
 
@@ -75,7 +87,7 @@ export default function HomePage() {
   const [isHomePageDrawerOpen, setIsHomePageDrawerOpen] = useState(false);
   const [drawerSelectedWidget, setSidebarSelectedWidget] = useState(getHomepageWidgets());
   const [enableDragResizeWidgets, setEnableDragResizeWidgets] = useState(false);
-  const { isLoading } = useSelector(state => state.HomePage);
+  const { isLoading, homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const { user } = useSelector(state => state.User);
 
   const handleDrawer = () => {
@@ -141,6 +153,22 @@ export default function HomePage() {
         className={clsx([classes.button, classes.btn])}>
         <SettingsIcon />
       </Button>
+
+      <div className={classes.homePageWidgetRegionContainer}>
+        <ButtonGroup color="primary">
+          {homePageWidgetRegion.map(diff => (
+            <Button
+              size="small"
+              key={diff.id}
+              onClick={() => {
+                dispatch(setHomePageSelectedWidgetRegion(diff));
+              }}
+              variant={diff.type === homePageSelectedWidgetRegion.type ? 'contained' : 'outlined'}>
+              {diff.label}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </div>
 
       <Slide direction="down" in={isHomePageDrawerOpen} mountOnEnter unmountOnExit>
         <Paper className={classes.drawerContainer} id="widget-drawer-container">
