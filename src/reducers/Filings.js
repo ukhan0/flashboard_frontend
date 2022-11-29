@@ -5,11 +5,11 @@ export const SET_COMPANY_PRICE_0VERLAY = 'FILLING/SET_COMPANY_PRICE_0VERLAY';
 export const SET_FILLINGS_SEARCH_TEXT = 'FILLING/SET_FILLINGS_SEARCH_TEXT';
 export const SET_IS_WORD_COUNT_CHART = 'FILLING/SET_IS_WORD_COUNT_CHART';
 export const CLEAR_FILINGS_STATES = 'FILLING/CLEAR_FILINGS_STATES';
-export const setCompanyFillingData = companyFillingData => ({
-  type: SET_COMPANY_FILLING_DATA,
-  companyFillingData
-});
 
+export const setCompanyFillingData = fillingsData => ({
+  type: SET_COMPANY_FILLING_DATA,
+  fillingsData
+});
 export const setCompanyFillingGraphData = fillingsGraphData => ({
   type: SET_COMPANY_FILLING_GRAPH_DATA,
   fillingsGraphData
@@ -30,7 +30,6 @@ export const setIsWordCountChart = isWordCountChart => ({
   type: SET_IS_WORD_COUNT_CHART,
   isWordCountChart
 });
-
 export const clearFilingsStates = () => ({
   type: CLEAR_FILINGS_STATES
 });
@@ -54,7 +53,7 @@ export default function reducer(
 ) {
   switch (action.type) {
     case SET_COMPANY_FILLING_DATA:
-      return { ...state, fillingsData: action.companyFillingData };
+      return { ...state, fillingsData: action.fillingsData };
     case SET_COMPANY_FILLING_REVENUE_DATA:
       return { ...state, filingsRevenueData: action.filingsRevenueData };
     case SET_COMPANY_FILLING_GRAPH_DATA:

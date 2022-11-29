@@ -12,7 +12,7 @@ import { sectionIds } from './FillingsHelper';
 import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setIsFromThemex } from '../../reducers/Topic';
-import { setIsFromfilling, setSelectedHeadingId } from '../../reducers/Sentiment';
+import { setSelectedHeadingId } from '../../reducers/Sentiment';
 Highcharts.setOptions({
   lang: {
     thousandsSep: ','
@@ -100,7 +100,6 @@ const FilingsDetailsGraph = props => {
                   // recentId = recentId.toString().replace('9000', '');
                   selectedItem.recentId = recentId;
                   dispatch(setSelectedWatchlist(selectedItem));
-                  dispatch(setIsFromfilling(true));
                   dispatch(setIsFromThemex(false));
                   dispatch(setSelectedHeadingId(sectionIds[this.series.name] || ''));
                   history.push('/sentiment');

@@ -3,17 +3,25 @@ import { BeatLoader } from 'react-spinners';
 import Card from '@material-ui/core/Card';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-const tableTypes = [
-  { name: 'Us', key: 'us', sort: 'ticker', container: 'heatmap-container1' },
-  { name: 'Canada', key: 'canada', sort: 'tsx', container: 'heatmap-container2' }
-];
+const tableTypes =
+  process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
+    ? [
+        { name: 'Canada', key: 'canada', sort: 'tsx', container: 'heatmap-container2' },
+        { name: 'U.S.', key: 'us', sort: 'ticker', container: 'heatmap-container1' }
+      ]
+    : [
+        { name: 'U.S.', key: 'us', sort: 'ticker', container: 'heatmap-container1' },
+        { name: 'Canada', key: 'canada', sort: 'tsx', container: 'heatmap-container2' }
+      ];
 
 export default function HomePageHeatMap() {
   const [isLoading, setIsLoading] = useState(true);
   const [tableType, setTableType] = useState(tableTypes[0]);
   const dispatch = useDispatch();
+  const { homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
+
   useEffect(() => {
     window.SMA.HeatmapWidget({
       container: tableType['container'],
@@ -34,6 +42,15 @@ export default function HomePageHeatMap() {
       }
     });
   }, [dispatch, tableType]);
+
+  useEffect(() => {
+    if (homePageSelectedWidgetRegion.type === 'Canada') {
+      setTableType(tableTypes.find(item => item.key === 'canada'));
+    } else {
+      setTableType(tableTypes.find(item => item.key === 'us'));
+    }
+  }, [homePageSelectedWidgetRegion]);
+
   return (
     <Card className="card-box mb-4" style={{ height: '100%' }}>
       {isLoading ? (

@@ -204,7 +204,7 @@ export default [
     ],
     globalFlag: 1,
     documentTypeGroup: 'AR',
-    documentTypeFillingGraph: ['ARS/A', 'ARS', 'AR'],
+    documentTypeFillingGraph: ['ARS/A', 'ARS', 'AR', 'Annual Report'],
     color: 'rgb(00,91,91)',
     domestic: 1,
     canadian: 1,

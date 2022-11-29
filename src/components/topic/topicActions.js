@@ -396,7 +396,7 @@ export const handleSaveSearch = () => {
         dispatch(setSnackBarActive(true, 'error', 'Something wroung'));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 };
@@ -423,7 +423,7 @@ export const updateSaveSearch = searchId => {
         dispatch(setSnackBarActive(true, 'error', 'Search Saved successfully'));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 };
