@@ -22,10 +22,12 @@ const Sentiment = () => {
   const [isComapnySedar, setIsCompanySedar] = useState(false);
 
   useEffect(() => {
-    if (selectedItem && selectedItem.source_name && selectedItem.source_name.toLowerCase() === "sedar") {
-      setIsCompanySedar(true);
-    } else {
+    const documentType = get(selectedItem, 'documentType', null);
+    const sourceName = get(selectedItem, 'source_name', null);
+    if ((sourceName === "EDGAR") || (!sourceName && (documentType === "10-K" || documentType === "10-Q"))) {
       setIsCompanySedar(false);
+    } else {
+      setIsCompanySedar(true);
     }
   }, [selectedItem]);
 
