@@ -29,8 +29,8 @@ function TickerLogo(props) {
   const tickerValue = props.value.includes('-G') ? '' : props.value;
 
   const url =
-    selectedType === 'global' && selectedFileType !== '10-K'
-      ? `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.to.png`
+    selectedType === 'global' && selectedFileType !== '10-K' || selectedFileType !== '10-Q'
+      ? `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.TO.png`
       : `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.png`;
   return (
     <Box className={classes.tickerLogo}>
