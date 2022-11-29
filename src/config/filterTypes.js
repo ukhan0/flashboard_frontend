@@ -58,13 +58,13 @@ export const sentimentVersions = [{ label: 'Show Original', key: 'original' }];
 export const homePageTypesSelection =
   process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
     ? [
-        { label: 'Canda', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
+        { label: 'Canada', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
         { label: 'U.S.', key: 'fillings_sec*', type: 'SEC', id: 2 },
         { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 }
       ]
     : [
         { label: 'U.S.', key: 'fillings_sec*', type: 'SEC', id: 2 },
-        { label: 'Canda', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
+        { label: 'Canada', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
         { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 }
       ];
 
