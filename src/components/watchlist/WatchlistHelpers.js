@@ -222,7 +222,7 @@ export const isItSocialCompany = flag => {
 
 export const isActive = (page, selectedItem) => {
   let disableButton = page.disabled;
-  if (page.label === 'Comparison' && !selectedItem.oldId) {
+  if (page.label === 'Comparison' && (!selectedItem.oldId || selectedItem.document_type === 'AR')) {
     disableButton = true;
   }
   if (page.label === 'Social Sentiment' && !isItSocialCompany(selectedItem.flag)) {

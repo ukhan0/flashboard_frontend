@@ -17,7 +17,6 @@ const WatchlistTopicSearch = () => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const [selectedTickerSymbol, setSelectedTickerSymbol] = useState(null);
   const { selectedFileType, completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
@@ -43,14 +42,11 @@ const WatchlistTopicSearch = () => {
     if (!text || text.length < 1) {
       return;
     }
-    setLoading(true);
     let filteredWatchlist = getSearchFilteredData(completeCompaniesData, text);
     if (filteredWatchlist.length < 1) {
       filteredWatchlist = getSearchFilteredData(completeCompaniesDataGlobal, text);
     }
     setAvailableSymbols(filteredWatchlist);
-
-    setLoading(false);
   }, 250);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
@@ -89,7 +85,6 @@ const WatchlistTopicSearch = () => {
   return (
     <FormControl className={classes.formControl}>
       <Autocomplete
-        loading={loading}
         style={{ backgroundColor: 'white', borderRadius: '12px' }}
         loadingText={'Loading...'}
         className={classes.searchField}
