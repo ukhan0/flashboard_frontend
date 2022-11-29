@@ -506,6 +506,21 @@ export const watchlistTableColDefs1 = [
     width: 150
   },
   {
+    headerName: 'Tweets',
+    headerTooltip: 'Tweets',
+    field: 'flag',
+    colId: 'tweetsFlag',
+    filter: false,
+    cellClass: ['align-left'],
+    cellRenderer: 'TweetIcon',
+    width: 36,
+    resizable: false,
+    suppressMenu: false,
+    menuTabs: ['generalMenuTab'],
+    pinned: 'left',
+    headerClass: ['actionColumnHeader']
+  },
+  {
     headerName: 'Country',
     headerTooltip: 'Country',
     field: 'countryName',

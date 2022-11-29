@@ -22,7 +22,8 @@ import {
   getColumnState,
   storeFilteringState,
   getFilteringState,
-  getFilterCountriesArray
+  getFilterCountriesArray,
+  isItSocialCompany
 } from './WatchlistHelpers';
 import { setIsFilterActive, setSelectedWatchlist } from '../../reducers/Watchlist';
 import {
@@ -31,6 +32,7 @@ import {
   watchlistTableColDefs1,
   watchlistTableSideBarConfiguration
 } from '../../config/columnDefinations';
+import { useHistory } from 'react-router-dom';
 
 const frameworkComponents = {
   WordStatusRenderer: WordStatus,
@@ -58,6 +60,7 @@ const filterColumnsFromBackend = ['country', 'document_type', 'source', 'industr
 
 const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetchTable2Data }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     selectedMetric,
     selectedType,
@@ -147,6 +150,12 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
       if (!isBigAgGrid(selectedFileType)) {
         if (rowId === 'actions') {
           handleWatchlistTickers(params.data.ticker, params.data.isTickerActive);
+          return;
+        }
+
+        if (rowId === 'tweetsFlag' && isItSocialCompany(params.data.flag)) {
+          dispatch(setSelectedWatchlist(params.data));
+          history.push('/socialSentiment');
           return;
         }
         let company = await getCompanyByIndex(params.data.ticker, completeCompaniesData, completeCompaniesDataGlobal);
