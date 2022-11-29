@@ -34,7 +34,6 @@ export const SET_SELECTED_INDUSTRIES = 'TOPIC/SET_SELECTED_INDUSTRIES';
 export const SET_SELECTED_WATCHLIST_COMPANY_NAMES = 'TOPIC/SET_SELECTED_WATCHLIST_COMPANY_NAMES';
 export const SET_SAVED_SEARCHES = 'TOPIC/SET_SAVED_SEARCHES';
 export const SET_SEARCH_LABEL = 'TOPIC/SET_SEARCHE_LABEL';
-export const SET_SNACKBAR_OBJ = 'TOPIC/SET_SNACKBAR_OBJ';
 export const SET_SELECTED_SECTION = 'TOPIC/SET_SELECTED_SECTION';
 export const SET_OPEN_TOPIC_SEARCH_DIALOG = 'TOPIC/SET_OPEN_TOPIC_SEARCH_DIALOG';
 export const SET_CURRENT_SEARCH_DETAIL = 'TOPIC/SET_CURRENT_SEARCH_DETAIL';
@@ -219,11 +218,6 @@ export const setSavedSearches = savedSearches => ({
 export const setSearchLabel = searchLabel => ({
   type: SET_SEARCH_LABEL,
   searchLabel
-});
-
-export const setSnackBarOBJ = (snackBarOBJ) => ({
-  type: SET_SNACKBAR_OBJ,
-  snackBarOBJ
 });
 
 export const setSelectedSection = selectedSection => ({
@@ -429,7 +423,6 @@ const getDefaultState = () => {
     showUpdateButton: false,
     selectedCompanyName: null,
     savedSearches: [],
-    snackBarOBJ: {},
     openTopicSearchDialog: false,
     currentSearchDetail: {},
     isCompanyClick: false,
@@ -552,13 +545,8 @@ export default function reducer(
       return { ...state, savedSearches: action.savedSearches };
     case SET_SEARCH_LABEL:
       return { ...state, searchLabel: action.searchLabel };
-    case SET_SNACKBAR_OBJ:
-      return { ...state, snackBarOBJ: action.snackBarOBJ };
     case SET_SELECTED_SECTION:
-      return {
-        ...state,
-        selectedSection: action.selectedSection
-      };
+      return { ...state, selectedSection: action.selectedSection };
     case SET_OPEN_TOPIC_SEARCH_DIALOG:
       return { ...state, openTopicSearchDialog: action.openTopicSearchDialog };
     case SET_CURRENT_SEARCH_DETAIL:
@@ -616,7 +604,6 @@ export default function reducer(
         selectedSector: null,
         selectedIndustries: []
       };
-
     case SET_SEARCH_ID:
       return { ...state, linkSearchId: action.linkSearchId };
     case SET_SEARCH_SUGGESTION_TYPE:

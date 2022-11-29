@@ -22,7 +22,6 @@ import {
   setSearchBackdropHighlights,
   setIsSearchLoading,
   setSavedSearches,
-  setSnackBarOBJ,
   setCurrentSearchtDetail,
   setSelectedCompanyName,
   setOpenTopicSearchDialog,
@@ -49,12 +48,11 @@ import { metricsSelection } from '../../config/filterTypes';
 import moment from 'moment';
 import { searchSuggestionTypeConfig } from '../../config/appConfig';
 import { setSnackBarObj } from '../../reducers/Alerts';
+const anchorOrigin = { vertical: 'top', horizontal: 'center' };
 
 export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = false, historyBy = 'month') => {
   return async (dispatch, getState) => {
     const {
-      // selectedDocumentTypes,
-      // selectedSection,
       simpleSearchTextArray,
       ignoreSearchTextArray,
       searchTextWithAnd,
@@ -147,7 +145,7 @@ export const performTopicSearchAggregate = (showBackdrop = false, freshSearch = 
           dispatch(setSearchResultHighlights([]));
           let errorMessage =
             'There are too many results for this search. Try refining your search with more specific keywords';
-          dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: errorMessage }));
+          dispatch(setSnackBarObj({ severity: 'error', message: errorMessage, anchorOrigin }));
         }
       }
 
@@ -391,9 +389,9 @@ export const handleSaveSearch = () => {
       const responsePayload = get(response, 'data', null);
       if (responsePayload) {
         dispatch(fetchTopicsList());
-        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'success', snackBarMessage: 'Search Saved successfully' }));
+        dispatch(setSnackBarObj({ severity: 'success', message: 'Search Saved successfully', anchorOrigin }));
       } else {
-        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Something wrong' }));
+        dispatch(setSnackBarObj({ severity: 'error', message: 'Something wrong', anchorOrigin }));
       }
     } catch (error) {
       console.log(error);
@@ -418,9 +416,9 @@ export const updateSaveSearch = searchId => {
       const isSuccess = get(response, 'data.data', null);
       if (isSuccess) {
         dispatch(fetchTopicsList());
-        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'success', snackBarMessage: 'Search updated successfully' }));
+        dispatch(setSnackBarObj({ severity: 'success', message: 'Search updated successfully', anchorOrigin }));
       } else {
-        dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Search Saved successfully' }));
+        dispatch(setSnackBarObj({ severity: 'error', message: 'Search Saved successfully', anchorOrigin }));
       }
     } catch (error) {
       console.log(error);
@@ -451,10 +449,10 @@ export const deleteSearch = searchId => {
     const response = await axios.delete(`${config.apiUrl}/api/search/delete_search/${searchId}/${user.id}`);
     const isDeleted = get(response, 'data.data.status', false);
     if (isDeleted) {
-      dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'success', snackBarMessage: 'Search Deleted successfully' }));
+      dispatch(setSnackBarObj({ severity: 'success', message: 'Search Deleted successfully', anchorOrigin }));
       dispatch(fetchTopicsList());
     } else {
-      dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Something wrong' }));
+      dispatch(setSnackBarObj({ severity: 'error', message: 'Something wrong', anchorOrigin }));
     }
   };
 };
@@ -661,7 +659,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
             dispatch(setSearchError(true));
             let errorMessage =
               'There are too many results for this search. Try refining your search with more specific keywords';
-            dispatch(setSnackBarOBJ(true, 'error', errorMessage));
+            dispatch(setSnackBarObj({ severity: 'error', message: errorMessage, anchorOrigin }));
           }
           return;
         }
@@ -720,7 +718,7 @@ export const performTopicTweetsSearchAggregate = (showBackdrop = false, freshSea
               'data.data.error.message',
               'There are too many results for this search. Try refining your search with more specific keywords.'
             );
-            dispatch(setSnackBarObj({ message: errorMessage, severity: 'error', autoHideDuration: null }));
+            dispatch(setSnackBarObj({ severity: 'error', message: errorMessage, anchorOrigin, autoHideDuration: null }));
             dispatch(setTwitterFetchData(true));
           }
           return;
