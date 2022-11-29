@@ -15,7 +15,6 @@ import { setSelectedCompanyName, setBackDropOnCompanyClick } from '../../reducer
 import { performTopicSearchHighlights } from './topicActions';
 import './TopicTableStyles.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex, setTopicSearchCompany, isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
@@ -125,7 +124,6 @@ export default function TopicCompantResultsTable() {
         companyId: params.data.companyId
       };
       dispatch(setSelectedWatchlist(data));
-      dispatch(setIsFromfilling(true));
       dispatch(setIsFromThemex(false));
     }
     dispatch(setSelectedCompanyName(params.data.key));

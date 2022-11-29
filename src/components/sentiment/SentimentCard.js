@@ -267,7 +267,6 @@ let cardArray = [
   }
 ];
 const SentimentCard = () => {
-  // const { cardGraphData } = useSelector(state => state.Sentiment);
   const classes = useStyles();
   return (
     <Grid container spacing={2}>
