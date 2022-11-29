@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty, get, forEach } from 'lodash';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community';
-// import countriesCode from '../../config/countriesCode';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import WatchlistService from './WatchlistService';
 import WordStatus from './WatchlistTableComponents/WordStatus';
@@ -13,10 +12,8 @@ import CountryCodeRenderer from './WatchlistTableComponents/CountryCodeRenderer'
 import TweetsIcon from './WatchlistTableComponents/tweet';
 import './watchlistTableStyles.css';
 import Action from './WatchlistActions/WatchlistActions';
-import { useLocation } from 'react-router-dom';
 import { saveComparisionSettings, getComparisionSettings } from '../comparision/ComparisionHelper';
 import {
-  checkIsFilterActive,
   getWatchlistType,
   isBigAgGrid,
   getWatchlistSettings,
@@ -24,10 +21,12 @@ import {
   storeColumnsState,
   getColumnState,
   storeFilteringState,
-  getFilteringState
+  getFilteringState,
+  getFilterCountriesArray
 } from './WatchlistHelpers';
 import { setIsFilterActive, setSelectedWatchlist } from '../../reducers/Watchlist';
 import {
+  watchlistTableDefaultColDef,
   watchlistTableColDefs,
   watchlistTableColDefs1,
   watchlistTableSideBarConfiguration
@@ -42,31 +41,6 @@ const frameworkComponents = {
   TweetIcon: TweetsIcon
 };
 
-const defaultColDef = {
-  sortable: true,
-  filter: true,
-  resizable: true,
-  floatingFilter: true,
-  suppressMenu: true,
-  filterParams: { newRowsAction: 'keep' },
-  headerClass: ['allColumnHeader'],
-  wrapText: true,
-  headerComponentParams: {
-    template:
-      '<div class="ag-cell-label-container" role="presentation">' +
-      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
-      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
-      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
-      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
-      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
-      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-      '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
-      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
-      '  </div>' +
-      '</div>'
-  }
-};
-
 const gridOptions = {
   headerHeight: 80
 };
@@ -79,7 +53,10 @@ const tableFooter = {
   textAlign: 'right',
   width: '100%'
 };
-const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) => {
+
+const filterColumnsFromBackend = ['country', 'document_type', 'source', 'industry', 'sector'];
+
+const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetchTable2Data }) => {
   const dispatch = useDispatch();
   const {
     selectedMetric,
@@ -91,9 +68,9 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
   const gridApi = useRef(null);
   const gridRef = useRef();
   const [isFilterData, setIsFilterData] = useState(false);
-  let getQueryParams = new URLSearchParams(useLocation().search);
   const [columnDefination, setColumnDefination] = useState([]);
   const [rowCount, setRowCount] = useState(0);
+  const [fetchFiltersFromApiFlag, setFetchFiltersFromApiFlag] = useState(false);
 
   useEffect(() => {
     isBigAgGrid(selectedFileType)
@@ -195,9 +172,34 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     }
   };
 
+  const filterColumnsFromBackendHandler = filteringModel => {
+    let filtersObjectForApiCall = {};
+    Object.keys(filteringModel).forEach(key => {
+      if (filterColumnsFromBackend.includes(key)) {
+        filtersObjectForApiCall[`filter_${key}`] = `*${filteringModel[key].filter}*`;
+      }
+    });
+    if (Object.keys(filtersObjectForApiCall).length) {
+      if (filteringModel.country) {
+        const countryies = getFilterCountriesArray(filteringModel.country.filter);
+        if (countryies) {
+          filtersObjectForApiCall['filter_country'] = countryies;
+        } else {
+          return;
+        }
+      }
+      setFetchFiltersFromApiFlag(true);
+      fetchTable2Data(filtersObjectForApiCall);
+    } else if (fetchFiltersFromApiFlag) {
+      setFetchFiltersFromApiFlag(false);
+      fetchTable2Data();
+    }
+  };
+
   const filterChangeHandler = params => {
+    const filteringModel = params.api.getFilterModel();
     if (params?.api?.rowModel?.rowsToDisplay) {
-      let data = params?.api?.rowModel?.rowsToDisplay;
+      let data = params.api.rowModel.rowsToDisplay;
       setRowCount(data.length);
       if (data.length < 1) {
         setIsFilterData(true);
@@ -209,23 +211,34 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         gridApi.current.hideOverlay();
       }
     }
-    const filteringModel = params.api.getFilterModel();
     const watchlistSetting = getWatchlistSettings();
-    let selectedType, selectedFileType, selectedUniverse, selectedMetric;
+    let type, fileType, universe, metric;
     if (watchlistSetting) {
-      selectedType = watchlistSetting.selectedType ? watchlistSetting.selectedType : 'domestic';
-      selectedFileType = watchlistSetting.selectedFileType ? watchlistSetting.selectedFileType : '10-K';
-      selectedUniverse = watchlistSetting.selectedUniverse ? watchlistSetting.selectedUniverse : 'watchlist';
-      selectedMetric = watchlistSetting.selectedMetric ? watchlistSetting.selectedMetric : 'totdoc';
+      type = watchlistSetting.selectedType ?? 'domestic';
+      fileType = watchlistSetting.selectedFileType ?? '10-K';
+      universe = watchlistSetting.selectedUniverse ?? 'all';
+      metric = watchlistSetting.selectedMetric ?? 'totdoc';
     } else {
-      selectedType = 'domestic';
-      selectedFileType = '10-K';
-      selectedUniverse = 'watchlist';
-      selectedMetric = 'totdoc';
+      type = 'domestic';
+      fileType = '10-K';
+      universe = 'watchlist';
+      metric = 'totdoc';
     }
-    const allSelectedFilters = { ...filteringModel, selectedType, selectedFileType, selectedUniverse, selectedMetric };
+    const allSelectedFilters = {
+      ...filteringModel,
+      selectedType: type,
+      selectedFileType: fileType,
+      selectedUniverse: universe,
+      selectedMetric: metric
+    };
+    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
+      // filter column from backend
+      filterColumnsFromBackendHandler(filteringModel);
+    }
     storeFilteringState(allSelectedFilters);
-    dispatch(setIsFilterActive(checkIsFilterActive()));
+    // dispatch(setIsFilterActive(params.api.isAnyFilterPresent()));
+    // dispatch(setIsFilterActive(params.api.isColumnFilterPresent()));
+    dispatch(setIsFilterActive(!isEmpty(filteringModel)));
   };
 
   const handleGridReady = params => {
@@ -259,14 +272,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
     if (filteringState && !isEmpty(filteringState)) {
       params.api.setFilterModel(filteringState);
     }
-    const tickerFilterInstance = gridApi.current.getFilterInstance('ticker');
-    if (getQueryParams.get('ticker')) {
-      tickerFilterInstance.setModel({
-        type: 'equals',
-        filter: getQueryParams.get('ticker')
-      });
-    }
-    gridApi.current.onFilterChanged();
     const columnsState = getColumnState(selectedFileType);
     if (columnsState && columnsState.length) {
       gridRef.current.columnApi.applyColumnState({
@@ -275,7 +280,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
       });
     }
   };
-
 
   useEffect(() => {
     if (!gridApi.current) {
@@ -303,6 +307,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
       storeColumnsState(selectedFileType, columnsState);
     }
   }, [selectedFileType]);
+
   return (
     <div className="ag-theme-alpine" style={{ height: '98%', width: '100%' }}>
       <AgGridReact
@@ -313,7 +318,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         rowData={tableData}
         quickFilterText={''}
         columnDefs={columnDefination}
-        defaultColDef={defaultColDef}
+        defaultColDef={watchlistTableDefaultColDef}
         sideBar={watchlistTableSideBarConfiguration}
         tooltipShowDelay={0}
         pagination={false}
@@ -328,7 +333,6 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers }) =>
         onSortChanged={storeChangedColumnsState}
         suppressScrollOnNewData={true}
         enableBrowserTooltips={true}
-        // context={countriesCode}
         overlayNoRowsTemplate={isFilterData ? 'No result for specified filters' : 'No Rows To Show'}
         onFilterChanged={filterChangeHandler}></AgGridReact>
       <div style={tableFooter}>Total Rows : {rowCount}</div>

@@ -6,7 +6,6 @@ import {
   setCompleteCompaniesData,
   setCompleteGlobalCompaniesData
 } from './../../reducers/Watchlist';
-import { renameDocumentTypes } from '../topic/topicHelpers';
 import { parseDateAndFormatMoment } from './WatchlistTableHelpers';
 import countriesCode from '../../config/countriesCode';
 
@@ -66,6 +65,7 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
   return async dispatch => {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
+      cancelGridApiCalls();
       gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_companies_data`, {
         params: {
@@ -82,10 +82,10 @@ export const getWatchlist = (selectedUniverse, selectedFileType, selectedType) =
       });
       rawData = get(response, 'data.data.content', []);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       rawData = null; // null will indicate, api call is cancelled or there is some error
     }
-    if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse)) {
+    if (isCanadaWatchlistRecent10K10Q(selectedType, selectedFileType, selectedUniverse) && rawData) {
       rawData = rawData.filter(item => item.co === 'CA');
     }
     return rawData;
@@ -124,7 +124,8 @@ export const getWatchlistTable2Data = (
   selectedFileTypes,
   selectedType,
   countryCode,
-  sourceName
+  sourceName,
+  filtersObject
 ) => {
   let rawData = [];
   let limit = 100;
@@ -134,9 +135,13 @@ export const getWatchlistTable2Data = (
   if (selectedUniverse === 'all') {
     limit = 1000;
   }
+  if (Object.keys(filtersObject).length) {
+    limit = selectedUniverse === 'recent' ? 50 : 100;
+  }
   const cancelToken = axios.CancelToken.source();
   return async dispatch => {
     try {
+      cancelGridApiCalls();
       gridCancelTokens.push(cancelToken);
       const response = await axios.get(`${config.apiUrl}/api/get_company_filing_listing`, {
         cancelToken: cancelToken.token,
@@ -148,7 +153,8 @@ export const getWatchlistTable2Data = (
           document_type: selectedFileTypes,
           selected_type: selectedType,
           ...(countryCode && { country_code: countryCode }),
-          ...(sourceName && { source_name: sourceName })
+          ...(sourceName && { source_name: sourceName }),
+          ...filtersObject
         }
       });
 
@@ -160,7 +166,7 @@ export const getWatchlistTable2Data = (
       return {
         ...d,
         companyName: get(d, 'company_name', null),
-        documentType: renameDocumentTypes(d.document_type),
+        documentType: d.document_type?.toLowerCase() === 'fmp-transcript' ? 'Earning Call' : d.document_type,
         sentiment: round(get(d, 'sentiment', null), 2) ?? 0,
         document_date: parseDateAndFormatMoment(d.document_date),
         wordCount: round(get(d, 'word_count', null), 2),

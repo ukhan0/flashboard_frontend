@@ -90,6 +90,7 @@ const WatchlistFilters = props => {
             <Button
               size="small"
               key={`t_${i}`}
+              title={type.tooltip}
               onClick={() => handleClickType(type.key)}
               variant={selectedType === type.key ? 'contained' : 'outlined'}>
               {type.label}

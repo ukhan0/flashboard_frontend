@@ -9,14 +9,14 @@ export const fileTypesSelectionGlobal = [
 export const typesSelection =
   process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
     ? [
-        { label: 'Canada', key: 'global' },
-        { label: 'U.S.', key: 'domestic' },
-        { label: 'Global', key: 'newGlobal' }
+        { label: 'Canada', key: 'global', tooltip: 'Companies Filed on SEDAR or Domicile in Canada.' },
+        { label: 'U.S.', key: 'domestic', tooltip: 'Companies Filed on SEC or Domicile in U.S.' },
+        { label: 'Global', key: 'newGlobal', tooltip: '' }
       ]
     : [
-        { label: 'U.S.', key: 'domestic' },
-        { label: 'Canada', key: 'global' },
-        { label: 'Global', key: 'newGlobal' }
+        { label: 'U.S.', key: 'domestic', tooltip: 'Companies Filed on SEC or Domicile in U.S.' },
+        { label: 'Canada', key: 'global', tooltip: 'Companies Filed on SEDAR or Domicile in Canada.' },
+        { label: 'Global', key: 'newGlobal', tooltip: '' }
       ];
 export const universeSelection = [
   { label: 'Watchlist', key: 'watchlist' },
