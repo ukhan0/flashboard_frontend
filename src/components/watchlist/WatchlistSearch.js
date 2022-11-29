@@ -109,7 +109,8 @@ const WatchlistTopicSearch = () => {
             fullWidth
             size="small"
             inputProps={{
-              ...params.inputProps
+              ...params.inputProps,
+              autoComplete: 'new-password'
             }}
           />
         )}
