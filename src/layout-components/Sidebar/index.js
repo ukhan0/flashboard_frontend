@@ -11,22 +11,21 @@ import { setIsFromSideBar } from '../../reducers/Topic';
 import { useDispatch, useSelector } from 'react-redux';
 import navItems from './navItems';
 import { hoverTime } from '../../config/appConfig';
-import {
-  setSidebarToggleMobile,
-  setSidebarHover
-} from '../../reducers/ThemeOptions';
+import { setSidebarToggleMobile, setSidebarHover } from '../../reducers/ThemeOptions';
 import './SidebarMenu.css';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const { sidebarFixed, sidebarToggle, sidebarHover, sidebarShadow, sidebarUserbox, sidebarToggleMobile } = useSelector(state => state.ThemeOptions);
+  const { sidebarFixed, sidebarToggle, sidebarHover, sidebarShadow, sidebarUserbox, sidebarToggleMobile } = useSelector(
+    state => state.ThemeOptions
+  );
   const { selectedItem } = useSelector(state => state.Watchlist);
 
   const toggleTimer = useRef(null);
   const toggleHoverOn = event => {
     let { currentTarget } = event;
     currentTarget.style.cursor = 'wait';
-    toggleTimer.current = setTimeout(function () {
+    toggleTimer.current = setTimeout(function() {
       dispatch(setSidebarHover(true));
       currentTarget.style.cursor = 'default';
     }, hoverTime);
