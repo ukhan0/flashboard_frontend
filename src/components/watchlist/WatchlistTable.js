@@ -153,10 +153,7 @@ const WatchlistTable = ({ tableData, onColumnClick, handleWatchlistTickers, fetc
           return;
         }
 
-        console.log('tweer', params.data);
         if (rowId === 'tweetsFlag' && isItSocialCompany(params.data.flag)) {
-          console.log('tweer', params.data);
-
           dispatch(setSelectedWatchlist(params.data));
           history.push('/socialSentiment');
           return;

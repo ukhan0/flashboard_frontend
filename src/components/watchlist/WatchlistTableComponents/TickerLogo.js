@@ -24,14 +24,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function TickerLogo(props) {
-  const { selectedType , selectedFileType } = useSelector(state => state.Watchlist);
-  console.log(selectedType, selectedFileType);
+  const { selectedType, selectedFileType } = useSelector(state => state.Watchlist);
   const classes = useStyles();
   const tickerValue = props.value.includes('-G') ? '' : props.value;
-  // https://widget.socialmarketanalytics.com/sma_earnings_watcher/assorted/UNMARKED/${props.value}.TO.png
+
   const url =
     selectedType === 'global' && selectedFileType !== '10-K'
-      ? `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.TO.png`
+      ? `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.to.png`
       : `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.png`;
   return (
     <Box className={classes.tickerLogo}>
