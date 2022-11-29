@@ -30,9 +30,14 @@ const useStyles = makeStyles(theme => ({
     width: '200px'
   },
   dateSelectionDisabled: {
-    backgroundColor: theme.palette.text.disabled,
+    color: theme.palette.action.disabled,
+    backgroundColor: theme.palette.action.disabledBackground,
     userSelect: 'none',
-    cursor: 'default'
+    cursor: 'default',
+    '& span': {
+      fontWeight: 'normal !important',
+      color: `${theme.palette.action.disabled} !important`
+    }
   },
   dateRangeSelector: {
     backgroundColor: 'white',

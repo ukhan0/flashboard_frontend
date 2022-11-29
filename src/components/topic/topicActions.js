@@ -396,7 +396,7 @@ export const handleSaveSearch = () => {
         dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Something wrong' }));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 };
@@ -423,7 +423,7 @@ export const updateSaveSearch = searchId => {
         dispatch(setSnackBarOBJ({ isSnackBarActive: true, snackBarSeverity: 'error', snackBarMessage: 'Search Saved successfully' }));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 };
