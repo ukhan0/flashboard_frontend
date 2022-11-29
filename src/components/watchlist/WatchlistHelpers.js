@@ -256,6 +256,25 @@ export const getCompanyByIndex = async (ticker, completeCompaniesData, completeC
   }
 };
 
+export const getCompanyByCompanyId = async (companyId, completeCompaniesData, completeCompaniesDataGlobal) => {
+  try {
+    let searchedData = null;
+    searchedData = completeCompaniesData.find(a => a.cu === companyId);
+    if (searchedData) {
+      return formatComapnyData(searchedData);
+    } else {
+      searchedData = completeCompaniesDataGlobal.find(a => a.cu === companyId);
+      if (searchedData) {
+        return formatComapnyData(searchedData);
+      } else {
+        return {};
+      }
+    }
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
 export const setTickerActiveStatus = async (ticker, status) => {
   try {
     await indexedDB()

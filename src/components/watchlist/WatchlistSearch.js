@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex, getCompanyByCompanyId } from '../watchlist/WatchlistHelpers';
 import { useHistory } from 'react-router-dom';
 
 const createOptionLabel = option => {
@@ -35,7 +35,7 @@ const WatchlistTopicSearch = () => {
             .toLowerCase()
             .includes(textToSearch)
       )
-      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+      .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', type: c.type, companyId: c.cu }));
   };
 
   const handleSearchTextChange = debounce(async text => {
@@ -50,23 +50,29 @@ const WatchlistTopicSearch = () => {
   }, 250);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
-    if (newSelectedSymbol && newSelectedSymbol.ticker) {
+    if (newSelectedSymbol) {
       setSelectedTickerSymbol(newSelectedSymbol);
-
-      let company = await getCompanyByIndex(
-        newSelectedSymbol.ticker,
-        completeCompaniesData,
-        completeCompaniesDataGlobal
-      );
-      company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
-      company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
-      company.documentType = selectedFileType;
-      dispatch(setSelectedWatchlist(company));
-      setAvailableSymbols([]);
-      setTimeout(() => {
-        setSelectedTickerSymbol(null);
-        history.push('/filings');
-      }, [100]);
+      let company = null;
+      if (newSelectedSymbol.companyId && newSelectedSymbol.companyId !== '0') {
+        company = await getCompanyByCompanyId(
+          newSelectedSymbol.companyId,
+          completeCompaniesData,
+          completeCompaniesDataGlobal
+        );
+      } else if (newSelectedSymbol.ticker) {
+        company = await getCompanyByIndex(newSelectedSymbol.ticker, completeCompaniesData, completeCompaniesDataGlobal);
+      }
+      if (company) {
+        company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
+        company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
+        company.documentType = selectedFileType;
+        dispatch(setSelectedWatchlist(company));
+        setAvailableSymbols([]);
+        setTimeout(() => {
+          setSelectedTickerSymbol(null);
+          history.push('/filings');
+        }, [100]);
+      }
     }
   };
 
@@ -76,7 +82,7 @@ const WatchlistTopicSearch = () => {
         .concat(completeCompaniesDataGlobal)
         .slice(0, 100)
         .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
-        .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+        .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', type: c.type, companyId: c.cu }));
 
       setAvailableSymbols(filteredWatchlist);
     }
@@ -103,8 +109,7 @@ const WatchlistTopicSearch = () => {
             fullWidth
             size="small"
             inputProps={{
-              ...params.inputProps,
-              autoComplete: 'new-password'
+              ...params.inputProps
             }}
           />
         )}
