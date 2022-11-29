@@ -16,8 +16,20 @@ import { visitOutlineObjTable, visitOutlineObj, removeHeadingTags } from './Sent
 import queryString from 'query-string';
 
 const Sentiment = () => {
-  const { selectedItem, completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
+  const selectedItem = useSelector(state => state.Watchlist.selectedItem);
+  const { completeCompaniesData, isCompleteCompaniesDataLoaded } = useSelector(state => state.Watchlist);
   const { data, sentimentRecentId } = useSelector(state => state.Sentiment);
+  const [isComapnySedar, setIsCompanySedar] = useState(false);
+
+  useEffect(() => {
+    const documentType = get(selectedItem, 'documentType', '');
+    const sourceName = get(selectedItem, 'source_name', '');
+    if (sourceName.toUpperCase() === "EDGAR" || documentType === "10-K" || documentType === "10-Q") {
+      setIsCompanySedar(false);
+    } else {
+      setIsCompanySedar(true);
+    }
+  }, [selectedItem]);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -153,6 +165,7 @@ const Sentiment = () => {
       contentData={contentData}
       tableData={tableData}
       onHandleHighlights={handleHighlights}
+      isComapnySedar={isComapnySedar}
     />
   );
 };

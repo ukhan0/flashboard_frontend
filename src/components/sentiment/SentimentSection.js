@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { BeatLoader } from 'react-spinners';
@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => ({
   lvl6: {
     fontSize: 22
   },
-
   lvl8: {
     fontSize: 20
   },
@@ -63,7 +62,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'white'
   }
 }));
-
 const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
   const classes = useStyles();
   let keywordsArray = {};
@@ -75,7 +73,6 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
   });
   let yellowTextCount = 0;
   const { data, isLoading, selectedHeadingId, sentiment, isHighLightedText } = useSelector(state => state.Sentiment);
-
   useEffect(() => {
     if (selectedHeadingId && data) {
       setTimeout(() => {
@@ -83,13 +80,11 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
       }, 2000);
     }
   }, [selectedHeadingId, dispatch, data]);
-
   useEffect(() => {
     if (selectedHeadingId) {
       onSelection(selectedHeadingId);
     }
   }, [selectedHeadingId, onSelection]);
-
   const rainbow = new Rainbow();
   rainbow.setSpectrum('#ff2a2a', '#ff2a2a', 'white', '#89ff89', '#89ff89');
   const parentClr = val => {
@@ -106,10 +101,8 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
     if (sentiment === 'hide') {
       return 'FFFFFF';
     }
-
     return clr;
   };
-
   const updateSentimentHighlightFunct = indexVal => {
     if (indexVal) {
       indexVal = indexVal.toLowerCase().replace(' ', '-');
@@ -146,16 +139,6 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
       return clr;
     }
   };
-  const isValidString = string => {
-    let ch = string.trim().charAt(0);       // take out first character of string
-    let isCharacter = ch.match(/[a-z]/i);   // checks if first character is alphabet
-    let isDigit = (ch >= '0' && ch <= '9'); // checks if first character is number
-    let result;
-    if (isCharacter) result = true;
-    else result = false;
-    if (result || isDigit) return false;    // returns false if first character is alphanumerical
-    else return true;
-  }
 
   let signatureIterator = 1;
   return (
@@ -188,162 +171,169 @@ const SentimentSection = ({ contentData, onHandleHighlights, onSelection }) => {
                           key={`2_${indexx}`}
                           style={{
                             backgroundColor: '#' + parentClr(0)
+                            // backgroundColor: '#' + parentClr(a.attributes ? (a.attributes.v ? a.attributes.v : 0) : 0)
                           }}>
                           {a.elements
                             ? Array.isArray(a.elements)
                               ? a.elements.map((c, i) => {
                                 return (
-                                  <>
-                                    <br />
-                                    <span key={`3_${i}`}>
-                                      {c.type === 'element' ? (
-                                        <span
-                                          key={`4_${i}`}
-                                          className={clsx(classes.content, classes.searchResultText)}
-                                          style={{
-                                            backgroundColor: '#' + childClr(c.attributes ? c.attributes.v : 0)
-                                          }}>
-                                          {c.elements
-                                            ?
-                                            c.elements.map((d, e) => {
-                                              const parentAttributes = d.attributes;
-                                              return (
-                                                <Fragment key={`8_${e}`}>
-                                                  {d.type === 'element' ? (
-                                                    <>
-                                                      {Array.isArray(d.elements)
-                                                        ? d.elements.map((g, k) => {
-                                                          if (g) {
-                                                            yellowTextCount = yellowTextCount + 1;
-                                                          }
-                                                          if (g.type === 'element') {
-                                                            if (
-                                                              g.attributes &&
-                                                              g.attributes.class === 'yellowColor'
-                                                            ) {
-                                                              d.attributes = g.attributes;
-                                                            } else {
-                                                              d.attributes = parentAttributes;
-                                                            }
-                                                            if (Array.isArray(g.elements)) {
-                                                              g = g.elements[0];
-                                                            } else {
-                                                              d.attributes = parentAttributes;
-                                                            }
+                                  <span key={`3_${i}`}>
+                                    {c.type === 'element' ? (
+                                      <span
+                                        key={`4_${i}`}
+                                        className={clsx(classes.content, classes.searchResultText)}
+                                        style={{
+                                          backgroundColor: '#' + childClr(c.attributes ? c.attributes.v : 0)
+                                        }}>
+                                        {c.elements
+                                          ? c.elements.map((d, e) => {
+                                            const parentAttributes = d.attributes;
+                                            return (
+                                              <React.Fragment key={`8_${e}`}>
+                                                {d.type === 'element' ? (
+                                                  <>
+                                                    {Array.isArray(d.elements)
+                                                      ? d.elements.map((g, k) => {
+                                                        if (g) {
+                                                          yellowTextCount = yellowTextCount + 1;
+                                                        }
+
+                                                        if (g.type === 'element') {
+                                                          if (
+                                                            g.attributes &&
+                                                            g.attributes.class === 'yellowColor'
+                                                          ) {
+                                                            d.attributes = g.attributes;
                                                           } else {
                                                             d.attributes = parentAttributes;
                                                           }
-                                                          return (
-                                                            <span
-                                                              id={updateSentimentHighlightFunct(
-                                                                d.attributes
-                                                                  ? d.attributes.class === 'yellowColor'
+                                                          if (Array.isArray(g.elements)) {
+                                                            g = g.elements[0];
+                                                          } else {
+                                                            d.attributes = parentAttributes;
+                                                          }
+                                                        } else {
+                                                          d.attributes = parentAttributes;
+                                                        }
+
+                                                        return (
+                                                          <span
+                                                            id={updateSentimentHighlightFunct(
+                                                              d.attributes
+                                                                ? d.attributes.class === 'yellowColor'
+                                                                  ? g.text
                                                                     ? g.text
-                                                                      ? g.text
-                                                                      : ''
                                                                     : ''
                                                                   : ''
-                                                              )}
-                                                              key={`4_${k}`}
-                                                              style={{
-                                                                backgroundColor: `${d.attributes
-                                                                  ? d.attributes.class === 'yellowColor'
-                                                                    ? 'orange'
-                                                                    : '#' +
-                                                                    childClr(
-                                                                      d.attributes ? d.attributes.v : 0
-                                                                    )
-                                                                  : '#' +
-                                                                  childClr(d.attributes ? d.attributes.v : 0)
-                                                                  }`,
-                                                                marginLeft: 0,
-                                                                borderRadius: `${d.attributes
-                                                                  ? d.attributes.class === 'yellowColor'
-                                                                    ? 4
-                                                                    : 0
-                                                                  : 0
-                                                                  }`,
-                                                                scrollMarginTop: '300px'
-                                                              }}>
-                                                              {g.text ? g.text : ''}
-                                                            </span>
-                                                          );
-                                                        })
-                                                        : null}
-                                                    </>
-                                                  ) : (
-                                                    <Fragment key={`5_${e}`}>
-                                                      {c.attributes ? (
-                                                        c.attributes.class === 'yellowColor' ? (
-                                                          <span
-                                                            id={
-                                                              d.text ? updateSentimentHighlightFunct(d.text) : null
-                                                            }
-                                                            key={`6_${e}`}
+                                                                : ''
+                                                            )}
+                                                            key={`4_${k}`}
                                                             style={{
-                                                              backgroundColor: 'orange',
-                                                              marginLeft: 3,
-                                                              borderRadius: 4,
+                                                              backgroundColor: `${d.attributes
+                                                                ? d.attributes.class === 'yellowColor'
+                                                                  ? 'orange'
+                                                                  : '#' +
+                                                                  childClr(
+                                                                    d.attributes ? d.attributes.v : 0
+                                                                  )
+                                                                : '#' +
+                                                                childClr(d.attributes ? d.attributes.v : 0)
+                                                                }`,
+
+                                                              marginLeft: 0,
+                                                              //borderRadius: 4,
+                                                              borderRadius: `${d.attributes
+                                                                ? d.attributes.class === 'yellowColor'
+                                                                  ? 4
+                                                                  : 0
+                                                                : 0
+                                                                }`,
                                                               scrollMarginTop: '300px'
                                                             }}>
-                                                            {d.text ? d.text : ''}
+                                                            {g.text ? g.text : g.name === 'br' ? <br /> : ''}
                                                           </span>
-                                                        ) : (
-                                                          (d.text) ? isValidString(d.text) ? (
-                                                            <>
-                                                              {d.text}
-                                                              <br />
-                                                            </>
-                                                          ) : `${d.text}` : null
-                                                        )
+                                                        );
+                                                      })
+                                                      : null}
+                                                    {d.name === 'br' ? (
+                                                      <>
+                                                        <br /> <br />{' '}
+                                                      </>
+                                                    ) : null}
+                                                    {/* </span> */}
+                                                  </>
+                                                ) : (
+                                                  <React.Fragment key={`5_${e}`}>
+                                                    {c.attributes ? (
+                                                      c.attributes.class === 'yellowColor' ? (
+                                                        <span
+                                                          id={
+                                                            d.text ? updateSentimentHighlightFunct(d.text) : null
+                                                          }
+                                                          key={`6_${e}`}
+                                                          style={{
+                                                            backgroundColor: 'orange',
+                                                            marginLeft: 3,
+                                                            //borderRadius: 4,
+                                                            borderRadius: 4,
+                                                            scrollMarginTop: '300px'
+                                                          }}>
+                                                          {d.text ? d.text : d.name === 'br' ? <br /> : ''}
+                                                        </span>
                                                       ) : (
                                                         d.text
-                                                      )}
-                                                    </Fragment>
-                                                  )}
-                                                </Fragment>
-                                              );
-                                            })
-                                            : null}
-                                        </span>
-                                      ) : (
-                                        c.text
-                                      )}
-                                    </span>
-                                  </>
+                                                      )
+                                                    ) : (
+                                                      d.text
+                                                    )}
+                                                  </React.Fragment>
+                                                )}
+                                              </React.Fragment>
+                                            );
+                                          })
+                                          : null}
+                                        <>
+                                          {c.name === 'br' ? (
+                                            <>
+                                              <br />
+                                            </>
+                                          ) : null}
+                                        </>
+                                      </span>
+                                    ) : (
+                                      c.text
+                                    )}
+                                  </span>
                                 );
                               })
                               : null
-                            : null}{''}
+                            : null}{' '}
                         </div>
                       );
                     })
                     : null}
                 </div>
               ) : (
-                <>
-                  <br />
-                  <p
-                    key={`11_${index}`}
-                    className={clsx(
-                      classes.upper,
-                      classes.searchResultTextHeading,
-                      classes.searchResultText,
-                      classes[`lvl${d.lvl}`],
-                      classes.lvl,
-                      selectedHeadingId === createHash(idVal) ? classes.highlightHeading : null
-                    )}
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        d.lvl === 4
-                          ? upperCase(d.prop)
-                          : d.prop
-                            .toLowerCase()
-                            .replace('data', '')
-                            .replace('ex.data', '')
-                            .replace('*.data', '')
-                    }}></p>
-                </>
+                <p
+                  key={`11_${index}`}
+                  className={clsx(
+                    classes.upper,
+                    classes.searchResultTextHeading,
+                    classes.searchResultText,
+                    classes[`lvl${d.lvl}`],
+                    classes.lvl,
+                    selectedHeadingId === createHash(idVal) ? classes.highlightHeading : null
+                  )}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      d.lvl === 4
+                        ? upperCase(d.prop)
+                        : d.prop
+                          .toLowerCase()
+                          .replace('data', '')
+                          .replace('ex.data', '')
+                          .replace('*.data', '')
+                  }}></p>
               )}
             </div>
           ) : null;
