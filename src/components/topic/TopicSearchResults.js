@@ -24,8 +24,6 @@ import {
 } from '../../reducers/Topic';
 import {
   setSelectedHeadingId,
-  setIsApiResponseReceived,
-  setIsFromfilling,
   setSentimentSearchIndex
 } from '../../reducers/Sentiment';
 import { createHash } from '../../utils/helpers';
@@ -188,13 +186,11 @@ const TopicSearchResults = () => {
   }, [selectedCompanyName, summaryByCompany]);
 
   const goToSentimentScreen = async (companyDocumentResultData, result, indexx) => {
-    dispatch(setIsFromfilling(false));
     const actualTitle = result.title.replace('sma_data_json.', '');
     const removel4 = actualTitle.replace('.l4', '');
     const replaceDots = removel4.replaceAll('.', 'id');
     dispatch(setSelectedHeadingId(createHash(`id${replaceDots}`)));
     dispatch(setIsFromSideBar(false));
-    dispatch(setIsApiResponseReceived(false));
     const fileId = get(companyDocumentResultData, 'summary_id', null);
     const companyId = get(companyDocumentResultData, 'company_id', null);
     const documentType = get(companyDocumentResultData, 'document_type', null);

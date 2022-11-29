@@ -10,7 +10,6 @@ export const setCompanyFillingData = fillingsData => ({
   type: SET_COMPANY_FILLING_DATA,
   fillingsData
 });
-
 export const setCompanyFillingGraphData = fillingsGraphData => ({
   type: SET_COMPANY_FILLING_GRAPH_DATA,
   fillingsGraphData
@@ -31,7 +30,6 @@ export const setIsWordCountChart = isWordCountChart => ({
   type: SET_IS_WORD_COUNT_CHART,
   isWordCountChart
 });
-
 export const clearFilingsStates = () => ({
   type: CLEAR_FILINGS_STATES
 });
