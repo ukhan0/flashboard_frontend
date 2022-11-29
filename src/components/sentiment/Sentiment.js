@@ -24,7 +24,7 @@ const Sentiment = () => {
   useEffect(() => {
     const documentType = get(selectedItem, 'documentType', null);
     const sourceName = get(selectedItem, 'source_name', null);
-    if ((sourceName === "EDGAR") || (!sourceName && (documentType === "10-K" || documentType === "10-Q"))) {
+    if (sourceName === "EDGAR" || documentType === "10-K" || documentType === "10-Q") {
       setIsCompanySedar(false);
     } else {
       setIsCompanySedar(true);
