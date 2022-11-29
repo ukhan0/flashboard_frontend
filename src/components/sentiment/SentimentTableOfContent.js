@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => {
 const SentimentTableOfContent = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { isLoading, isPin, canceHighlightsCall } = useSelector(state => state.Sentiment);
+  const { isLoading, isPin } = useSelector(state => state.Sentiment);
   const { selectedItem } = useSelector(state => state.Watchlist);
 
   const handlePin = () => {
@@ -88,9 +88,6 @@ const SentimentTableOfContent = props => {
   const handleCloseDrawer = () => {
     dispatch(setSentimentDrawerOpen(false));
     dispatch(setCurrentToc(false));
-    if (canceHighlightsCall) {
-      canceHighlightsCall.cancel();
-    }
   };
 
   let signatureIterator = 1;
@@ -137,12 +134,12 @@ const SentimentTableOfContent = props => {
                 ? d.lvl === 4
                   ? lowerCase(d.prop)
                   : lowerCase(
-                      d.prop
-                        .toLowerCase()
-                        .replace('data', '')
-                        .replace('ex.data', '')
-                        .replace('*.data', '')
-                    )
+                    d.prop
+                      .toLowerCase()
+                      .replace('data', '')
+                      .replace('ex.data', '')
+                      .replace('*.data', '')
+                  )
                 : '';
             if (idVal === 'signatures') {
               idVal = idVal + signatureIterator;
@@ -159,10 +156,10 @@ const SentimentTableOfContent = props => {
                 {d.lvl === 4
                   ? upperCase(d.prop)
                   : d.prop
-                      .toLowerCase()
-                      .replace('data', '')
-                      .replace('ex.data', '')
-                      .replace('*.data', '')}
+                    .toLowerCase()
+                    .replace('data', '')
+                    .replace('ex.data', '')
+                    .replace('*.data', '')}
               </div>
             ) : null;
           })

@@ -15,7 +15,6 @@ import { uniq } from 'lodash';
 import { performTopicTweetsSearchAggregate } from './topicActions';
 import { setSelectedCompanyName, setBackDropOnCompanyClick } from '../../reducers/Topic';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex, isDateSet } from '../../reducers/Topic';
 
 const useStyles = makeStyles(theme => ({
@@ -166,7 +165,6 @@ export default function TopicTweetsTable() {
         companyId: params.data.companyId
       };
       dispatch(setSelectedWatchlist(data));
-      dispatch(setIsFromfilling(true));
       dispatch(setIsFromThemex(false));
     }
     dispatch(setSelectedCompanyName(params.data.key));

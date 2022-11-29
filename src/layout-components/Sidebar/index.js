@@ -73,7 +73,6 @@ const Sidebar = () => {
           <PerfectScrollbar>
             {sidebarUserbox && selectedItem ? <SidebarUserbox /> : null}
             {sidebarMenuContent}
-            {/* {sidebarFooter && <SidebarFooter />} */}
           </PerfectScrollbar>
         </Drawer>
       </Hidden>
@@ -100,7 +99,6 @@ const Sidebar = () => {
               {sidebarUserbox && selectedItem ? <SidebarUserbox /> : null}
               <div style={{ marginTop: 10 }}></div>
               {sidebarMenuContent}
-              {/* {sidebarFooter && <SidebarFooter />} */}
             </PerfectScrollbar>
           </div>
         </Paper>

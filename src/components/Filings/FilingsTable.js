@@ -6,7 +6,6 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './FilingsResultsTableStyles.css';
 import { useHistory } from 'react-router-dom';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { setIsFromfilling } from '../../reducers/Sentiment';
 import { setIsFromThemex } from '../../reducers/Topic';
 import { storeColumnsState, getColumnState } from './FillingsHelper';
 import FillingsService from './FillingsService';
@@ -86,7 +85,6 @@ export default function FilingsResultsTable() {
       selectedItem.recentId = params.data.document_id;
       selectedItem.documentType = params.data.document_type;
       dispatch(setSelectedWatchlist(selectedItem));
-      dispatch(setIsFromfilling(true));
       dispatch(setIsFromThemex(false));
       history.push('/sentiment');
     }
