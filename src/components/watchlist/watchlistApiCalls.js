@@ -177,7 +177,8 @@ export const getWatchlistTable2Data = (
           ''
         ),
         sector: get(d, 'sector', null),
-        industry: get(d, 'industry', null)
+        industry: get(d, 'industry', null),
+        flag: d.source_social_id
       };
     });
 

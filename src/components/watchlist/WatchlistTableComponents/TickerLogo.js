@@ -2,6 +2,7 @@ import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   tickerLogo: {
@@ -23,15 +24,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function TickerLogo(props) {
+  const { selectedType , selectedFileType } = useSelector(state => state.Watchlist);
+  console.log(selectedType, selectedFileType);
   const classes = useStyles();
   const tickerValue = props.value.includes('-G') ? '' : props.value;
+  // https://widget.socialmarketanalytics.com/sma_earnings_watcher/assorted/UNMARKED/${props.value}.TO.png
+  const url =
+    selectedType === 'global' && selectedFileType !== '10-K'
+      ? `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.TO.png`
+      : `https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.png`;
   return (
     <Box className={classes.tickerLogo}>
-      <Avatar
-        alt="-"
-        src={`https://sma-assets.s3.us-east-2.amazonaws.com/logos/${props.value}.png`}
-        className={classes.logo}
-      />
+      <Avatar alt="-" src={url} className={classes.logo} />
       <Box variant="outlined" className={classes.tickerText}>
         {tickerValue}
       </Box>
