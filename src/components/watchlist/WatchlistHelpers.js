@@ -1,4 +1,4 @@
-import { forEach, get, isEmpty } from 'lodash';
+import { forEach, get } from 'lodash';
 import { getSectorIndustryById } from '../watchlist/WatchlistTableHelpers';
 import Localbase from 'localbase';
 import config from '../../config/config';
@@ -178,12 +178,6 @@ export const storeFilteringState = state => {
   localStorage.setItem(filteringModelKey, JSON.stringify(state));
 };
 
-export const checkIsFilterActive = () => {
-  const filteringState = getFilteringState();
-  let { selectedFileType, selectedMetric, selectedType, selectedUniverse, ...filteredOutState } = filteringState;
-  return !isEmpty(filteredOutState);
-};
-
 export const checkIsSortActive = () => {
   const sortingState = getColumnState();
   const activeSortColumns = sortingState.filter(state => state.sort);
@@ -210,7 +204,6 @@ export const getWatchlistType = () => {
 
 export const getWatchlistSettings = () => {
   const settings = JSON.parse(localStorage.getItem('watchlistSetting'));
-
   return settings;
 };
 export const saveWatchlistSettings = setting => {
@@ -280,4 +273,16 @@ export const isBigAgGrid = selectedFileType => {
     status = false;
   }
   return status;
+};
+
+export const getFilterCountriesArray = filterString => {
+  if (filterString) {
+    let countryiesArray = countriesCode
+      .filter(countryObj => countryObj.name.toLowerCase().includes(filterString.toLowerCase()))
+      .map(countryObj => countryObj.code)
+      .join(',');
+    return countryiesArray;
+  } else {
+    return '';
+  }
 };

@@ -12,6 +12,30 @@ import {
   getCellStyle
 } from '../components/watchlist/WatchlistTableHelpers';
 
+export const watchlistTableDefaultColDef = {
+  sortable: true,
+  filter: true,
+  resizable: true,
+  floatingFilter: true,
+  suppressMenu: true,
+  filterParams: { newRowsAction: 'keep' },
+  headerClass: ['allColumnHeader'],
+  wrapText: true,
+  headerComponentParams: {
+    template:
+      '<div class="ag-cell-label-container" role="presentation">' +
+      '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+      '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+      '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+      '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+      '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+      '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+      '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
+      '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+      '  </div>' +
+      '</div>'
+  }
+};
 export const watchlistTableColDefs = [
   {
     headerName: 'Actions',
@@ -79,7 +103,7 @@ export const watchlistTableColDefs = [
     headerName: 'Sector',
     headerTooltip: 'Sector',
     field: 'sector',
-    colId: 'sector',
+    colId: 'sector_',
     width: 142,
     filter: 'agTextColumnFilter',
     cellStyle: params => {
@@ -90,7 +114,7 @@ export const watchlistTableColDefs = [
     headerName: 'Industry',
     headerTooltip: 'Industry',
     field: 'industry',
-    colId: 'industry',
+    colId: 'industry_',
     width: 158,
     filter: 'agTextColumnFilter',
     cellStyle: params => {
@@ -478,7 +502,6 @@ export const watchlistTableColDefs1 = [
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 1,
     colId: 'companyName',
     width: 150
   },
@@ -486,12 +509,15 @@ export const watchlistTableColDefs1 = [
     headerName: 'Country',
     headerTooltip: 'Country',
     field: 'countryName',
-    colId: 'countryCode',
-    width: 158,
+    colId: 'country',
+    width: 150,
     filter: 'agTextColumnFilter',
     cellRenderer: 'CountryCodeRenderer',
     cellStyle: params => {
       return getCellStyle({});
+    },
+    floatingFilterComponentParams: {
+      suppressFilterButton: true
     }
   },
   {
@@ -500,11 +526,10 @@ export const watchlistTableColDefs1 = [
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 1,
     colId: 'agrregate_sentiment',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    width: 100,
+    width: 150,
     sortingOrder: ['desc', 'asc']
   },
   {
@@ -514,11 +539,10 @@ export const watchlistTableColDefs1 = [
     editable: false,
     sortable: true,
     sortingOrder: ['desc', 'asc'],
-    flex: 1,
     colId: 'word_count',
     type: 'numericColumn',
     filter: 'agNumberColumnFilter',
-    width: 100
+    width: 150
   },
   {
     headerName: 'Document Date',
@@ -528,7 +552,7 @@ export const watchlistTableColDefs1 = [
     sortable: true,
     filter: 'agDateColumnFilter',
     cellClass: ['center-align-text'],
-    width: 120,
+    width: 150,
     sortingOrder: ['desc', 'asc']
   },
   {
@@ -537,9 +561,11 @@ export const watchlistTableColDefs1 = [
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 1,
     colId: 'document_type',
-    width: 100
+    width: 150,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true
+    }
   },
   {
     headerName: 'Sector',
@@ -548,9 +574,11 @@ export const watchlistTableColDefs1 = [
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 1,
-    colId: 'gics_sector',
-    width: 150
+    colId: 'sector',
+    width: 150,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true
+    }
   },
   {
     headerName: 'Industry',
@@ -559,9 +587,11 @@ export const watchlistTableColDefs1 = [
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 1,
-    colId: 'gics_industry',
-    width: 150
+    colId: 'industry',
+    width: 150,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true
+    }
   },
   {
     headerName: 'Source',
@@ -570,9 +600,11 @@ export const watchlistTableColDefs1 = [
     menuTabs: false,
     editable: false,
     sortable: true,
-    flex: 1,
-    colId: 'source_name',
-    width: 150
+    colId: 'source',
+    width: 150,
+    floatingFilterComponentParams: {
+      suppressFilterButton: true
+    }
   }
 ];
 
