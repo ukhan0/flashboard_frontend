@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import useStyles from './watchlistStyles';
 import { debounce, get } from 'lodash';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
-import { getCompanyByIndex } from '../watchlist/WatchlistHelpers';
+import { getCompanyByIndex, getCompanyByCompanyId } from '../watchlist/WatchlistHelpers';
 import { useHistory } from 'react-router-dom';
 
 const createOptionLabel = option => {
@@ -17,7 +17,6 @@ const WatchlistTopicSearch = () => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [availableSymbols, setAvailableSymbols] = useState([]);
   const [selectedTickerSymbol, setSelectedTickerSymbol] = useState(null);
   const { selectedFileType, completeCompaniesData, completeCompaniesDataGlobal } = useSelector(
@@ -36,41 +35,44 @@ const WatchlistTopicSearch = () => {
             .toLowerCase()
             .includes(textToSearch)
       )
-      .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+      .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', type: c.type, companyId: c.cu }));
   };
 
   const handleSearchTextChange = debounce(async text => {
     if (!text || text.length < 1) {
       return;
     }
-    setLoading(true);
     let filteredWatchlist = getSearchFilteredData(completeCompaniesData, text);
     if (filteredWatchlist.length < 1) {
       filteredWatchlist = getSearchFilteredData(completeCompaniesDataGlobal, text);
     }
     setAvailableSymbols(filteredWatchlist);
-
-    setLoading(false);
   }, 250);
 
   const selectionChanged = async (e, newSelectedSymbol) => {
-    if (newSelectedSymbol && newSelectedSymbol.ticker) {
+    if (newSelectedSymbol) {
       setSelectedTickerSymbol(newSelectedSymbol);
-
-      let company = await getCompanyByIndex(
-        newSelectedSymbol.ticker,
-        completeCompaniesData,
-        completeCompaniesDataGlobal
-      );
-      company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
-      company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
-      company.documentType = selectedFileType;
-      dispatch(setSelectedWatchlist(company));
-      setAvailableSymbols([]);
-      setTimeout(() => {
-        setSelectedTickerSymbol(null);
-        history.push('/filings');
-      }, [100]);
+      let company = null;
+      if (newSelectedSymbol.companyId && newSelectedSymbol.companyId !== '0') {
+        company = await getCompanyByCompanyId(
+          newSelectedSymbol.companyId,
+          completeCompaniesData,
+          completeCompaniesDataGlobal
+        );
+      } else if (newSelectedSymbol.ticker) {
+        company = await getCompanyByIndex(newSelectedSymbol.ticker, completeCompaniesData, completeCompaniesDataGlobal);
+      }
+      if (company) {
+        company.recentId = selectedFileType === '10-K' ? company.recentId10k : company.recentId10q;
+        company.oldId = selectedFileType === '10-K' ? company.oldId10k : company.oldId10q;
+        company.documentType = selectedFileType;
+        dispatch(setSelectedWatchlist(company));
+        setAvailableSymbols([]);
+        setTimeout(() => {
+          setSelectedTickerSymbol(null);
+          history.push('/filings');
+        }, [100]);
+      }
     }
   };
 
@@ -80,7 +82,7 @@ const WatchlistTopicSearch = () => {
         .concat(completeCompaniesDataGlobal)
         .slice(0, 100)
         .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
-        .map(c => ({ ticker: c.ticker, name: c.b ? c.b : '', code: c.co ? c.co : '', type: c.type }));
+        .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', type: c.type, companyId: c.cu }));
 
       setAvailableSymbols(filteredWatchlist);
     }
@@ -89,7 +91,6 @@ const WatchlistTopicSearch = () => {
   return (
     <FormControl className={classes.formControl}>
       <Autocomplete
-        loading={loading}
         style={{ backgroundColor: 'white', borderRadius: '12px' }}
         loadingText={'Loading...'}
         className={classes.searchField}

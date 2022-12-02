@@ -9,14 +9,14 @@ export const fileTypesSelectionGlobal = [
 export const typesSelection =
   process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
     ? [
-        { label: 'Canada', key: 'global' },
-        { label: 'U.S.', key: 'domestic' },
-        { label: 'Global', key: 'newGlobal' }
+        { label: 'Canada', key: 'global', tooltip: 'Companies Filed on SEDAR or Domicile in Canada.' },
+        { label: 'U.S.', key: 'domestic', tooltip: 'Companies Filed on SEC or Domicile in U.S.' },
+        { label: 'Global', key: 'newGlobal', tooltip: '' }
       ]
     : [
-        { label: 'U.S.', key: 'domestic' },
-        { label: 'Canada', key: 'global' },
-        { label: 'Global', key: 'newGlobal' }
+        { label: 'U.S.', key: 'domestic', tooltip: 'Companies Filed on SEC or Domicile in U.S.' },
+        { label: 'Canada', key: 'global', tooltip: 'Companies Filed on SEDAR or Domicile in Canada.' },
+        { label: 'Global', key: 'newGlobal', tooltip: '' }
       ];
 export const universeSelection = [
   { label: 'Watchlist', key: 'watchlist' },
@@ -58,13 +58,13 @@ export const sentimentVersions = [{ label: 'Show Original', key: 'original' }];
 export const homePageTypesSelection =
   process.env?.REACT_APP_DOMAIN_NAME === 'TMX'
     ? [
-        { label: 'Canda', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
+        { label: 'Canada', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
         { label: 'U.S.', key: 'fillings_sec*', type: 'SEC', id: 2 },
         { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 }
       ]
     : [
         { label: 'U.S.', key: 'fillings_sec*', type: 'SEC', id: 2 },
-        { label: 'Canda', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
+        { label: 'Canada', key: 'fillings_sedar*', type: 'SEDAR', id: 3 },
         { label: 'Watchlist', key: 'fillings_*', type: 'Watchlist', id: 1 }
       ];
 

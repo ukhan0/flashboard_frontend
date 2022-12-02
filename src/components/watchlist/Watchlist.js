@@ -36,8 +36,7 @@ import {
   getWatchlist,
   getWatchlistTable2Data,
   getWatchlistFileTypeEmailAlertStatus,
-  syncCompleteDataOnPage,
-  cancelGridApiCalls
+  syncCompleteDataOnPage
 } from './watchlistApiCalls';
 import { useHistory } from 'react-router-dom';
 import { setIsFromThemex } from '../../reducers/Topic';
@@ -149,53 +148,63 @@ const Watchlist = () => {
     getSavedFilters();
   }, [getSavedFilters]);
 
-  const getWatchlistTable2Dataa = useCallback(async () => {
-    if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
-      try {
-        let fileTypes = [];
-        if (selectedType === 'domestic') {
-          fileTypes = FileTypes.usFileTypes.find(
-            e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+  const getWatchlistTable2Dataa = useCallback(
+    async (filtersObject = {}) => {
+      if (selectedFileType !== '10-K' && selectedFileType !== '10-Q') {
+        try {
+          let fileTypes = [];
+          if (selectedType === 'domestic') {
+            fileTypes = FileTypes.usFileTypes.find(
+              e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+            );
+          } else if (selectedType === 'global') {
+            fileTypes = FileTypes.canadaFileTypes.find(
+              e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+            );
+          } else if (selectedType === 'newGlobal') {
+            fileTypes = FileTypes.globalFileTypes.find(
+              e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
+            );
+          }
+          let index = 'fillings_*';
+          if (selectedFileType === 'all') {
+            index = fileTypes.index;
+          }
+          const countryCode = get(fileTypes, 'countryCode', null);
+          const sourceName = get(fileTypes, 'sourceName', null);
+          fileTypes = get(fileTypes, 'value', []).map(e => e.value);
+          setLoading(prev => prev + 1);
+          let data = await dispatch(
+            getWatchlistTable2Data(
+              index,
+              selectedUniverse,
+              fileTypes.join(','),
+              selectedType,
+              countryCode,
+              sourceName,
+              filtersObject
+            )
           );
-        } else if (selectedType === 'global') {
-          fileTypes = FileTypes.canadaFileTypes.find(
-            e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-          );
-        } else if (selectedType === 'newGlobal') {
-          fileTypes = FileTypes.globalFileTypes.find(
-            e => e.documentTypeGroup.toLocaleLowerCase() === selectedFileType.toLocaleLowerCase()
-          );
+          setGridData2(data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(prev => prev - 1);
         }
-        let index = 'fillings_*';
-        if (selectedFileType === 'all') {
-          index = fileTypes.index;
-        }
-        const countryCode = get(fileTypes, 'countryCode', null);
-        const sourceName = get(fileTypes, 'sourceName', null);
-        fileTypes = get(fileTypes, 'value', []).map(e => e.value);
-        setLoading(prev => prev + 1);
-        let data = await dispatch(
-          getWatchlistTable2Data(index, selectedUniverse, fileTypes.join(','), selectedType, countryCode, sourceName)
-        );
-        setGridData2(data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(prev => prev - 1);
       }
-    }
-  }, [dispatch, selectedUniverse, selectedFileType, selectedType]);
+    },
+    [dispatch, selectedUniverse, selectedFileType, selectedType]
+  );
 
   useEffect(() => {
     getWatchlistTable2Dataa();
     return () => {
-      cancelGridApiCalls();
       setGridData2([]);
     };
   }, [getWatchlistTable2Dataa]);
 
   const fetchData = useCallback(async () => {
-    if ((selectedFileType === '10-Q' || selectedFileType === '10-K') && selectedUniverse !== 'all') {
+    if ((selectedFileType === '10-K' || selectedFileType === '10-Q') && selectedUniverse !== 'all') {
       try {
         setLoading(prev => prev + 1);
         let rawData = await dispatch(getWatchlist(selectedUniverse, selectedFileType, selectedType));
@@ -217,7 +226,6 @@ const Watchlist = () => {
   useEffect(() => {
     fetchData();
     return () => {
-      cancelGridApiCalls();
       setWatchlistData([]);
     };
   }, [fetchData]);
@@ -622,6 +630,7 @@ const Watchlist = () => {
         <span style={filterLabel ? screenTitle : { display: 'none' }}>{filterLabel}</span>
         <div className={classes.watchlistTableContainer} style={{ display: 'flex', height: window.innerHeight - 160 }}>
           <WatchlistTable
+            fetchTable2Data={getWatchlistTable2Dataa}
             tableData={isBigAgGrid(selectedFileType) ? gridData : gridData2}
             onColumnClick={onColumnClick}
             handleWatchlistTickers={handleWatchlistTickers}

@@ -15,7 +15,6 @@ import useStyles from './WatchlistTopicStyles';
 import { setWatchlistSelectedSymbols } from '../../../reducers/Watchlist';
 
 const WatchlistTopicDialog = ({ error, onClose, onUpload, open }) => {
-  // const [errMsg, setErrMsg] = useState('');
   const disptach = useDispatch();
   const { selectedTab, selectedSymbols } = useSelector(state => state.Watchlist);
 

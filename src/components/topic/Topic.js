@@ -7,11 +7,9 @@ import TopicSearchResults from './TopicSearchResults';
 import TopicHistoryChart from './TopicHistoryChart';
 import { useSelector, useDispatch } from 'react-redux';
 import topicStyles from './topicStyles';
-import TopicSnackbar from './TopicSnackbar';
 import TopicCurrentSearchDetail from './TopicCurrentSearchDetail';
 import {
   setIsTopicDeleteErr,
-  setSnackBarActive,
   setTopicHandleSearchCombineReducer,
   setSearchError
 } from '../../reducers/Topic';
@@ -30,9 +28,6 @@ const Topic = () => {
   const {
     isTopicDeleteError,
     cancelTokenSourceHighlights,
-    isSnackBarActive,
-    snackBarMessage,
-    snackBarSeverity,
     openTopicSearchDialog,
     showUpdateButton,
     searchIndex,
@@ -57,9 +52,6 @@ const Topic = () => {
       dispatch(setSearchError(false));
     };
   }, [dispatch]);
-  const handleCloseSnackBar = () => {
-    dispatch(setSnackBarActive(false));
-  };
 
   return (
     <div className={classes.root}>
@@ -132,14 +124,6 @@ const Topic = () => {
           </Grid>
         ) : null}
       </Grid>
-      <TopicSnackbar
-        open={isSnackBarActive}
-        onClose={() => {
-          handleCloseSnackBar();
-        }}
-        message={snackBarMessage}
-        severity={snackBarSeverity}
-      />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={isTopicDeleteError}

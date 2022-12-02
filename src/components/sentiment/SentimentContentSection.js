@@ -5,6 +5,7 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import SentimentSection from './SentimentSection';
+import GlobalSentimentSection from './GlobalSentimentSection';
 import SentimentDrawer from './SentimentDrawer';
 import { useSelector, useDispatch } from 'react-redux';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -43,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsData, tableData }) => {
+const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsData, tableData, isComapnySedar }) => {
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { searchIndex, isFromThemex } = useSelector(state => state.Topic);
   const { isPin, currentToc, data } = useSelector(state => state.Sentiment);
@@ -111,11 +112,19 @@ const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsDa
               {hideCards === 'true' &&
                 (searchIndex['value'] === 'filling_int_sentiment4' && isFromThemex ? null : <SentimentCard />)}
 
-              <SentimentSection
-                contentData={contentData}
-                onHandleHighlights={onHandleHighlights}
-                onSelection={handleSelection}
-              />
+              {isComapnySedar ?
+                <GlobalSentimentSection
+                  contentData={contentData}
+                  onHandleHighlights={onHandleHighlights}
+                  onSelection={handleSelection}
+                />
+                :
+                <SentimentSection
+                  contentData={contentData}
+                  onHandleHighlights={onHandleHighlights}
+                  onSelection={handleSelection}
+                />
+              }
             </Grid>
             <Grid item xs={4}>
               <div className={classes.tableOfContent}>
@@ -152,11 +161,19 @@ const SentimentContentSection = ({ contentData, onHandleHighlights, highlightsDa
               Table of contents
             </Button>
           </div>
-          <SentimentSection
-            contentData={contentData}
-            onHandleHighlights={onHandleHighlights}
-            onSelection={handleSelection}
-          />
+          {isComapnySedar ?
+            <GlobalSentimentSection
+              contentData={contentData}
+              onHandleHighlights={onHandleHighlights}
+              onSelection={handleSelection}
+            />
+            :
+            <SentimentSection
+              contentData={contentData}
+              onHandleHighlights={onHandleHighlights}
+              onSelection={handleSelection}
+            />
+          }
           <SentimentDrawer
             highlightsData={highlightsData}
             tableData={tableData}
