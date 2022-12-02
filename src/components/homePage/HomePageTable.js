@@ -14,7 +14,7 @@ import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHomePageSelectedItem, setHomePageLoader } from '../../reducers/HomePage';
+import { setHomePageLoader, hideHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -101,9 +101,7 @@ const homePageSelectedIndexFromConfig = homePageTypesSelection.find(item => item
 export default function HomePageTable() {
   const classes = useStyles();
   const [recentCompaniesData, setRecentCompaniesData] = useState([]);
-  const { globalWatchlist, domesticWatchlist, homePageSelectedWidgetRegion, isLoading } = useSelector(
-    state => state.HomePage
-  );
+  const { globalWatchlist, domesticWatchlist, homePageSelectedWidgetRegion } = useSelector(state => state.HomePage);
   const { completeCompaniesData, completeCompaniesDataGlobal } = useSelector(state => state.Watchlist);
   const [cancelToken, setCancelToken] = useState(null);
   const [rowsOfRecentDocumentsTable, setRowsOfRecentDocumentsTable] = useState(0);
@@ -219,7 +217,6 @@ export default function HomePageTable() {
     }
   };
 
-  console.log('isLoading', isLoading);
   const getRecentCompaniesData = React.useCallback(async () => {
     dispatch(setHomePageLoader());
     const cancelToken = axios.CancelToken.source();

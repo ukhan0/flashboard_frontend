@@ -34,13 +34,11 @@ const getDefaultState = () => {
         : { id: 2, label: 'U.S.', type: 'US' }
   };
 };
-export const setHomePageLoader = isLoading => ({
-  type: SET_HOMEPAGE_LOADER,
-  isLoading
+export const setHomePageLoader = () => ({
+  type: SET_HOMEPAGE_LOADER
 });
-export const hideHomePageLoader = isLoading => ({
-  type: HIDE_HOMEPAGE_LOADER,
-  isLoading
+export const hideHomePageLoader = () => ({
+  type: HIDE_HOMEPAGE_LOADER
 });
 
 export default function reducer(
