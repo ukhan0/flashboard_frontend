@@ -18,7 +18,6 @@ export const setHomePageSelectedWidgetRegion = selectedWidgetRegion => ({
 });
 const getDefaultState = () => {
   return {
-    homePageSelectedItem: {},
     isLoading: 0,
     domesticWatchlist: [],
     globalWatchlist: [],
