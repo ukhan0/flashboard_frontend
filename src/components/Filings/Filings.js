@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const Filings = () => {
   const dispatch = useDispatch();
-  const { fillingsGraphData, priceOverlay } = useSelector(state => state.Filings);
+  const { fillingsGraphData } = useSelector(state => state.Filings);
   const { selectedItem } = useSelector(state => state.Watchlist);
   const { sidebarToggle } = useSelector(state => state.ThemeOptions);
   const classes = useStyles();
@@ -59,11 +59,7 @@ const Filings = () => {
         </div>
       )}
       <div className={classes.companyTimelineChart}>
-        {
-          !!priceOverlay.length ?
-            <FillingCompanyStockChart />
-            : null
-        }
+        <FillingCompanyStockChart />
       </div>
       <div>{fillingsGraphData.length > 0 ? <FilingsCards /> : null}</div>
       <div className={classes.filingsDetailsGraph}>
