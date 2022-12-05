@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { setHomePageWatchlistDomestic, setHomePageWatchlistGlobal, setHomePageLoader } from '../../reducers/HomePage';
+import {
+  setHomePageWatchlistDomestic,
+  setHomePageWatchlistGlobal,
+  setHomePageLoader,
+  hideHomePageLoader
+} from '../../reducers/HomePage';
 import { get } from 'lodash';
 import config from '../../config/config';
 
@@ -7,7 +12,7 @@ const getUserWatchlists = selectedType => {
   return async dispatch => {
     try {
       let user = JSON.parse(localStorage.getItem('user'));
-      dispatch(setHomePageLoader(true));
+      dispatch(setHomePageLoader());
       const response = await axios.get(
         `${config.apiUrl}/api/get_companies_data?auth_token=${user.authentication_token}&user_id=${user.id}&subject=watchlist&selected_type=${selectedType}`
       );
@@ -18,7 +23,6 @@ const getUserWatchlists = selectedType => {
       } else {
         dispatch(setHomePageWatchlistDomestic(data));
       }
-      dispatch(setHomePageLoader(false));
     } catch (error) {
       console.log(error);
       console.error('Internal server error:', error);
@@ -27,7 +31,8 @@ const getUserWatchlists = selectedType => {
       } else {
         dispatch(setHomePageWatchlistDomestic([]));
       }
-      dispatch(setHomePageLoader(false));
+    } finally {
+      dispatch(hideHomePageLoader());
     }
   };
 };

@@ -1,13 +1,9 @@
-export const SET_HOMEPAGE_SEARCH_INDEX = 'HOMEPAGE/SET_HOMEPAGE_SEARCH_INDEX';
 export const SET_HOMEPAGE_LOADER = 'HOMEPAGE/SET_HOMEPAGE_LOADER';
+export const HIDE_HOMEPAGE_LOADER = 'HOMEPAGE/HIDE_HOMEPAGE_LOADER';
 export const SET_HOMEPAGE_WATCHLIST_DOMESTIC = 'HOMEPAGE/SET_HOMEPAGE_DOMESTIC';
 export const SET_HOMEPAGE_WATCHLIST_GLOBAL = 'HOMEPAGE/SET_HOMEPAGE_GLOBAL';
 export const SET_HOMEPAGE_SELECTED_WIDGET_REGION = 'HOMEPAGE/SET_HOMEPAGE_SELECTED_WIDGET_REGION';
 
-export const setHomePageSearchIndex = homePageSelectedSearchIndex => ({
-  type: SET_HOMEPAGE_SEARCH_INDEX,
-  homePageSelectedSearchIndex
-});
 export const setHomePageWatchlistDomestic = domesticWatchlist => ({
   type: SET_HOMEPAGE_WATCHLIST_DOMESTIC,
   domesticWatchlist
@@ -22,8 +18,7 @@ export const setHomePageSelectedWidgetRegion = selectedWidgetRegion => ({
 });
 const getDefaultState = () => {
   return {
-    isLoading: false,
-    homePageSelectedSearchIndex: { label: 'SEDAR', key: 'fillings_sedar*', type: 'SEDAR' },
+    isLoading: 0,
     domesticWatchlist: [],
     globalWatchlist: [],
     homePageSelectedWidgetRegion:
@@ -32,9 +27,11 @@ const getDefaultState = () => {
         : { id: 2, label: 'U.S.', type: 'US' }
   };
 };
-export const setHomePageLoader = isLoading => ({
-  type: SET_HOMEPAGE_LOADER,
-  isLoading
+export const setHomePageLoader = () => ({
+  type: SET_HOMEPAGE_LOADER
+});
+export const hideHomePageLoader = () => ({
+  type: HIDE_HOMEPAGE_LOADER
 });
 
 export default function reducer(
@@ -44,10 +41,10 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case SET_HOMEPAGE_SEARCH_INDEX:
-      return { ...state, homePageSelectedSearchIndex: action.homePageSelectedSearchIndex };
     case SET_HOMEPAGE_LOADER:
-      return { ...state, isLoading: action.isLoading };
+      return { ...state, isLoading: state.isLoading + 1 };
+    case HIDE_HOMEPAGE_LOADER:
+      return { ...state, isLoading: state.isLoading - 1 };
     case SET_HOMEPAGE_WATCHLIST_DOMESTIC:
       return { ...state, domesticWatchlist: action.domesticWatchlist };
     case SET_HOMEPAGE_WATCHLIST_GLOBAL:

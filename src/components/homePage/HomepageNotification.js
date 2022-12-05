@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { setHomePageLoader } from '../../reducers/HomePage';
+import { hideHomePageLoader, setHomePageLoader } from '../../reducers/HomePage';
 import axios from 'axios';
 import { forEach, get, reverse } from 'lodash';
 import config from '../../config/config';
@@ -34,7 +34,7 @@ export default function HomepageNotification() {
   };
 
   const getEarningsCalls = useCallback(async () => {
-    dispatch(setHomePageLoader(true));
+    dispatch(setHomePageLoader());
     const now = moment();
     try {
       const response = await axios.get(`https://financialmodelingprep.com/api/v4/earning-calendar-confirmed`, {
@@ -48,19 +48,19 @@ export default function HomepageNotification() {
       const data = get(response, 'data', []);
       reverse(data);
       //place datetime object in all items
-      forEach(data, function (item) {
+      forEach(data, function(item) {
         item['datetime'] = moment(`${item.date}T${item.time}:00`);
       });
       //re-sort data by time in ascending order
-      data.sort(function (a, b) {
+      data.sort(function(a, b) {
         return a.datetime - b.datetime;
       });
       setUpcomingCalls(data);
-      dispatch(setHomePageLoader(false));
     } catch (error) {
       console.error('Internal server error:', error);
       setUpcomingCalls([]);
-      dispatch(setHomePageLoader(false));
+    } finally {
+      dispatch(hideHomePageLoader());
     }
   }, [dispatch]);
 
@@ -124,7 +124,9 @@ export default function HomepageNotification() {
                 <div className="timeline-item--content">
                   <div className="timeline-item--icon"></div>
                   <div style={{ display: 'flex', justify: 'space-between', paddingRight: '20px' }}>
-                    <h4 className="timeline-item--label mb-2 ">{data.symbol}  &nbsp; {moment(`${data.date}T${data.time}:00`).format('MM/DD/YYYY')}</h4>
+                    <h4 className="timeline-item--label mb-2 ">
+                      {data.symbol} &nbsp; {moment(`${data.date}T${data.time}:00`).format('MM/DD/YYYY')}
+                    </h4>
                   </div>
                   <p>{data.title}</p>
                 </div>

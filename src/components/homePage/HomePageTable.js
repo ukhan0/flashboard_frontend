@@ -14,7 +14,7 @@ import './HomePageTableStyle.css';
 import { setSelectedWatchlist } from '../../reducers/Watchlist';
 import { setSidebarToggle, setSidebarToggleMobile } from '../../reducers/ThemeOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHomePageLoader } from '../../reducers/HomePage';
+import { setHomePageLoader, hideHomePageLoader } from '../../reducers/HomePage';
 import config from '../../config/config';
 import axios from 'axios';
 import { renameDocumentTypes } from '../topic/topicHelpers';
@@ -218,7 +218,7 @@ export default function HomePageTable() {
   };
 
   const getRecentCompaniesData = React.useCallback(async () => {
-    dispatch(setHomePageLoader(true));
+    dispatch(setHomePageLoader());
     const cancelToken = axios.CancelToken.source();
     try {
       setCancelToken(cancelToken);
@@ -252,7 +252,7 @@ export default function HomePageTable() {
       setRecentCompaniesData([]);
       setRowsOfRecentDocumentsTable(0);
     } finally {
-      dispatch(setHomePageLoader(false));
+      dispatch(hideHomePageLoader());
     }
   }, [dispatch, rowsOfRecentDocumentsTable, homePageSelectedSearchIndex.key, homePageSelectedSearchIndex.type]);
 
