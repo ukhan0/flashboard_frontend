@@ -83,7 +83,6 @@ const TopicFilters = props => {
   const {
     searchText,
     selectedSuggestions,
-    showUpdateButton,
     selectedSearch,
     cancelTokenSourceHighlights,
     isTopicEmailAlertEnable,
@@ -342,29 +341,16 @@ const TopicFilters = props => {
           </Grid>
           <Grid item>&nbsp; </Grid>
           <Grid item>
-            {showUpdateButton ? (
-              <Button
-                style={{ width: '100px' }}
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  handleOpenThemeDialog();
-                }}>
-                Save
-              </Button>
-            ) : (
-              <Button
-                style={{ width: '100px' }}
-                variant="contained"
-                color="primary"
-                disabled={isButtonActive}
-                onClick={() => {
-                  // props.onSearch();
-                  handleOpenThemeDialog();
-                }}>
-                Save
-              </Button>
-            )}
+            <Button
+              style={{ width: '100px' }}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                handleOpenThemeDialog();
+              }}
+            >
+              Save
+            </Button>
           </Grid>
           <Grid item>&nbsp; </Grid>
           <Grid item>

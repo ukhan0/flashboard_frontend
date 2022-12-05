@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TopicThemeLabelTextField from './TopicSearchLabelTextField';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -18,54 +17,47 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AlertDialog(props) {
+export default function AlertDialog({
+  open,
+  handleClose,
+  handleUpdateSaveSearch,
+  handleClickSaveSearch
+}) {
   const { showUpdateButton } = useSelector(state => state.Topic);
   const classes = useStyles();
   return (
     <div>
       <Dialog
-        open={props.open}
+        open={open}
         onClose={() => {
-          props.handleClose();
+          handleClose();
         }}
         classes={{ paper: classes.paper }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
         <DialogTitle id="alert-dialog-title">ThemeX Label</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <TopicThemeLabelTextField />
-          </DialogContentText>
+          <TopicThemeLabelTextField />
         </DialogContent>
         <DialogActions>
-          {showUpdateButton ? (
-            <Button
-              style={{ width: '100px' }}
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                props.handleUpdateSaveSearch();
-              }}>
-              Save
-            </Button>
-          ) : (
-            <Button
-              style={{ width: '100px' }}
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                props.handleClickSaveSearch();
-              }}>
-              Save
-            </Button>
-          )}
-
           <Button
             style={{ width: '100px' }}
             variant="contained"
             color="primary"
             onClick={() => {
-              props.handleClose();
+              showUpdateButton ?
+                handleUpdateSaveSearch()
+                :
+                handleClickSaveSearch();
+            }}>
+            Save
+          </Button>
+          <Button
+            style={{ width: '100px' }}
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              handleClose();
             }}>
             Cancel
           </Button>
