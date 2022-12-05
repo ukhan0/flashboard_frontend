@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormControl from '@material-ui/core/FormControl';
@@ -23,6 +23,10 @@ const WatchlistTopicSearch = () => {
     state => state.Watchlist
   );
 
+  const combineData = useMemo(() => {
+    return completeCompaniesData.concat(completeCompaniesDataGlobal);
+  }, [completeCompaniesData, completeCompaniesDataGlobal]);
+
   const getSearchFilteredData = (dataArray, textToSearch) => {
     textToSearch = textToSearch.toLowerCase();
     return dataArray
@@ -35,17 +39,14 @@ const WatchlistTopicSearch = () => {
             .toLowerCase()
             .includes(textToSearch)
       )
-      .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', type: c.type, companyId: c.cu }));
+      .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', companyId: c.cu }));
   };
 
   const handleSearchTextChange = debounce(async text => {
     if (!text || text.length < 1) {
       return;
     }
-    let filteredWatchlist = getSearchFilteredData(completeCompaniesData, text);
-    if (filteredWatchlist.length < 1) {
-      filteredWatchlist = getSearchFilteredData(completeCompaniesDataGlobal, text);
-    }
+    let filteredWatchlist = getSearchFilteredData(combineData, text);
     setAvailableSymbols(filteredWatchlist);
   }, 250);
 
@@ -76,17 +77,20 @@ const WatchlistTopicSearch = () => {
     }
   };
 
+  const getAvailableSymbols = useCallback(() => {
+    const filteredWatchlist = combineData
+      .slice(0, 100)
+      .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
+      .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', companyId: c.cu }));
+
+    setAvailableSymbols(filteredWatchlist);
+  }, [combineData]);
+
   useEffect(() => {
     if (availableSymbols.length === 0) {
-      const filteredWatchlist = completeCompaniesData
-        .concat(completeCompaniesDataGlobal)
-        .slice(0, 100)
-        .filter(c => get(c, 'b', '') || get(c, 'ticker', ''))
-        .map(c => ({ ticker: c.ticker, name: c.b ?? '', code: c.co ?? '', type: c.type, companyId: c.cu }));
-
-      setAvailableSymbols(filteredWatchlist);
+      getAvailableSymbols();
     }
-  }, [completeCompaniesData, completeCompaniesDataGlobal, availableSymbols.length]);
+  }, [availableSymbols.length, getAvailableSymbols]);
 
   return (
     <FormControl className={classes.formControl}>
@@ -101,7 +105,7 @@ const WatchlistTopicSearch = () => {
         getOptionLabel={option => createOptionLabel(option)}
         renderInput={params => (
           <TextField
-            onBlur={() => {}}
+            onBlur={getAvailableSymbols}
             {...params}
             variant="outlined"
             placeholder="Type Company Name or Symbol"
