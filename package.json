@@ -73,10 +73,12 @@
     "deploy:sma:live": "aws s3 sync build/ s3://filingsflash.com --acl public-read --profile flashboard",
     "deploy:udt": "aws s3 sync build/ s3://unstructureddataterminal.com --acl public-read --profile flashboard",
     "bd_staging": "yarn build:sma:staging && yarn deploy:sma:staging",
-    "bd_udt": "yarn build:udt && yarn deploy:udt",
+    "deploy_cache_clear:udt": "aws cloudfront create-invalidation --distribution-id E2RNJICKKHWOPL --paths '/*' --profile flashboard",
+    "bd_udt": "yarn build:udt && yarn deploy:udt && yarn deploy_cache_clear:udt",
     "build:tmx": "env-cmd -f .env.tmx.prod react-scripts build",
     "deploy:tmx": "aws s3 sync build/ s3://tmx.contextanalytics-ai.com --acl public-read --profile flashboard",
-    "bd_tmx": "yarn build:tmx && yarn deploy:tmx"
+    "deploy_cache_clear:tmx": "aws cloudfront create-invalidation --distribution-id E12952THRYJ8EJ --paths '/*' --profile flashboard",
+    "bd_tmx": "yarn build:tmx && yarn deploy:tmx && yarn deploy_cache_clear:tmx"
   },
   "eslintConfig": {
     "extends": "react-app"
